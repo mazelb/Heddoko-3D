@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2015
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.Caoching Demo 0.0.3.CSharp.Plugins", "UnityVS.Caoching Demo 0.0.3.CSharp.Plugins.csproj", "{6E614662-7DAA-9B24-9215-D548659891A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.Caoching Demo 0.0.3.CSharp", "UnityVS.Caoching Demo 0.0.3.CSharp.csproj", "{306A70A8-6836-3321-ABF5-C70EC6EC971F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityVS.Caoching Demo 0.0.3.CSharp.Editor", "UnityVS.Caoching Demo 0.0.3.CSharp.Editor.csproj", "{33D2D6E0-3855-03D5-6A75-57D2A870EF32}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6E614662-7DAA-9B24-9215-D548659891A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E614662-7DAA-9B24-9215-D548659891A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E614662-7DAA-9B24-9215-D548659891A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E614662-7DAA-9B24-9215-D548659891A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{306A70A8-6836-3321-ABF5-C70EC6EC971F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{306A70A8-6836-3321-ABF5-C70EC6EC971F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{306A70A8-6836-3321-ABF5-C70EC6EC971F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{306A70A8-6836-3321-ABF5-C70EC6EC971F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33D2D6E0-3855-03D5-6A75-57D2A870EF32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33D2D6E0-3855-03D5-6A75-57D2A870EF32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33D2D6E0-3855-03D5-6A75-57D2A870EF32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33D2D6E0-3855-03D5-6A75-57D2A870EF32}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
