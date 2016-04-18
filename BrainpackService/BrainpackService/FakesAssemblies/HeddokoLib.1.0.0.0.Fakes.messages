@@ -1,0 +1,9 @@
+E:\Code\Binaries\BrainpackService\BrainpackService\Fakes\HeddokoLib.fakes : warning : Cannot generate stub for HeddokoLib.utils.ProcessState: type is a value type.
+E:\Code\Binaries\BrainpackService\BrainpackService\Fakes\HeddokoLib.fakes : warning : Cannot generate stub for HeddokoLib.utils.CommandType: type is a value type.
+E:\Code\Binaries\BrainpackService\BrainpackService\Fakes\HeddokoLib.fakes : warning : Cannot generate stub for HeddokoLib.utils.HeddokoCommands: type is sealed.
+E:\Code\Binaries\BrainpackService\BrainpackService\Fakes\HeddokoLib.fakes : warning : Cannot generate stub for HeddokoLib.networking.CommandDelegate: type is sealed.
+E:\Code\Binaries\BrainpackService\BrainpackService\Fakes\HeddokoLib.fakes : warning : Cannot generate stub for HeddokoLib.networking.PacketSetting: type is sealed.
+E:\Code\Binaries\BrainpackService\BrainpackService\Fakes\HeddokoLib.fakes : warning : Cannot generate shim for HeddokoLib.utils.ProcessState: type is an enum.
+E:\Code\Binaries\BrainpackService\BrainpackService\Fakes\HeddokoLib.fakes : warning : Cannot generate shim for HeddokoLib.utils.CommandType: type is an enum.
+E:\Code\Binaries\BrainpackService\BrainpackService\Fakes\HeddokoLib.fakes : warning : Cannot generate shim for HeddokoLib.networking.CommandDelegate: type is a delegate.
+E:\Code\Binaries\BrainpackService\BrainpackService\Fakes\HeddokoLib.fakes : warning : Cannot generate shim for HeddokoLib.adt.CircularQueue`1+<GetEnumerator>d__36: type is not supported because of internal limitations.

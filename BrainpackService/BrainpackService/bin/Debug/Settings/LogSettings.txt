@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DebugLogSettings xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.datacontract.org/2004/07/BrainpackService.Tools_and_Utilities.Debugging">
+  <ApplicationCommandLog>false</ApplicationCommandLog>
+  <ApplicationFrameData>false</ApplicationFrameData>
+  <ApplicationResponseLog>false</ApplicationResponseLog>
+  <BrainpackCommandLog>false</BrainpackCommandLog>
+  <BrainpackFrameData>false</BrainpackFrameData>
+  <BrainpackResponseLog>false</BrainpackResponseLog>
+  <LogAll>true</LogAll>
+  <LogAllApplicationContext>false</LogAllApplicationContext>
+  <LogAllBrainpackContext>false</LogAllBrainpackContext>
+  <MaxFileSizeMb>250</MaxFileSizeMb>
+</DebugLogSettings>

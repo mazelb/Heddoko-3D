@@ -1,0 +1,298 @@
+09:20:24.440 AM , 4 , BP Connection request System.Byte[]
+09:20:24.446 AM , 5 , BP Connection request true
+09:20:24.447 AM , 5 , Beginning send via socket: 0x04$true<EOL>
+09:20:24.532 AM , 4 , GetState
+09:20:24.532 AM , 5 , GetState response: 
+09:20:24.532 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:20:24.536 AM , 4 , Request to disable the sleep timer
+09:20:24.536 AM , 5 , response to disable the sleep timer
+09:20:24.536 AM , 5 , Beginning send via socket: 0x38$<EOL>
+09:20:24.537 AM , 4 , Req to registerListener
+09:20:24.537 AM , 5 , Beginning send via socket: 0x44$<EOL>
+09:20:24.541 AM , 4 , setTime2016-4-6-3-9:20:24
+09:20:24.541 AM , 5 , Beginning send via socket: 0x23$<EOL>
+09:20:27.543 AM , 4 , GetState
+09:20:27.543 AM , 5 , GetState response: 
+09:20:27.543 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:20:30.572 AM , 4 , GetState
+09:20:30.572 AM , 5 , GetState response: 
+09:20:30.572 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:20:33.604 AM , 4 , GetState
+09:20:33.604 AM , 5 , GetState response: 
+09:20:33.604 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:20:36.642 AM , 4 , GetState
+09:20:36.642 AM , 5 , GetState response: 
+09:20:36.642 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:20:39.673 AM , 4 , GetState
+09:20:39.673 AM , 5 , GetState response: Timeout
+09:20:39.673 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:20:42.693 AM , 4 , GetState
+09:20:42.693 AM , 5 , GetState response: Timeout
+09:20:42.693 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:20:45.703 AM , 4 , GetState
+09:20:45.703 AM , 5 , GetState response: Timeout
+09:20:45.703 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:20:48.743 AM , 4 , GetState
+09:20:48.743 AM , 5 , GetState response: Timeout
+09:20:48.743 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:20:51.791 AM , 4 , GetState
+09:20:51.791 AM , 5 , GetState response: Timeout
+09:20:51.791 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:20:54.822 AM , 4 , GetState
+09:20:54.822 AM , 5 , GetState response: Timeout
+09:20:54.822 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:20:57.829 AM , 4 , GetState
+09:20:57.829 AM , 5 , GetState response: Timeout
+09:20:57.829 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:00.876 AM , 4 , GetState
+09:21:00.876 AM , 5 , GetState response: Timeout
+09:21:00.876 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:03.895 AM , 4 , GetState
+09:21:03.895 AM , 5 , GetState response: Timeout
+09:21:03.895 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:06.924 AM , 4 , GetState
+09:21:06.924 AM , 5 , GetState response: Timeout
+09:21:06.924 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:09.959 AM , 4 , GetState
+09:21:09.959 AM , 5 , GetState response: Timeout
+09:21:09.959 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:12.978 AM , 4 , GetState
+09:21:12.978 AM , 5 , GetState response: Timeout
+09:21:12.978 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:15.987 AM , 4 , GetState
+09:21:15.987 AM , 5 , GetState response: Timeout
+09:21:15.987 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:19.018 AM , 4 , GetState
+09:21:19.018 AM , 5 , GetState response: Timeout
+09:21:19.018 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:22.045 AM , 4 , GetState
+09:21:22.045 AM , 5 , GetState response: Timeout
+09:21:22.045 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:25.082 AM , 4 , GetState
+09:21:25.082 AM , 5 , GetState response: Timeout
+09:21:25.082 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:28.112 AM , 4 , GetState
+09:21:28.112 AM , 5 , GetState response: Timeout
+09:21:28.112 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:31.141 AM , 4 , GetState
+09:21:31.141 AM , 5 , GetState response: Timeout
+09:21:31.141 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:34.159 AM , 4 , GetState
+09:21:34.159 AM , 5 , GetState response: Timeout
+09:21:34.159 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:37.197 AM , 4 , GetState
+09:21:37.197 AM , 5 , GetState response: Timeout
+09:21:37.197 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:40.224 AM , 4 , GetState
+09:21:40.224 AM , 5 , GetState response: Timeout
+09:21:40.224 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:43.260 AM , 4 , GetState
+09:21:43.260 AM , 5 , GetState response: Timeout
+09:21:43.260 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:46.270 AM , 4 , GetState
+09:21:46.270 AM , 5 , GetState response: Timeout
+09:21:46.270 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:49.313 AM , 4 , GetState
+09:21:49.313 AM , 5 , GetState response: Timeout
+09:21:49.313 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:52.332 AM , 4 , GetState
+09:21:52.332 AM , 5 , GetState response: Timeout
+09:21:52.332 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:55.372 AM , 4 , GetState
+09:21:55.372 AM , 5 , GetState response: Timeout
+09:21:55.372 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:21:58.419 AM , 4 , GetState
+09:21:58.419 AM , 5 , GetState response: Timeout
+09:21:58.419 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:01.432 AM , 4 , GetState
+09:22:01.432 AM , 5 , GetState response: Timeout
+09:22:01.432 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:04.457 AM , 4 , GetState
+09:22:04.457 AM , 5 , GetState response: Timeout
+09:22:04.457 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:07.490 AM , 4 , GetState
+09:22:07.490 AM , 5 , GetState response: Timeout
+09:22:07.490 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:10.495 AM , 4 , GetState
+09:22:10.495 AM , 5 , GetState response: Timeout
+09:22:10.495 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:13.518 AM , 4 , GetState
+09:22:13.518 AM , 5 , GetState response: Timeout
+09:22:13.518 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:16.546 AM , 4 , GetState
+09:22:16.546 AM , 5 , GetState response: Timeout
+09:22:16.546 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:19.583 AM , 4 , GetState
+09:22:19.583 AM , 5 , GetState response: Timeout
+09:22:19.583 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:22.604 AM , 4 , GetState
+09:22:22.604 AM , 5 , GetState response: Timeout
+09:22:22.604 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:25.650 AM , 4 , GetState
+09:22:25.650 AM , 5 , GetState response: Timeout
+09:22:25.650 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:28.667 AM , 4 , GetState
+09:22:28.667 AM , 5 , GetState response: Timeout
+09:22:28.667 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:31.694 AM , 4 , GetState
+09:22:31.694 AM , 5 , GetState response: Timeout
+09:22:31.694 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:34.727 AM , 4 , GetState
+09:22:34.727 AM , 5 , GetState response: Timeout
+09:22:34.727 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:37.756 AM , 4 , GetState
+09:22:37.756 AM , 5 , GetState response: Timeout
+09:22:37.756 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:40.794 AM , 4 , GetState
+09:22:40.794 AM , 5 , GetState response: Timeout
+09:22:40.794 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:43.807 AM , 4 , GetState
+09:22:43.807 AM , 5 , GetState response: Timeout
+09:22:43.807 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:46.852 AM , 4 , GetState
+09:22:46.852 AM , 5 , GetState response: Timeout
+09:22:46.852 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:49.899 AM , 4 , GetState
+09:22:49.899 AM , 5 , GetState response: Timeout
+09:22:49.899 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:22:52.758 AM , 4 , Request to enable sleep timer
+09:22:52.758 AM , 5 , Beginning send via socket: 0x42$<EOL>
+09:22:52.759 AM , 4 , Brainpack connection closedAttempting to disconnect from brainpack
+09:22:52.759 AM , 5 , BP connection statusFalse
+09:22:52.759 AM , 5 , Beginning send via socket: 0x16$Brainpack connection closed<EOL>
+09:26:01.080 AM , 4 , BP Connection request System.Byte[]
+09:26:53.335 AM , 5 , BP Connection request true
+09:26:53.335 AM , 5 , Beginning send via socket: 0x04$true<EOL>
+09:27:04.597 AM , 4 , BP Connection request System.Byte[]
+09:27:04.597 AM , 5 , BP Connection request true
+09:27:04.597 AM , 5 , Beginning send via socket: 0x04$true<EOL>
+09:27:04.683 AM , 4 , GetState
+09:27:04.683 AM , 5 , GetState response: 
+09:27:04.683 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:27:04.689 AM , 4 , Request to disable the sleep timer
+09:27:04.689 AM , 5 , response to disable the sleep timer
+09:27:04.689 AM , 5 , Beginning send via socket: 0x38$<EOL>
+09:27:04.690 AM , 4 , Req to registerListener
+09:27:04.690 AM , 5 , Beginning send via socket: 0x44$<EOL>
+09:27:04.692 AM , 4 , setTime2016-4-6-3-9:27:4
+09:27:04.692 AM , 5 , Beginning send via socket: 0x23$<EOL>
+09:27:07.703 AM , 4 , GetState
+09:27:07.703 AM , 5 , GetState response: 
+09:27:07.703 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:27:10.747 AM , 4 , GetState
+09:27:10.747 AM , 5 , GetState response: 
+09:27:10.747 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:27:13.786 AM , 4 , GetState
+09:27:13.786 AM , 5 , GetState response: 
+09:27:13.786 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:27:17.900 AM , 4 , GetState
+09:27:17.900 AM , 5 , GetState response: Timeout
+09:27:17.900 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:27:26.000 AM , 4 , GetState
+09:27:26.000 AM , 5 , GetState response: Timeout
+09:27:26.000 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:27:26.085 AM , 4 , GetState
+09:27:26.085 AM , 5 , GetState response: Timeout
+09:27:26.085 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:27:26.164 AM , 4 , GetState
+09:27:26.164 AM , 5 , GetState response: Timeout
+09:27:26.164 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:27:28.914 AM , 4 , GetState
+09:27:28.914 AM , 5 , GetState response: Timeout
+09:27:28.914 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:27:31.947 AM , 4 , GetState
+09:27:31.947 AM , 5 , GetState response: Timeout
+09:27:31.947 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:27:34.977 AM , 4 , GetState
+09:27:34.977 AM , 5 , GetState response: Timeout
+09:27:34.977 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:27:38.004 AM , 4 , GetState
+09:27:38.004 AM , 5 , GetState response: Timeout
+09:27:38.004 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:27:45.215 AM , 4 , GetState
+09:27:45.215 AM , 5 , GetState response: Timeout
+09:27:45.215 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:27:46.870 AM , 4 , GetState
+09:27:51.571 AM , 5 , GetState response: Timeout
+09:27:51.571 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:27:51.647 AM , 4 , GetState
+09:27:51.647 AM , 5 , GetState response: Timeout
+09:27:51.647 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:27:51.723 AM , 4 , GetState
+09:27:51.723 AM , 5 , GetState response: Timeout
+09:27:51.723 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:27:53.150 AM , 4 , GetState
+09:27:53.150 AM , 5 , GetState response: Timeout
+09:27:53.150 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:27:56.162 AM , 4 , GetState
+09:27:56.162 AM , 5 , GetState response: Timeout
+09:27:56.162 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:27:59.192 AM , 4 , GetState
+09:27:59.192 AM , 5 , GetState response: Timeout
+09:27:59.192 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:28:02.225 AM , 4 , GetState
+09:28:02.225 AM , 5 , GetState response: Timeout
+09:28:02.225 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:28:05.246 AM , 4 , GetState
+09:28:05.246 AM , 5 , GetState response: Timeout
+09:28:05.246 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:28:08.276 AM , 4 , GetState
+09:28:08.276 AM , 5 , GetState response: Timeout
+09:28:08.276 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:28:11.309 AM , 4 , GetState
+09:28:11.309 AM , 5 , GetState response: Timeout
+09:28:11.309 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:28:14.345 AM , 4 , GetState
+09:28:14.345 AM , 5 , GetState response: Timeout
+09:28:14.345 AM , 5 , Beginning send via socket: 0x27$Timeout<EOL>
+09:28:14.805 AM , 4 , Request to enable sleep timer
+09:28:14.805 AM , 5 , Beginning send via socket: 0x42$<EOL>
+09:28:14.806 AM , 4 , Brainpack connection closedAttempting to disconnect from brainpack
+09:28:14.806 AM , 5 , BP connection statusFalse
+09:28:14.806 AM , 5 , Beginning send via socket: 0x16$Brainpack connection closed<EOL>
+09:29:33.194 AM , 4 , BP Connection request System.Byte[]
+09:29:33.195 AM , 5 , BP Connection request true
+09:29:33.195 AM , 5 , Beginning send via socket: 0x04$true<EOL>
+09:29:33.334 AM , 4 , GetState
+09:29:33.334 AM , 5 , GetState response: 
+09:29:33.334 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:29:33.336 AM , 4 , Request to disable the sleep timer
+09:29:33.336 AM , 5 , response to disable the sleep timer
+09:29:33.336 AM , 5 , Beginning send via socket: 0x38$<EOL>
+09:29:33.337 AM , 4 , Req to registerListener
+09:29:33.337 AM , 5 , Beginning send via socket: 0x44$<EOL>
+09:29:33.340 AM , 4 , setTime2016-4-6-3-9:29:33
+09:29:33.340 AM , 5 , Beginning send via socket: 0x23$<EOL>
+09:29:36.418 AM , 4 , GetState
+09:29:36.418 AM , 5 , GetState response: 
+09:29:36.418 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:29:39.421 AM , 4 , GetState
+09:29:39.421 AM , 5 , GetState response: 
+09:29:39.421 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:29:42.424 AM , 4 , GetState
+09:29:42.424 AM , 5 , GetState response: 
+09:29:42.424 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:29:45.426 AM , 4 , GetState
+09:29:45.426 AM , 5 , GetState response: 
+09:29:45.426 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:29:46.620 AM , 4 , Buffer clear request
+09:29:46.621 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:29:47.957 AM , 4 , Buffer clear request
+09:29:47.957 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:29:48.429 AM , 4 , GetState
+09:29:48.429 AM , 5 , GetState response: 
+09:29:48.429 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:29:51.432 AM , 4 , GetState
+09:29:51.432 AM , 5 , GetState response: 
+09:29:51.432 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:29:54.466 AM , 4 , GetState
+09:29:54.466 AM , 5 , GetState response: 
+09:29:54.466 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:29:57.492 AM , 4 , GetState
+09:29:57.492 AM , 5 , GetState response: 
+09:29:57.492 AM , 5 , Beginning send via socket: 0x27$<EOL>
+09:29:59.312 AM , 4 , Request to enable sleep timer
+09:29:59.312 AM , 5 , Beginning send via socket: 0x42$<EOL>
+09:29:59.312 AM , 4 , Brainpack connection closedAttempting to disconnect from brainpack
+09:29:59.312 AM , 5 , BP connection statusFalse
+09:29:59.312 AM , 5 , Beginning send via socket: 0x16$Brainpack connection closed<EOL>

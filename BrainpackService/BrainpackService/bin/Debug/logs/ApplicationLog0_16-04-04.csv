@@ -1,0 +1,155 @@
+16:50:39.554 PM , 4 , BP Connection request System.Byte[]
+16:50:39.562 PM , 5 , BP Connection request true
+16:50:39.563 PM , 5 , Beginning send via socket: 0x04$true<EOL>
+16:50:39.658 PM , 4 , GetState
+16:50:39.658 PM , 5 , GetState response: Idle
+16:50:39.658 PM , 5 , Beginning send via socket: 0x27$Idle<EOL>
+16:50:39.667 PM , 4 , Request to disable the sleep timer
+16:50:39.667 PM , 5 , response to disable the sleep timer
+16:50:39.667 PM , 5 , Beginning send via socket: 0x38$<EOL>
+16:50:39.669 PM , 4 , Req to registerListener
+16:50:39.669 PM , 5 , Beginning send via socket: 0x44$<EOL>
+16:50:39.678 PM , 4 , setTime2016-4-4-1-16:50:39
+16:50:39.678 PM , 5 , Beginning send via socket: 0x23$<EOL>
+16:50:42.699 PM , 4 , GetState
+16:50:42.699 PM , 5 , GetState response: Idle
+16:50:42.699 PM , 5 , Beginning send via socket: 0x27$Idle<EOL>
+16:50:44.420 PM , 4 , Record
+16:50:44.420 PM , 5 , 0x29
+16:50:44.420 PM , 5 , Beginning send via socket: 0x29$<EOL>
+16:50:44.497 PM , 4 , GetState
+16:50:44.497 PM , 5 , GetState response: Idle
+16:50:44.497 PM , 5 , Beginning send via socket: 0x27$Idle<EOL>
+16:50:45.742 PM , 4 , GetState
+16:50:45.742 PM , 5 , GetState response: Recording
+16:50:45.742 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:50:48.775 PM , 4 , GetState
+16:50:48.775 PM , 5 , GetState response: Recording
+16:50:48.775 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:50:51.819 PM , 4 , GetState
+16:50:51.819 PM , 5 , GetState response: Recording
+16:50:51.819 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:50:54.860 PM , 4 , GetState
+16:50:54.860 PM , 5 , GetState response: Recording
+16:50:54.860 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:50:57.907 PM , 4 , GetState
+16:50:57.907 PM , 5 , GetState response: Recording
+16:50:57.907 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:00.962 PM , 4 , GetState
+16:51:00.962 PM , 5 , GetState response: Recording
+16:51:00.962 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:04.001 PM , 4 , GetState
+16:51:04.001 PM , 5 , GetState response: Recording
+16:51:04.001 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:07.050 PM , 4 , GetState
+16:51:07.050 PM , 5 , GetState response: Recording
+16:51:07.050 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:10.091 PM , 4 , GetState
+16:51:10.091 PM , 5 , GetState response: Recording
+16:51:10.091 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:11.321 PM , 4 , Req to stop recording
+16:51:11.371 PM , 5 , Recording
+16:51:11.371 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:11.448 PM , 4 , GetState
+16:51:11.448 PM , 5 , GetState response: Recording
+16:51:11.448 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:13.138 PM , 4 , GetState
+16:51:13.138 PM , 5 , GetState response: Idle
+16:51:13.138 PM , 5 , Beginning send via socket: 0x27$Idle<EOL>
+16:51:14.210 PM , 4 , Record
+16:51:14.210 PM , 5 , 0x29
+16:51:14.210 PM , 5 , Beginning send via socket: 0x29$<EOL>
+16:51:14.286 PM , 4 , GetState
+16:51:14.286 PM , 5 , GetState response: Idle
+16:51:14.286 PM , 5 , Beginning send via socket: 0x27$Idle<EOL>
+16:51:16.177 PM , 4 , GetState
+16:51:16.177 PM , 5 , GetState response: Recording
+16:51:16.177 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:19.216 PM , 4 , GetState
+16:51:19.216 PM , 5 , GetState response: Recording
+16:51:19.216 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:22.255 PM , 4 , GetState
+16:51:22.255 PM , 5 , GetState response: Recording
+16:51:22.255 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:25.284 PM , 4 , GetState
+16:51:25.284 PM , 5 , GetState response: Recording
+16:51:25.284 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:28.322 PM , 4 , GetState
+16:51:28.322 PM , 5 , GetState response: Recording
+16:51:28.322 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:31.360 PM , 4 , GetState
+16:51:31.360 PM , 5 , GetState response: Recording
+16:51:31.360 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:34.407 PM , 4 , GetState
+16:51:34.407 PM , 5 , GetState response: Recording
+16:51:34.407 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:37.446 PM , 4 , GetState
+16:51:37.446 PM , 5 , GetState response: Recording
+16:51:37.446 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:40.493 PM , 4 , GetState
+16:51:40.493 PM , 5 , GetState response: Recording
+16:51:40.493 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:43.541 PM , 4 , GetState
+16:51:43.541 PM , 5 , GetState response: Recording
+16:51:43.541 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:46.576 PM , 4 , GetState
+16:51:46.576 PM , 5 , GetState response: Recording
+16:51:46.576 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:51:46.841 PM , 4 , Request to enable sleep timer
+16:51:46.841 PM , 5 , Beginning send via socket: 0x42$<EOL>
+16:51:46.847 PM , 4 , Brainpack connection closedAttempting to disconnect from brainpack
+16:51:46.847 PM , 5 , BP connection statusFalse
+16:51:46.847 PM , 5 , Beginning send via socket: 0x16$Brainpack connection closed<EOL>
+16:53:56.687 PM , 4 , BP Connection request System.Byte[]
+16:53:56.690 PM , 5 , BP Connection request true
+16:53:56.690 PM , 5 , Beginning send via socket: 0x04$true<EOL>
+16:53:56.795 PM , 4 , GetState
+16:53:56.795 PM , 5 , GetState response: Recording
+16:53:56.795 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:53:56.801 PM , 4 , Request to disable the sleep timer
+16:53:56.801 PM , 5 , response to disable the sleep timer
+16:53:56.801 PM , 5 , Beginning send via socket: 0x38$<EOL>
+16:53:56.803 PM , 4 , Req to registerListener
+16:53:56.803 PM , 5 , Beginning send via socket: 0x44$<EOL>
+16:53:56.812 PM , 4 , setTime2016-4-4-1-16:53:56
+16:53:56.813 PM , 5 , Beginning send via socket: 0x23$<EOL>
+16:53:59.841 PM , 4 , GetState
+16:53:59.841 PM , 5 , GetState response: Recording
+16:53:59.841 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:54:02.889 PM , 4 , GetState
+16:54:02.889 PM , 5 , GetState response: Recording
+16:54:02.889 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:54:05.932 PM , 4 , GetState
+16:54:05.932 PM , 5 , GetState response: Recording
+16:54:05.932 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:54:08.964 PM , 4 , GetState
+16:54:08.964 PM , 5 , GetState response: Recording
+16:54:08.964 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:54:12.001 PM , 4 , GetState
+16:54:12.001 PM , 5 , GetState response: Recording
+16:54:12.001 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:54:15.043 PM , 4 , GetState
+16:54:15.043 PM , 5 , GetState response: Recording
+16:54:15.043 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:54:18.076 PM , 4 , GetState
+16:54:18.076 PM , 5 , GetState response: Recording
+16:54:18.076 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:54:21.114 PM , 4 , GetState
+16:54:21.114 PM , 5 , GetState response: Recording
+16:54:21.114 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:54:24.153 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:54:24.153 PM , 4 , GetState
+16:54:27.194 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:54:27.194 PM , 4 , GetState
+16:54:30.237 PM , 4 , GetState
+16:54:30.237 PM , 5 , GetState response: Recording
+16:54:30.237 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:54:33.292 PM , 4 , GetState
+16:54:33.292 PM , 5 , GetState response: Recording
+16:54:33.292 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:54:36.331 PM , 5 , Beginning send via socket: 0x27$Recording<EOL>
+16:54:36.331 PM , 4 , GetState
+16:54:37.898 PM , 5 , Beginning send via socket: 0x42$<EOL>
+16:54:37.904 PM , 4 , Brainpack connection closedAttempting to disconnect from brainpack
+16:54:37.904 PM , 5 , BP connection statusFalse
+16:54:37.904 PM , 5 , Beginning send via socket: 0x16$Brainpack connection closed<EOL>
