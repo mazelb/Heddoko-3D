@@ -62,7 +62,7 @@ namespace Assets.Scripts.Utils.Containers
         {
             if (mSprites == null || mSprites.Length == 0)
             {
-                mSprites = Resources.LoadAll<Sprite>(FontAwesomeSpriteSheet.name);
+                mSprites = Resources.LoadAll<Sprite>("ArtAssets/"+FontAwesomeSpriteSheet.name);
             }
 
         }

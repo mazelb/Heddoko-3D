@@ -272,7 +272,7 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
             RenderedBody vRenderedBody = vBody.RenderedBody;
             PanelCameraSettings vPanelCameraSettings = new PanelCameraSettings(vRenderedBody.CurrentLayerMask, PanelSettings);
             PanelSettings.CameraToBodyPair.PanelCamera = PanelCameraPool.GetPanelCamResource(vPanelCameraSettings);
-            PanelSettings.CameraToBodyPair.PanelCamera.SetCameraTarget(vRenderedBody, 10);
+            PanelSettings.CameraToBodyPair.PanelCamera.SetDefaultTarget(vRenderedBody, 10);
             if (PanelCamUpdated != null)
             {
                 PanelCamUpdated(this);

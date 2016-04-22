@@ -7,10 +7,10 @@
 */
 
 
-using System.Collections;
-using System.Security.Policy;
+using System.Collections; 
 using Assets.Scripts.Frames_Pipeline;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
+using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Layouts;
 using UnityEngine;
 
@@ -111,6 +111,11 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
 
             }
 
+        }
+
+        public override ControlPanelType PanelType
+        {
+            get { return ControlPanelType.RecordingPlaybackControlPanel; }
         }
 
         /// <summary>
@@ -468,7 +473,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// <param name="vNewBodyFramesRecording"></param>
         public void NewRecordingSelected(BodyFramesRecording vNewBodyFramesRecording)
         {
-            if (mBody != null)
+            if (mBody != null && vNewBodyFramesRecording!=null)
             {
                 mBody.StopThread();
                 if (mBody.InitialBodyFrame != null)

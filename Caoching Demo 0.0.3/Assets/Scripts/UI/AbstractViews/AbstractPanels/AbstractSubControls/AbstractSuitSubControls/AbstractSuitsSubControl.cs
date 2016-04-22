@@ -12,7 +12,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.Abs
         
        public virtual void OnEnable()
         {
-            Debug.Log("the enabling");
+          
             //Listen to the AbstractSuitConnect OnConnect, OnDisconnect and OnStatusUpdate events
             SuitConnection.OnSuitStateUpdate += OnStatusUpdate;
             SuitConnection.ConnectedStateEvent += OnConnection;
@@ -21,7 +21,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.Abs
 
         public virtual void OnDisable()
         {
-            Debug.Log("the disabling");
+            
             // ReSharper disable once DelegateSubtraction
             SuitConnection.OnSuitStateUpdate -= OnStatusUpdate;
             // ReSharper disable once DelegateSubtraction

@@ -18,7 +18,7 @@ namespace Assets.Scripts.UI.DemoKit
         public Text CummulativeTotalScore;
         private int mFlexionScore;
         private int mTwistScore;
-        private int mTotal;
+      
         private Color mHedRed;
         private int mMaxFlexionScore = 0;
         private int mMaxTwistScore =0 ;
@@ -29,6 +29,23 @@ namespace Assets.Scripts.UI.DemoKit
         void Awake()
         {
             mHedRed = new Color(249f / 255, 69f / 255, 97f / 255f, 0.60f);
+        }
+
+        public void ResetScores()
+        {
+            mFlexionScoreSum =0;
+            mTwistScoreSum = 0;
+            mTotalScoreSum = mFlexionScoreSum + mTwistScoreSum;
+            CummulativeFlexionScore.text = "+" + mFlexionScoreSum + "";
+            CummulativeTwistScore.text = "+" + mTwistScoreSum + "";
+            CummulativeTotalScore.text = "+" + mTotalScoreSum + "";
+
+            mMaxFlexionScore = 0;
+            mMaxTwistScore = 0;
+            mMaxTotal = mFlexionScore + mTwistScore;
+            FlexionScoreText.text = "+" + mMaxFlexionScore + "";
+            TwistScoreText.text = "+" + mMaxTwistScore + "";
+            TotalScoreText.text = "+" + mMaxTotal;
         }
         public void UpdateScore(int vFlexion, int vTwist)
         {
@@ -50,7 +67,7 @@ namespace Assets.Scripts.UI.DemoKit
                 mMaxTwistScore = mTwistScore;
             }
             mMaxTotal = mMaxTwistScore + mMaxFlexionScore;
-            mTotal = mFlexionScore + mTwistScore;
+            
             FlexionScoreText.text = "+" + mMaxFlexionScore+"";
             TwistScoreText.text = "+" + mMaxTwistScore + "";
             TotalScoreText.text ="+"+ mMaxTotal  ;

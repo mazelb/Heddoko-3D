@@ -45,7 +45,7 @@ namespace Assets.Scripts.Body_Data.View
 
         [SerializeField]
         private BodyStructureMap.BodyTypes mCurrentBodyType;
-        private Dictionary<BodyStructureMap.SubSegmentTypes, Transform> mTransformMapping = new Dictionary<BodyStructureMap.SubSegmentTypes, Transform>(10);
+        internal Dictionary<BodyStructureMap.SubSegmentTypes, SegmentInteractibleObjects> TransformMapping = new Dictionary<BodyStructureMap.SubSegmentTypes, SegmentInteractibleObjects>(10);
         private LayerMask mCurrLayerMask;
         /// <summary>
         /// Getter and setter property: assigns the layer mask to the associated SkinnedMeshes
@@ -64,21 +64,21 @@ namespace Assets.Scripts.Body_Data.View
                 Limbs.gameObject.layer = mCurrLayerMask;
                 Torso.gameObject.layer = mCurrLayerMask;
                 gameObject.layer = mCurrLayerMask;
-                foreach (var vKvPair in mTransformMapping)
+                foreach (var vKvPair in TransformMapping)
                 {
-                    vKvPair.Value.gameObject.layer = mCurrLayerMask;
+                    vKvPair.Value.Transform.gameObject.layer = mCurrLayerMask;
                 }
                 if (LayerCopyListeners != null)
                 {
-                    for (int i = 0; i < LayerCopyListeners.Length; i ++)
+                    for (int i = 0; i < LayerCopyListeners.Length; i++)
                     {
                         LayerCopyListeners[i].layer = mCurrLayerMask;
                     }
-                } 
+                }
             }
         }
 
-       
+
 
         /// <summary>
         /// Applies a transformation to the skin based on the body type, defaulted to full body
@@ -88,17 +88,27 @@ namespace Assets.Scripts.Body_Data.View
         {
             mCurrentBodyType = vType;
             Debug.Log("create subsegments per body type. Everything is set to fullbody now");
-            mTransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf, LowerLeftLeg);
-            mTransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh, UpperLeftLeg);
-            mTransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_RightCalf, LowerRightLeg);
-            mTransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_RightThigh, UpperRightLeg);
-            mTransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine, UpperSpine);
-            mTransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine, Hips);
-            mTransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm, LowerLeftArm);
-            mTransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm, UpperLeftArm);
-            mTransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm, LowerRightArm);
-            mTransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_RightUpperArm, UpperRightArm);
-
+            TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf, new SegmentInteractibleObjects(LowerLeftLeg, 6, Limbs));
+            TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh, new SegmentInteractibleObjects(UpperLeftLeg, 4, Limbs));
+            TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_RightCalf, new SegmentInteractibleObjects(LowerRightLeg, 7, Limbs));
+            TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_RightThigh, new SegmentInteractibleObjects(UpperRightLeg, 5, Limbs));
+            TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine, new SegmentInteractibleObjects(UpperSpine,0, Torso));
+            TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine, new SegmentInteractibleObjects(Hips, 0, Torso));
+            TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm, new SegmentInteractibleObjects(LowerLeftArm, 0, Limbs));
+            TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm, new SegmentInteractibleObjects(UpperLeftArm, 2, Limbs));
+            TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm, new SegmentInteractibleObjects(LowerRightArm, 1, Limbs));
+            TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_RightUpperArm, new SegmentInteractibleObjects(UpperRightArm, 3, Limbs));
+            foreach (var vKvPair in TransformMapping)
+            {
+                vKvPair.Value.Selectable = vKvPair.Value.Transform.gameObject.AddComponent<SelectableSegment>();
+                if (vKvPair.Key != BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine ||
+                  vKvPair.Key != BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine)
+                {
+                    vKvPair.Value.SubsegmentVisibility = vKvPair.Value.Transform.gameObject.AddComponent<SubsegmentVisibility>();
+                    vKvPair.Value.SubsegmentVisibility.Initialize(vKvPair.Value.MaterialIndex, vKvPair.Value.AssociatedMeshRenderer);
+                    vKvPair.Value.Selectable.SegmentHeldDownEvent += vKvPair.Value.SubsegmentVisibility.ToggleVisiblity;
+                }
+            }
         }
 
         /// <summary>
@@ -110,7 +120,7 @@ namespace Assets.Scripts.Body_Data.View
             mCurrentBodyType = vType;
         }
 
- 
+
         /// <summary>
         /// Hides the segment based on the segment passed in
         /// </summary>
@@ -126,9 +136,9 @@ namespace Assets.Scripts.Body_Data.View
         /// <param name="vPosturePosition">The posture position</param>
         /// <param name="vShow">Show after initialization: default to false</param>
         /// <returns></returns>
-        public RulaVisualAngleAnalysis GetRulaVisualAngleAnalysis( AnaylsisFeedBackContainer.PosturePosition vPosturePosition,bool vShow=false)
+        public RulaVisualAngleAnalysis GetRulaVisualAngleAnalysis(AnaylsisFeedBackContainer.PosturePosition vPosturePosition, bool vShow = false)
         {
-             return AnaylsisFeedBackContainer.RequestRulaVisualAngleAnalysis(vPosturePosition,CurrentLayerMask,vShow);
+            return AnaylsisFeedBackContainer.RequestRulaVisualAngleAnalysis(vPosturePosition, CurrentLayerMask, vShow);
         }
 
         /// <summary>
@@ -166,11 +176,39 @@ namespace Assets.Scripts.Body_Data.View
         /// <returns></returns>
         public Transform GetSubSegment(BodyStructureMap.SubSegmentTypes sstype)
         {
-            return mTransformMapping[sstype];
+            return TransformMapping[sstype].Transform;
+        }
+
+        /// <summary>
+        /// Reset the visibility of the RenderedBody
+        /// </summary>
+        public void ResetVisiblity()
+        {
+            foreach (var vKeyPair in TransformMapping)
+            {
+                vKeyPair.Value.SubsegmentVisibility.IsVisible = true;
+            }
         }
     }
 
+    public class SegmentInteractibleObjects
+    {
+        public Transform Transform;
+        public int MaterialIndex;
+        public SkinnedMeshRenderer AssociatedMeshRenderer;
+        public SubsegmentVisibility SubsegmentVisibility;
+        public SelectableSegment Selectable;
 
+        public SegmentInteractibleObjects(Transform vTransform, int vMaterialIndex,
+            SkinnedMeshRenderer vSkinnedMeshRenderer)
+        {
+            Transform = vTransform;
+            MaterialIndex = vMaterialIndex;
+            AssociatedMeshRenderer = vSkinnedMeshRenderer;
+
+
+        }
+    }
     [Serializable]
     public class InvalidSegmentChangeRequestException : Exception
     {

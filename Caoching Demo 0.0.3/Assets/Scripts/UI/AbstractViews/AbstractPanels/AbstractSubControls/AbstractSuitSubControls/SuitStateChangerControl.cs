@@ -41,8 +41,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.Abs
 
         void Awake()
         {
-            Debug.Log("est");
             SuitStateControl.onClick.AddListener(EngageControl);
+
             //check current state of the suit
             if (mIsConnectedToSuit)
             {
@@ -68,9 +68,9 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.Abs
 
         public override void OnDisable()
         {
-            base.OnDisable();
             SuitState = SuitState.Start;
-            InputHandler.RemoveKeybinding(KeyCode.KeypadEnter, EngageControl);
+            InputHandler.RemoveKeybinding(KeyCode.Return, EngageControl);
+            base.OnDisable();
         }
 
         public override void OnStatusUpdate(SuitState vSuitState)
@@ -134,7 +134,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.Abs
         /// Engages suit controls based on the current suit state
         /// </summary>
         private void EngageControl()
-        {
+        { 
             switch (SuitState)
             {
                 case SuitState.Error:
@@ -194,8 +194,9 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.Abs
         /// </summary>
         public override void OnEnable()
         {
+            InputHandler.RegisterKeyboardAction(KeyCode.Return, EngageControl);
             base.OnEnable();
-            InputHandler.RegisterKeyboardAction(KeyCode.KeypadEnter, EngageControl);
+
         }
 
         

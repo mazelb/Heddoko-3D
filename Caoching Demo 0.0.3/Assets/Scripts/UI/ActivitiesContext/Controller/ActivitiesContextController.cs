@@ -217,6 +217,7 @@ namespace Assets.Scripts.UI.ActivitiesContext.Controller
         /// </summary>
         public void ReturnToMainMenu()
         {
+
             ChangeState(ActivitiesContextViewState.Idle);
         }
         /// <summary>

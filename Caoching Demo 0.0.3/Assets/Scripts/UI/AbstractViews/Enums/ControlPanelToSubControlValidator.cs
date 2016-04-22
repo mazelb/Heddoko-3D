@@ -7,7 +7,7 @@
 */
 
 
-using System.Collections.Generic; 
+using System.Collections.Generic;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 
@@ -35,7 +35,7 @@ namespace Assets.Scripts.UI.AbstractViews.Enums
             List<SubControlType> vCommentsSubControls = new List<SubControlType>();
             List<SubControlType> vCameraSubControls = new List<SubControlType>();
             List<SubControlType> vDemoKitSubControls = new List<SubControlType>();
-            
+
 
             sValidControlToSubControls.Add(ControlPanelType.RecordingPlaybackControlPanel, vRecSubCtrls);
             sValidControlToSubControls.Add(ControlPanelType.RenderedBodyControlPanel, vAvatarSubCtrl);
@@ -44,14 +44,14 @@ namespace Assets.Scripts.UI.AbstractViews.Enums
             sValidControlToSubControls.Add(ControlPanelType.TagControlPanel, vTagsSubControls);
             sValidControlToSubControls.Add(ControlPanelType.CommentControlPanel, vCommentsSubControls);
             sValidControlToSubControls.Add(ControlPanelType.CameraControlPanel, vCameraSubControls);
-            sValidControlToSubControls.Add(ControlPanelType.DemoKit,vDemoKitSubControls);
+            sValidControlToSubControls.Add(ControlPanelType.DemoKit, vDemoKitSubControls);
 
             //register recordings subcontrols
             vRecSubCtrls.Add(SubControlType.PlaybackSliderSubcontrol);
             vRecSubCtrls.Add(SubControlType.RecordingSpeedModifierSubcontrol);
             vRecSubCtrls.Add(SubControlType.RecordingSelectionSubControl);
             vRecSubCtrls.Add(SubControlType.RecordingLoadSingleSubControl);
-            
+
             //register avatar subcontrols
             vAvatarSubCtrl.Add(SubControlType.ResetAvatarSubControl);
 
@@ -74,6 +74,10 @@ namespace Assets.Scripts.UI.AbstractViews.Enums
             vCommentsSubControls.Add(SubControlType.CommentWidgetSubControl);
             vCommentsSubControls.Add(SubControlType.AddCommentSubControl);
             vCommentsSubControls.Add(SubControlType.ModifyCommentSubControl);
+
+            //register camera subcontrols
+            vCameraSubControls.Add(SubControlType.CameraOrbitSubControl);
+            vCameraSubControls.Add(SubControlType.CameraZoomSubControl);
 
             //Demo kit subcontrols
             vDemoKitSubControls.Add(SubControlType.PlayerLoopback);
@@ -113,7 +117,7 @@ namespace Assets.Scripts.UI.AbstractViews.Enums
                 sIsInitialized = true;
                 Init();
             }
-         
+
 
             return Validate(vControlPanel.PanelType, vSubControl.SubControlType);
         }
@@ -134,8 +138,8 @@ namespace Assets.Scripts.UI.AbstractViews.Enums
         SettingControlPanel,
         DebugRecordingPanel,
         LoadingPanel,
-        DemoKit
-   
+        DemoKit,
+        BrainpackControlPanel
     }
 
     public enum SubControlType
@@ -171,6 +175,7 @@ namespace Assets.Scripts.UI.AbstractViews.Enums
         CameraOrbitSubControl,
         RecordingPlaybackSpeedDisplay,
         RightClickSubControl,
-        LoginControl
+        LoginControl,
+        CameraZoomSubControl
     }
 }

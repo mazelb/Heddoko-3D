@@ -79,3 +79,13 @@ E:\Code\Heddoko-3D\HEDDOKO_Unity_test_v0.0.3\BrainpackService\BrainpackService\o
 E:\Code\Heddoko-3D\HEDDOKO_Unity_test_v0.0.3\BrainpackService\BrainpackService\obj\Debug\BrainpackService.csproj.GenerateResource.Cache
 E:\Code\Heddoko-3D\HEDDOKO_Unity_test_v0.0.3\BrainpackService\BrainpackService\obj\Debug\BrainpackService.exe
 E:\Code\Heddoko-3D\HEDDOKO_Unity_test_v0.0.3\BrainpackService\BrainpackService\obj\Debug\BrainpackService.pdb
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe.config
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.pdb
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\HeddokoLib.dll
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\HeddokoLib.pdb
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.csprojResolveAssemblyReference.cache
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.ProjectInstaller.resources
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.csproj.GenerateResource.Cache
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.exe
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.pdb
