@@ -19,7 +19,7 @@ using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Torso;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
-using Assets.Scripts.Utils.DebugContext.logging; 
+using Assets.Scripts.Utils.DebugContext.logging;
 
 /**
 * Body class 
@@ -113,7 +113,7 @@ public class Body
         get { return mRenderedBody; }
         private set
         {
-            mRenderedBody = value; 
+            mRenderedBody = value;
         }
     }
 
@@ -177,8 +177,8 @@ public class Body
         List<BodyStructureMap.SegmentTypes> vSegmentList = BodyStructureMap.Instance.BodyToSegmentMap[vBodyType];
         TorsoAnalysis vTorsoSegmentAnalysis = new TorsoAnalysis();
         vTorsoSegmentAnalysis.SegmentType = BodyStructureMap.SegmentTypes.SegmentType_Torso;
-      
- 
+
+
         foreach (BodyStructureMap.SegmentTypes type in vSegmentList)
         {
             BodySegment vSegment = new BodySegment();
@@ -272,7 +272,7 @@ public class Body
     {
         for (int i = 0; i < BodySegments.Count; i++)
         {
-            BodySegments[i].UpdateInitialSensorsData(InitialBodyFrame,mBodyCalibrationSetting);
+            BodySegments[i].UpdateInitialSensorsData(InitialBodyFrame, mBodyCalibrationSetting);
         }
     }
 
@@ -288,20 +288,18 @@ public class Body
     }
 
     /**
-    * PlayRecording(string vRecUUID)
-    * @param vRecUUID, the recording UUID
+    * PlayRecording(string vRecUuid)
+    * @param vRecUuid, the recording UUID
     * @brief  Play a recording from the given recording UUID. 
     */
-    public void PlayRecording(string vRecUUID)
+    public void PlayRecording(string vRecUuid)
     {
         //Stops the current thread from running.
         StopThread();
 
         //get the raw frames from recording 
         //first try to get the recording from the recording manager. 
-      BodyRecordingsMgr.Instance.TryGetRecordingByUuid(vRecUUID, PlayRecordingCallback);
-
-        
+        BodyRecordingsMgr.Instance.TryGetRecordingByUuid(vRecUuid, PlayRecordingCallback);
     }
 
     /// <summary>
@@ -395,9 +393,9 @@ public class Body
         }
         catch
         {
-            
+
         }
-       
+
     }
 
     /// <summary>

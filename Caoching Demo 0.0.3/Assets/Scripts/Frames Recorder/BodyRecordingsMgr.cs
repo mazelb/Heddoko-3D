@@ -356,8 +356,11 @@ public class BodyRecordingsMgr : IDatabaseConsumer
         {
             return Recordings.Find(vX => vX.BodyRecordingGuid == vRecUuid);
         }
-
-        return null;
+        
+            //Get the recording from the database
+            BodyFramesRecording vNewRecording = Database.Connection.GetRawRecording(vRecUuid);
+            Recordings.Add(vNewRecording);
+            return vNewRecording; 
     }
 
     /// <summary>

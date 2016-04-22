@@ -1,5 +1,5 @@
-﻿  
-using System.Collections.Generic; 
+﻿
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,7 +12,7 @@ namespace Assets.Scripts.Utils.DebugContext
     public class InputHandler : MonoBehaviour
     {
         private static Dictionary<KeyCode, List<UnityAction>> sgKeyBindActionMaps = new Dictionary<KeyCode, List<UnityAction>>();
-        private static Dictionary<int, List<UnityAction>>  sgMouseActionBindings = new Dictionary<int, List<UnityAction>>(3);
+        private static Dictionary<int, List<UnityAction>> sgMouseActionBindings = new Dictionary<int, List<UnityAction>>(3);
 
         /// <summary>
         /// Registers an action to the internal register
@@ -21,6 +21,7 @@ namespace Assets.Scripts.Utils.DebugContext
         /// <param name="vAction"></param>
         public static void RegisterKeyboardAction(KeyCode vKeyCode, UnityAction vAction)
         {
+
             if (!sgKeyBindActionMaps.ContainsKey(vKeyCode))
             {
                 List<UnityAction> vNewActionList = new List<UnityAction>();
@@ -33,6 +34,7 @@ namespace Assets.Scripts.Utils.DebugContext
                 vNewActionList.Add(vAction);
             }
 
+
         }
 
         /// <summary>
@@ -42,6 +44,7 @@ namespace Assets.Scripts.Utils.DebugContext
         /// <param name="vAction">The action to register</param>
         public static void RegisterMouseInputAction(int vButtonCode, UnityAction vAction)
         {
+
             if (!sgMouseActionBindings.ContainsKey(vButtonCode))
             {
                 List<UnityAction> vNewActionList = new List<UnityAction>();
@@ -70,25 +73,30 @@ namespace Assets.Scripts.Utils.DebugContext
                 }
             }
         }
+
+        private void TryInvokeKeyActions(Event vEvent)
+        {
+            if (sgKeyBindActionMaps.ContainsKey(vEvent.keyCode))
+            {
+                for (int vI = 0; vI < sgKeyBindActionMaps[vEvent.keyCode].Count; vI++)
+                {
+                    sgKeyBindActionMaps[vEvent.keyCode][vI].Invoke();
+                }
+
+            }
+        }
         void OnGUI()
         {
             var vEvent = Event.current;
 
             if (vEvent.isKey && vEvent.type == EventType.KeyDown)
             {
-                if (sgKeyBindActionMaps.ContainsKey(vEvent.keyCode))
-                {
-                    foreach (var vUnityAction in sgKeyBindActionMaps[vEvent.keyCode])
-                    {
-                        vUnityAction.Invoke();
-                    }
-                }
+                TryInvokeKeyActions(vEvent);
             }
 
-
-          else  if (vEvent.isMouse && vEvent.type == EventType.mouseDown )
-          {
-              int vMouseButton = vEvent.button;
+            if (vEvent.isMouse && vEvent.type == EventType.mouseDown)
+            {
+                int vMouseButton = vEvent.button;
                 if (sgMouseActionBindings.ContainsKey(vMouseButton))
                 {
                     foreach (var vUnityAction in sgMouseActionBindings[vMouseButton])
@@ -97,6 +105,7 @@ namespace Assets.Scripts.Utils.DebugContext
                     }
                 }
             }
+
 
         }
 
@@ -107,6 +116,7 @@ namespace Assets.Scripts.Utils.DebugContext
         /// <param name="vAction"></param>
         public static void RemoveKeybinding(KeyCode vKeycode, UnityAction vAction)
         {
+
             if (sgKeyBindActionMaps.ContainsKey(vKeycode))
             {
                 if (sgKeyBindActionMaps[vKeycode].Contains(vAction))
@@ -114,6 +124,7 @@ namespace Assets.Scripts.Utils.DebugContext
                     sgKeyBindActionMaps[vKeycode].Remove(vAction);
                 }
             }
+
 
         }
     }

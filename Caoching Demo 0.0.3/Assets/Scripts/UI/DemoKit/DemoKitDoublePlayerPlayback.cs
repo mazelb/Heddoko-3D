@@ -8,6 +8,7 @@
 */
 
 using System;
+using System.Collections;
 using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Layouts;
@@ -100,36 +101,38 @@ namespace Assets.Scripts.UI.DemoKit
             mLeftCamera.PanelRenderingCamera.GetComponent<CameraOrbitter>().IsEnabled = false;
             mRightCamera.PanelRenderingCamera.GetComponent<CameraOrbitter>().IsEnabled = false;
             LookAtTarget = mRightCamera.PanelRenderingCamera.GetComponent<CameraOrbitter>().Target;
-
+            StartCoroutine(BeginProcess());
         }
+
+
+        IEnumerator BeginProcess()
+        {
+            yield return new WaitForSeconds(1.5f);
+            MoveTowards = true;
+            MoveBack = false;
+            yield return new WaitForSeconds(3.1f);
+            StartPlayingRecording();
+        } 
+
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.S))
+            try
             {
-                StartPlayingRecording();
+                if (mPlayer.DemoBody.View.Buffer.Count > 0)
+                {
+                    vTrunkFlexionExtension.IsCountingPoints = true;
+                    vTrunkRotation.IsCountingPoints = true;
+                    mDemoPointCounting.UpdateScore(vTrunkFlexionExtension.Point, vTrunkRotation.Point);
+                }
+                else
+                {
+                    vTrunkFlexionExtension.IsCountingPoints = false;
+                    vTrunkRotation.IsCountingPoints = false;
+                }
             }
-            if (Input.GetKeyDown(KeyCode.I))
+            catch
             {
-                MoveTowards = true;
-                MoveBack = false;
-
-            }
-            if (Input.GetKeyDown(KeyCode.O))
-            {
-                MoveTowards = false;
-                MoveBack = true;
-
-            }
-            if (mPlayer.DemoBody.View.Buffer.Count > 0)
-            {
-                vTrunkFlexionExtension.IsCountingPoints = true;
-                vTrunkRotation.IsCountingPoints = true;
-                mDemoPointCounting.UpdateScore(vTrunkFlexionExtension.Point, vTrunkRotation.Point);
-            }
-            else
-            {
-                vTrunkFlexionExtension.IsCountingPoints = false;
-                vTrunkRotation.IsCountingPoints = false;
+                
             }
         }
 

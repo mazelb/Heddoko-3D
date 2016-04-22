@@ -31,8 +31,8 @@ namespace HeddokoLib.adt
         private const int mDefaultCapacity = 64; //default size to use in the parameterles constructor 
         #region properties
         public bool AllowOverflow { get; set; }
-        //private object mQueueLock = new object();
-        private ReaderWriterLock mLock = new ReaderWriterLock();
+       // private object mQueueLock = new object();
+       private ReaderWriterLock mLock = new ReaderWriterLock();
         public int Capacity
         {
             get
@@ -222,16 +222,20 @@ namespace HeddokoLib.adt
 
             try
             {
-                mLock.AcquireWriterLock(250);
-                mQueue[mTailIndex] = vItem;
-                if (++mTailIndex == mCapacity)
+               mLock.AcquireWriterLock(250);
+               // lock (mQueueLock)
                 {
-                    mTailIndex = 0;
+                    mQueue[mTailIndex] = vItem;
+                    if (++mTailIndex == mCapacity)
+                    {
+                        mTailIndex = 0;
+                    }
+                    if (mCount < Capacity)
+                    {
+                        mCount++;
+                    }
                 }
-                if (mCount < Capacity)
-                {
-                    mCount++;
-                }
+                
             }
 
 
@@ -244,11 +248,7 @@ namespace HeddokoLib.adt
             {
                 mLock.ReleaseLock();
             }
-            //  lock (mQueueLock)
-            //  {
-
-
-            // }
+           
 
         }
         /**
@@ -303,16 +303,20 @@ namespace HeddokoLib.adt
             //     {
             try
             {
-                mLock.AcquireWriterLock(250);
-                for (int i = 0; i < actualCount; i++, mHeadIndex++, startIndex++)
+               mLock.AcquireWriterLock(250);
+            //    lock (mQueueLock)
                 {
-                    if (mHeadIndex == mCapacity)
+                    for (int i = 0; i < actualCount; i++, mHeadIndex++, startIndex++)
                     {
-                        mHeadIndex = 0;
+                        if (mHeadIndex == mCapacity)
+                        {
+                            mHeadIndex = 0;
+                        }
+                        tA[startIndex] = mQueue[mHeadIndex];
                     }
-                    tA[startIndex] = mQueue[mHeadIndex];
+                    mCount -= actualCount;
                 }
-                mCount -= actualCount;
+               
             }
             catch
             {
@@ -320,7 +324,7 @@ namespace HeddokoLib.adt
             }
             finally
             {
-                mLock.ReleaseLock();
+               mLock.ReleaseLock();
             }
 
             //  }

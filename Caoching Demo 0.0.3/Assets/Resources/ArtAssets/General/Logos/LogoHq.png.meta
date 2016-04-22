@@ -1,0 +1,264 @@
+fileFormatVersion: 2
+guid: 6fad7638fddbc484887a4ad676865927
+timeCreated: 1461017102
+licenseType: Pro
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: LogoHq_0
+    21300002: LogoHq_1
+    21300004: LogoHq_2
+    21300006: LogoHq_3
+    21300008: LogoHq_4
+    21300010: LogoHq_5
+    21300012: LogoHq_6
+    21300014: LogoHq_7
+    21300016: LogoHq_8
+    21300018: LogoHq_9
+    21300020: LogoHq_10
+    21300022: LogoHq_11
+    21300024: LogoHq_12
+    21300026: LogoHq_13
+    21300028: LogoHq_14
+    21300030: LogoHq_15
+    21300032: LogoHq_16
+    21300034: LogoHq_17
+    21300036: LogoHq_18
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: .25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 8
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: .5, y: .5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: LogoHq_0
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 321
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_1
+      rect:
+        serializedVersion: 2
+        x: 309
+        y: 289
+        width: 101
+        height: 99
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_2
+      rect:
+        serializedVersion: 2
+        x: 550
+        y: 265
+        width: 75
+        height: 78
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_3
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 263
+        width: 40
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_4
+      rect:
+        serializedVersion: 2
+        x: 406
+        y: 211
+        width: 68
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_5
+      rect:
+        serializedVersion: 2
+        x: 478
+        y: 237
+        width: 72
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_6
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 209
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_7
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 181
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_8
+      rect:
+        serializedVersion: 2
+        x: 261
+        y: 181
+        width: 55
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_9
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 193
+        width: 62
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_10
+      rect:
+        serializedVersion: 2
+        x: 151
+        y: 75
+        width: 68
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_11
+      rect:
+        serializedVersion: 2
+        x: 231
+        y: 101
+        width: 62
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_12
+      rect:
+        serializedVersion: 2
+        x: 309
+        y: 117
+        width: 55
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_13
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 123
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_14
+      rect:
+        serializedVersion: 2
+        x: 446
+        y: 99
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_15
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 11
+        width: 75
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_16
+      rect:
+        serializedVersion: 2
+        x: 75
+        y: 43
+        width: 72
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_17
+      rect:
+        serializedVersion: 2
+        x: 476
+        y: 51
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+    - name: LogoHq_18
+      rect:
+        serializedVersion: 2
+        x: 482
+        y: 0
+        width: 34
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

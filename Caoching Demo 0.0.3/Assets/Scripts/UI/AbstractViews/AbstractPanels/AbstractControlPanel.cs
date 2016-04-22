@@ -23,14 +23,11 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels
     public abstract class AbstractControlPanel : MonoBehaviour, IEquatable<AbstractControlPanel>
     {
         protected List<AbstractSubControl> mSubControls = new List<AbstractSubControl>();
-        private ControlPanelType mControlPanelType;
+        
         private RectTransform mParent;
         private RectTransform mCurrentRectTransform;
         public PanelNode ParentNode { get; set; }
-        public ControlPanelType PanelType
-        {
-            get { return mControlPanelType; }
-        }
+        public abstract  ControlPanelType PanelType { get; }
 
         /// <summary>
         /// initializes the current abstract control panel

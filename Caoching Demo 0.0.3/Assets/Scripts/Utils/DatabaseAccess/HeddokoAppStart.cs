@@ -124,6 +124,7 @@ namespace Assets.Scripts.Utils.DatabaseAccess
         private void InjectDatabaseDependents()
         {
             mTaggingManager.Database = mDatabase;
+            BodyRecordingsMgr.Instance.Database = mDatabase;
             foreach (var vDbConsumer in DatabaseConsumers)
             {
                 //attempt to grab the database consumer interface from the gameobject

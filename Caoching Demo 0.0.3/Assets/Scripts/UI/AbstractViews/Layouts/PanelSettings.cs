@@ -7,6 +7,7 @@
 */
 
 using System.Collections.Generic;
+using System.Linq;
 using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels;
@@ -25,7 +26,7 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
     {
         private LayoutElement mLayoutElementComponent;
         private HorizontalOrVerticalLayoutGroup mLayoutGroup;
-        private HashSet<AbstractControlPanel> mControlPanelSet = new HashSet<AbstractControlPanel>();
+        private List<AbstractControlPanel> mControlPanelSet = new List<AbstractControlPanel>();
         private PanelCameraToBodyPair mPanelCameraToBodyPair = new PanelCameraToBodyPair();
         private float mLayoutElementModifier;
         private AbstractControlPanelBuilder mBuilder = new AbstractControlPanelBuilder();
@@ -56,12 +57,23 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
 
         }
 
-        public HashSet<AbstractControlPanel> ControlPanelSet
+        public List<AbstractControlPanel> ControlPanelSet
         {
             get { return mControlPanelSet; }
             set { mControlPanelSet = value; }
         }
 
+        /// <summary>
+        /// Return the first hit of a control panel from the type requested.
+        /// Note: can return null
+        /// </summary>
+        /// <param name="vPanelType">The requested type</param>
+        /// <returns></returns>
+        public AbstractControlPanel GetPanelOfType(ControlPanelType vPanelType)
+        {
+             return  ControlPanelSet.First(x=> x.PanelType == vPanelType);
+ 
+        }
         public PanelSettings(PanelNode vAssociatedNode)
         {
             PanelNode = vAssociatedNode;
@@ -160,7 +172,7 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
                 RenderedBody vRenderedBody = vBody.RenderedBody;
                 PanelCameraSettings vPanelCameraSettings = new PanelCameraSettings(vRenderedBody.CurrentLayerMask, this);
                 CameraToBodyPair.PanelCamera = PanelCameraPool.GetPanelCamResource(vPanelCameraSettings);
-               CameraToBodyPair.PanelCamera.SetCameraTarget(vRenderedBody, 10);
+               CameraToBodyPair.PanelCamera.SetDefaultTarget(vRenderedBody, 10);
             }
 
 

@@ -81,8 +81,7 @@ namespace Assets.Scripts.Tests
             }
             else
             {
-                mPanelNodes[0].PanelSettings.RequestResources();
-//                mPanelNodes[1].PanelSettings.RequestResources();
+                mPanelNodes[0].PanelSettings.RequestResources(); 
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.UI.AbstractViews.AbstractPanels;
+using Assets.Scripts.UI.AbstractViews.Enums;
 
 namespace Assets.Scripts.UI.DemoKit
 {
@@ -14,6 +15,11 @@ namespace Assets.Scripts.UI.DemoKit
         public override void ReleaseResources()
         {
 
+        }
+
+        public override ControlPanelType PanelType
+        {
+            get { return ControlPanelType.DebugRecordingPanel;}
         }
 
         public override void BodyUpdated(Body vBody)
