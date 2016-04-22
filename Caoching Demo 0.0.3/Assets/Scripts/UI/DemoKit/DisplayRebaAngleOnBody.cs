@@ -23,8 +23,6 @@ using Assets.Scripts.UI.ActivitiesContext.Controller;
 using Assets.Scripts.Utils.DebugContext;
 using UnityEngine;
 using UnityEngine.UI;
-using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Complex;
 
 namespace Assets.Scripts.UI.DemoKit
 {
