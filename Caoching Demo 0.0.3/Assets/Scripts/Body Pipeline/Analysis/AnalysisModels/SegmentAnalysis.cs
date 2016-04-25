@@ -32,8 +32,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         {
 
         }
-
-        static public float GetSignedAngle(Vector3 vVectorA, Vector3 vVectorB, Vector3 vVectorNormal)
+        
+         static public float GetSignedAngle(Vector3 vVectorA, Vector3 vVectorB, Vector3 vVectorNormal)
         {
             // angle in [0,180]
             float angle = Vector3.Angle(vVectorA,vVectorB);

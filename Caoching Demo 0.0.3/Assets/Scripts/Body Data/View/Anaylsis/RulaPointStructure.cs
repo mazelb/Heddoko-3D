@@ -1,3 +1,4 @@
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.REBA_RULA;
 using UnityEngine;
 
 namespace Assets.Scripts.Body_Data.View.Anaylsis

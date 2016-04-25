@@ -1,10 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿/** 
+* @file PanelID.cs
+* @brief PanelID  
+* @author Mohammed Haider(mohamed@heddoko.com)
+* @date April 2016
+* Copyright Heddoko(TM) 2016, all rights reserved
+*/
 
+using System; 
 namespace Assets.Scripts.UI.Layouts
 {
+    /// <summary>
+    /// The id of a panel
+    /// </summary>
     public class PanelID
     {
         private Guid mID = Guid.NewGuid();
@@ -14,7 +21,10 @@ namespace Assets.Scripts.UI.Layouts
             get { return mID.ToString(); }
         }
 
-
+        /// <summary>
+        /// Get the hashcode 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return mID.GetHashCode();

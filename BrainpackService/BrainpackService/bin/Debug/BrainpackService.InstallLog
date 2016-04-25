@@ -5144,3 +5144,137 @@ Removing EventLog source BrainpackService.
 Service BrainpackService is being removed from the system...
 Service BrainpackService was successfully removed from the system.
 Attempt to stop service BrainpackService.
+Installing assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Installing service BrainpackService...
+Service BrainpackService has been successfully installed.
+Creating EventLog source BrainpackService in log Application...
+Committing assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Uninstalling assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Removing EventLog source BrainpackService.
+Service BrainpackService is being removed from the system...
+Service BrainpackService was successfully removed from the system.
+Attempt to stop service BrainpackService.
+Installing assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Installing service BrainpackService...
+Service BrainpackService has been successfully installed.
+Creating EventLog source BrainpackService in log Application...
+Committing assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Uninstalling assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Removing EventLog source BrainpackService.
+Service BrainpackService is being removed from the system...
+Service BrainpackService was successfully removed from the system.
+Attempt to stop service BrainpackService.
+Uninstalling assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Removing EventLog source BrainpackService.
+Warning: The source BrainpackService is not registered on the local machine.
+Service BrainpackService is being removed from the system...
+An exception occurred during the uninstallation of the System.ServiceProcess.ServiceInstaller installer.
+System.ComponentModel.Win32Exception: The specified service does not exist as an installed service
+An exception occurred while uninstalling. This exception will be ignored and the uninstall will continue. However, the application might not be fully uninstalled after the uninstall is complete.
+Installing assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Installing service BrainpackService...
+Service BrainpackService has been successfully installed.
+Creating EventLog source BrainpackService in log Application...
+Committing assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Uninstalling assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Removing EventLog source BrainpackService.
+Service BrainpackService is being removed from the system...
+Service BrainpackService was successfully removed from the system.
+Attempt to stop service BrainpackService.
+Installing assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Installing service BrainpackService...
+Service BrainpackService has been successfully installed.
+Creating EventLog source BrainpackService in log Application...
+Committing assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Uninstalling assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Removing EventLog source BrainpackService.
+Service BrainpackService is being removed from the system...
+Service BrainpackService was successfully removed from the system.
+Attempt to stop service BrainpackService.
+Installing assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Installing service BrainpackService...
+Service BrainpackService has been successfully installed.
+Creating EventLog source BrainpackService in log Application...
+Committing assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Uninstalling assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Removing EventLog source BrainpackService.
+Service BrainpackService is being removed from the system...
+Service BrainpackService was successfully removed from the system.
+Attempt to stop service BrainpackService.
+Installing assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Installing service BrainpackService...
+Service BrainpackService has been successfully installed.
+Creating EventLog source BrainpackService in log Application...
+Committing assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine; 
 
 namespace Assets.Scripts.Body_Data.View.Anaylsis
 {
@@ -10,14 +9,16 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
     /// </summary>
     public static class RulaSettings
     {
-        private static Dictionary<AnaylsisFeedBackContainer.PosturePosition, List<RulaPointStructure>> sGAngleRangeAssociation;
+        private static Dictionary<AnaylsisFeedBackContainer.PosturePosition, List<RulaPointStructure>>
+            sGAngleRangeAssociation;
         private static Dictionary<AnaylsisFeedBackContainer.PosturePosition, float> sGMaskRangeMap;
         private static Dictionary<string, Color32> sGColorMapping;
 
         /// <summary>
         /// Statically defined set of action mappings
         /// </summary>
-        private static Dictionary<AnaylsisFeedBackContainer.PosturePosition, Action<RulaVisualAngleAnalysis>> sGActionMap;
+        private static Dictionary<AnaylsisFeedBackContainer.PosturePosition, Action<RulaVisualAngleAnalysis>>
+            sGActionMap;
 
         /// <summary>
         /// Return a float value indicating that range of the mask to be applied onto the pie chart
@@ -50,7 +51,8 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
         /// Statically defined set of action mappings
         /// Note: this will return null in the case that no actions for the specified Positions were found
         /// </summary>
-        public static Action<RulaVisualAngleAnalysis> GetActionMap(AnaylsisFeedBackContainer.PosturePosition vPosturePosition)
+        public static Action<RulaVisualAngleAnalysis> GetActionMap(
+            AnaylsisFeedBackContainer.PosturePosition vPosturePosition)
         {
             if (sGActionMap == null)
             {
@@ -74,12 +76,14 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
             sGActionMap.Add(AnaylsisFeedBackContainer.PosturePosition.TrunkRotation, SpineAngleTransversePlane);
 
         }
+
         /// <summary>
         /// get the point structure list for the specified position
         /// </summary>
         /// <param name="vPosturePosition"></param>
         /// <returns></returns>
-        public static List<RulaPointStructure> PointStructureList(AnaylsisFeedBackContainer.PosturePosition vPosturePosition)
+        public static List<RulaPointStructure> PointStructureList(
+            AnaylsisFeedBackContainer.PosturePosition vPosturePosition)
         {
             if (sGAngleRangeAssociation == null)
             {
@@ -90,6 +94,7 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
             return sGAngleRangeAssociation[vPosturePosition];
 
         }
+
         /// <summary>
         /// Updates the spine's angular fill with respect to the coronal plane
         /// </summary> 
@@ -101,7 +106,8 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
             //Get the projection of the perfect Vector
             Vector3 vPerfectVectProjection = Vector3.ProjectOnPlane(vAnalysis.TransformComparison.up, vUpVector);
             float vAngle = Vector3.Angle(vAnalysis.CenteredObject.up, vPerfectVectProjection);
-            Quaternion vRot = Quaternion.LookRotation(vAnalysis.TransformComparison.right, vAnalysis.TransformComparison.up);
+            Quaternion vRot = Quaternion.LookRotation(vAnalysis.TransformComparison.right,
+                vAnalysis.TransformComparison.up);
 
 
 
@@ -174,7 +180,8 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
             // Vector3 vUpVector = vAnalysis.TransformComparison.up;
             Vector3 vUpVector = vAnalysis.TransformComparison.up;
             //Get the projection of the perfect Vector
-            Vector3 vPerfectVectProjection = Vector3.ProjectOnPlane(vAnalysis.TransformComparison.right, vAnalysis.CenteredObject.up);
+            Vector3 vPerfectVectProjection = Vector3.ProjectOnPlane(vAnalysis.TransformComparison.right,
+                vAnalysis.CenteredObject.up);
             float vAngle = Vector3.Angle(vAnalysis.CenteredObject.right, vPerfectVectProjection);
 
 
@@ -227,6 +234,7 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
                 vAnalysis.MaskingImage.fillAmount = vFill;
             }
         }
+
         /// <summary>
         /// Get the point color for the rula point
         /// </summary>
@@ -247,7 +255,8 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
         /// </summary>
         private static void InitPointStructureList()
         {
-            sGAngleRangeAssociation = new Dictionary<AnaylsisFeedBackContainer.PosturePosition, List<RulaPointStructure>>(9);
+            sGAngleRangeAssociation =
+                new Dictionary<AnaylsisFeedBackContainer.PosturePosition, List<RulaPointStructure>>(9);
             List<RulaPointStructure> vTrunkExtFlex = new List<RulaPointStructure>();
             vTrunkExtFlex.Add(new RulaPointStructure(350f + float.Epsilon, 360f, RulaPoint.OnePointTrExtBuffer));
             vTrunkExtFlex.Add(new RulaPointStructure(340f + float.Epsilon, 350f, RulaPoint.TwoPoint));
@@ -266,6 +275,7 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
             vTrunkRot.Add(new RulaPointStructure(260f, 340f + float.Epsilon, RulaPoint.OnePoint));
             vTrunkRot.Add(new RulaPointStructure(340f, 360f, RulaPoint.ZeroPointTrunkTwistBuff));
             sGAngleRangeAssociation.Add(AnaylsisFeedBackContainer.PosturePosition.TrunkRotation, vTrunkRot);
+
 
 
         }
@@ -287,6 +297,7 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
             return 0;
 
         }
+
         private static void InitColorMapping()
         {
             sGColorMapping = new Dictionary<string, Color32>();
@@ -309,8 +320,8 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
             sGColorMapping.Add(RulaPoint.FourPoint, vFourPointC);
 
         }
-
-
-
     }
+ 
 }
+
+

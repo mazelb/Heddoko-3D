@@ -175,8 +175,8 @@ namespace BrainpackService.Tools_and_Utilities.Debugging
                 {
                     Log vLog = mMessageQueue.Dequeue();
                     WriteFile(vLog);
-                    Thread.Sleep(1);
                 }
+                Thread.Sleep(1);
             }
         }
 

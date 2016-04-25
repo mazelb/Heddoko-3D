@@ -1,0 +1,83 @@
+09:53:56.498 AM , 8 ,    at System.IO.Ports.InternalResources.WinIOError(Int32 errorCode, String str)
+   at System.IO.Ports.SerialStream.EndRead(IAsyncResult asyncResult)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144
+09:54:56.150 AM , 8 ,    at System.IO.Ports.InternalResources.WinIOError(Int32 errorCode, String str)
+   at System.IO.Ports.SerialStream.EndRead(IAsyncResult asyncResult)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144
+09:55:38.468 AM , 8 ,    at System.IO.Ports.InternalResources.WinIOError(Int32 errorCode, String str)
+   at System.IO.Ports.SerialStream.EndRead(IAsyncResult asyncResult)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144
+09:56:53.526 AM , 8 ,    at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144
+10:12:46.869 AM , 8 ,    at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144
+10:14:41.783 AM , 8 ,    at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144
+10:16:12.732 AM , 8 ,    at System.IO.Ports.InternalResources.WinIOError(Int32 errorCode, String str)
+   at System.IO.Ports.SerialStream.EndRead(IAsyncResult asyncResult)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144
+10:17:49.133 AM , 8 ,    at System.IO.Ports.InternalResources.WinIOError(Int32 errorCode, String str)
+   at System.IO.Ports.SerialStream.EndRead(IAsyncResult asyncResult)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144
+10:18:17.103 AM , 8 ,    at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144
+10:19:37.865 AM , 8 ,    at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144
+10:24:57.792 AM , 8 ,    at System.IO.Ports.InternalResources.WinIOError(Int32 errorCode, String str)
+   at System.IO.Ports.SerialStream.EndRead(IAsyncResult asyncResult)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144
+10:43:00.863 AM , 8 ,    at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144
+10:47:59.161 AM , 8 ,    at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144
+10:49:02.455 AM , 8 ,    at System.Runtime.InteropServices.SafeHandle.DangerousAddRef(Boolean& success)
+   at System.StubHelpers.StubHelpers.SafeHandleAddRef(SafeHandle pHandle, Boolean& success)
+   at Microsoft.Win32.UnsafeNativeMethods.ReadFile(SafeFileHandle handle, Byte* bytes, Int32 numBytesToRead, IntPtr numBytesRead, NativeOverlapped* overlapped)
+   at System.IO.Ports.SerialStream.ReadFileNative(Byte[] bytes, Int32 offset, Int32 count, NativeOverlapped* overlapped, Int32& hr)
+   at System.IO.Ports.SerialStream.BeginReadCore(Byte[] array, Int32 offset, Int32 numBytes, AsyncCallback userCallback, Object stateObject)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144
+10:49:55.879 AM , 8 ,    at System.IO.Ports.InternalResources.WinIOError(Int32 errorCode, String str)
+   at System.IO.Ports.SerialStream.EndRead(IAsyncResult asyncResult)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count, Int32 timeout)
+   at System.IO.Ports.SerialStream.Read(Byte[] array, Int32 offset, Int32 count)
+   at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144
+10:50:18.933 AM , 8 ,    at System.IO.Ports.SerialPort.InternalRead(Char[] buffer, Int32 offset, Int32 count, Int32 timeout, Boolean countMultiByteCharsAsOne)
+   at System.IO.Ports.SerialPort.ReadTo(String value)
+   at BrainpackService.brainpack_serial_connect.BrainpackSerialConnector.ThreadedFunction() in E:\Code\Heddoko3D\BrainpackService\BrainpackService\brainpack_serial connect\BrainpackSerialConnector.cs:line 144

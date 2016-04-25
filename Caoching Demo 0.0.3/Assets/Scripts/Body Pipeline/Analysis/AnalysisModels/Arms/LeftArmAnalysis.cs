@@ -50,6 +50,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
         {
             PeakAngularVelocityElbowFlexion = 0;
         }
+ 
 
         /// <summary>
         /// Extract angles from orientations
@@ -126,7 +127,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             float vAngularVelocityShoulderRotationNew = (vAngleShoulderRotationNew - Mathf.Abs(AngleShoulderRotation)) / DeltaTime;
             AngularAccelerationShoulderRotation = (vAngularVelocityShoulderRotationNew - AngularVelocityShoulderRotation) / DeltaTime;
             AngularVelocityShoulderRotation = vAngularVelocityShoulderRotationNew;
-            AngleShoulderRotation = vAngleShoulderRotationNew; //*/
+            AngleShoulderRotation = vAngleShoulderRotationNew;
         }
     }
 }

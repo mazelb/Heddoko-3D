@@ -61,10 +61,19 @@ public class BodyFrame
     */
     public override string ToString()
     {
+        return ToString(new []{' ' }, true,true); 
+    }
+
+    /// <summary>
+    /// Returns a string, with a character delimiter between sensor position and data. 
+    /// </summary>
+    /// <returns>Frame data as a string</returns>
+    public string ToString(char[] vDelimiter, bool vIncludePos = false,bool vLineSeperated = false)
+    {
         string vOutput = "";
-        foreach(KeyValuePair<BodyStructureMap.SensorPositions, Vector3> vPair in FrameData)
+        foreach (KeyValuePair<BodyStructureMap.SensorPositions, Vector3> vPair in FrameData)
         {
-            vOutput += "" + vPair.Key + " " + vPair.Value + "\n";
+            vOutput += "" + (vIncludePos? vPair.Key+"":"") + new string(vDelimiter) + vPair.Value + (vLineSeperated? "\n":" ");
         }
         return vOutput;
     }

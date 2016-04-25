@@ -7,7 +7,8 @@
 */
 
 using System.Collections;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.REBA_RULA;
 using Assets.Scripts.UI.ArcAngle;
 using UnityEngine;
 using UnityEngine.UI;
@@ -270,8 +271,7 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
             MaskOnlyRange = !MaskOnlyRange;
         }
     }
-
-
+    
     public static class RulaPoint
     {
 

@@ -25,7 +25,7 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
 
         private static Dictionary<PosturePosition, PostureStartEndStructure> sGPostureStartAssociation;
         private readonly Dictionary<PosturePosition, RulaVisualAngleAnalysis> mRulaVisualAngleContainer = new Dictionary<PosturePosition, RulaVisualAngleAnalysis>();
-
+ 
         public RenderedBody RenderedBody
         {
             get { return mRenderedBody; }

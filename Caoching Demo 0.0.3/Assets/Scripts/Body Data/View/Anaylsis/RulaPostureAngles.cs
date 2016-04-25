@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.REBA_RULA;
 
 namespace Assets.Scripts.Body_Data.View.Anaylsis
 {
