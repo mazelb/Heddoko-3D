@@ -12,6 +12,8 @@ using Assets.Scripts.Utils.DebugContext;
 using Assets.Scripts.Utils.DebugContext.logging;
 using LogType = Assets.Scripts.Utils.DebugContext.logging.LogType;
 
+
+
 namespace Assets.Scripts.Body_Data.view
 {
     /// <summary>
@@ -19,7 +21,8 @@ namespace Assets.Scripts.Body_Data.view
     /// </summary>
     public class BodyView : MonoBehaviour
     {
-
+        public delegate void BodyFrameUpdated(BodyFrame vNewFrame);
+        public event BodyFrameUpdated BodyFrameUpdatedEvent;
         //private BodyFrameBuffer mBuffer;
         private BodyFrameBuffer mBuffer;
         [SerializeField]
@@ -36,10 +39,7 @@ namespace Assets.Scripts.Body_Data.view
         [SerializeField]
         private bool mStartUpdating;
 
-
-
-
-
+         
         /// <summary>
         /// Internally set the Body associated to this view. Class property that returns the Body associated with this view.
         /// </summary>
@@ -76,7 +76,6 @@ namespace Assets.Scripts.Body_Data.view
         {
             get { return mBuffer; }
         }
-
 
         /// <summary>
         /// Initialize the view with the frame buffer
@@ -127,6 +126,11 @@ namespace Assets.Scripts.Body_Data.view
                 Body.ApplyTracking(AssociatedBody, vDic);
                 //todo: extract this from the view and place it in its own module
             }
+            
+            if (BodyFrameUpdatedEvent != null && vBodyFrame!= null)
+            {
+                BodyFrameUpdatedEvent(vBodyFrame);
+            }
         }
 
         /// <summary>
@@ -173,7 +177,6 @@ namespace Assets.Scripts.Body_Data.view
                     {
                         ResetInitialFrame(vBodyFrame);
                     }
-
                     UpdateViewTracking(vBodyFrame);
                     DebugLogger.Instance.LogMessage(LogType.FrameRenderingFinish, "Finish timestamp: " + vBodyFrame.Timestamp);
 
