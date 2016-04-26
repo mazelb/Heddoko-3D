@@ -9,6 +9,8 @@ namespace Calibration1.CalibrationTransformation
 {
     public class ShiuTransform
     {
+        public static Matrix<float> A = Matrix<float>.Build.Dense(9, 2, 0);
+        public static Matrix<float> b = Matrix<float>.Build.Dense(9, 1, 0);
         public Matrix4x4 Shiufunc(float phi1, float psy1, float theta1, float phi2, float psy2, float theta2)
         {
             string pose1 = "T";
@@ -48,9 +50,11 @@ namespace Calibration1.CalibrationTransformation
             Matrix<float> b = Matrix<float>.Build.Dense(9, 1);
 
             LinearSystem Axb = new LinearSystem(b, A);
-            //ShiuMatrix(k1, Xp1);
+
+            ShiuMatrix(k1, Xp1);
             Axb.Addequation(A, b);
-            //ShiuMatrix(k2, Xp2);
+
+            ShiuMatrix(k2, Xp2);
             Axb.Addequation(A, b);
 
             return TransformationMatrixX;
@@ -132,6 +136,61 @@ namespace Calibration1.CalibrationTransformation
                 }
             }
             return Xp;
+        }
+        static void ShiuMatrix(Vector3 k,Matrix4x4 Xp)
+        {
+            Vector3 xx1 = new Vector3(Xp[0, 0], Xp[1, 0], Xp[2, 0]);
+            Vector3 xx2 = new Vector3(Xp[0, 1], Xp[1, 1], Xp[2, 1]);
+            Vector3 xx3 = new Vector3(Xp[0, 2], Xp[1, 2], Xp[2, 2]);
+
+            Vector3 n = new Vector3(0f, 0f, 0f);
+            Vector3 o = new Vector3(0f, 0f, 0f);
+            Vector3 a = new Vector3(0f, 0f, 0f);
+
+            n = Vector3.Cross(xx1, k);
+            o = Vector3.Cross(xx2, k);
+            a = Vector3.Cross(xx3, k);
+
+            A[0, 0] = Xp[0, 0] - k[0] * Vector3.Dot(xx1, k);
+            A[1, 0] = Xp[0, 1] - k[0] * Vector3.Dot(xx2, k);
+            A[2, 0] = Xp[0, 2] - k[0] * Vector3.Dot(xx3, k);
+
+            A[3, 0] = Xp[1, 0] - k[1] * Vector3.Dot(xx1, k);
+            A[4, 0] = Xp[1, 1] - k[1] * Vector3.Dot(xx2, k);
+            A[5, 0] = Xp[1, 2] - k[1] * Vector3.Dot(xx3, k);
+
+            A[6, 0] = Xp[2, 0] - k[2] * Vector3.Dot(xx1, k);
+            A[7, 0] = Xp[2, 1] - k[2] * Vector3.Dot(xx2, k);
+            A[8, 0] = Xp[2, 2] - k[2] * Vector3.Dot(xx3, k);
+
+            A[0, 1] = -n[0];
+            A[1, 1] = -o[0];
+            A[2, 1] = -a[0];
+
+            A[3, 1] = -n[1];
+            A[4, 1] = -o[1];
+            A[5, 1] = -a[1];
+
+            A[6, 1] = -n[2];
+            A[7, 1] = -o[2];
+            A[8, 1] = -a[2];
+
+            //n = X[:, 1];
+            //o = X[:, 2];
+            //a = X[:, 3];
+
+            b[0, 0] = -k[0] * Vector3.Dot(xx1, k);
+            b[1, 0] = -k[0] * Vector3.Dot(xx2, k);
+            b[2, 0] = -k[0] * Vector3.Dot(xx3, k);
+
+            b[3, 0] = -k[1] * Vector3.Dot(xx1, k);
+            b[4, 0] = -k[1] * Vector3.Dot(xx2, k);
+            b[5, 0] = -k[1] * Vector3.Dot(xx3, k);
+
+            b[6, 0] = -k[2] * Vector3.Dot(xx1, k);
+            b[7, 0] = -k[2] * Vector3.Dot(xx2, k);
+            b[8, 0] = -k[2] * Vector3.Dot(xx3, k);
+
         }
     }
 }
