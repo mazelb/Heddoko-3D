@@ -9,6 +9,7 @@
 
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
@@ -20,11 +21,11 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     public class RecordingPlayPause : AbstractSubControl
     {
         public Button PlayPauseButton;
-        public TextUnicode UnicodePlayText; 
-        public string FontawesomePlayText = "\\uf04c";
-        public string FontawesomePauseText = "\\uf04b";
-        public string FontawesomeStopText = "\\uf04d";
+        public Sprite PlaySprite;
+        public Sprite PauseSprite;
+        public Sprite StopSprite;
         private bool mIsPaused;
+
         public PlaybackControlPanel ParentPanel;
 
         private SubControlType mType = SubControlType.RecordingPlayPause;
@@ -42,7 +43,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             set
             { 
                 mIsPaused = value;
-                ChangePlayPauseText();
+                ChangePlayPauseGraphics();
             }
         }
 
@@ -60,16 +61,17 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// </summary>
         private void Stop()
         {
-            UnicodePlayText.text = FontawesomeStopText;
-        
+            PlayPauseButton.image.sprite = StopSprite;
+
+
         }
 
         /// <summary>
         /// Changes the text of the play pause button according to the current pause state
         /// </summary>
-        private void ChangePlayPauseText()
+        private void ChangePlayPauseGraphics()
         {
-            UnicodePlayText.text = IsPaused? FontawesomePauseText : FontawesomePlayText;
+            PlayPauseButton.image.sprite = IsPaused? PauseSprite : PlaySprite;
         }
         public override void Disable()
         {
@@ -99,7 +101,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
 
                 else
                 {
-                    ChangePlayPauseText();
+                    ChangePlayPauseGraphics();
                 }
             }
         }

@@ -7,6 +7,7 @@
 
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
@@ -16,9 +17,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     public class RecordingRewindSubControl : AbstractSubControl
     {
         public Button RewindButton;
-        public TextUnicode UnicodeRewindText;
-        private string FontawesomeFastRewindText = "\\uf04a";
-        private string FontawesomeStepRewindText = "\\uf048";
+        public Sprite FastRewind;
+        public Sprite StepRewind;
         private SubControlType mType = SubControlType.RecordingRewindSubControl;
         public PlaybackControlPanel ParentPanel;
         private bool mIsPaused;
@@ -29,11 +29,11 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             {
                 if (value)
                 {
-                    UnicodeRewindText.text = FontawesomeStepRewindText;
+                    RewindButton.image.sprite = StepRewind;
                 }
                 else
                 {
-                    UnicodeRewindText.text = FontawesomeFastRewindText;
+                    RewindButton.image.sprite = FastRewind;
                 }
                 mIsPaused = value;
             }

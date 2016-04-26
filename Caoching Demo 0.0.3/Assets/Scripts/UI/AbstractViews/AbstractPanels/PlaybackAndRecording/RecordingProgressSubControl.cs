@@ -63,7 +63,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             float vCurrTimeStamp = ParentPanel.GetTimeStampFromFrameIdx(vIndex);
             float vStartTime = ParentPanel.GetTimeStampFromFrameIdx(0);
             float vCurrentTime = vCurrTimeStamp - vStartTime;
-            CurrentPlayTimeText.text = "/" + FormatSecondsToTimeString((int)vCurrentTime);
+            CurrentPlayTimeText.text = "" + FormatSecondsToTimeString((int)vCurrentTime);
         }
 
         /// <summary>

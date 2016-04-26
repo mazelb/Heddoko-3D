@@ -293,10 +293,10 @@ public class Body
     * @brief  Play a recording from the given recording UUID. 
     */
     public void PlayRecording(string vRecUuid)
-    {
+    { 
         //Stops the current thread from running.
         StopThread();
-
+ 
         //get the raw frames from recording 
         //first try to get the recording from the recording manager. 
         BodyRecordingsMgr.Instance.TryGetRecordingByUuid(vRecUuid, PlayRecordingCallback);

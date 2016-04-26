@@ -9,6 +9,7 @@
 
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
@@ -19,9 +20,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     public class RecordingForwardSubControl: AbstractSubControl
     {
         public Button ForwardButton;
-        public TextUnicode UnicodeFowardText; 
-        public string FontawesomeStepForwardText = "\\uf051";
-        public string FontawesomeFastForwardText = "\\uf04e";
+        public Sprite FastForward;
+        public Sprite StepForward;
         private SubControlType mType = SubControlType.RecordingForwardSubControl;
         public PlaybackControlPanel ParentPanel;
 
@@ -33,11 +33,11 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             {
                 if (value)
                 {
-                    UnicodeFowardText.text = FontawesomeStepForwardText;
+                    ForwardButton.image.sprite  = StepForward;
                 }
                 else
                 {
-                    UnicodeFowardText.text = FontawesomeFastForwardText;
+                    ForwardButton.image.sprite = FastForward;
                 }
                 mIsPaused = value;
             }
