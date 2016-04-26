@@ -29,22 +29,7 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-																																																																																																																																																																																																																																																																																																																																									GlobalSection(MonoDevelopProperties) = preSolution
-=======
-																																																																																																																																																																																																																																																																																																																																						GlobalSection(MonoDevelopProperties) = preSolution
->>>>>>> 3db248fb3b2b89b0dfe04adbf598ed1e1d28edb6
-=======
-																																																																																																																																																																																																																																																																																																																																																																										GlobalSection(MonoDevelopProperties) = preSolution
->>>>>>> new-commit-before-merge
-=======
-																																																																																																																																																																																																																																							GlobalSection(MonoDevelopProperties) = preSolution
->>>>>>> 429b6a317bc8b12842275a01c687223d34e24d22
-=======
-																																																																																																																																																										GlobalSection(MonoDevelopProperties) = preSolution
->>>>>>> 5e2ca36bd245e6615aeb77d16211e9065ffe8245
-=======
-																																																																																																														GlobalSection(MonoDevelopProperties) = preSolution
->>>>>>> origin/master
+					GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
