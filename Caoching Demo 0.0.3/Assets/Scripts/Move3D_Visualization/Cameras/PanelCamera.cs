@@ -98,13 +98,14 @@ namespace Assets.Scripts.UI.AbstractViews.camera
             PanelRenderingCamera.farClipPlane = 1000f;
             PanelRenderingCamera.orthographicSize = 1.6f;
             PanelRenderingCamera.depth = -1;
-            PanelRenderingCamera.rect = new Rect(vSettings.BottomLeftViewPortPoint.x, mSettings.BottomLeftViewPortPoint.y, mSettings.TopRightViewPortPoint.x, mSettings.TopRightViewPortPoint.y);
+      PanelRenderingCamera.rect = new Rect(mSettings.BottomLeftViewPortPoint.x, mSettings.BottomLeftViewPortPoint.y, mSettings.TopRightViewPortPoint.x - mSettings.BottomLeftViewPortPoint.x, mSettings.TopRightViewPortPoint.y - mSettings.BottomLeftViewPortPoint.y);
+            
             PanelRenderingCamera.transform.position = Vector3.back * 10;
             CamViewPlane.CameraPositionChangedEvent -= MoveCameraToPosition;
             CamViewPlane.CameraPositionChangedEvent += MoveCameraToPosition;
             CameraZoom.Camera = PanelRenderingCamera;
             PhysicsRaycaster =PanelRenderingCamera.gameObject.AddComponent<PhysicsRaycaster>();
-            PhysicsRaycaster.eventMask = 1 << vSettings.RenderingLayerMask.value;
+            PhysicsRaycaster.eventMask = 1 << mSettings.RenderingLayerMask.value;
 
 
         }

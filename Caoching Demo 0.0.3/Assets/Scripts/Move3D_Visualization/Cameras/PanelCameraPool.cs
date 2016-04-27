@@ -20,8 +20,6 @@ namespace Assets.Scripts.UI.AbstractViews.camera
         private static List<PanelCamera> sInUseCameras = new List<PanelCamera>();
         private static Transform sCameraParent;
 
-   
-
         public static Transform CameraParent { get; set; }
 
         /// <summary>
@@ -30,7 +28,7 @@ namespace Assets.Scripts.UI.AbstractViews.camera
         /// <param name="vSettings"></param>
         /// <returns></returns>
         public static PanelCamera GetPanelCamResource(PanelCameraSettings vSettings)
-        {
+        { 
             if (sAvailablePanelCams.Count != 0)
             {
                 PanelCamera vPooledObject = sAvailablePanelCams[0];

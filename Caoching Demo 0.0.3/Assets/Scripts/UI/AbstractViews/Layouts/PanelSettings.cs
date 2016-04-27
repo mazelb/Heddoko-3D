@@ -71,8 +71,8 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
         /// <returns></returns>
         public AbstractControlPanel GetPanelOfType(ControlPanelType vPanelType)
         {
-             return  ControlPanelSet.First(x=> x.PanelType == vPanelType);
- 
+            return ControlPanelSet.First(x => x.PanelType == vPanelType);
+
         }
         public PanelSettings(PanelNode vAssociatedNode)
         {
@@ -162,17 +162,31 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
             }
         }
 
-        public void RequestResources()
+        /// <summary>
+        /// Request resources for the current panel. Optional argument: pass in the rendered body to use instead of 
+        /// requesting a new one. 
+        /// </summary>
+        /// <param name="vOptionalRenderedBody">The RenderedBody to use instead of a new one</param>
+        public void RequestResources(RenderedBody vOptionalRenderedBody = null)
         {
             if (CameraToBodyPair.Body != null)
             {
                 Body vBody = CameraToBodyPair.Body;
-                RenderedBody vRendered = RenderedBodyPool.RequestResource(vBody.BodyType);
-                vBody.UpdateRenderedBody(vRendered);
-                RenderedBody vRenderedBody = vBody.RenderedBody;
+                RenderedBody vRenderedBody = null;
+                if (vOptionalRenderedBody == null)
+                {
+                    RenderedBody vRendered = RenderedBodyPool.RequestResource(vBody.BodyType);
+                    vBody.UpdateRenderedBody(vRendered);
+                    vRenderedBody = vBody.RenderedBody;
+                }
+                else
+                {
+                    vRenderedBody = vOptionalRenderedBody;
+                }
+
                 PanelCameraSettings vPanelCameraSettings = new PanelCameraSettings(vRenderedBody.CurrentLayerMask, this);
                 CameraToBodyPair.PanelCamera = PanelCameraPool.GetPanelCamResource(vPanelCameraSettings);
-               CameraToBodyPair.PanelCamera.SetDefaultTarget(vRenderedBody, 10);
+                CameraToBodyPair.PanelCamera.SetDefaultTarget(vRenderedBody, 10);
             }
 
 
@@ -199,8 +213,7 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
             }
             if (CameraToBodyPair.Body != null)
             {
-                CameraToBodyPair.Body.ReleaseResources();
-                Debug.Log("RELEASING BODY");
+                CameraToBodyPair.Body.ReleaseResources(); 
             }
         }
     }
