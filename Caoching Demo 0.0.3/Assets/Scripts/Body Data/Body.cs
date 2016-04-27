@@ -342,12 +342,18 @@ public class Body
         // ===================== End of "How this functions works" ========================================================//
         //stop the current thread and get ready for a new connection. 
         StopThread();
-
-        BodyFrameBuffer vBuffer1 = new BodyFrameBuffer(24);
-        mBodyFrameThread = new BodyFrameThread(vBuffer1, BodyFrameThread.SourceDataType.BrainFrame);
-        mBodyFrameThread.Start();
+        if (mBodyFrameThread == null)
+        {
+            BodyFrameBuffer vBuffer1 = new BodyFrameBuffer(24);
+            mBodyFrameThread = new BodyFrameThread(vBuffer1, BodyFrameThread.SourceDataType.BrainFrame);
+        }
+        else
+        { 
+           mBodyFrameThread.InitializeInboundSuitBuffer();
+        }
+        mBodyFrameThread.BodyFrameBuffer.Clear();
         View.StartUpdating = true;
-
+        mBodyFrameThread.Start();
         //1 inform the brainpack connection controller to establish a new connection
         //1i: Listen to the event that the brainpack has been disconnected
         BrainpackConnectionController.Instance.DisconnectedStateEvent += BrainPackStreamDisconnectedListener;
@@ -364,7 +370,7 @@ public class Body
             BrainpackConnectionController.Instance.ConnectedStateEvent += BrainPackStreamReadyListener;
         }
 
-        View.Init(this, vBuffer1);
+        View.Init(this, mBodyFrameThread.BodyFrameBuffer);
     }
 
     /// <summary>
@@ -372,7 +378,7 @@ public class Body
     /// </summary>
     private void BrainPackStreamReadyListener()
     {
-        BrainpackConnectionController.Instance.ReadyToLinkBodyToBP(mBodyFrameThread);
+        BrainpackConnectionController.Instance.ReadyToLinkBodyToBP(mBodyFrameThread); 
     }
 
     /// <summary>
