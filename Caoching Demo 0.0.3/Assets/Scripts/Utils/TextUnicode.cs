@@ -27,19 +27,19 @@ namespace UnityEngine.UI
         }
         */
 
-        protected override void OnPopulateMesh(Mesh toFill)
-        {
-            string cache = this.text;
-            disableDirty = true;
-            Debug.Log("Being called");
-            this.text = this.FAConvert(this.text);
+        //protected override void OnPopulateMesh(Mesh toFill)
+        //{
+        //    string cache = this.text;
+        //    disableDirty = true;
+        //    Debug.Log("Being called");
+        //    this.text = this.FAConvert(this.text);
 
-            this.text = this.Decode(this.text);
-            base.OnPopulateMesh(toFill);
-            this.text = cache;
+        //    this.text = this.Decode(this.text);
+        //    base.OnPopulateMesh(toFill);
+        //    this.text = cache;
 
-            disableDirty = false;
-        }
+        //    disableDirty = false;
+        //}
 
 
         private string Decode(string value)

@@ -27,3 +27,5 @@ Temp
 *.sdf
 !BrainpackService/BrainpackService/BrainpackService.csproj
 !BrainpackService/*
+!CalibrationLib/Calibration1/Calibration1/Calibration1.csproj
+!CalibrationLib/Calibration1/CalibrationTest/CalibrationTest.csproj
