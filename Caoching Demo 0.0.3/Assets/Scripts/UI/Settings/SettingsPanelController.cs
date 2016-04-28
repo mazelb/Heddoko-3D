@@ -20,16 +20,22 @@ namespace Assets.Scripts.UI.Settings
         public Camera UiCamera;
         private float mSettingsButtonTimer = 0.5f;
         private bool mSettingsButtonPressed = false;
-
  
 
  
 
         void Awake()
         {
-            SettingsView.SettingsButton.onClick.AddListener(SwitchEnableState);
-            SettingsView.CloseButton.onClick.AddListener(SwitchEnableState);
-            InputHandler.RegisterKeyboardAction(HeddokoDebugKeyMappings.SettingsButton, SwitchEnableState);
+            if (SettingsView.SettingsButton != null)
+            {
+                SettingsView.SettingsButton.onClick.AddListener(SwitchEnableState);
+            }
+            if (SettingsView.CloseButton != null)
+            {
+                SettingsView.CloseButton.onClick.AddListener(SwitchEnableState);
+                InputHandler.RegisterKeyboardAction(HeddokoDebugKeyMappings.SettingsButton, SwitchEnableState);
+            }
+          
             BrainpackConnectionController.Instance.BrainpackStatusResponse += UpdateTextBox;
             BrainpackConnectionController.Instance.BrainpackTimeSetResp += GenericAckMsg;
             BrainpackConnectionController.Instance.ResetBrainpackResp += GenericAckMsg;
@@ -113,7 +119,6 @@ namespace Assets.Scripts.UI.Settings
 
         public override void CreateDefaultLayout()
         {
-            throw new System.NotImplementedException();
-        }
+         }
     }
 }

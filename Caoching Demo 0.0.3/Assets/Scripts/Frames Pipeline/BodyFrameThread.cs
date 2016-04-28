@@ -459,6 +459,7 @@ public class BodyFrameThread : ThreadedJob
         {
             mInboundSuitBuffer  = new CircularQueue<HeddokoPacket>(InboundSuitBufferCap,true);
         }
+        mDataSourceType= SourceDataType.BrainFrame;
         InboundSuitBuffer.Clear();
     }
 }

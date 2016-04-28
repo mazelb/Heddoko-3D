@@ -5,6 +5,8 @@
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
 
+using System.Collections;
+using System.Collections.Generic;
 using Assets.Scripts.Communication.Controller;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,15 +21,16 @@ namespace Assets.Scripts.Communication.View.Table
 
         private Body mBody;
         public BrainpackDataList DataList;
-        public int MaxItems = 15;
+        public const int GMaxItems = 250;
         public Button PauseButton;
-        private bool IsPaused=false;
+        public bool IsPaused = false;
+        private List<BodyFrame> mBodyFrameCache = new List<BodyFrame>();
+
 
         public void Start()
         {
-            mBody = BodiesManager.Instance.GetBodyFromUUID("BrainpackPlaceholderBody");
-            mBody.View.BodyFrameUpdatedEvent += BodyFrameUpdatedEvent;
-            PauseButton.onClick.AddListener(()=> IsPaused = !IsPaused);
+
+            PauseButton.onClick.AddListener(() => IsPaused = !IsPaused);
         }
 
         /// <summary>
@@ -38,21 +41,57 @@ namespace Assets.Scripts.Communication.View.Table
         {
             if (!IsPaused)
             {
-                if (DataList.DataSource.Count < MaxItems)
+                // add a new frame to the data souce
+                DataList.DataSource.Add(vNewFrame);
+                mBodyFrameCache.Add(vNewFrame); 
+                //Optimization. run this once the number of items of the data source list is greater than a predefined max items
+                if (DataList.DataSource.Count > GMaxItems)
                 {
-                    DataList.DataSource.Add(vNewFrame);
+                    int vMaxVisibleItems = DataList.MaxDisplayCount;
+                    DataList.DataSource.Clear();
+                    IEnumerable<BodyFrame> vEnumerable = mBodyFrameCache.GetRange(mBodyFrameCache.Count - vMaxVisibleItems,
+                        vMaxVisibleItems);
+                    DataList.DataSource.AddRange(vEnumerable);
+                    mBodyFrameCache.Clear();
                 }
-                else
-                {
-                    DataList.DataSource.RemoveAt(0);
-                    DataList.DataSource.Add(vNewFrame);
-                }
+
+                DataList.ScrollToIndex(DataList.DataSource.Count - 1);
+
             }
         }
 
+
+
         public void OnApplicationQuit()
         {
-            mBody.View.BodyFrameUpdatedEvent -= BodyFrameUpdatedEvent;
+            if (mBody != null)
+            {
+                mBody.View.BodyFrameUpdatedEvent -= BodyFrameUpdatedEvent;
+            }
+        }
+
+
+        /// <summary>
+        /// Clears the list
+        /// </summary>
+        public void Clear()
+        {
+            DataList.DataSource.Clear();
+            mBodyFrameCache.Clear();
+        }
+
+        /// <summary>
+        /// Set the data source body
+        /// </summary>
+        /// <param name="vNewBody"></param>
+        public void SetBody(Body vNewBody)
+        {
+            if (mBody != null)
+            {
+                mBody.View.BodyFrameUpdatedEvent -= BodyFrameUpdatedEvent;
+            }
+            mBody = vNewBody;
+            mBody.View.BodyFrameUpdatedEvent += BodyFrameUpdatedEvent;
         }
     }
 }

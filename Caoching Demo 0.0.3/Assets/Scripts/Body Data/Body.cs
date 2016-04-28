@@ -540,6 +540,7 @@ public class Body
         if (RenderedBody != null)
         {
             RenderedBodyPool.ReleaseResource(RenderedBody);
+          RenderedBody = null;
         }
         for (int i = 0; i < BodySegments.Count; i++)
         {

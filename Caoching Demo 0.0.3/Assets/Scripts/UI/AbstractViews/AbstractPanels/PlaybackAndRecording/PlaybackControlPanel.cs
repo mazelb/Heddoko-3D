@@ -16,7 +16,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
 {
-
+    public delegate void BodyUpdated(Body vBody);
     /// <summary>
     /// Provides controls for recording play back
     /// </summary>
@@ -34,7 +34,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public RecordingPlaySpeedModSubControl PlaybackSpeedModifierSubControl;
         public RecordingProgressSubControl PlaybackProgressSubControl;
         public LoadSingleRecordingSubControl SingleRecordingLoadSubControl;
-
+        public event BodyUpdated BodyUpdatedEvent;
         public float MaxForwardSpeed = 5f;
         public float MaxBackSpeed = -5f;
         private float mCurrForwardSpeed = 1f;
@@ -465,6 +465,10 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             }
             mBody = vBody;
             mIsNewRecording = true;
+            if (BodyUpdatedEvent != null)
+            {
+                BodyUpdatedEvent(vBody);
+            }
         }
 
         /// <summary>
@@ -485,6 +489,10 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 //update the recording playback task by polling the body
                 StopCoroutine(CaptureRecordingPlaybackTask());
                 StartCoroutine(CaptureRecordingPlaybackTask());
+                if (BodyUpdatedEvent != null)
+                {
+                    BodyUpdatedEvent(mBody);
+                }
             }
             mIsNewRecording = true;
         }

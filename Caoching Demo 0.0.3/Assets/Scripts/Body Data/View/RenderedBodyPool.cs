@@ -76,8 +76,7 @@ namespace Assets.Scripts.Body_Data.View
         /// </summary>
         /// <param name="vRenderedBody"></param>
         public static void ReleaseResource(RenderedBody vRenderedBody)
-        {
-            Debug.Log("in rendered body pool");
+        { 
             vRenderedBody.Cleanup();
             sInUsePool.Remove(vRenderedBody);
             sAvailablePool.Add(vRenderedBody);

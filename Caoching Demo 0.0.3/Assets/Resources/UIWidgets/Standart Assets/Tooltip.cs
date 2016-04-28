@@ -19,6 +19,7 @@ namespace UIWidgets {
 		[SerializeField]
 		GameObject tooltipObject;
 
+	    [SerializeField] private Text TextField;
 		/// <summary>
 		/// Seconds before tooltip shown after pointer enter.
 		/// </summary>
@@ -85,6 +86,21 @@ namespace UIWidgets {
 			StartCoroutine(currentCorutine);
 		}
 
+
+        /// <summary>
+        /// Show this tooltip with a custom message
+        /// </summary>
+        /// <param name="vMessage"></param>
+	    public void Show(string vMessage)
+	    {
+            if (TooltipObject == null || TextField == null)
+            {
+                return;
+            }
+
+            currentCorutine = ShowCorutine();
+            StartCoroutine(currentCorutine);
+        }
 		IEnumerator HideCoroutine()
 		{
 			if (currentCorutine!=null)
