@@ -41,7 +41,7 @@ namespace Calibration1.CalibrationTransformation
         public Matrix4x4 TestB1 = Matrix4x4.zero;
         public Matrix4x4 TestB2 = Matrix4x4.zero;
 
-        public ShiuTransform(bool test)
+        public ShiuTransform(bool test=false)
         {
             this.Test   = test;
         }
@@ -97,8 +97,8 @@ namespace Calibration1.CalibrationTransformation
 
             ///Matrix example from the paper : Calibration of Wriste-Mounted Robotic Sensors by 
             ///Solving Homogeneous Transform Equations of the Form AX = XB (Y.C. Shiu, IEEE Trans. on Robotics And Automation, Feb. 1989)
-            /*
-            vAMatrixPose1[0, 0] = -0.989992F; vAMatrixPose1[0, 1] = -0.141120F; vAMatrixPose1[0, 2] = 0.0F; vAMatrixPose1[0, 3] = 0.0F;
+           
+            /*vAMatrixPose1[0, 0] = -0.989992F; vAMatrixPose1[0, 1] = -0.141120F; vAMatrixPose1[0, 2] = 0.0F; vAMatrixPose1[0, 3] = 0.0F;
             vAMatrixPose1[1, 0] = 0.141120F; vAMatrixPose1[1, 1] = -0.989992F; vAMatrixPose1[1, 2] = 0.0F; vAMatrixPose1[1, 3] = 0.0F;
             vAMatrixPose1[2, 0] = 0.0F; vAMatrixPose1[2, 1] = 0.0F; vAMatrixPose1[2, 2] = 1.0F; vAMatrixPose1[2, 3] = 0.0F;
             vAMatrixPose1[3, 0] = 0.0F; vAMatrixPose1[3, 1] = 0.0F; vAMatrixPose1[3, 2] = 0.0F; vAMatrixPose1[3, 3] = 1.0F;
@@ -116,8 +116,8 @@ namespace Calibration1.CalibrationTransformation
             vBMatrixSensor2[0, 0] = 0.070737F; vBMatrixSensor2[0, 1] = 0.198172F; vBMatrixSensor2[0, 2] = 0.977612F; vBMatrixSensor2[0, 3] = 0.0F;
             vBMatrixSensor2[1, 0] = -0.198172F; vBMatrixSensor2[1, 1] = 0.963323F; vBMatrixSensor2[1, 2] = -0.180936F; vBMatrixSensor2[1, 3] = 0.0F;
             vBMatrixSensor2[2, 0] = -0.977612F; vBMatrixSensor2[2, 1] = -0.180936F; vBMatrixSensor2[2, 2] = 0.107415F; vBMatrixSensor2[2, 3] = 0.0F;
-            vBMatrixSensor2[3, 0] = 0.0F; vBMatrixSensor2[3, 1] = 0.0F; vBMatrixSensor2[3, 2] = 0.0F; vBMatrixSensor2[3, 3] = 1.0F;
-            */
+            vBMatrixSensor2[3, 0] = 0.0F; vBMatrixSensor2[3, 1] = 0.0F; vBMatrixSensor2[3, 2] = 0.0F; vBMatrixSensor2[3, 3] = 1.0F;*/
+            
 
             ///From rotation matrix we obtain Rotation axis vector
             Vector3 vRotationAxisA1 = RotationAxis(vAMatrixPose1);
@@ -126,6 +126,9 @@ namespace Calibration1.CalibrationTransformation
             Vector3 vRotationAxisB2 = RotationAxis(vBMatrixSensor2);
             Vector3 ka1 = Vector3.Normalize(vRotationAxisA1);
             Vector3 ka2 = Vector3.Normalize(vRotationAxisA2);
+            //Vector3 kb1 = Vector3.Normalize(vRotationAxisB1);
+            //Vector3 kb2 = Vector3.Normalize(vRotationAxisB2);
+           
 
             ///From rotation axis vectors we obtain a rotation axis perpendicular to the plan containing the rotation 
             ///axis (vRotationAxisA) of Real movement (vAMatrixPose) and the rotation axis (vRotationAxisB) of sensor data vBMatrixSensor
@@ -135,6 +138,7 @@ namespace Calibration1.CalibrationTransformation
             ///Normalisation of vector vVectorPerpenToa1b1Plan and vVectorPerpenToa2b2Plan 
             Vector3 k1 = Vector3.Normalize(vVectorPerpenToa1b1Plan);
             Vector3 k2 = Vector3.Normalize(vVectorPerpenToa2b2Plan);
+            
 
             ///Rotation angle around the two new rotation axis k1 and k2
             float W1 = Mathf.Atan2(Vector3.Magnitude(vVectorPerpenToa1b1Plan), Vector3.Dot(vRotationAxisA1, vRotationAxisB1));
@@ -418,6 +422,11 @@ namespace Calibration1.CalibrationTransformation
             Console.WriteLine(s);
             Console.ReadLine();
         }
+        public void SeeYou(Vector3 s)
+        {
+            Console.WriteLine(s);
+            Console.ReadLine();
+        }        
         public void SeeYou(float s)
         {
             Console.WriteLine(s);
