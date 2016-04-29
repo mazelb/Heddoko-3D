@@ -36,16 +36,13 @@ namespace Assets.Demos
         public PlayerStreamManager PlayerStreamManager;
         public Text DebugToggleInfo;
         public Animator DebugTextAnimator;
-        //Toggle these items values on escape
-        private bool mEscapeToggler;
-        public GameObject[] EscapeKeyListeners;
-
+       
         [SerializeField]
         private bool mDebuggingActive = false;
 
         void Awake()
         {
-            DebugLogger.Settings.LogAll = false;
+            DebugLogger.Settings.LogAll = false ;
             if (!DisableDebugging)
             {
                 DebugLogger.Settings.LogAll = true;
@@ -68,7 +65,7 @@ namespace Assets.Demos
             if (DisableDebugging)
             {
                 DebugLogger.Settings.LogAll = false;
-                bool vIsDebug = false;
+                bool vIsDebug = false; 
                 mDebuggingActive = false;
                 mChildren.SetActive(false);
                 mSegmentOptions.SetActive(false);
@@ -83,7 +80,7 @@ namespace Assets.Demos
         public void ToggleDebugContext()
         {
             //DebugTextAnimator.clip = Clip; 
-
+           
             mDebuggingActive = !mDebuggingActive;
             if (DebugTextAnimator && DebugToggleInfo)
             {
@@ -96,7 +93,7 @@ namespace Assets.Demos
             }
             mChildren.SetActive(mDebuggingActive);
             mSegmentOptions.SetActive(mDebuggingActive);
-
+     
             foreach (var vDebuggingItems in mDebuggingItems)
             {
                 vDebuggingItems.SetActive(mDebuggingActive);
@@ -143,25 +140,8 @@ namespace Assets.Demos
                         mDebugContextEnablerCounter = 0;
                     }
                 }
-                if (mDebuggingActive)
-                {
-                    if (EscapeKeyListeners.Length > 0)
-                    {
-                        if (Input.anyKeyDown && e.isKey)
-                        {
-                            if (e.keyCode == KeyCode.Escape)
-                            {
-                                mEscapeToggler = !mEscapeToggler;
-                                for (int i = 0; i < EscapeKeyListeners.Length; i++)
-                                {
-                                    EscapeKeyListeners[i].SetActive(mEscapeToggler);
-                                }
-                            }
-                        }
-                    }
-                }
             }
-
+            
 
         }
     }
