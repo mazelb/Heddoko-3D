@@ -6,6 +6,7 @@
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
 
+using System.Collections;
 using Assets.Scripts.UI.AbstractViews.Layouts;
 using UnityEngine;
 
@@ -36,19 +37,22 @@ namespace Assets.Scripts.UI.AbstractViews.camera
             Vector3[] vCorners =  new Vector3[  4];
             vRectTransform.GetWorldCorners(vCorners);
 
-            vCorners[0].z = Camera.main.transform.position.z;
-            vCorners[2].z = Camera.main.transform.position.z;
+            vCorners[0].z = 10f;// -Camera.main.transform.position.z;
+            vCorners[2].z = 10f;//-Camera.main.transform.position.z;
 
             Vector2 vBottomLeft = RectTransformUtility.WorldToScreenPoint(Camera.main, vCorners[0]);
             vBottomLeft = Camera.main.ScreenToViewportPoint(vBottomLeft);
 
             Vector2 vTopRight = RectTransformUtility.WorldToScreenPoint(Camera.main, vCorners[2]);
             vTopRight = Camera.main.ScreenToViewportPoint(vTopRight);
-
+            
             mTopRightViewPortPoint = vTopRight;
             mBottomLeftViewPortPoint = vBottomLeft;
-          
+         
         }
+
+
+  
 
         public LayerMask RenderingLayerMask
         {

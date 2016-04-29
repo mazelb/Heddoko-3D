@@ -7,9 +7,9 @@
 */
 
  
-using Assets.Scripts.UI.Tagging;
-using UIWidgets; 
+using UIWidgets;
 using System.Collections.Generic;
+using System;
 
 namespace Assets.Scripts.Communication.View.Table
 {
@@ -19,7 +19,15 @@ namespace Assets.Scripts.Communication.View.Table
     public class BrainpackDataList : ListViewCustom<FrameSelectionComponent, BodyFrame>
     {
         private bool mInitialized = false;
-        public int MaxDisplayCount =15;   
+
+        public int MaxDisplayCount
+        {
+            get
+            {
+                CalculateMaxVisibleItems();
+                return maxVisibleItems;
+            }
+        }   
         public void Initialize()
         {
             if (mInitialized)
@@ -45,9 +53,15 @@ namespace Assets.Scripts.Communication.View.Table
                 DataSource.Add(vItemDescriptors[i]);
             }
             DataSource.EndUpdate();
+             
         }
- 
- 
+
+        public void ScrollToIndex(int v)
+        {
+             base.ScrollTo(v);
+        }
+
+
         /// <summary>
         /// Sets the component with spefied vItem
         /// </summary>

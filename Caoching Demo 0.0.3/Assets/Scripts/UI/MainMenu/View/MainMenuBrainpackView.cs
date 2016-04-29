@@ -77,9 +77,7 @@ namespace Assets.Scripts.UI.MainMenu.View
         /// on connect view
         /// </summary> 
         public void OnConnect()
-        {
-
-            Debug.Log("OnConnect");
+        { 
             UnpairButton.interactable = true;
             UnpairButton.gameObject.SetActive(true);
             FadeInFadeOutEffect.enabled = true;
@@ -105,8 +103,7 @@ namespace Assets.Scripts.UI.MainMenu.View
         ///  Display the failed connection views
         /// </summary> 
         public void FailedConnection()
-        {
-            Debug.Log("FailedConnection");
+        { 
             UnpairButton.interactable = false;
             UnpairButton.gameObject.SetActive(false);
             PairButton.gameObject.SetActive(true);
@@ -128,8 +125,7 @@ namespace Assets.Scripts.UI.MainMenu.View
             
             PairButton.gameObject.SetActive(false);
             UnpairButton.gameObject.SetActive(true);
-            UnpairButton.interactable = false;
-            Debug.Log("Connect to brainpack");
+            UnpairButton.interactable = false; 
             BrainpackConnectionController.Instance.ConnectToBrainpack();
         }
 

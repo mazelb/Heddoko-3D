@@ -14,7 +14,7 @@
         /// <summary>
         /// default constructor
         /// </summary>
-        public BodyCalibrationSetting( )
+        public BodyCalibrationSetting()
         {
             mStartTime = mTime = 0;
         }
@@ -33,7 +33,10 @@
         /// <param name="vBodyFrame"></param>
         public void SetNewStartTimeFromBodyFrame(BodyFrame vBodyFrame)
         {
-            StartTime = vBodyFrame.Timestamp;
+            if (vBodyFrame != null)
+            {
+                StartTime = vBodyFrame.Timestamp;
+            }
         }
 
         /// <summary>
@@ -51,7 +54,7 @@
             }
             else
             {
-                vHasPassedTime = Time >= GlobalCalibrationSettings.CalibrationTimes[vType] ;
+                vHasPassedTime = Time >= GlobalCalibrationSettings.CalibrationTimes[vType];
             }
 
             return vHasPassedTime;

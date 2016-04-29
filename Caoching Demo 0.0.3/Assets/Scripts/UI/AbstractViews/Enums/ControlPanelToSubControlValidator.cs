@@ -139,7 +139,8 @@ namespace Assets.Scripts.UI.AbstractViews.Enums
         DebugRecordingPanel,
         LoadingPanel,
         DemoKit,
-        BrainpackControlPanel
+        BrainpackControlPanel,
+        LiveBPFeedView
     }
 
     public enum SubControlType

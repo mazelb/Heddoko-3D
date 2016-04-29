@@ -450,4 +450,16 @@ public class BodyFrameThread : ThreadedJob
         Forward //=> with this we have multiple playback speeds. 
     }
 
+    /// <summary>
+    /// Initializes the inbound suit buffer
+    /// </summary>
+    public void InitializeInboundSuitBuffer()
+    {
+        if (InboundSuitBuffer == null)
+        {
+            mInboundSuitBuffer  = new CircularQueue<HeddokoPacket>(InboundSuitBufferCap,true);
+        }
+        mDataSourceType= SourceDataType.BrainFrame;
+        InboundSuitBuffer.Clear();
+    }
 }

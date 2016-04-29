@@ -8,6 +8,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.Abs
     {
         internal bool mIsConnectedToSuit;
         internal SuitState SuitState;
+
         public AbstractSuitConnection SuitConnection;
         
        public virtual void OnEnable()

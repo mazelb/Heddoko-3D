@@ -57,6 +57,7 @@ namespace Assets.Scripts.Tests
             //initialize the browser settings
             UniFileBrowser.use.SetFileExtensions(new[] { "csv", "dat" });
             UniFileBrowser.use.allowMultiSelect = false;
+            UniFileBrowser.use.showVolumes = true;
             UniFileBrowser.use.OpenFileWindow(SelectRecordingFile);
         }
 

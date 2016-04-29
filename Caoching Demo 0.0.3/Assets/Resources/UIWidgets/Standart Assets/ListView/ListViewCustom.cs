@@ -345,7 +345,7 @@ namespace UIWidgets
 		/// <summary>
 		/// The set ContentSizeFitter parametres according direction.
 		/// </summary>
-		protected bool setContentSizeFitter = true;
+	 	protected bool setContentSizeFitter = true;
 
 		/// <summary>
 		/// Gets or sets the direction.

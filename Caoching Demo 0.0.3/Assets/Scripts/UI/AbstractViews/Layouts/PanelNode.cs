@@ -8,7 +8,7 @@
 using System;
 using System.Collections;
 using Assets.Scripts.UI.Layouts;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.UI.AbstractViews.camera;
 using Assets.Scripts.UI.AbstractViews.Layouts;
@@ -92,7 +92,7 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
             {
                 vRectTransform = this.gameObject.AddComponent<RectTransform>();
 
-            } 
+            }
 
             PanelSettings = new PanelSettings(this);
             if (vTemplate.HorizontalOrVerticalLayoutType != HorizontalOrVerticalLayoutGroupType.Null)
@@ -201,7 +201,7 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
             List<PanelNode> vPanelNodes = new List<PanelNode>();
             PanelNode vFirstChild = PanelNode.CreatePanelNode(this, vFirstChildTemplate, PanelSettings.RectTransform);
             PanelNode vSecondChild = PanelNode.CreatePanelNode(this, vSecondChildTemplate, PanelSettings.RectTransform);
-   
+
             //change the current HorizontalOrverticallayout group according to the type
             PanelNodeTemplate.AttachHorizontalOrVerticalLayoutGroup(this, vType);
 
@@ -228,17 +228,15 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
             this.Children = null;
             this.Parent = null;
         }
-         
+
         /// <summary>
         /// sends a message to all controls panels that the body has been updated, and update
         /// current panel camera resources
         /// </summary>
         /// <param name="vBody"></param>
         public void UpdateBody(Body vBody)
-        {
-            //todo
-            Debug.Log("TODO set up cam position");
-             
+        { 
+
             foreach (var vAbstractControlPanel in PanelSettings.ControlPanelSet)
             {
                 vAbstractControlPanel.BodyUpdated(vBody);
@@ -256,8 +254,9 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
             }
             else
             {
-                StartCoroutine(UpdateCameraAfterEndOfFrame(vBody));}
+                //StartCoroutine(UpdateCameraAfterEndOfFrame(vBody));
             }
+        }
 
 
 

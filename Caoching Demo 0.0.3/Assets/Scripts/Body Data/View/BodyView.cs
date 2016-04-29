@@ -118,19 +118,23 @@ namespace Assets.Scripts.Body_Data.view
         /// <param name="vBodyFrame">the body frame to update to</param>
         public void UpdateViewTracking(BodyFrame vBodyFrame)
         {
+            Profiler.BeginSample("UPDATE VIEW TRACKING");
             AssociatedBody.UpdateBody(vBodyFrame);
             Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic = Body.GetTracking(AssociatedBody);
 
             if (vDic != null)
             {
-                Body.ApplyTracking(AssociatedBody, vDic);
-                //todo: extract this from the view and place it in its own module
+                Body.ApplyTracking(AssociatedBody, vDic); 
             }
             
             if (BodyFrameUpdatedEvent != null && vBodyFrame!= null)
             {
+                Profiler.BeginSample("BODY FRAME UPDATE EVENT");
                 BodyFrameUpdatedEvent(vBodyFrame);
+                Profiler.EndSample();
             }
+            Profiler.EndSample();
+
         }
 
         /// <summary>
@@ -162,6 +166,7 @@ namespace Assets.Scripts.Body_Data.view
         /// </summary>
         private void Update()
         {
+          
             if (StartUpdating)
             {
                 if (mIsPaused)
@@ -169,7 +174,7 @@ namespace Assets.Scripts.Body_Data.view
                     return;
                 }
 
-                if (mBuffer != null && mBuffer.Count > 0)
+                if (mBuffer != null && mBuffer.Count > 0 && AssociatedBody.RenderedBody != null)
                 {
                     BodyFrame vBodyFrame = mBuffer.Dequeue();
                     DebugLogger.Instance.LogMessage(LogType.FrameRenderingStart, "Start timestamp: " + vBodyFrame.Timestamp);
@@ -182,7 +187,7 @@ namespace Assets.Scripts.Body_Data.view
 
                 }
             }
-        }
+         }
 
         /// <summary>
         /// Handles inputs related to the body view

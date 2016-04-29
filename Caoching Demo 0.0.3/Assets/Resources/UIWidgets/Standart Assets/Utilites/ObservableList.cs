@@ -111,11 +111,11 @@ namespace UIWidgets {
 		{
 			if (IsItemsObservable)
 			{
-				(item as IObservable).OnChange += CollectionItemChanged;
+				((IObservable)item).OnChange += CollectionItemChanged;
 			}
 			else if (IsItemsSupportNotifyPropertyChanged)
 			{
-				(item as INotifyPropertyChanged).PropertyChanged += ItemPropertyChanged;
+				((INotifyPropertyChanged)item).PropertyChanged += ItemPropertyChanged;
 			}
 		}
 
