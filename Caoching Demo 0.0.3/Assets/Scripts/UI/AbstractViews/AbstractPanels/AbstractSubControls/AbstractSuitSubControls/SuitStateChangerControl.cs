@@ -2,7 +2,7 @@
 * @file SuitStateChangerControl.cs
 * @brief Contains the SuitStateChangerControl abstract class
 * @author Mohammed Haider (mohammed@heddoko.com)
-* @date Macrch 2016
+* @date March 2016
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
 using Assets.Scripts.Communication.Controller;
@@ -25,12 +25,12 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.Abs
         public static event StopRecordingDel StopRecordingEvent;
         public Button SuitStateControl;
         public Text ControlText;
-        private string mWaitingText = "Waiting for response";
-        private string mInRecordingStateTxt = "Stop Recording";
-        private string mInIdleStateTxt = "Start Recording";
-        private string mInErrorStateTxt = "Error: click to reset";
-        private string mInResetStateTxt = "Reinitializing..";
-        private string mInDisconnectStatetxt = "Disconnected state";
+        private string mWaitingText = "WAITING FOR RESPONSE";
+        private string mInRecordingStateTxt = "STOP RECORDING";
+        private string mInIdleStateTxt = "START RECORDING";
+        private string mInErrorStateTxt = "ERROR: CLICK TO \nRESET BRAINPACK";
+        private string mInResetStateTxt = "BRAINPACK\nREINITIALIZING";
+        private string mInDisconnectStatetxt = "BRAINPACK\nDISCONNECTED";
 
         public ColorBlock RecordingStateColorBlock;
         public ColorBlock IdleStateBlock;

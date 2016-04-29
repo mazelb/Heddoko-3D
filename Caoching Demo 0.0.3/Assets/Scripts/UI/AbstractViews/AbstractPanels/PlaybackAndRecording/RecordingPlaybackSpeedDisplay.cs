@@ -18,7 +18,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     {
         private SubControlType mType = SubControlType.RecordingPlaybackSpeedDisplay;
         public Text CurrentSpeed;
-        private string mDisplaySpeedString = "100%";
+        private string mDisplaySpeedString = "1";
         private bool mIsPaused;
         public PlaybackControlPanel ParentPanel;
         public override SubControlType SubControlType
@@ -37,7 +37,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             {
                 if (value)
                 {
-                    CurrentSpeed.text = "Paused.";
+                    UpdateSpeedText(0f);
                 }
                 else
                 {
@@ -54,8 +54,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// <param name="vNewVal"></param>
         public void UpdateSpeedText(float vNewVal)
         {
-            int vVal = (int)(100*vNewVal);
-            mDisplaySpeedString = vVal + "%";
+            mDisplaySpeedString = vNewVal.ToString("0.0"); 
             CurrentSpeed.text = mDisplaySpeedString;
         }
 
@@ -70,7 +69,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
 
         public override void Enable()
         {
-            CurrentSpeed.text = "100 %";
+            CurrentSpeed.text = "1";
         }
  
     }

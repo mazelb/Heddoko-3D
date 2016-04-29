@@ -36,7 +36,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// <summary>
         /// Recording selected
         /// </summary>
-        private void SelectedRecording()
+        internal void SelectedRecording()
         {
             ParentPanel.ChangeState(PlaybackState.Pause);
             SingleRecordingSelection.Instance.OpenFileBrowseDialog(ParentPanel.NewRecordingSelected);
@@ -55,6 +55,30 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public override void Enable()
         {
 
+        }
+
+        /// <summary>
+        /// Changes the Load recording button to the one passed in
+        /// </summary>
+        /// <param name="vNewRecordingButton"></param>
+        public void SetNewButtonControl(Button vNewRecordingButton)
+        {
+            if (LoadButton != null)
+            {
+                //disable before switching
+                LoadButton.enabled = false;
+                LoadButton.onClick.RemoveAllListeners();
+                //find any children with graphical components and disable them.
+                MaskableGraphic[] vChildren = LoadButton.GetComponentsInChildren<MaskableGraphic>();
+                foreach (var vMaskableChild in vChildren)
+                {
+                    vMaskableChild.enabled = false;
+                }
+
+            }
+            LoadButton = vNewRecordingButton;
+            //set the new event handler
+            LoadButton.onClick.AddListener(SelectedRecording);
         }
     }
 }

@@ -348,7 +348,7 @@ public function GetFileWindowRect () : Rect {
 	return fileWindowRect;
 }
 
-private function UpdateRects () {
+public function UpdateRects () {
 	fileBoxRect = Rect(fileWindowInset, textfieldRect.y + (fileType == FileType.Save? (textfieldRect.height + 10) : 0), 0, 0);
 	fileBoxRect.width = fileWindowRect.width - fileWindowInset*2;
 	
@@ -1254,7 +1254,7 @@ public function CloseFileWindow () {
 	fileWindowOpen = false;
 	selectedFileNumber = oldSelectedFileNumber = -1;
 	fileName = "";
-	if (sendCloseMessage) {
+	if (sendCloseMessage) { 
 		closeWindowFunction();
 	}
 	// For maximum efficiency, the OnGUI function in this script doesn't run at all when the file browser window isn't open,

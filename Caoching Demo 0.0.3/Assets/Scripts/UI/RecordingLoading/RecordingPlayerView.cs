@@ -15,6 +15,7 @@ using Assets.Scripts.Communication.View.Table;
 using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.RecordingLoading
 {
@@ -30,6 +31,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         private bool mIsInitialized = false;
         private Body mCurrBody;
         public BodyFrameDataControl BodyFrameDataControl;
+        public Button LoadRecordingButton; 
         public AnaylsisTextContainer AnaylsisTextContainer;
         void Awake()
         {
@@ -57,6 +59,9 @@ namespace Assets.Scripts.UI.RecordingLoading
                 (PlaybackControlPanel)
                     mPanelNodes[0].PanelSettings.GetPanelOfType(ControlPanelType.RecordingPlaybackControlPanel);
             vPbCtrlPanel.BodyUpdatedEvent += SetNewBody;
+            vPbCtrlPanel.SingleRecordingLoadSubControl.SetNewButtonControl(LoadRecordingButton);
+            //Call the load recording panel
+            vPbCtrlPanel.SingleRecordingLoadSubControl.SelectedRecording();
         }
 
         /// <summary>

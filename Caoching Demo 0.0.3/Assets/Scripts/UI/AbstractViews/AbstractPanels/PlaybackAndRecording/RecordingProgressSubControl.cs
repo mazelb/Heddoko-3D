@@ -118,7 +118,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public void UpdateMaxTimeAndMaxValue(int recordingCount, float totalRecordingTime)
         {
             PlaySlider.maxValue = recordingCount;
-            TotalRecordingTimeText.text = FormatSecondsToTimeString((int)totalRecordingTime);
+            TotalRecordingTimeText.text = " / "+FormatSecondsToTimeString((int)totalRecordingTime);
 
         }
     }

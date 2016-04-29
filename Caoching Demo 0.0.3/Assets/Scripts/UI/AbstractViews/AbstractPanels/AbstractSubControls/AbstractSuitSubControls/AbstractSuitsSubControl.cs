@@ -1,9 +1,19 @@
-﻿ 
+﻿/** 
+* @file AbstractSuitsSubControl.cs
+* @brief Contains the AbstractSuitsSubControl abstract class
+* @author Mohammed Haider (mohammed@heddoko.com)
+* @date March 2016
+* Copyright Heddoko(TM) 2016, all rights reserved
+*/
 using Assets.Scripts.Communication.Controller;
-using UnityEngine;
+ 
 
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.AbstractSuitSubControls
 {
+
+    /// <summary>
+    /// Sub control class for any controls dealing with controlling suits
+    /// </summary>
     public abstract class AbstractSuitsSubControl : AbstractSubControl
     {
         internal bool mIsConnectedToSuit;

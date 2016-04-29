@@ -8,6 +8,7 @@
 
 using System;
 using Assets.Scripts.Communication.Controller;
+using Assets.Scripts.Communication.View;
 using Assets.Scripts.UI.RecordingLoading;
 using UIWidgets;
 using UnityEngine;
@@ -20,8 +21,10 @@ namespace Assets.Scripts.UI.Settings
     /// </summary>
     public class ControlPanel : MonoBehaviour
     {
+        public ColorBlock SelectedColorBlock;
+        public ColorBlock UnSelectedColorBlock;
         public Button LoadRecordingsButton;
-        public Button LiveViewButton;
+        public LiveConnectionButton LiveViewButton;
         public Button BrainpackConnectionButton;
         public SlideBlock BrainpackConnectionSlider;
         public Button SettingsButton;
@@ -35,8 +38,9 @@ namespace Assets.Scripts.UI.Settings
         public void Awake()
         {
             ExitApplicationButton.onClick.AddListener(QuitApplication);
-            RenameRecordingButton.onClick.AddListener(()=>RenameRecordingModule.Toggle());
+            RenameRecordingButton.onClick.AddListener(() => RenameRecordingModule.Toggle());
             RenameRecordingModule.Init(ConnectionController);
+            LiveViewButton.Disable();
             LoadRecordingsButton.onClick.AddListener(() =>
             {
                 if (BrainpackConnectionSlider.IsOpen)
@@ -47,10 +51,13 @@ namespace Assets.Scripts.UI.Settings
                 {
                     SuitFeedView.Hide();
                     RecordingPlayerView.Show();
-
                 }
+
+                LoadRecordingsButton.colors = SelectedColorBlock;
+                LiveViewButton.Button.colors = UnSelectedColorBlock;
+                BrainpackConnectionButton.colors = UnSelectedColorBlock;
             });
-            LiveViewButton.onClick.AddListener(() =>
+            LiveViewButton.Button.onClick.AddListener(() =>
             {
                 if (ConnectionController.ConnectionState == BrainpackConnectionState.Connected)
                 {
@@ -65,13 +72,26 @@ namespace Assets.Scripts.UI.Settings
                     SuitFeedView.Show();
 
                 }
+                LiveViewButton.Button.colors = SelectedColorBlock;
+                LoadRecordingsButton.colors = UnSelectedColorBlock;
+                BrainpackConnectionButton.colors = UnSelectedColorBlock;
 
             });
             BrainpackConnectionButton.onClick.AddListener(() =>
             {
                 BrainpackConnectionSlider.Toggle();
+                BrainpackConnectionButton.colors = SelectedColorBlock;
+                LiveViewButton.Button.colors = UnSelectedColorBlock;
+                LoadRecordingsButton.colors = UnSelectedColorBlock;
+                if (RecordingPlayerView.gameObject.activeInHierarchy)
+                {
+                    RecordingPlayerView.Hide();
+                }
             }
              );
+
+            ConnectionController.ConnectedStateEvent += LiveViewButton.Enable;
+            ConnectionController.DisconnectedStateEvent += LiveViewButton.Disable;
         }
 
 

@@ -449,6 +449,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             {
                 mPlaybackSpeed = vNewSpeed;
                 mPlaybackTask.PlaybackSpeed = vNewSpeed;
+                RecordingPlaybackSpeedDisplay.UpdateSpeedText(vNewSpeed);
             }
         }
 
@@ -558,6 +559,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                     vSubControl.Disable();
                 }
             }
+            RecordingProgressSliderSubControl.PlaySlider.value = 0;
+            PlaybackSpeedModifierSubControl.PlaybackSpeedSlider.value = 1;
         }
     }
 

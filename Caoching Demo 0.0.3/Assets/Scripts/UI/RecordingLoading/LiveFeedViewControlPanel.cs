@@ -39,7 +39,13 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 mBody = value;
                 TPoseButton.onClick.RemoveAllListeners();
-               TPoseButton.onClick.AddListener(()=>Body.View.ResetInitialFrame());
+               TPoseButton.onClick.AddListener(() =>
+               {
+                   if (Body.InitialBodyFrame != null)
+                   {
+                       Body.View.ResetInitialFrame();
+                   }
+               });
             }
         }
         public void Show()

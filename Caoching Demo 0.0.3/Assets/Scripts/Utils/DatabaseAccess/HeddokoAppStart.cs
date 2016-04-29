@@ -7,7 +7,9 @@
 */
 
 using System;
+
 using System.Collections.Generic;
+using System.IO;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Communication.DatabaseConnectionPipe;
@@ -18,6 +20,7 @@ using Assets.Scripts.UI.Settings;
 using Assets.Scripts.UI.Tagging;
 using Assets.Scripts.Utils.DebugContext.logging;
 using UnityEngine;
+using UnityEngine.Experimental.Director;
 using Application = UnityEngine.Application;
 
 namespace Assets.Scripts.Utils.DatabaseAccess
@@ -41,7 +44,9 @@ namespace Assets.Scripts.Utils.DatabaseAccess
         // ReSharper disable once UnusedMember.Local
         void Awake()
         {
+
             OutterThreadToUnityThreadIntermediary.Instance.Init();
+            BodySegment.IsTrackingHeight = false;
             mTaggingManager = new TaggingManager();
             InitiliazePools();
             InitializeDatabase();
@@ -82,7 +87,6 @@ namespace Assets.Scripts.Utils.DatabaseAccess
 
                         foreach (KeyValuePair<string, string> vKV in LauncherBrainpackSearchResults.BrainpackToComPortMappings)
                         {
-
                             ScrollableContent vContent = new ScrollableContent();
                             vContent.ContentValue = vKV.Value;
                             if (vContent.ContentValue.Contains("COM") || vContent.ContentValue.Contains("com"))
@@ -98,6 +102,7 @@ namespace Assets.Scripts.Utils.DatabaseAccess
 
                         }
                         ContentPanel.Contents = vContentList;
+                        ContentPanel.LoadContent();
                         EnableObjects(true);
                     }
                     else
@@ -105,7 +110,7 @@ namespace Assets.Scripts.Utils.DatabaseAccess
                         AppNotLaunchedThroughLauncher();
                     }
                 }
-       
+
             }
 
 
@@ -115,7 +120,35 @@ namespace Assets.Scripts.Utils.DatabaseAccess
         {
             if (!IsDemo)
             {
-                UniFileBrowser.use.SetPath(ApplicationSettings.PreferedRecordingsFolder);
+                bool vUseNonPersistentDataFolder = false;
+#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN 
+                //check if recordings folder exists first. Create it
+                string vPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Recordings";
+
+                vUseNonPersistentDataFolder = true;
+                if (!Directory.Exists(vPath))
+                {
+                    Debug.Log("here1");
+
+                    try
+                    {
+                        Debug.Log("here2");
+
+                        Directory.CreateDirectory(vPath);
+                      
+                    }
+                    catch (Exception)
+                    {
+
+                        vUseNonPersistentDataFolder = false;
+                    }
+                }
+                UniFileBrowser.use.SetPath(vPath);
+#endif
+                if (!vUseNonPersistentDataFolder)
+                {
+                    UniFileBrowser.use.SetPath(Application.persistentDataPath);
+                }
             }
         }
         /// <summary>
@@ -169,7 +202,7 @@ namespace Assets.Scripts.Utils.DatabaseAccess
             PanelCameraPool.CameraParent = vPanelCameraGroup.transform;
         }
 
-      
+
         /// <summary>
         /// Enables or disable the array of gameobjects 
         /// </summary>
