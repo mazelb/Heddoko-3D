@@ -58,7 +58,7 @@ namespace Assets.Scripts.UI.Settings
                 BrainpackConnectionButton.colors = UnSelectedColorBlock;
             });
             LiveViewButton.Button.onClick.AddListener(() =>
-            {
+            {   
                 if (ConnectionController.ConnectionState == BrainpackConnectionState.Connected)
                 {
                     if (BrainpackConnectionSlider.IsOpen)

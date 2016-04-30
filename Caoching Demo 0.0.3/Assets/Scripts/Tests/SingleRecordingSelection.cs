@@ -7,6 +7,8 @@
 */
 
 using System;
+using System.IO;
+using Assets.Scripts.UI.Settings;
 using Assets.Scripts.Utils;
 using UnityEngine;
 
@@ -67,6 +69,8 @@ namespace Assets.Scripts.Tests
         /// <param name="vRecordingSelected"></param>
         private void SelectRecordingFile(string vRecordingSelected)
         {
+            FileInfo vInfo = new FileInfo(vRecordingSelected);
+            ApplicationSettings.PreferedRecordingsFolder = vInfo.DirectoryName;
             BodyRecordingsMgr.Instance.ScanRecordings(UniFileBrowser.use.filePath);
             BodyRecordingsMgr.Instance.ReadRecordingFile(vRecordingSelected, BodyFramesRecordingCallback);
         }

@@ -148,7 +148,7 @@ public class BodyStructureMap
             vBSm = JsonUtilities.JsonFileToObject<BodyStructureMap>(vPath);
         }
         //in case the file isn't found, write a new one with generic values
-        catch (FileNotFoundException) 
+        catch (FileNotFoundException)
         {
             CreateBodyToSegmentMap();
             CreateSegmentToSensorPosMap();
@@ -520,5 +520,15 @@ public class BodyStructureMap
                     break;
             }
         }
+    }
+    /**
+    * SubSegmentOrientationType enum
+    * @brief The type of subsegment's orientation
+    */
+    public enum SubSegmentOrientationType
+    {
+        Fused = 0,
+        NonFused = 1,
+        MappedTransformation
     }
 }

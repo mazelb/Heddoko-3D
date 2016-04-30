@@ -8,11 +8,9 @@
 
 
 using System;
-using System.Collections.Generic;
-using System.Configuration;
+using System.Collections.Generic; 
 using System.IO;
-using Assets.Scripts.Communication.DatabaseConnectionPipe;
-using Assets.Scripts.UI;
+using Assets.Scripts.Communication.DatabaseConnectionPipe; 
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.UI.Tagging;
 using UnityEngine;

@@ -8,6 +8,7 @@
 */
 
 
+using System.IO;
 using Assets.Scripts.Utils;
 using Assets.Scripts.Utils.DatabaseAccess;
 using UnityEngine;
@@ -24,6 +25,11 @@ namespace Assets.Scripts.UI.Settings
         private static int sResWidth;
         private static int sResHeight;
         private static bool sAppLaunchedSafely;
+
+        public static void SaveSettings()
+        {
+            
+        }
         /// <summary>
         /// provides and sets the the prefered recordings folder for the application
         /// </summary>
@@ -31,21 +37,27 @@ namespace Assets.Scripts.UI.Settings
         {
             get
             {
-#if UNITY_EDITOR
-                return Application.dataPath + "/Resources/Recordings";
-#endif
+ 
                 return sPreferedRecordingsFolder;
             }
             set
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    sPreferedRecordingsFolder = FilePathReferences.RecordingsDirectory;
-                    value = sPreferedRecordingsFolder.Replace("\\", "/");
+                    DirectoryInfo vDirectoryInfo = new DirectoryInfo(Application.dataPath );
+                    sPreferedRecordingsFolder =     vDirectoryInfo.Parent+"\\DemoRecordings";
+                    value = sPreferedRecordingsFolder;
                 }
-
-                value = value.Replace("\\", "/");
-                sPreferedRecordingsFolder = value;
+                 
+                //make sure that this folder exists. else set it to the default application folder
+                if (Directory.Exists(value) )
+                {
+                    sPreferedRecordingsFolder = value;
+                }
+                else
+                {
+                    sPreferedRecordingsFolder =  Application.dataPath + "\\DemoRecordings";
+                }
             }
         }
 

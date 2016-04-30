@@ -87,7 +87,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         public override void Show()
         {
             gameObject.SetActive(true);
-
+            bool vIsLerp = BodySegment.IsUsingInterpolation;
             if (CurrentLayout == null)
             {
                 CreateDefaultLayout();
@@ -99,13 +99,14 @@ namespace Assets.Scripts.UI.RecordingLoading
             SetContextualInfo();
             try
             {
+                BodySegment.IsUsingInterpolation=false;
                 mCurrBody.View.ResetInitialFrame();
             }
             catch
             {
                
             }
-
+             BodySegment.IsUsingInterpolation= vIsLerp ;
         }
 
         /// <summary>

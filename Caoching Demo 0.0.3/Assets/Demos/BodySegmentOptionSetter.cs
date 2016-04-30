@@ -32,7 +32,7 @@ namespace Assets.Demos
         private Dictionary<string, FieldInfo> mButtonMappings = new Dictionary<string, FieldInfo>();
         public RectTransform ParentPanel;
       
-        void Awake()
+       public void Awake()
         {
             //Get all the fields marked as public and static 
             mButtonMappings =
@@ -53,28 +53,28 @@ namespace Assets.Demos
                          };
 
             var vMappedDictionary = vQuery.ToDictionary(vf => vf.vKey, vf => vf.value2);
-            foreach (var vKVPair in mButtonMappings)
+            foreach (var vKvPair in mButtonMappings)
             {
                 try
                 {
                     GameObject vButton = Instantiate(BodySegmentOptionButtonPrefab);
                     vButton.transform.SetParent(ParentPanel.transform, false);
-                    string vTextualInfo = SplitCamelCase(vKVPair.Key);
+                    string vTextualInfo = SplitCamelCase(vKvPair.Key);
                     BodySegmentOptionButton vButtonBSegment = vButton.GetComponent<BodySegmentOptionButton>();
                     vButtonBSegment.TextualInfo.text = vTextualInfo;
 
-                    bool vVal = (bool)vKVPair.Value.GetValue(null);
+                    bool vVal = (bool)vKvPair.Value.GetValue(null);
                     vButtonBSegment.OnOffText.text = ReturnOnOffFromBool((vVal));
 
-                    KeyValuePair<string, FieldInfo> vNewKvPair = new KeyValuePair<string, FieldInfo>(vKVPair.Key, vKVPair.Value);
+                    KeyValuePair<string, FieldInfo> vNewKvPair = new KeyValuePair<string, FieldInfo>(vKvPair.Key, vKvPair.Value);
                     UnityAction vAction = () => SetValue(vNewKvPair, vButtonBSegment);
-                    KeyCode vKeyCode = (KeyCode)(vMappedDictionary[vKVPair.Key].GetValue(null));
+                    KeyCode vKeyCode = (KeyCode)(vMappedDictionary[vKvPair.Key].GetValue(null));
                     InputHandler.RegisterKeyboardAction(vKeyCode, vAction);
                     vButtonBSegment.AssociatedButton.onClick.AddListener(vAction);
                 }   
                 catch(KeyNotFoundException)
                 {
-                    Debug.Log("option "+  vKVPair.Key + " in BodySegment.cs not found in HeddokoDebugKeyMappings. Make sure that you have this  mapped in HeddokoDebugKeyMappings");
+                    Debug.Log("option "+  vKvPair.Key + " in BodySegment.cs not found in HeddokoDebugKeyMappings. Make sure that you have this  mapped in HeddokoDebugKeyMappings");
                 }
             }
 
@@ -119,8 +119,8 @@ namespace Assets.Demos
 
         /// <summary>
         /// Splits camel case strings
-        /// </summary>
-        /// <param name="vValue"></param>
+        /// </summary> 
+        /// <param name="vStr"></param>
         /// <returns></returns>
         public static string SplitCamelCase(string vStr)
         {
@@ -129,12 +129,12 @@ namespace Assets.Demos
         }
 
 
-        void SetValue(KeyValuePair<string, FieldInfo> vKVPair, BodySegmentOptionButton vButtonBSegment)
+        void SetValue(KeyValuePair<string, FieldInfo> vKvPair, BodySegmentOptionButton vButtonBSegment)
         {
-            bool vCurrVal = (bool)vKVPair.Value.GetValue(null);
+            bool vCurrVal = (bool)vKvPair.Value.GetValue(null);
             bool vNewVal = !vCurrVal;
             vButtonBSegment.OnOffText.text = ReturnOnOffFromBool(vNewVal);
-            vKVPair.Value.SetValue(null, vNewVal);
+            vKvPair.Value.SetValue(null, vNewVal);
         }
 
 

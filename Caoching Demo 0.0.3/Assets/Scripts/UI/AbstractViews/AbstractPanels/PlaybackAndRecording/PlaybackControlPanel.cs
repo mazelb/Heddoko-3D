@@ -495,6 +495,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                     BodyUpdatedEvent(mBody);
                 }
             }
+            
             mIsNewRecording = true;
         }
 

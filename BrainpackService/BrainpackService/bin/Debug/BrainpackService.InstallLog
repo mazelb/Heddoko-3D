@@ -5304,3 +5304,21 @@ Affected parameters are:
 Removing EventLog source BrainpackService.
 Service BrainpackService is being removed from the system...
 Service BrainpackService was successfully removed from the system.
+Uninstalling assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Removing EventLog source BrainpackService.
+An exception occurred during the uninstallation of the System.Diagnostics.EventLogInstaller installer.
+System.Security.SecurityException: Requested registry access is not allowed.
+An exception occurred while uninstalling. This exception will be ignored and the uninstall will continue. However, the application might not be fully uninstalled after the uninstall is complete.
+Uninstalling assembly 'E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   assemblypath = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.exe
+   logfile = E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.InstallLog
+Removing EventLog source BrainpackService.
+Service BrainpackService is being removed from the system...
+Service BrainpackService was successfully removed from the system.
+Attempt to stop service BrainpackService.
