@@ -808,7 +808,7 @@ public partial class BodySegment
         foreach (BodyStructureMap.SubSegmentTypes sstype in subsegmentTypes)
         {
             BodySubSegment subSegment = new BodySubSegment();
-            subSegment.subsegmentType = sstype;
+            subSegment.SubsegmentType = sstype;
             subSegment.InitializeBodySubsegment(sstype);
             BodySubSegmentsDictionary.Add((int)sstype, subSegment);
             subSegment.AssociatedView.transform.parent = AssociatedView.transform;
