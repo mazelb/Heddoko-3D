@@ -31,6 +31,9 @@ namespace Assets.Demos
         private GameObject mChildren;
         [SerializeField]
         private GameObject[] mDebuggingItems;
+
+        private bool mEscapableFlags = false;
+        public GameObject[] mEscapables;
         [SerializeField]
         private GameObject mSegmentOptions;
         public PlayerStreamManager PlayerStreamManager;
@@ -138,6 +141,17 @@ namespace Assets.Demos
                     else if (e.keyCode == KeyCode.F12)
                     {
                         mDebugContextEnablerCounter = 0;
+                    }
+                }
+                if (Input.anyKeyDown && e.isKey)
+                {
+                    if (e.keyCode == KeyCode.Escape)
+                    {
+                        mEscapableFlags = !mEscapableFlags;
+                        foreach (var vEscapables in mEscapables)
+                        {
+                            vEscapables.SetActive(mEscapableFlags);
+                        }
                     }
                 }
             }
