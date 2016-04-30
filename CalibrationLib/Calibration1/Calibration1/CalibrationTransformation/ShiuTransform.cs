@@ -308,11 +308,12 @@ namespace Calibration1.CalibrationTransformation
             Vector3 xx1 = new Vector3(Xp[0, 0], Xp[1, 0], Xp[2, 0]);
             Vector3 xx2 = new Vector3(Xp[0, 1], Xp[1, 1], Xp[2, 1]);
             Vector3 xx3 = new Vector3(Xp[0, 2], Xp[1, 2], Xp[2, 2]);
-
+            
             Vector3 n = new Vector3(0f, 0f, 0f);
             Vector3 o = new Vector3(0f, 0f, 0f);
             Vector3 a = new Vector3(0f, 0f, 0f);
 
+           
             n = Vector3.Cross(xx1, k);
             o = Vector3.Cross(xx2, k);
             a = Vector3.Cross(xx3, k);
@@ -358,6 +359,23 @@ namespace Calibration1.CalibrationTransformation
             sb[8, 0] = -k[2] * Vector3.Dot(xx3, k);
         }
         ///Function to test the algorithm with fake sensors data
+ /*       public Matrix4x4 QuaterniontoRigthHanded(Quaternion Q)
+        {
+            Matrix4x4 RigthHandedRotation;
+
+            n = w * w + x * x + y * y + z * z
+s = if n == 0 then 0 else 2 / n
+wx = s * w * x, wy = s * w * y, wz = s * w * z
+xx = s * x * x, xy = s * x * y, xz = s * x * z
+yy = s * y * y, yz = s * y * z, zz = s * z * z
+
+[1 - (yy + zz)         xy - wz          xz + wy]
+[xy + wz     1 - (xx + zz)         yz - wx]
+[xz - wy          yz + wx     1 - (xx + yy)]
+
+
+            return RigthHandedRotation;
+        }*/
         public void TestFunction(string mode,float XRotEulerSensorSys, float YRotEulerSensorSys, float ZRotEulerSensorSys)
         {
             Vector3 vEulerA1Pose = PoseToEulerAngles(ShiuTransform.pose1);
@@ -382,7 +400,6 @@ namespace Calibration1.CalibrationTransformation
             this.TestB1 = invFakeOrientationSensorSys*vAMatrixPose1*FakeOrientationSensorSys;
             this.TestB2 = invFakeOrientationSensorSys*vAMatrixPose2*FakeOrientationSensorSys;                        
         }
-        ///
         public Matrix<float> UtoM(Matrix4x4 U)
         {
             Matrix<float> M = Matrix<float>.Build.Dense(4,4);
