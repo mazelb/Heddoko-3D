@@ -44,7 +44,6 @@ namespace Assets.Scripts.Utils.DatabaseAccess
         // ReSharper disable once UnusedMember.Local
         void Awake()
         {
-
             OutterThreadToUnityThreadIntermediary.Instance.Init();
             BodySegment.IsTrackingHeight = false;
             mTaggingManager = new TaggingManager();
@@ -120,35 +119,8 @@ namespace Assets.Scripts.Utils.DatabaseAccess
         {
             if (!IsDemo)
             {
-                bool vUseNonPersistentDataFolder = false;
-#if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN 
-                //check if recordings folder exists first. Create it
-                string vPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Recordings";
+                UniFileBrowser.use.SetPath(ApplicationSettings.PreferedRecordingsFolder);
 
-                vUseNonPersistentDataFolder = true;
-                if (!Directory.Exists(vPath))
-                {
-                    Debug.Log("here1");
-
-                    try
-                    {
-                        Debug.Log("here2");
-
-                        Directory.CreateDirectory(vPath);
-                      
-                    }
-                    catch (Exception)
-                    {
-
-                        vUseNonPersistentDataFolder = false;
-                    }
-                }
-                UniFileBrowser.use.SetPath(vPath);
-#endif
-                if (!vUseNonPersistentDataFolder)
-                {
-                    UniFileBrowser.use.SetPath(Application.persistentDataPath);
-                }
             }
         }
         /// <summary>
@@ -231,6 +203,7 @@ namespace Assets.Scripts.Utils.DatabaseAccess
         {
             // mDatabase.CleanUp();
             DebugLogger.Instance.Stop();
+            mDbAccess.SaveApplicationSettings();
         }
 
         /// <summary>
@@ -240,7 +213,6 @@ namespace Assets.Scripts.Utils.DatabaseAccess
         {
             mDatabase = new Database(DatabaseConnectionType.Local);
             mDatabase.Init();
-
         }
 
 

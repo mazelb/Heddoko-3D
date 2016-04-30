@@ -6,8 +6,11 @@
 * @date February 2016
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
-using Mono.Data.Sqlite; 
+
+using System;
+using Mono.Data.Sqlite;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using Assets.Scripts.UI.Loading;
 using Assets.Scripts.UI.ModalWindow;
@@ -32,7 +35,7 @@ namespace Assets.Scripts.Utils.DatabaseAccess
             {
                 //check if the file exists first. 
                 string vFilePath = ApplicationSettings.LocalDbPath;
-              
+
                 if (File.Exists(vFilePath))
                 {
                     mDbConnection = new SqliteConnection("URI=file:" + vFilePath);
@@ -96,6 +99,46 @@ namespace Assets.Scripts.Utils.DatabaseAccess
             return null;
         }
 
+        public void SaveApplicationSettings()
+        {
+            if (mDbConnection != null)
+            {
+                try
+                {
+                    if (mDbConnection.State != ConnectionState.Open)
+                    {
+                        mDbConnection.Open();
+                    }
+                   
+                }
+                catch
+                {
+                    
+                }
+                using (var vCmd = mDbConnection.CreateCommand())
+                {
+                    using (var vTransaction = mDbConnection.BeginTransaction())
+                    {
+                        try
+                        { 
+                            vCmd.CommandText = "UPDATE Settings set recordingsPath = @param1 WHERE _rowid_=1";
+                            vCmd.Parameters.Add(new SqliteParameter("@param1", ApplicationSettings.PreferedRecordingsFolder));
+                            vCmd.ExecuteNonQuery();
+                            vTransaction.Commit();
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Log("<color=red><b>DB error:</b></color> " + e);
+                            vTransaction.Rollback();
+                        }
+                    }
+                }
+                if (mDbConnection.State != ConnectionState.Closed)
+                {
+                    mDbConnection.Close();
+                }
+            }
+        }
         /// <summary>
         /// Sets the application settings from the Settings table in the database
         /// </summary>
@@ -134,7 +177,12 @@ namespace Assets.Scripts.Utils.DatabaseAccess
 
                     if (vPrfConnCheck != null && vPrfConnCheck is string)
                     {
-                        ApplicationSettings.PreferedConnName = (string)vPrfConnCheck;
+                        string vSettings = (string)vPrfConnCheck;
+                        if (vSettings.Length == 0)
+                        {
+                            ApplicationSettings.PreferedConnName = Application.dataPath + "\\DemoRecordings";
+                        }
+                        ApplicationSettings.PreferedConnName = vSettings;
                     }
 
                     if (vPrfConnCheck != null && vLaunchStart is bool)
