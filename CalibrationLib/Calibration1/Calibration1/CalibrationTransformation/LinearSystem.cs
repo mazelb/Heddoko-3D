@@ -63,8 +63,7 @@ namespace Calibration1.CalibrationTransformation
                 {
                     this.vA[i, j] = Sign*vA[i, j];
                 }
-            }
-                        
+            }                        
             mNumberlineb = 9;
             mNumbercolb  = 1;
             mNumberlineA = 9;
