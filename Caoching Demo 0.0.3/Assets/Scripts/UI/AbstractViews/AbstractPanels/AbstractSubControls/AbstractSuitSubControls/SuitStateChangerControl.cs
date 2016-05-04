@@ -111,9 +111,11 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.Abs
                     }
                     break;
                 case SuitState.Undefined:
-                    //todo
+                    SuitConnection.DisconnectBrainpack();
+                    SuitStateControl.interactable = true;
+                    SuitStateControl.colors = InErrorStateBlock;
+                    ControlText.text = "CHECK BRAINPACK";
                     break;
-
             }
             SuitState = vSuitState;
         }

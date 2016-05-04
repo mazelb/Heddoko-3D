@@ -17,7 +17,7 @@ using HeddokoLib.utils;
 using UnityEngine;
 using Assets.Scripts.Utils.UnityUtilities;
 using Assets.Scripts.Utils.UnityUtilities.Repos;
-using UIWidgets;
+using UIWidgets; 
 
 namespace Assets.Scripts.Communication.Controller
 {
@@ -162,7 +162,7 @@ namespace Assets.Scripts.Communication.Controller
 
         }
 
-        internal void DisconnectBrainpack()
+        public override void DisconnectBrainpack()
         {
             HeddokoPacket vHeddokoPacket = new HeddokoPacket(HeddokoCommands.DisconnectBrainpack, "");
             ChangeCurrentState(BrainpackConnectionState.Disconnected);
@@ -582,7 +582,7 @@ namespace Assets.Scripts.Communication.Controller
                 return;
             }
 
-            if (Regex.IsMatch(vMsg, "Idle", RegexOptions.IgnoreCase))
+            if (Regex.IsMatch(vMsg, "Idle", RegexOptions.IgnoreCase) || string.IsNullOrEmpty(vMsg))
             {
                 vReceivedState = SuitState.Idle;
             }
