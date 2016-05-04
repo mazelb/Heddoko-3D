@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: a9c039f23c7dceb4ba566fc2ae0afa4c
-timeCreated: 1461802721
+guid: 5f74b4c422546da45940a6547a1e0d52
+timeCreated: 1461712508
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName: {}
@@ -51,7 +51,7 @@ TextureImporter:
   spriteSheet:
     sprites: []
     outline: []
-  spritePackingTag: 
+  spritePackingTag: fa_icons
   userData: 
   assetBundleName: 
   assetBundleVariant: 

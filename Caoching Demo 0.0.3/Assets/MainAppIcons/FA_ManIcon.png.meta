@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 927780d8d1c36a9419b82d6f0c766637
-timeCreated: 1461878402
+guid: 9f4d78ddbb1e4be46b6b97eba1172b17
+timeCreated: 1461286192
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName: {}
@@ -23,7 +23,7 @@ TextureImporter:
   grayScaleToAlpha: 0
   generateCubemap: 0
   cubemapConvolution: 0
-  cubemapConvolutionSteps: 7
+  cubemapConvolutionSteps: 8
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
@@ -51,7 +51,7 @@ TextureImporter:
   spriteSheet:
     sprites: []
     outline: []
-  spritePackingTag: 
+  spritePackingTag: icons
   userData: 
   assetBundleName: 
   assetBundleVariant: 

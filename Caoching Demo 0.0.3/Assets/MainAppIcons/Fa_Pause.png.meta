@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: 9d420a0c24031334296f33f94fccbcd6
-timeCreated: 1461802680
+guid: c6da331a9e64d6d409ecc6342a7bc452
+timeCreated: 1461624157
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName: {}
@@ -51,7 +51,7 @@ TextureImporter:
   spriteSheet:
     sprites: []
     outline: []
-  spritePackingTag: 
+  spritePackingTag: recordingPlay
   userData: 
   assetBundleName: 
   assetBundleVariant: 

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: f014c29c09e5b7f4293eb3d0a7ec8d46
-timeCreated: 1461624228
+guid: 64d9517f8c8b3ae4598efe8df95246d0
+timeCreated: 1461255182
 licenseType: Pro
 TextureImporter:
   fileIDToRecycleName: {}
@@ -23,7 +23,7 @@ TextureImporter:
   grayScaleToAlpha: 0
   generateCubemap: 0
   cubemapConvolution: 0
-  cubemapConvolutionSteps: 7
+  cubemapConvolutionSteps: 8
   cubemapConvolutionExponent: 1.5
   seamlessCubemap: 0
   textureFormat: -1
@@ -51,7 +51,7 @@ TextureImporter:
   spriteSheet:
     sprites: []
     outline: []
-  spritePackingTag: 
+  spritePackingTag: fa_icons
   userData: 
   assetBundleName: 
   assetBundleVariant: 
