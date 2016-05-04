@@ -23,8 +23,8 @@ namespace Assets.Scripts.Utils.DebugContext
         public UnityEngine.UI.Text Text;
         public UnityEngine.UI.InputField ComInputField;
         public UnityEngine.UI.Button PairButton;
-        //Matches strings that begin with COM and proceeded by at least 1 number
-        string mStringRgx = @"^(?i)com(?-i)\d+";
+        //Matches strings that begin with COM and proceeded by three numbers 
+        string mStringRgx = @"^(?i)com(?-i)\d{1,3}$";
 
         /// <summary>
         /// Depending on the current active state, flips to enable or disable
