@@ -7,6 +7,7 @@
 */
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
@@ -57,7 +58,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// <param name="vIndex"></param>
         public void UpdateCurrentTime(int vIndex)
         {
-
             //update the slider
             PlaySlider.value = vIndex;
             float vCurrTimeStamp = ParentPanel.GetTimeStampFromFrameIdx(vIndex);
@@ -105,7 +105,9 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         {
             if (IsInteractable)
             {
-                ParentPanel.SetPlayPositionAt((int)PlaySlider.value);
+                int vPlaySliderValue = (int)PlaySlider.value;
+                ParentPanel.SetPlayPositionAt(vPlaySliderValue);
+                Debug.Log(vPlaySliderValue);
                 ParentPanel.ChangeState(PlaybackState.Pause);
             }
         }

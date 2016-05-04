@@ -432,7 +432,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// <param name="vIndex"></param>
         public void SetPlayPositionAt(int vIndex)
         {
-            mPlaybackTask.PlayFromIndex(--vIndex);
+            mPlaybackTask.PlayFromIndex(vIndex);
         }
 
         /// <summary>

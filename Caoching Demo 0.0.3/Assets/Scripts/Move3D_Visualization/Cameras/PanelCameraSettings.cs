@@ -34,7 +34,7 @@ namespace Assets.Scripts.UI.AbstractViews.camera
             mRenderingLayerMask = vMask;
 
             RectTransform vRectTransform = vPanelSettings.RectTransform;   
-            Vector3[] vCorners =  new Vector3[  4];
+            Vector3[] vCorners =  new Vector3[ 4];
             vRectTransform.GetWorldCorners(vCorners);
 
             vCorners[0].z = 10f;// -Camera.main.transform.position.z;
