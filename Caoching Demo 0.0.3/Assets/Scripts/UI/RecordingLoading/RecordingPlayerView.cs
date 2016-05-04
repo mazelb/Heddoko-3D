@@ -60,8 +60,9 @@ namespace Assets.Scripts.UI.RecordingLoading
                     mPanelNodes[0].PanelSettings.GetPanelOfType(ControlPanelType.RecordingPlaybackControlPanel);
             vPbCtrlPanel.BodyUpdatedEvent += SetNewBody;
             vPbCtrlPanel.SingleRecordingLoadSubControl.SetNewButtonControl(LoadRecordingButton);
+         
             //Call the load recording panel
-            vPbCtrlPanel.SingleRecordingLoadSubControl.SelectedRecording();
+            //   vPbCtrlPanel.SingleRecordingLoadSubControl.SelectedRecording();
         }
 
         /// <summary>
@@ -69,7 +70,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         public override void Hide()
         {
-          
+            bool vIsLerp = BodySegment.IsUsingInterpolation;
             if (mIsInitialized)
             {
                 foreach (var vPanelNodes in mPanelNodes)
@@ -82,6 +83,16 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 PreviousView.Show();
             }
+            try
+            {
+                BodySegment.IsUsingInterpolation = false;
+                mCurrBody.View.ResetInitialFrame();
+            }
+            catch
+            {
+
+            }
+            BodySegment.IsUsingInterpolation = vIsLerp;
         }
 
         public override void Show()
