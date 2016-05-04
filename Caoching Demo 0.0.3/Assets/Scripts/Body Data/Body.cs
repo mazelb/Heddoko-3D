@@ -352,8 +352,6 @@ public class Body
            mBodyFrameThread.InitializeInboundSuitBuffer();
         }
         mBodyFrameThread.BodyFrameBuffer.Clear();
-        View.StartUpdating = true;
-        mBodyFrameThread.Start();
         //1 inform the brainpack connection controller to establish a new connection
         //1i: Listen to the event that the brainpack has been disconnected
         BrainpackConnectionController.Instance.DisconnectedStateEvent += BrainPackStreamDisconnectedListener;
@@ -369,8 +367,10 @@ public class Body
             BrainpackConnectionController.Instance.ConnectedStateEvent -= BrainPackStreamReadyListener;
             BrainpackConnectionController.Instance.ConnectedStateEvent += BrainPackStreamReadyListener;
         }
-
+        
+        mBodyFrameThread.Start();
         View.Init(this, mBodyFrameThread.BodyFrameBuffer);
+        View.StartUpdating = true;
     }
 
     /// <summary>
@@ -411,32 +411,43 @@ public class Body
     /// <param name="vDic">Dictionary vDic: The tracking matrices to be applied. </param> 
     public static void ApplyTracking(Body vBody, Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic)
     {
+        Profiler.BeginSample("BODY: ApplyTracking");
         //get the list of segments of the speicfied vBody
         List<BodySegment> vListBodySegments = vBody.BodySegments;
 
-        foreach (BodySegment vBodySegment in vListBodySegments)
+        //foreach (BodySegment vBodySegment in vListBodySegments)
+        for (int i  = 0 ; i < vListBodySegments.Count; i++)
         {
+            Profiler.BeginSample("BODY:   foreach (BodySegment vBodySegment)");
             //of the current body segment, get the appropriate subsegments
             List<BodyStructureMap.SensorPositions> vSensPosList =
-                BodyStructureMap.Instance.SegmentToSensorPosMap[vBodySegment.SegmentType];
+                BodyStructureMap.Instance.SegmentToSensorPosMap[vListBodySegments[i].SegmentType];
 
             //create a Dictionary of BodyStructureMap.SensorPositions, float[,] , which will be passed
             //to the segment
             Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vFilteredDictionary = new Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure>(2);
 
-            foreach (BodyStructureMap.SensorPositions vSenPos in vSensPosList)
+            //foreach (BodyStructureMap.SensorPositions vSenPos in vSensPosList)
+            for(int j = 0 ; j < vSensPosList.Count; j++)
             {
-                if (vDic.ContainsKey(vSenPos))
+                Profiler.BeginSample("BODY:   foreach (BodyStructureMap.SensorPositions)");
+            //    if (vDic.ContainsKey(vSenPos))
+                    if (vDic.ContainsKey(vSensPosList[j]))
                 {
-                    BodyStructureMap.TrackingStructure vTrackedMatrices = vDic[vSenPos];
-                    vFilteredDictionary.Add(vSenPos, vTrackedMatrices);
+                    //BodyStructureMap.TrackingStructure vTrackedMatrices = vDic[vSenPos];
+                    //  vFilteredDictionary.Add(vSenPos, vTrackedMatrices);
+                    BodyStructureMap.TrackingStructure vTrackedMatrices = vDic[vSensPosList[j]];
+                    vFilteredDictionary.Add(vSensPosList[j], vTrackedMatrices);
                 }
+                Profiler.EndSample();
             }
-            DebugLogger.Instance.LogMessage(Assets.Scripts.Utils.DebugContext.logging.LogType.SegmentUpdateStart, "Segment Update start: " + vBodySegment.SegmentType.ToString());
+            Profiler.EndSample();
+            //DebugLogger.Instance.LogMessage(Assets.Scripts.Utils.DebugContext.logging.LogType.SegmentUpdateStart, "Segment Update start: " + vBodySegment.SegmentType.ToString());
 
-            vBodySegment.UpdateSegment(vFilteredDictionary);
-            DebugLogger.Instance.LogMessage(Assets.Scripts.Utils.DebugContext.logging.LogType.SegmentUpdateStart, "Segment Update finish  : " + vBodySegment.SegmentType.ToString());
-
+            //  vBodySegment.UpdateSegment(vFilteredDictionary);
+            vListBodySegments[i].UpdateSegment(vFilteredDictionary);
+         //   DebugLogger.Instance.LogMessage(Assets.Scripts.Utils.DebugContext.logging.LogType.SegmentUpdateStart, "Segment Update finish  : " + vBodySegment.SegmentType.ToString());
+          
         }
     }
 

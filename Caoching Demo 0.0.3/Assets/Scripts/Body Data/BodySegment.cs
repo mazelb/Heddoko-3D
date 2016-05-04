@@ -112,7 +112,9 @@ public partial class BodySegment
     /// <param name="vFilteredDictionary">Dictionnary of tracked segments and their transformations.</param>
     internal void UpdateSegment(Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vFilteredDictionary)
     {
+         Profiler.BeginSample("MapSubSegments");
         MapSubSegments(vFilteredDictionary);
+        Profiler.EndSample();
     }
 
     /// <summary>
