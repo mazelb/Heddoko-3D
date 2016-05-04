@@ -8,8 +8,7 @@
 
 using System;
 
-using System.Collections.Generic;
-using System.IO;
+using System.Collections.Generic; 
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Communication.DatabaseConnectionPipe;
@@ -19,8 +18,7 @@ using Assets.Scripts.UI.Scene_3d.View;
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.UI.Tagging;
 using Assets.Scripts.Utils.DebugContext.logging;
-using UnityEngine;
-using UnityEngine.Experimental.Director;
+using UnityEngine; 
 using Application = UnityEngine.Application;
 
 namespace Assets.Scripts.Utils.DatabaseAccess
@@ -52,7 +50,7 @@ namespace Assets.Scripts.Utils.DatabaseAccess
             InjectDatabaseDependents();
             InjectTaggingManagerDependents();
             InitializeLoggers();
-
+            QualitySettings.vSyncCount = 0;
             bool vAppSafelyLaunched;
             EnableObjects(false);
             BodySegment.IsTrackingHeight = false;
