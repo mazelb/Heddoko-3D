@@ -25,21 +25,19 @@ namespace Calibration1.CalibrationTransformation
     /// The method allow to handle more then 2 set but now it's
     /// hard coded. 
     public class LinearSystem
-    {
-        
+    {        
         public int mNumberlineb = 0;
         public int mNumbercolb  = 0;
         public int mNumberlineA = 0;
         public int mNumbercolA  = 0;
         public int mNumberOfSystemAdd  = 0;        
         static int mMaxNumbersOfSystem = 2;
+        const  int mMaxnumberlineA  = 9;    
         static int mMaxnumbercolA   = mMaxNumbersOfSystem * 2;
         const  int mMaxnumberlineb  = 9;
-        const  int mMaxnumbercolb   = 1;
-        const  int mMaxnumberlineA  = 9;        
+        const  int mMaxnumbercolb   = 1;            
         public Matrix<float> vA;
         public Matrix<float> vb;
-
         /// <summary>
         /// Default constructor        
         /// </summary>
@@ -94,12 +92,7 @@ namespace Calibration1.CalibrationTransformation
             for (int j = 0; j < 9; j++)
             {  
                 this.vb[j,0] =  this.vb[j, 0] + Sign * vb[j, 0] ;
-            }
-
-            if ((mNumbercolA > LinearSystem.mMaxnumbercolA) || (mNumberlineA > LinearSystem.mMaxnumberlineA))
-            {
-                System.Console.Write("Exceed max size of A");
-            }
+            }           
             mNumberlineb =  9;
             mNumbercolb  =  1;
             mNumberlineA =  9;
