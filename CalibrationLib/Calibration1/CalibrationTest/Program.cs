@@ -20,7 +20,7 @@ namespace CalibrationTest
             Vector<float> RawSensDataAngles2 = Vector<float>.Build.Dense(3, 0);
             ShiuTransform AvatarToDataSensorsTransform = new ShiuTransform(Test);
             float K  = 2.0F * Mathf.PI / 360;
-            float x  = 105.0F; float y = 105.0F; float z = 105.0F;
+            float x  = 45.0F; float y = 45.0F; float z = 45.0F;
             AvatarToDataSensorsTransform.TestFunction("CleanRotation", x*K, y*K, z*K);
             Xtmp = AvatarToDataSensorsTransform.Shiufunc(RawSensDataAngles1, RawSensDataAngles2);
             invXtmp = Xtmp.Transpose();
