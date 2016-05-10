@@ -83,8 +83,9 @@ namespace Assets.Scripts.Body_Data.CalibrationData
         {
             if (!sIsInitialized)
             {
-                sIsInitialized = true;
                 Init();
+                sIsInitialized = true;
+                
             }
         }
         /// <summary>
@@ -119,6 +120,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
         ArmsForward = 3,
         ArmsForwardToArmsDown = 4,
         ArmsDown = 5,
-        Count = 6
+        Invalid =6,
+        Count = 7
     }
 }

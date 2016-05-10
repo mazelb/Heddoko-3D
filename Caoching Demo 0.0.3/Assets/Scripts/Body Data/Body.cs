@@ -46,16 +46,11 @@ public class Body
     public BodyFrame CurrentBodyFrame;
     [SerializeField]
     public BodyFrame PreviousBodyFrame;
-
-    private BodyCalibrationSetting mBodyCalibrationSetting = new BodyCalibrationSetting();   
-
-
-    [SerializeField]
     //Initial body Frame
+    [SerializeField]
     public BodyFrame InitialBodyFrame { get; set; }
 
     private BodyFrameThread mBodyFrameThread = new BodyFrameThread();
-
     public Dictionary<BodyStructureMap.SegmentTypes, SegmentAnalysis> AnalysisSegments = new Dictionary<BodyStructureMap.SegmentTypes, SegmentAnalysis>(5);
     public LeftArmAnalysis LeftArmAnalysis;
     public RightArmAnalysis RightArmAnalysis;
@@ -68,6 +63,7 @@ public class Body
     [SerializeField]
     private RenderedBody mRenderedBody;
 
+    internal BodyFrameCalibrationContainer mBodyFrameCalibrationContainer = new BodyFrameCalibrationContainer();
     /**
     * View
     * @param 
@@ -185,6 +181,8 @@ public class Body
             vSegment.SegmentType = type;
             vSegment.InitializeBodySegment(type);
             vSegment.ParentBody = this;
+            //set the reference to the BodyFrameCalibrationContainer
+            vSegment.BodyFrameCalibrationContainer = mBodyFrameCalibrationContainer;
             BodySegments.Add(vSegment);
 
             vSegment.AssociatedView.transform.parent = View.transform;
@@ -245,7 +243,7 @@ public class Body
     {
         PreviousBodyFrame = CurrentBodyFrame;
         CurrentBodyFrame = vFrame;
-        mBodyCalibrationSetting.UpdateTimeFromBodyFrame(CurrentBodyFrame);     
+
         for (int i = 0; i < BodySegments.Count; i++)
         {
             BodySegments[i].UpdateSensorsData(vFrame);
@@ -260,8 +258,9 @@ public class Body
     public void SetInitialFrame(BodyFrame vInitialFrame)
     {
         InitialBodyFrame = vInitialFrame;
-        //set the body calibration setting with the new frame
-        mBodyCalibrationSetting.SetNewStartTimeFromBodyFrame(vInitialFrame);    
+        //Reset the body frame calibration container's initial time
+        if (vInitialFrame != null) ;
+        mBodyFrameCalibrationContainer.Reset(vInitialFrame);
         UpdateInitialFrameData();
     }
 
@@ -272,7 +271,7 @@ public class Body
     {
         for (int i = 0; i < BodySegments.Count; i++)
         {
-            BodySegments[i].UpdateInitialSensorsData(InitialBodyFrame, mBodyCalibrationSetting);    
+            BodySegments[i].UpdateInitialSensorsData(InitialBodyFrame);
         }
     }
 
@@ -293,10 +292,10 @@ public class Body
     * @brief  Play a recording from the given recording UUID. 
     */
     public void PlayRecording(string vRecUuid)
-    { 
+    {
         //Stops the current thread from running.
         StopThread();
- 
+
         //get the raw frames from recording 
         //first try to get the recording from the recording manager. 
         BodyRecordingsMgr.Instance.TryGetRecordingByUuid(vRecUuid, PlayRecordingCallback);
@@ -348,8 +347,8 @@ public class Body
             mBodyFrameThread = new BodyFrameThread(vBuffer1, BodyFrameThread.SourceDataType.BrainFrame);
         }
         else
-        { 
-           mBodyFrameThread.InitializeInboundSuitBuffer();
+        {
+            mBodyFrameThread.InitializeInboundSuitBuffer();
         }
         mBodyFrameThread.BodyFrameBuffer.Clear();
         //1 inform the brainpack connection controller to establish a new connection
@@ -367,7 +366,7 @@ public class Body
             BrainpackConnectionController.Instance.ConnectedStateEvent -= BrainPackStreamReadyListener;
             BrainpackConnectionController.Instance.ConnectedStateEvent += BrainPackStreamReadyListener;
         }
-        
+
         mBodyFrameThread.Start();
         View.Init(this, mBodyFrameThread.BodyFrameBuffer);
         View.StartUpdating = true;
@@ -378,7 +377,7 @@ public class Body
     /// </summary>
     private void BrainPackStreamReadyListener()
     {
-        BrainpackConnectionController.Instance.ReadyToLinkBodyToBP(mBodyFrameThread); 
+        BrainpackConnectionController.Instance.ReadyToLinkBodyToBP(mBodyFrameThread);
     }
 
     /// <summary>
@@ -411,12 +410,13 @@ public class Body
     /// <param name="vDic">Dictionary vDic: The tracking matrices to be applied. </param> 
     public static void ApplyTracking(Body vBody, Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic)
     {
+               //unity debug
         Profiler.BeginSample("BODY: ApplyTracking");
         //get the list of segments of the speicfied vBody
         List<BodySegment> vListBodySegments = vBody.BodySegments;
 
         //foreach (BodySegment vBodySegment in vListBodySegments)
-        for (int i  = 0 ; i < vListBodySegments.Count; i++)
+        for (int i = 0; i < vListBodySegments.Count; i++)
         {
             Profiler.BeginSample("BODY:   foreach (BodySegment vBodySegment)");
             //of the current body segment, get the appropriate subsegments
@@ -428,11 +428,11 @@ public class Body
             Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vFilteredDictionary = new Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure>(2);
 
             //foreach (BodyStructureMap.SensorPositions vSenPos in vSensPosList)
-            for(int j = 0 ; j < vSensPosList.Count; j++)
+            for (int j = 0; j < vSensPosList.Count; j++)
             {
                 Profiler.BeginSample("BODY:   foreach (BodyStructureMap.SensorPositions)");
-            //    if (vDic.ContainsKey(vSenPos))
-                    if (vDic.ContainsKey(vSensPosList[j]))
+                //    if (vDic.ContainsKey(vSenPos))
+                if (vDic.ContainsKey(vSensPosList[j]))
                 {
                     //BodyStructureMap.TrackingStructure vTrackedMatrices = vDic[vSenPos];
                     //  vFilteredDictionary.Add(vSenPos, vTrackedMatrices);
@@ -446,8 +446,8 @@ public class Body
 
             //  vBodySegment.UpdateSegment(vFilteredDictionary);
             vListBodySegments[i].UpdateSegment(vFilteredDictionary);
-         //   DebugLogger.Instance.LogMessage(Assets.Scripts.Utils.DebugContext.logging.LogType.SegmentUpdateStart, "Segment Update finish  : " + vBodySegment.SegmentType.ToString());
-          
+            //   DebugLogger.Instance.LogMessage(Assets.Scripts.Utils.DebugContext.logging.LogType.SegmentUpdateStart, "Segment Update finish  : " + vBodySegment.SegmentType.ToString());
+
         }
     }
     /**
@@ -550,7 +550,7 @@ public class Body
         if (RenderedBody != null)
         {
             RenderedBodyPool.ReleaseResource(RenderedBody);
-          RenderedBody = null;
+            RenderedBody = null;
         }
         for (int i = 0; i < BodySegments.Count; i++)
         {

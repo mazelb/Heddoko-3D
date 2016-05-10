@@ -18,6 +18,8 @@ using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Torso;
 using System.IO;
 using Assets.Scripts.Utils;
+using Assets.Scripts.Body_Data.CalibrationData;
+
 public partial class BodySegment
 {
 #if SEGMENTS_DEBUG
@@ -1246,5 +1248,6 @@ public partial class BodySegment
     }
 
 #endif
+   
 }
 

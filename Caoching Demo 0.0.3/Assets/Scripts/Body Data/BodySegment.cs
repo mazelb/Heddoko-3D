@@ -34,13 +34,14 @@ using MathNet.Numerics.LinearAlgebra;
 /// </summary>
 public partial class BodySegment
 {
+    public BodyFrameCalibrationContainer BodyFrameCalibrationContainer { get; internal set; }
 #if !SEGMENTS_DEBUG
     //Segment Type 
     public BodyStructureMap.SegmentTypes SegmentType;
 
     //Body SubSegments 
     public Dictionary<int, BodySubSegment> BodySubSegmentsDictionary = new Dictionary<int, BodySubSegment>();
-    private BodyCalibrationSetting mBodyCalibration;   ///****************/////
+    private BodyFrameCalibrationContainer mBodyFrameCalibrationContainer;
     public Body ParentBody;
 
     //Is segment tracked (based on body type) 
@@ -132,7 +133,7 @@ public partial class BodySegment
     /// </summary>
     /// <param name="vFrame">the body frame whose subframes will updates to initial sensors.</param>
     /// <param name="vBodyCalibrationSetting">optional parameter to set the current calibration setting</param>
-    public void UpdateInitialSensorsData(BodyFrame vFrame, BodyCalibrationSetting vBodyCalibrationSetting = null)     ///*************************/////
+    public void UpdateInitialSensorsData(BodyFrame vFrame)     ///*************************/////
     {
         IsReseting = true;
         List<BodyStructureMap.SensorPositions> vSensorPos = BodyStructureMap.Instance.SegmentToSensorPosMap[SegmentType];
@@ -598,6 +599,19 @@ public partial class BodySegment
         vLeftArmAnalysis.LoArTransform = vLASubsegment.AssociatedView.SubsegmentTransform;
         vLeftArmAnalysis.DeltaTime = DeltaTime;
         vLeftArmAnalysis.AngleExtraction();//*/
+
+        //testing Calibration container
+        /*************** Get a list of a calibration movement type ****************************/
+        //List<Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure>> vItem = mBodyFrameCalibrationContainer.GetListOfCalibrationMovement(CalibrationType.Tpose);
+        /*************** possible check for null references ****************************/
+
+        //if(vItem != null)
+        //{
+        /*************** Get first movement frame's CurrRawEuler of the left forearm****************************/
+
+        //    vItem[0][BodyStructureMap.SensorPositions.SP_LeftForeArm].CurrRawEuler
+
+        //}
     }
 
     /// <summary>
