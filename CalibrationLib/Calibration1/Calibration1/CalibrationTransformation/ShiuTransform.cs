@@ -74,8 +74,12 @@ namespace Calibration1.CalibrationTransformation
             Matrix<float> SZ2 = EulerAngleToRotationMatrix(vEulerA2Pose[2], "Z");
 
             ///Resulting Rotation matrix for the poses
-            Matrix<float> vAMatrixPose1 = SZ1.Multiply(SY1.Multiply(SX1));   //resulting rotation matrix = R(Z)xR(Y)xR(X)
-            Matrix<float> vAMatrixPose2 = SZ2.Multiply(SY2.Multiply(SX2));
+            //Matrix<float> vAMatrixPose1 = SZ1.Multiply(SY1.Multiply(SX1));   //resulting rotation matrix = R(Z)xR(Y)xR(X)
+            //Matrix<float> vAMatrixPose2 = SZ2.Multiply(SY2.Multiply(SX2));
+            Matrix<float> vAMatrixPose1 = SZ1.Multiply(SX1.Multiply(SY1));
+            Matrix<float> vAMatrixPose2 = SZ2.Multiply(SX2.Multiply(SY2));
+
+
 
             Console.WriteLine("----------Ideal rotations Matrix of Pose1 et Pose2--------------");
             Print(vAMatrixPose1);
@@ -104,10 +108,12 @@ namespace Calibration1.CalibrationTransformation
                 Matrix<float> Rz2 = EulerAngleToRotationMatrix(RawSensorsEulerAngle2[2], "Z");
 
                 ///Resulting Rotation matrix 
-                vBMatrixSensor1 = Rz1.Multiply(Ry1.Multiply(Rx1));
-                vBMatrixSensor2 = Rz2.Multiply(Ry2.Multiply(Rx2));
+                //vBMatrixSensor1 = Rz1.Multiply(Ry1.Multiply(Rx1));
+                //vBMatrixSensor2 = Rz2.Multiply(Ry2.Multiply(Rx2));
+                vBMatrixSensor1 = Rz1.Multiply(Rx1.Multiply(Ry1));
+                vBMatrixSensor2 = Rz2.Multiply(Rx2.Multiply(Ry2));
             }
-                        
+
             ///Matrix example from the paper : Calibration of Wriste-Mounted Robotic Sensors by 
             ///Solving Homogeneous Transform Equations of the Form AX = XB (Y.C. Shiu, IEEE Trans. on Robotics And Automation, Feb. 1989)
             /*vAMatrixPose1[0, 0] = -0.989992F; vAMatrixPose1[0, 1] = -0.141120F; vAMatrixPose1[0, 2] = 0.0F; vAMatrixPose1[0, 3] = 0.0F;
@@ -190,14 +196,38 @@ namespace Calibration1.CalibrationTransformation
             Beta = Axb.Solve();
             float theta1 = Mathf.Atan2(Beta[1,0], Beta[0,0]);
             float theta2 = Mathf.Atan2(Beta[3,0], Beta[2,0]);
+<<<<<<< HEAD
             
+=======
+            /*Console.WriteLine("------beta1 and beta2:-------------");
+            Console.WriteLine(Beta);
+            Console.WriteLine("------Theta1 and Theta2:-------------");
+            Console.WriteLine(theta1);
+            Console.WriteLine(theta2);
+            Console.WriteLine("------ka1 and ka2:-------------");
+            Console.WriteLine(ka1);
+            Console.WriteLine(ka2);*/
+>>>>>>> shuibranch
             Matrix<float> RA1 = Xpreliminairy(theta1, ka1);
             Matrix<float> RA2 = Xpreliminairy(theta2, ka2);
             Matrix<float> R1  = RA1 * Xp1;
             Matrix<float> R2  = RA2 * Xp2;
+
             Console.WriteLine("------Transformations(Solution of Algo1):R1 and R2:-------------");
             Print(R1);
+<<<<<<< HEAD
             Print(R1);
+=======
+            Print(R2);
+            //vAMatrixPose1 
+            //vAMatrixPose2
+            Matrix<float> invR1 = R1.Transpose();
+            Matrix<float> A1 = R1.Multiply(vBMatrixSensor1).Multiply(invR1);
+            Matrix<float> A2 = R1.Multiply(vBMatrixSensor2).Multiply(invR1);
+            Console.WriteLine("-------------------------A1 and A2:-----------------------------");
+            Print(A1);
+            Print(A2);
+>>>>>>> shuibranch
             Console.WriteLine("----------------------------------------------------------------");
             return R1;
         }
@@ -272,7 +302,12 @@ namespace Calibration1.CalibrationTransformation
         /// <param name="AxisOfRotation">Rotation normalize axis</param>
         /// <returns>Matrix<float> : first part of the solution</returns>
         public Matrix<float> Xpreliminairy(float AngleOfRotation, Vector<float> AxisOfRotation)
+<<<<<<< HEAD
         {
+=======
+        {            
+            
+>>>>>>> shuibranch
             float A = 0.0F;            
             Matrix<float> Xp = Matrix<float>.Build.Dense(4, 4, 0);
             //Skew part
@@ -427,7 +462,15 @@ namespace Calibration1.CalibrationTransformation
                 Matrix<float> RotX   = EulerAngleToRotationMatrix(Xf,"X");
                 Matrix<float> RotY   = EulerAngleToRotationMatrix(Yf,"Y");
                 Matrix<float> RotZ   = EulerAngleToRotationMatrix(Zf,"Z");
-                FakeOrientationSensorSys = RotZ.Multiply(RotY.Multiply(RotX));                
+                Console.WriteLine("Rotation matrix for Euler Angles");
+                Print(RotX);
+                Print(RotY);
+                Print(RotZ);
+                FakeOrientationSensorSys = RotZ.Multiply(RotY.Multiply(RotX));
+                Console.WriteLine("Final Rotation");
+                Print(FakeOrientationSensorSys);
+
+
             }
             else if(mode == "NoisyRotation")
             {
