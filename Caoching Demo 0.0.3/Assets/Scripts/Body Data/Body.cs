@@ -47,7 +47,7 @@ public class Body
     [SerializeField]
     public BodyFrame PreviousBodyFrame;
 
-    private BodyCalibrationSetting mBodyCalibrationSetting = new BodyCalibrationSetting();   ///*************************************///////
+    private BodyCalibrationSetting mBodyCalibrationSetting = new BodyCalibrationSetting();   
 
 
     [SerializeField]
@@ -245,7 +245,7 @@ public class Body
     {
         PreviousBodyFrame = CurrentBodyFrame;
         CurrentBodyFrame = vFrame;
-        mBodyCalibrationSetting.UpdateTimeFromBodyFrame(CurrentBodyFrame);     ///*************************/////
+        mBodyCalibrationSetting.UpdateTimeFromBodyFrame(CurrentBodyFrame);     
         for (int i = 0; i < BodySegments.Count; i++)
         {
             BodySegments[i].UpdateSensorsData(vFrame);
@@ -261,7 +261,7 @@ public class Body
     {
         InitialBodyFrame = vInitialFrame;
         //set the body calibration setting with the new frame
-        mBodyCalibrationSetting.SetNewStartTimeFromBodyFrame(vInitialFrame);    ///*************************/////
+        mBodyCalibrationSetting.SetNewStartTimeFromBodyFrame(vInitialFrame);    
         UpdateInitialFrameData();
     }
 
@@ -272,7 +272,7 @@ public class Body
     {
         for (int i = 0; i < BodySegments.Count; i++)
         {
-            BodySegments[i].UpdateInitialSensorsData(InitialBodyFrame, mBodyCalibrationSetting);    ///*************************/////
+            BodySegments[i].UpdateInitialSensorsData(InitialBodyFrame, mBodyCalibrationSetting);    
         }
     }
 
@@ -450,7 +450,6 @@ public class Body
           
         }
     }
-
     /**
     * GetTracking()
     * @brief  Play a recording from the given recording UUID. 

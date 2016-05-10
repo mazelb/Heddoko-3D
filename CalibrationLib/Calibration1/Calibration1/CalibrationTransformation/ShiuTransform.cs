@@ -35,16 +35,22 @@ namespace Calibration1.CalibrationTransformation
         static string sTpose       = "T";
         static string sZombiepose  = "Z";
         static string sSoldierpose = "S";
-        static string pose1 = sZombiepose;
-        static string pose2 = sSoldierpose;        
+        static string pose1 = sZombiepose;   
+        static string pose2 = sSoldierpose;
         public bool Test    = false       ;
         public Matrix<float> TestB1 = Matrix<float>.Build.Dense(4, 4, 0);
         public Matrix<float> TestB2 = Matrix<float>.Build.Dense(4, 4, 0);
         /// <summary>
+        /// Default constructor
+        /// </summary>
+        static ShiuTransform()
+        {            
+        }
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="test">describing if ours intention is to test the class(test=true) or not(test=false)</param>
-        public ShiuTransform(bool test=false)
+        public ShiuTransform(bool test)
         {
             this.Test   = test;
         }
@@ -167,7 +173,7 @@ namespace Calibration1.CalibrationTransformation
             /// kai (ka1 and ka2) is the same rotation axis of the initiales A1 and A2 matrix
 
             Xp1 = Xpreliminairy(W1, k1);
-            Xp2 = Xpreliminairy(W2, k2);
+            Xp2 = Xpreliminairy(W2, k2); 
 
             ///instantiation of containter for the linear system to be form
             LinearSystem Axb = new LinearSystem();
@@ -190,14 +196,18 @@ namespace Calibration1.CalibrationTransformation
             Beta = Axb.Solve();
             float theta1 = Mathf.Atan2(Beta[1,0], Beta[0,0]);
             float theta2 = Mathf.Atan2(Beta[3,0], Beta[2,0]);
-            
+            Console.WriteLine("------beta1 and beta2:-------------");
+            Console.WriteLine(Beta);
+            Console.WriteLine("------Theta1 and Theta2:-------------");
+            Console.WriteLine(theta1);
+            Console.WriteLine(theta2);
             Matrix<float> RA1 = Xpreliminairy(theta1, ka1);
-            Matrix<float> RA2 = Xpreliminairy(theta2, ka2);
+            Matrix<float> RA2 = Xpreliminairy(theta2, ka2); 
             Matrix<float> R1  = RA1 * Xp1;
             Matrix<float> R2  = RA2 * Xp2;
             Console.WriteLine("------Transformations(Solution of Algo1):R1 and R2:-------------");
             Print(R1);
-            Print(R1);
+            Print(R2);
             Console.WriteLine("----------------------------------------------------------------");
             return R1;
         }
@@ -272,14 +282,16 @@ namespace Calibration1.CalibrationTransformation
         /// <param name="AxisOfRotation">Rotation normalize axis</param>
         /// <returns>Matrix<float> : first part of the solution</returns>
         public Matrix<float> Xpreliminairy(float AngleOfRotation, Vector<float> AxisOfRotation)
-        {
+        {            
+            Console.WriteLine("Rotation axis");
+            Console.WriteLine(AxisOfRotation);
             float A = 0.0F;            
             Matrix<float> Xp = Matrix<float>.Build.Dense(4, 4, 0);
             //Skew part
-            Xp[1, 0] = -AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
-            Xp[0, 1] =  AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
-            Xp[2, 0] =  AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
-            Xp[0, 2] = -AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
+            Xp[1, 0] =  AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
+            Xp[0, 1] = -AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
+            Xp[2, 0] = -AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
+            Xp[0, 2] =  AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
             Xp[2, 1] =  AxisOfRotation[0] * Mathf.Sin(AngleOfRotation);
             Xp[1, 2] = -AxisOfRotation[0] * Mathf.Sin(AngleOfRotation);
             for (int i = 0; i < 3; i++)
@@ -318,7 +330,7 @@ namespace Calibration1.CalibrationTransformation
             vRotationAxis[0] = vScalarxLogRotationMatrix[2, 1];
             vRotationAxis[1] = vScalarxLogRotationMatrix[0, 2];
             vRotationAxis[2] = vScalarxLogRotationMatrix[1, 0];            
-            vRotationAxis = vRotationAxis.Normalize(2);
+            vRotationAxis    = vRotationAxis.Normalize(2);
             return vRotationAxis;
         }
         /////////////////////////--------Change from Left to Rigth Handed convention--------/////////////
