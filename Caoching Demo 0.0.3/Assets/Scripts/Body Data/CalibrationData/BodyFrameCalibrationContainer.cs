@@ -10,6 +10,7 @@ using System.Collections.Generic;
 
 namespace Assets.Scripts.Body_Data.CalibrationData
 {
+    public delegate void CompletedCollectionEvent();
     /// <summary>
     /// Calibration settings and times of a body calibration
     /// </summary>
@@ -18,16 +19,36 @@ namespace Assets.Scripts.Body_Data.CalibrationData
         private float mStartTime;
         private float mTime;
         private bool mFirstUpdateLoop = true;
-        private bool mHasEnteredFinalPose = false;
+        private bool mHasEnteredFinalPose;
         private CalibrationType mCurrentPos = CalibrationType.Invalid;
-
+        public event CompletedCollectionEvent CollectionCompletedNotification;
         /// <summary>
         /// Cette structure de donnees nous permet de retirer des points de mouvement  contigues de nature equivalent
         /// </summary>
-        private Dictionary<CalibrationType, List<Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure>>> mCalibrationFrames
-            = new Dictionary<CalibrationType, List<Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure>>>();
+        private Dictionary<CalibrationType, CalibrationTrackingStructure> mCalibrationFrames;
 
-  
+        private Dictionary<CalibrationType, CalibrationTrackingStructure> CalibrationFrames
+        {
+            get
+            {
+                if (mCalibrationFrames == null)
+                {
+                    mCalibrationFrames = new Dictionary<CalibrationType, CalibrationTrackingStructure>();
+                    Initialize();
+                }
+                return mCalibrationFrames;
+            }
+        }
+
+        /// <summary>
+        /// Initializes container
+        /// </summary>
+        private void Initialize()
+        {
+            mCalibrationFrames.Add(CalibrationType.Tpose, new CalibrationTrackingStructure());
+            mCalibrationFrames.Add(CalibrationType.ArmsForward, new CalibrationTrackingStructure());
+            mCalibrationFrames.Add(CalibrationType.ArmsDown, new CalibrationTrackingStructure());
+        }
         /// <summary>
         /// default constructor
         /// </summary>
@@ -35,16 +56,18 @@ namespace Assets.Scripts.Body_Data.CalibrationData
         {
             mStartTime = mTime = 0;
         }
-        /// <summary>
-        /// update the current calibration setting time from a given body frame
-        /// </summary>
-        /// <param name="vFrame"></param>      
 
+
+        /// <summary>
+        /// updates the BodyFrameCalibration container with movement data. 
+        /// </summary>
+        /// <param name="vFiltered">the filtered movement data </param>
+        /// <param name="vCurrentFrameTime">Current Time frame of the movement data</param>
         public void UpdateCalibrationContainer(Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vFiltered, float vCurrentFrameTime)
         {
+            CurrentTime = vCurrentFrameTime - StartTime;
             if (ValidationStateMachine())
             {
-                CurrentTime = vCurrentFrameTime - StartTime;
                 if (HasPassedCalibrationTypeEvent(CalibrationType.Tpose))
                 {
                     mCalibrationFrames[CalibrationType.Tpose].Add(vFiltered);
@@ -52,13 +75,18 @@ namespace Assets.Scripts.Body_Data.CalibrationData
                 }
                 else if (HasPassedCalibrationTypeEvent(CalibrationType.ArmsForward))
                 {
+                    mCalibrationFrames[CalibrationType.ArmsForward].Completed = false;
                     mCalibrationFrames[CalibrationType.ArmsForward].Add(vFiltered);
                     mCurrentPos = CalibrationType.ArmsForward;
+                    //Set the Tpose to being completed
+                    mCalibrationFrames[CalibrationType.Tpose].Completed = true;
                 }
                 else if (HasPassedCalibrationTypeEvent(CalibrationType.ArmsDown))
                 {
+                    mCalibrationFrames[CalibrationType.ArmsDown].Completed = false;
                     mCalibrationFrames[CalibrationType.ArmsDown].Add(vFiltered);
                     mCurrentPos = CalibrationType.ArmsDown;
+                    mCalibrationFrames[CalibrationType.ArmsForward].Completed = true;
                 }
                 else
                 {
@@ -66,10 +94,14 @@ namespace Assets.Scripts.Body_Data.CalibrationData
                 }
             }
         }
+
+        /// <summary>
+        ///  Returns the current pointer of the movement position that the calibration container is in. 
+        /// </summary>
         public CalibrationType GetCurrentPos
         {
             get { return mCurrentPos; }
-          
+
         }
         /// <summary>
         /// Will return a list of calibration movements according to the Calibration movement type 
@@ -80,9 +112,12 @@ namespace Assets.Scripts.Body_Data.CalibrationData
 
         public List<Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure>> GetListOfCalibrationMovement(CalibrationType vType)
         {
-            if (mCalibrationFrames.ContainsKey(vType))
+            if (CalibrationFrames.ContainsKey(vType))
             {
-                return mCalibrationFrames[vType];
+                if (CalibrationFrames[vType].Completed)
+                {
+                    return CalibrationFrames[vType].GetList;
+                }
             }
             return null;
         }
@@ -98,16 +133,27 @@ namespace Assets.Scripts.Body_Data.CalibrationData
         /// <summary>
         /// Clear and reset container
         /// </summary>
-        public void Reset(BodyFrame vFirstBodyFrame )
+        public void Reset(BodyFrame vFirstBodyFrame)
         {
-            mCalibrationFrames.Clear();
+            Clear();
             mFirstUpdateLoop = true;
-            if(vFirstBodyFrame != null)
+            if (vFirstBodyFrame != null)
             {
                 mStartTime = vFirstBodyFrame.Timestamp;
             }
         }
 
+
+        /// <summary>
+        /// Clears out the content of the calibration container.
+        /// </summary>
+        public void Clear()
+        {
+            foreach (var vCalibrationFrames in CalibrationFrames)
+            {
+                vCalibrationFrames.Value.Clear();
+            }
+        }
 
         /// <summary>
         /// Calibration Type event has been passed
@@ -117,16 +163,11 @@ namespace Assets.Scripts.Body_Data.CalibrationData
         public bool HasPassedCalibrationTypeEvent(CalibrationType vType)
         {
             bool vHasPassedTime = false;
-            if (vType != GlobalCalibrationSettings.FinalPose && vType != CalibrationType.Invalid)
+            CalibrationType vPrevCalibrationType = vType - 1;
+            if (vType != CalibrationType.Invalid && vPrevCalibrationType != CalibrationType.Invalid)
             {
-                CalibrationType vNextCalibrationType = vType + 1;
-                vHasPassedTime = CurrentTime >= GlobalCalibrationSettings.CalibrationTimes[vType] && CurrentTime < GlobalCalibrationSettings.CalibrationTimes[vNextCalibrationType];
+                vHasPassedTime = CurrentTime >= GlobalCalibrationSettings.CalibrationTimestamps[vPrevCalibrationType] && CurrentTime <= GlobalCalibrationSettings.CalibrationTimestamps[vType];
             }
-            else if(vType == GlobalCalibrationSettings.FinalPose)
-            {
-                vHasPassedTime = CurrentTime >= GlobalCalibrationSettings.CalibrationTimes[vType];
-            }
-
             return vHasPassedTime;
         }
 
@@ -141,7 +182,8 @@ namespace Assets.Scripts.Body_Data.CalibrationData
             if (mFirstUpdateLoop)
             {
                 vResult = true;
-                if (HasPassedCalibrationTypeEvent(GlobalCalibrationSettings.FinalPose))
+                //first verify if the Frame container has recieved a timestamp that has exited the final pose
+                if (CurrentTime > GlobalCalibrationSettings.CalibrationTimestamps[GlobalCalibrationSettings.FinalPose])
                 {
                     mHasEnteredFinalPose = true;
                 }
@@ -150,10 +192,14 @@ namespace Assets.Scripts.Body_Data.CalibrationData
                     if (mHasEnteredFinalPose)
                     {
                         mFirstUpdateLoop = false;
+                        mCalibrationFrames[GlobalCalibrationSettings.FinalPose].Completed = true;
+                        //notify this on 
+                        if (CollectionCompletedNotification != null)
+                        {
+                            CollectionCompletedNotification();
+                        }
                     }
                 }
-
-
             }
             return vResult;
         }
@@ -161,13 +207,13 @@ namespace Assets.Scripts.Body_Data.CalibrationData
         /// <summary>
         /// Get the calibration type's timer
         /// </summary>
-        /// <param name="vType"></param>
+        /// <param name="vType"> The calibration type</param>
         /// <returns></returns>
         public float GetCalibrationTypeTimer(CalibrationType vType)
         {
-            if (GlobalCalibrationSettings.CalibrationTimes.ContainsKey(vType))
+            if (GlobalCalibrationSettings.CalibrationTimestamps.ContainsKey(vType))
             {
-                return GlobalCalibrationSettings.CalibrationTimes[vType];
+                return GlobalCalibrationSettings.CalibrationTimestamps[vType];
             }
             return -1;
         }

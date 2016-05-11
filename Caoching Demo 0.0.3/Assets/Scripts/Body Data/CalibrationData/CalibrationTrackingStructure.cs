@@ -25,7 +25,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
 
 
         /// <summary>
-        /// Getter to return FramesList
+        /// Getter to return FramesList s
         /// </summary>
         public List<Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure>> GetList
         {
