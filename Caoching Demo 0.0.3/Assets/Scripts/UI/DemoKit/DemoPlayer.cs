@@ -40,5 +40,21 @@ namespace Assets.Scripts.UI.DemoKit
             DemoBody.PlayRecording(vTempRecording.BodyRecordingGuid);
             DemoBody.MBodyFrameThread.PlaybackTask.LoopPlaybackEnabled = false;
         }
+
+        public void PlayRecording(string vGuid)
+        {
+            DemoBody.PlayRecording(vGuid);
+            DemoBody.MBodyFrameThread.PlaybackTask.LoopPlaybackEnabled = false;
+        }
+        public void PauseRecording()
+        {
+            DemoBody.View.IsPaused = true; 
+        }
+
+        public void UnPauseRecording()
+        {
+            DemoBody.View.IsPaused = false;
+        }
+ 
     }
 }

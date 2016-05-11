@@ -11,7 +11,7 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews
     /// <summary>
     /// Parent class for analysis text views. 
     /// </summary>
-    public abstract class AnaylsisTextView: MonoBehaviour
+    public abstract class AnaylsisTextView : MonoBehaviour
     {
         [SerializeField]
         private ColorBlock mHiddenColorBlock;
@@ -21,8 +21,8 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews
         private Color mSelectedColor;
         private Color mNonSelectedColor;
         private bool mIsInitiazed;
-        internal Body mBodyToAnalyze; 
-        public abstract string LabelName { get;  }
+        internal Body mBodyToAnalyze;
+        public abstract string LabelName { get; }
         public Button ControlButton;
         public void Hide()
         {
@@ -34,6 +34,8 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews
 
             gameObject.SetActive(false);
         }
+
+        
 
         public void Show()
         {
@@ -49,12 +51,12 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews
 
         void InitializeColors()
         {
-            mSelectedColor = new Color(1,1,1,1);
-            mNonSelectedColor = new Color(1,1,1,0);
+            mSelectedColor = new Color(1, 1, 1, 1);
+            mNonSelectedColor = new Color(1, 1, 1, 0);
             mIsInitiazed = true;
             mSelectedColorBlock = new ColorBlock();
             mHiddenColorBlock = new ColorBlock();
-            mSelectedColorBlock.colorMultiplier = mHiddenColorBlock.colorMultiplier =1;
+            mSelectedColorBlock.colorMultiplier = mHiddenColorBlock.colorMultiplier = 1;
             mSelectedColorBlock.fadeDuration = mHiddenColorBlock.fadeDuration = 0.2f;
             mSelectedColorBlock.normalColor =
                 mSelectedColorBlock.highlightedColor = mSelectedColorBlock.pressedColor = mSelectedColor;
@@ -81,14 +83,14 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews
             }
         }
 
-      protected abstract void BodyUpdated();
+        protected abstract void BodyUpdated();
 
         protected abstract void BodyFrameUpdated(BodyFrame vFrame);
 
 
         protected abstract void ClearText();
 
-        
+
         /// <summary>
         /// Returns a formatted string of an angle
         /// </summary>
@@ -96,10 +98,10 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews
         /// <returns></returns>
         internal static string FeedbackAngleToString(float vFeedbackAngle)
         {
-            return vFeedbackAngle.ToString("0.00")+ "°";
+            return vFeedbackAngle.ToString("0.00") + "°";
         }
 
-        
+
 
     }
 }

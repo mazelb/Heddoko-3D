@@ -31,8 +31,7 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
         private float mLayoutElementModifier;
         private AbstractControlPanelBuilder mBuilder = new AbstractControlPanelBuilder();
         private PanelNode PanelNode;
-
-
+ 
         public PanelCameraToBodyPair CameraToBodyPair
         {
             get { return mPanelCameraToBodyPair; }
@@ -54,6 +53,7 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
         public RectTransform RectTransform
         {
             get { return PanelNode.GetComponent<RectTransform>(); }
+        
 
         }
 

@@ -29,11 +29,12 @@ namespace Assets.Scripts.Body_Data.view
         private Body mAssociatedBody;
         private BodyFrame mCurreBodyFrame;
         [SerializeField]
-        private bool mIsPaused;
+     private bool mIsPaused;
 
         public bool IsPaused
         {
             get { return mIsPaused; }
+            set { mIsPaused = true; }
 
         }
         [SerializeField]
@@ -94,6 +95,7 @@ namespace Assets.Scripts.Body_Data.view
         /// <param name="vBodyFrame">the body frame to reset to</param>
         public void ResetInitialFrame(BodyFrame vBodyFrame = null)
         {
+          
             if (mAssociatedBody != null)
             {
                 BodyFrame vTempBodyFrame = null;

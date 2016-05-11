@@ -16,6 +16,8 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
             get { return mLabelName; }
         }
 
+      
+
         protected override void BodyUpdated()
         {
             if (BodyToAnalyze == null)

@@ -19,16 +19,6 @@ using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Torso;
 
-///////////////
-//////////////
-//////////////
-using Calibration1.CalibrationTransformation;
-using MathNet.Numerics.LinearAlgebra;
-///////////////
-//////////////
-//////////////
-
-
 /// <summary>
 /// BodySegment class: represents one abstracted reprensentation of a body segment.
 /// </summary>
@@ -40,7 +30,7 @@ public partial class BodySegment
 
     //Body SubSegments 
     public Dictionary<int, BodySubSegment> BodySubSegmentsDictionary = new Dictionary<int, BodySubSegment>();
-    private BodyCalibrationSetting mBodyCalibration;   ///****************/////
+    private BodyCalibrationSetting mBodyCalibration;
     public Body ParentBody;
 
     //Is segment tracked (based on body type) 
@@ -132,7 +122,7 @@ public partial class BodySegment
     /// </summary>
     /// <param name="vFrame">the body frame whose subframes will updates to initial sensors.</param>
     /// <param name="vBodyCalibrationSetting">optional parameter to set the current calibration setting</param>
-    public void UpdateInitialSensorsData(BodyFrame vFrame, BodyCalibrationSetting vBodyCalibrationSetting = null)     ///*************************/////
+    public void UpdateInitialSensorsData(BodyFrame vFrame, BodyCalibrationSetting vBodyCalibrationSetting = null)
     {
         IsReseting = true;
         List<BodyStructureMap.SensorPositions> vSensorPos = BodyStructureMap.Instance.SegmentToSensorPosMap[SegmentType];
@@ -530,10 +520,6 @@ public partial class BodySegment
         vLLSubsegment.UpdateSubsegmentOrientation(vNewKneeQuat, 1, true);
     }
 
-    ////////**Here**///////
-    ////////******///////
-
-
     /// <summary>
     /// MapRightArmSubsegment: Updates the right arm subsegment from the available sensor data.
     /// </summary>
@@ -564,12 +550,6 @@ public partial class BodySegment
         vRightArmAnalysis.ReferenceVector = Vector3.one;
         vRightArmAnalysis.AngleExtraction();//*/
     }
-
-    ////////******///////
-    ////////**END***///////
-
-
-
 
     /// <summary>
     /// MapLeftArmSubsegment: Updates the left arm subsegment from the available sensor data.
@@ -605,12 +585,6 @@ public partial class BodySegment
     /// </summary>
     float vCurrentAngle = 0;
     bool vIsIncreasingAngle = true;
-
-
-
-    ////////**Here**///////
-    ////////******///////
-
 
     public void MapArmsOrientations(Vector3 vUAInitEuler, Vector3 vUACurEuler, Vector3 vLAInitEuler, Vector3 vLACurEuler, Vector3 vTorsoInitEuler, Vector3 vTorsoCurEuler,
                                     BodySubSegment vUASubsegment, BodySubSegment vLASubsegment, BodySubSegment vTorsoSubSegment, BodySubSegment vHipsSubsegment, bool vIsRight = true)
@@ -656,30 +630,8 @@ public partial class BodySegment
         vLoArmQuatZ = Quaternion.Inverse(vLoArmInitQuatZ) * vLoArmQuatZ;
         vLoArmQuatZ = Quaternion.Inverse(vLoArmQuatZ);
 
-        Quaternion vUpArmQuat = vUpArmQuatY * vUpArmQuatX * vUpArmQuatZ;   ////////******///////
-                                                                           ////////******///////
-
-        /////////////////////////////////
-        /////////////////////////////////
-        /////////////////////////////////
-        //Quaternion Q1 = vUpArmQuat;
-        //Quaternion Q2 = vUpArmQuat;
-        //bool Test = true;
-        //ShiuTransform AvatarToDataSensorsTransform = new ShiuTransform(Test);
-        //Matrix<float> Xtmp = Matrix<float>.Build.Dense(4, 4);
-        //Xtmp = AvatarToDataSensorsTransform.Shiufunc(Q1,Q2);
-        /////////////////////////////////
-        /////////////////////////////////
-        /////////////////////////////////
-
-
+        Quaternion vUpArmQuat = vUpArmQuatY * vUpArmQuatX * vUpArmQuatZ;
         Quaternion vLoArmQuat = vLoArmQuatY * vLoArmQuatX * vLoArmQuatZ;
-
-        ////////******///////
-        ////////*END**///////
-
-
-
 
         vCurrentAngle += 0.01f;
         
@@ -828,10 +780,6 @@ public partial class BodySegment
         return vResult;
     }
 
-    ////////*Here**///////
-    ////////******///////
-
-
     /// <summary>
     /// InitializeBodySegment: Initializes a new body structure's internal properties with the desired Segment Type.
     /// </summary>
@@ -867,12 +815,10 @@ public partial class BodySegment
             BodySubSegmentsDictionary.Add((int)sstype, subSegment);
             subSegment.AssociatedView.transform.parent = AssociatedView.transform;
         }
+
     }
 
-    ////////******///////
-    ////////**END*///////
-
-
+ 
     /// <summary>
     /// MapSubSegments: Perform mapping on the current segments and its respective subsegments.
     /// </summary>
@@ -884,23 +830,16 @@ public partial class BodySegment
             //Debug.Log("TORSO");
             MapTorsoSegment(vFilteredDictionary);
         }
-        ////////*Here**///////
-        ////////******///////
         if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_RightArm)
         {
             //Debug.Log("RIGHT ARM");
-            MapRightArmSubsegment(vFilteredDictionary);    
-        }        
-        ////////******///////
-        ////////*END**///////
-
+            MapRightArmSubsegment(vFilteredDictionary);
+        }
         if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_LeftArm)
         {
             //Debug.Log("LEFT ARM");
             MapLeftArmSubsegment(vFilteredDictionary);
         }
-
-
         if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_RightLeg)
         {
             //Debug.Log("RIGHT LEG");
