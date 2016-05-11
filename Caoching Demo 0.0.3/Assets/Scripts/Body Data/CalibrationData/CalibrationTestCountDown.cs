@@ -55,7 +55,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
                 CurrentSprite = TPoseSprite,
                 NextInfo = "Arms Out Front",
                 NextSprite = ArmsFrontSprite,
-                CompletionTime = GlobalCalibrationSettings.CalibrationTimes[CalibrationType.TPoseToArmsForward]
+                CompletionTime = GlobalCalibrationSettings.CalibrationTimestamps[CalibrationType.TPoseToArmsForward]
             };
 
             CalibrationTestDescriptor vArmsFrontDescriptor = new CalibrationTestDescriptor
@@ -64,7 +64,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
                 CurrentSprite = ArmsFrontSprite,
                 NextInfo = "Arms To The Side",
                 NextSprite = ArmsFrontToDownSprite,
-                CompletionTime = GlobalCalibrationSettings.CalibrationTimes[CalibrationType.ArmsForwardToArmsDown]
+                CompletionTime = GlobalCalibrationSettings.CalibrationTimestamps[CalibrationType.ArmsForwardToArmsDown]
 
             };
             CalibrationTestDescriptor vArmsDownSprite = new CalibrationTestDescriptor
@@ -73,7 +73,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
                 CurrentSprite = ArmsFrontToDownSprite,
                 NextInfo = "",
                 NextSprite = null,
-                CompletionTime = GlobalCalibrationSettings.CalibrationTimes[CalibrationType.ArmsDown]
+                CompletionTime = GlobalCalibrationSettings.CalibrationTimestamps[CalibrationType.ArmsDown]
 
             };
             mOnCompletionDescription = new CalibrationTestDescriptor()
