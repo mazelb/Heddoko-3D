@@ -28,7 +28,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
         /// </summary>
         private static float sCalibrationTimer = 3f;
 
-
+        
 
 
         private static List<CalibrationType> sCalibrationTypes = new List<CalibrationType>();
@@ -102,7 +102,6 @@ namespace Assets.Scripts.Body_Data.CalibrationData
             sCalibrationTimes.Add(CalibrationType.ArmsForward, CalibrationTimer * vMultipler++);
             sCalibrationTimes.Add(CalibrationType.ArmsForwardToArmsDown, CalibrationTimer * vMultipler++);
             sCalibrationTimes.Add(CalibrationType.ArmsDown, CalibrationTimer * vMultipler);
-
             FinalPose = CalibrationType.ArmsDown;
         }
     }
@@ -115,8 +114,8 @@ namespace Assets.Scripts.Body_Data.CalibrationData
     public enum CalibrationType
     {
         NullToTPose = 0,
-        Tpose = 1,
-        TPoseToArmsForward = 2,
+        Tpose=1,
+        TPoseToArmsForward=2,
         ArmsForward = 3,
         ArmsForwardToArmsDown = 4,
         ArmsDown = 5,

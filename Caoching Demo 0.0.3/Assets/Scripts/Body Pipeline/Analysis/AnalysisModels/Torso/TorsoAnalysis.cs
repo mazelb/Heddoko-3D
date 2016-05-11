@@ -24,7 +24,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
         public float AngleTorsoFlexion;
         public float AngleTorsoLateral;
         public float AngleTorsoRotation;
-
+        public float SignedTorsoFlexion;
+         
         //Accelerations and velocities
         public float AngularAccelerationTorsoFlexion;
         public float AngularVelocityTorsoFlexion;
@@ -70,6 +71,33 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
             AngularAccelerationTorsoFlexion = (vAngularVelocityTorsoFlexionNew - AngularVelocityTorsoFlexion) / vTimeDifference;
             AngularVelocityTorsoFlexion = vAngularVelocityTorsoFlexionNew;
             AngleTorsoFlexion = vAngleTorsoFlexionNew;
+  
+            Vector3 vCross = Vector3.Cross(vHipAxisUp, Vector3.ProjectOnPlane(vTorsoAxisUp, HipGlobalTransform.right));
+            float vSign = Mathf.Sign(Vector3.Dot(vHipAxisRight, vCross));
+            SignedTorsoFlexion = vSign*AngleTorsoFlexion;   
+            /*
+            
+              Vector3 vUpVector = vAnalysis.CenteredObject.right;
+
+            //Get the projection of the perfect Vector
+            Vector3 vPerfectVectProjection = Vector3.ProjectOnPlane(vAnalysis.TransformComparison.up, vUpVector);
+            float vAngle = Vector3.Angle(vAnalysis.CenteredObject.up, vPerfectVectProjection);
+            Quaternion vRot = Quaternion.LookRotation(vAnalysis.TransformComparison.right,
+                vAnalysis.TransformComparison.up);
+
+
+
+            Vector3 vOffset = (0.2f * vAnalysis.CenteredObject.up);
+            vAnalysis.PieGraph.transform.position = vAnalysis.CenteredObject.position + vOffset;
+            vAnalysis.MaskingImage.transform.position = vAnalysis.CenteredObject.position + vOffset;
+
+
+            Vector3 vCross = Vector3.Cross(vAnalysis.CenteredObject.up, vPerfectVectProjection);
+            float vSign = Mathf.Sign(Vector3.Dot(vUpVector, vCross));
+            
+            **/
+
+
 
             //  calculate the Torso lateral angle 
             float vAngleTorsoLateralNew = Vector3.Angle(HipGlobalTransform.up, Vector3.ProjectOnPlane(vTorsoAxisUp, HipGlobalTransform.forward)); 

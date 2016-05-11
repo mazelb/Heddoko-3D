@@ -489,7 +489,10 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 mBody.PlayRecording(vRecGuid);
                 //update the recording playback task by polling the body
                 StopCoroutine(CaptureRecordingPlaybackTask());
-                StartCoroutine(CaptureRecordingPlaybackTask());
+                if (gameObject.activeInHierarchy)
+                {
+                    StartCoroutine(CaptureRecordingPlaybackTask());
+                }
                 if (BodyUpdatedEvent != null)
                 {
                     BodyUpdatedEvent(mBody);
@@ -549,12 +552,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             ChangeState(PlaybackState.Pause);
             if (PlaybackTask != null)
             {
-               
-                mBody.StopThread();
-                bool vPreInter = BodySegment.IsUsingInterpolation;
-                BodySegment.IsUsingInterpolation = false;
-                mBody.View.ResetInitialFrame();
-                BodySegment.IsUsingInterpolation = vPreInter;
+                
                 foreach (var vSubControl in mSubControls)
                 {
                     vSubControl.Disable();

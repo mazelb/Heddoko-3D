@@ -20,8 +20,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
         //Elbow Angles
         public float AngleElbowFlexion = 0;
         public float SignedAngleElbowFlexion = 0;
+        public float SignedAngleElbowAdduction = 0;
         public float AngleElbowPronation = 0;
-
+        public float SignedAngleShoulderFlexion = 0;
         //Upper Arm Angles
         public float AngleShoulderFlexion = 0;
         public float AngleShoulderVertAbduction = 0;
@@ -91,13 +92,27 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             //calculate the Elbow Flexion angle
             Vector3 vProjectedShoulderAxisRight = Vector3.ProjectOnPlane(vShoulderAxisRight, vShoulderAxisForward);
             Vector3 vProjectedElbowAxisRight = Vector3.ProjectOnPlane(vElbowAxisRight, vShoulderAxisForward);
-            float vAngleElbowFlexionNew = Vector3.Angle(vProjectedShoulderAxisRight, vProjectedElbowAxisRight);
+            float vAngleElbowFlexionNew = Vector3.Angle(vElbowAxisRight, vProjectedElbowAxisRight);
             float vAngularVelocityElbowFlexionNew = (vAngleElbowFlexionNew - AngleElbowFlexion) / DeltaTime;
             AngularAccelerationElbowFlexion = (vAngularVelocityElbowFlexionNew - AngularVelocityElbowFlexion) / DeltaTime;
             AngularVelocityElbowFlexion = vAngularVelocityElbowFlexionNew;
             PeakAngularVelocityElbowFlexion = Mathf.Max(Mathf.Abs(AngularVelocityElbowFlexion), PeakAngularVelocityElbowFlexion);
             AngleElbowFlexion = vAngleElbowFlexionNew;
             SignedAngleElbowFlexion = GetSignedAngle(vElbowAxisRight, vShoulderAxisRight, vElbowAxisUp.normalized);
+
+
+         //   Vector3 vProjection = Vector3.ProjectOnPlane(vShoulderAxisRight, vTorsoAxisRight);
+            float vAngle = Vector3.Angle(-vTorsoAxisUp, vShoulderAxisRight);// Vector3.Angle(-vTorsoAxisUp, vProjection);
+            //Vector3 vCross = Vector3.Cross(-vTorsoAxisUp, vProjection);
+            float vSign = 1;//Mathf.Sign(Vector3.Dot(vTorsoAxisRight, vCross));
+            SignedAngleShoulderFlexion = vSign * vAngle;
+
+            //Signed angle adduction calculation
+            Vector3 vAductionprojection = Vector3.ProjectOnPlane(vShoulderAxisRight, vTorsoAxisForward);
+            float vAductionAngle = Vector3.Angle(-vTorsoAxisUp, vAductionprojection);
+           Vector3 vAductionCross = Vector3.Cross(-vTorsoAxisUp, vAductionprojection);
+            float vAductionSign = Mathf.Sign(Vector3.Dot(vTorsoAxisForward, vAductionCross));
+            SignedAngleElbowAdduction = vAductionSign * vAductionAngle;
 
             //calculate the Elbow Pronation angle
             float vAngleElbowPronationNew = 180 - Mathf.Abs(180 - LoArTransform.rotation.eulerAngles.x);

@@ -106,8 +106,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             if (IsInteractable)
             {
                 int vPlaySliderValue = (int)PlaySlider.value;
-                ParentPanel.SetPlayPositionAt(vPlaySliderValue);
-                Debug.Log(vPlaySliderValue);
+                ParentPanel.SetPlayPositionAt(vPlaySliderValue); 
                 ParentPanel.ChangeState(PlaybackState.Pause);
             }
         }

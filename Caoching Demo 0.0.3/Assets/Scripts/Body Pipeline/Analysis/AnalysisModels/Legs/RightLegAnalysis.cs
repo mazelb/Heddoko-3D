@@ -94,6 +94,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             float vAngularVelocityKneeFlexionNew = Mathf.Abs(vAngleKneeFlexionNew - AngleKneeFlexion) / vDeltaTime;
             AngularAccelerationKneeFlexion = Mathf.Abs(vAngularVelocityKneeFlexionNew - AngularVelocityKneeFlexion) / vDeltaTime;
             AngularVelocityKneeFlexion = vAngularVelocityKneeFlexionNew;
+            //Signed angle adduction calculation
+
+         
+     
 
             //Squatts counting
             if ( mStartCountingSquats)

@@ -86,8 +86,7 @@ namespace Assets.Scripts.Body_Data.View
         /// <param name="vTypes"></param>
         public void Init(BodyStructureMap.BodyTypes vType = BodyStructureMap.BodyTypes.BodyType_FullBody)
         {
-            mCurrentBodyType = vType;
-            Debug.Log("create subsegments per body type. Everything is set to fullbody now");
+            mCurrentBodyType = vType; 
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf, new SegmentInteractibleObjects(LowerLeftLeg, 6, Limbs));
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh, new SegmentInteractibleObjects(UpperLeftLeg, 4, Limbs));
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_RightCalf, new SegmentInteractibleObjects(LowerRightLeg, 7, Limbs));

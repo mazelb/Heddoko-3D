@@ -37,12 +37,14 @@ namespace Assets.Scripts.UI.RecordingLoading
         public Button RenameRecordingButton;
         public Image RenameRecordingImage;
         public Text RenameRecordingText;
+
+        public PanelNode RootNode { get { return mRootNode; } }
         void Awake()
         {
             List<ControlPanelType> vLeftSide = new List<ControlPanelType>();
             vLeftSide.Add(ControlPanelType.LiveBPFeedView);
             ControlPanelTypeList.Add(vLeftSide);
-            CreateDefaultLayout();
+      
         }
 
 
@@ -58,7 +60,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             mRootNode = mPanelNodes[0];
             mRootNode.name = "Main";
 
-            mRootNode.PanelSettings.Init(ControlPanelTypeList[0], false, BrainpackBody);
+            mRootNode.PanelSettings.Init(ControlPanelTypeList[0], true, BrainpackBody);
             mLiveFeedViewControlPanel = (LiveFeedViewControlPanel)mRootNode.PanelSettings.GetPanelOfType(ControlPanelType.LiveBPFeedView);
             mLiveFeedViewControlPanel.SuitConnection = BpController;
             mLiveFeedViewControlPanel.Body = BrainpackBody;

@@ -89,7 +89,6 @@ namespace Assets.Scripts.UI.Settings
                 }
             }
              );
-
             ConnectionController.ConnectedStateEvent += LiveViewButton.Enable;
             ConnectionController.DisconnectedStateEvent += LiveViewButton.Disable;
         }

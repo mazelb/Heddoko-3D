@@ -31,6 +31,7 @@ namespace Assets.Scripts.UI.Settings
         public Text InformationPanel;
         public BodyFrameDataControl BodyFrameControl;
         public AnaylsisTextContainer AnalysisTextContainer;
+        public bool DisablePanelShowClicks = false;
         public Body Body
         {
             get { return mBody; }
@@ -78,7 +79,7 @@ namespace Assets.Scripts.UI.Settings
         /// </summary>
         void TogglePanel()
         {
-            if (!BodyContentSlider.IsOpen)
+            if (!BodyContentSlider.IsOpen && !DisablePanelShowClicks)
             {
                 BodyContentSlider.Toggle();
             }

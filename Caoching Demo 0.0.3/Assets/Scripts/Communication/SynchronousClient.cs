@@ -100,8 +100,9 @@ namespace Assets.Scripts.Communication
             // Connect to a remote device.
             try
             {
-                IPHostEntry vIpHostEntry = Dns.Resolve("localhost");
-                IPAddress vIpAddress = vIpHostEntry.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork);
+                // IPHostEntry vIpHostEntry = Dns.Resolve("localhost");
+                //  IPAddress vIpAddress = vIpHostEntry.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork);
+                IPAddress vIpAddress = IPAddress.Parse("127.0.0.1");
                 IPEndPoint vRemoteEndPoint = new IPEndPoint(vIpAddress, 11000);
                 // Create a TCP/IP  socket.
                 Socket vSender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -193,6 +194,10 @@ namespace Assets.Scripts.Communication
 
         }
 
+        /// <summary>
+        /// open a socket and send a message
+        /// </summary>
+        /// <param name="vMsg"></param>
         public void StartClientAndSendData(PriorityMessage vMsg)
         {
             byte[] bytes = new byte[1024];
@@ -204,8 +209,10 @@ namespace Assets.Scripts.Communication
             // Connect to a remote device.
             try
             {
-                IPHostEntry vIpHostEntry = Dns.Resolve("localhost");
-                IPAddress vIpAddress = vIpHostEntry.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork);
+                // IPHostEntry vIpHostEntry = Dns.Resolve("localhost");
+                // IPHostEntry vIpHostEntry =  new IPHostEntry("")//Dns.GetHostEntry("localhost");
+                IPAddress vIpAddress = IPAddress.Parse("127.0.0.1");// vIpHostEntry.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork);
+               // IPAddress vIpAddress = vIpHostEntry.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork);
                 IPEndPoint vRemoteEndPoint = new IPEndPoint(vIpAddress, 11000);
                 // Create a TCP/IP  socket.
                 Socket vSender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
