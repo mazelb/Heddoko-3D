@@ -1,17 +1,28 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
 using UIWidgets;
 
 namespace UIWidgetsSamples.Shops {
+	/// <summary>
+	/// Trader list view component.
+	/// </summary>
 	public class TraderListViewComponent : ListViewItem {
+		/// <summary>
+		/// The name.
+		/// </summary>
 		[SerializeField]
 		public Text Name;
 
+		/// <summary>
+		/// The price.
+		/// </summary>
 		[SerializeField]
 		public Text Price;
 
+		/// <summary>
+		/// The available count.
+		/// </summary>
 		[SerializeField]
 		public Text AvailableCount;
 
@@ -26,7 +37,11 @@ namespace UIWidgetsSamples.Shops {
 			base.Start();
 		}
 
-		public override void OnMove (AxisEventData eventData)
+		/// <summary>
+		/// Change count on left and right movements.
+		/// </summary>
+		/// <param name="eventData">Event data.</param>
+		public override void OnMove(AxisEventData eventData)
 		{
 			switch (eventData.moveDir)
 			{
@@ -43,6 +58,10 @@ namespace UIWidgetsSamples.Shops {
 
 		}
 
+		/// <summary>
+		/// Sets the data.
+		/// </summary>
+		/// <param name="orderLine">Order line.</param>
 		public void SetData(JRPGOrderLine orderLine)
 		{
 			OrderLine = orderLine;
@@ -51,9 +70,9 @@ namespace UIWidgetsSamples.Shops {
 			Price.text = OrderLine.Price.ToString();
 			AvailableCount.text = (OrderLine.Item.Count==-1) ? "∞" : OrderLine.Item.Count.ToString();
 
-			Count.Value = 0;
 			Count.Min = 0;
 			Count.Max = (OrderLine.Item.Count==-1) ? 9999 : OrderLine.Item.Count;
+			Count.Value = OrderLine.Count;
 		}
 
 		void ChangeCount(int count)

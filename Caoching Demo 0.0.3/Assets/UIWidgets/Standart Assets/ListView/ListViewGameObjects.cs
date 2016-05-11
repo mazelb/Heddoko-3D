@@ -17,9 +17,9 @@ namespace UIWidgets
 		
 	}
 	
-	[AddComponentMenu("UI/ListViewGameObjects", 255)]
 	/// <summary>
 	/// List view with GameObjects.
+	/// Outdated. Replaced with ListViewCustom. It's provide better interface and usability.
 	/// </summary>
 	public class ListViewGameObjects : ListViewBase {
 		[SerializeField]
@@ -291,14 +291,5 @@ namespace UIWidgets
 			
 			base.OnDestroy();
 		}
-
-
-		#if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/UI/ListViewGameObjects", false, 1070)]
-		static void CreateObject()
-		{
-			Utilites.CreateWidgetFromAsset("ListViewGameObjects");
-		}
-		#endif
 	}
 }

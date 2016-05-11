@@ -41,13 +41,13 @@ namespace UIWidgets
 
 		//[SerializeField]
 		//[HideInInspector]
-		ObservableList<TItem> dataSource;
+		protected ObservableList<TItem> dataSource;
 
 		/// <summary>
 		/// Gets or sets the data source.
 		/// </summary>
 		/// <value>The data source.</value>
-		public ObservableList<TItem> DataSource {
+		public virtual ObservableList<TItem> DataSource {
 			get {
 				if (dataSource==null)
 				{
@@ -81,18 +81,18 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// The default vItem.
+		/// The default item.
 		/// </summary>
 		[SerializeField]
 		public TComponent DefaultItem;
 
 		/// <summary>
-		/// The Components list.
+		/// The components list.
 		/// </summary>
-		internal List<TComponent> Components = new List<TComponent>();
+		protected List<TComponent> components = new List<TComponent>();
 
 		/// <summary>
-		/// The Components cache list.
+		/// The components cache list.
 		/// </summary>
 		protected List<TComponent> componentsCache = new List<TComponent>();
 
@@ -101,9 +101,9 @@ namespace UIWidgets
 		Dictionary<int,UnityAction<PointerEventData>> callbacksExit = new Dictionary<int,UnityAction<PointerEventData>>();
 
 		/// <summary>
-		/// Gets the selected vItem.
+		/// Gets the selected item.
 		/// </summary>
-		/// <value>The selected vItem.</value>
+		/// <value>The selected item.</value>
 		public TItem SelectedItem {
 			get {
 				if (SelectedIndex==-1)
@@ -138,7 +138,7 @@ namespace UIWidgets
 			}
 			set {
 				sort = value;
-				if (Sort && isStartedListViewCustom)
+				if (sort && isStartedListViewCustom)
 				{
 					UpdateItems();
 				}
@@ -235,7 +235,7 @@ namespace UIWidgets
 		Color selectedColor = Color.black;
 		
 		/// <summary>
-		/// Background color of selected vItem.
+		/// Background color of selected item.
 		/// </summary>
 		public Color SelectedBackgroundColor {
 			get {
@@ -248,7 +248,7 @@ namespace UIWidgets
 		}
 		
 		/// <summary>
-		/// Text color of selected vItem.
+		/// Text color of selected item.
 		/// </summary>
 		public Color SelectedColor {
 			get {
@@ -287,8 +287,12 @@ namespace UIWidgets
 				scrollRect = value;
 				if (scrollRect!=null)
 				{
-					var r = scrollRect.GetComponent<ResizeListener>() ?? scrollRect.gameObject.AddComponent<ResizeListener>();
-					r.OnResize.AddListener(SetNeedResize);
+					var resizeListener = scrollRect.GetComponent<ResizeListener>();
+					if (resizeListener==null)
+					{
+						resizeListener = scrollRect.gameObject.AddComponent<ResizeListener>();
+					}
+					resizeListener.OnResize.AddListener(SetNeedResize);
 
 					scrollRect.onValueChanged.AddListener(OnScrollRectUpdate);
 				}
@@ -299,14 +303,14 @@ namespace UIWidgets
 		/// The height of the DefaultItem.
 		/// </summary>
 		[SerializeField]
-		[Tooltip("Minimal height of vItem")]
+		[Tooltip("Minimal height of item")]
 		protected float itemHeight;
 
 		/// <summary>
 		/// The width of the DefaultItem.
 		/// </summary>
 		[SerializeField]
-		[Tooltip("Minimal width of vItem")]
+		[Tooltip("Minimal width of item")]
 		protected float itemWidth;
 
 		/// <summary>
@@ -339,13 +343,29 @@ namespace UIWidgets
 		/// </summary>
 		protected int bottomHiddenItems;
 
+		/// <summary>
+		/// The direction.
+		/// </summary>
 		[SerializeField]
-		ListViewDirection direction = ListViewDirection.Vertical;
+		protected ListViewDirection direction = ListViewDirection.Vertical;
+
+		bool _setContentSizeFitter = true;
 
 		/// <summary>
 		/// The set ContentSizeFitter parametres according direction.
 		/// </summary>
-	 	protected bool setContentSizeFitter = true;
+		protected bool setContentSizeFitter {
+			get {
+				return _setContentSizeFitter;
+			}
+			set {
+				_setContentSizeFitter = value;
+				if (LayoutBridge!=null)
+				{
+					LayoutBridge.UpdateContentSizeFitter = value;
+				}
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets the direction.
@@ -356,26 +376,7 @@ namespace UIWidgets
 				return direction;
 			}
 			set {
-				direction = value;
-
-				if (scrollRect)
-				{
-					scrollRect.horizontal = IsHorizontal();
-					scrollRect.vertical = !IsHorizontal();
-				}
-				if (CanOptimize() && (layout is EasyLayout.EasyLayout))
-				{
-					LayoutBridge.IsHorizontal = IsHorizontal();
-
-					if (isStartedListViewCustom)
-					{
-						CalculateMaxVisibleItems();
-					}
-				}
-				if (isStartedListViewCustom)
-				{
-					UpdateView();
-				}
+				SetDirection(value, isStartedListViewCustom);
 			}
 		}
 
@@ -424,6 +425,7 @@ namespace UIWidgets
 			{
 				return ;
 			}
+			isStartedListViewCustom = true;
 
 			base.Start();
 			base.Items = new List<ListViewItem>();
@@ -436,7 +438,7 @@ namespace UIWidgets
 
 			if (DefaultItem==null)
 			{
-				throw new NullReferenceException(String.Format("DefaultItem is null. Set vComponenent of type {0} to DefaultItem.", typeof(TComponent).FullName));
+				throw new NullReferenceException(String.Format("DefaultItem is null. Set component of type {0} to DefaultItem.", typeof(TComponent).FullName));
 			}
 			DefaultItem.gameObject.SetActive(true);
 
@@ -453,37 +455,137 @@ namespace UIWidgets
 
 				if (layout is EasyLayout.EasyLayout)
 				{
-					LayoutBridge = new EasyLayoutBridge(layout as EasyLayout.EasyLayout, DefaultItem.transform as RectTransform);
+					LayoutBridge = new EasyLayoutBridge(layout as EasyLayout.EasyLayout, DefaultItem.transform as RectTransform, setContentSizeFitter);
 					LayoutBridge.IsHorizontal = IsHorizontal();
 				}
 				else if (layout is HorizontalOrVerticalLayoutGroup)
 				{
-					LayoutBridge = new StandardLayoutBridge(layout as HorizontalOrVerticalLayoutGroup, DefaultItem.transform as RectTransform);
+					LayoutBridge = new StandardLayoutBridge(layout as HorizontalOrVerticalLayoutGroup, DefaultItem.transform as RectTransform, setContentSizeFitter);
 				}
 
 				CalculateItemSize();
 				CalculateMaxVisibleItems();
 
-				var r = scrollRect.gameObject.AddComponent<ResizeListener>();
-				r.OnResize.AddListener(SetNeedResize);
+				var resizeListener = scrollRect.GetComponent<ResizeListener>();
+				if (resizeListener==null)
+				{
+					resizeListener = scrollRect.gameObject.AddComponent<ResizeListener>();
+				}
+				resizeListener.OnResize.AddListener(SetNeedResize);
 			}
 
 			DefaultItem.gameObject.SetActive(false);
 
-			Direction = direction;
+			SetDirection(direction, false);
 
 			UpdateItems();
 
 			OnSelect.AddListener(OnSelectCallback);
 			OnDeselect.AddListener(OnDeselectCallback);
-
-			isStartedListViewCustom = true;
 		}
 
 		/// <summary>
-		/// Gets the vItem.
+		/// Sets the direction.
 		/// </summary>
-		/// <returns>The vItem.</returns>
+		/// <param name="newDirection">New direction.</param>
+		/// <param name="isInited">If set to <c>true</c> is inited.</param>
+		protected virtual void SetDirection(ListViewDirection newDirection, bool isInited = true)
+		{
+			direction = newDirection;
+
+			if (scrollRect)
+			{
+				scrollRect.horizontal = IsHorizontal();
+				scrollRect.vertical = !IsHorizontal();
+			}
+			(Container as RectTransform).anchoredPosition = Vector2.zero;
+			if (CanOptimize() && (layout is EasyLayout.EasyLayout))
+			{
+				LayoutBridge.IsHorizontal = IsHorizontal();
+
+				if (isInited)
+				{
+					CalculateMaxVisibleItems();
+				}
+			}
+			if (isInited)
+			{
+				UpdateView();
+			}
+		}
+
+		/// <summary>
+		/// Determines whether is sort enabled.
+		/// </summary>
+		/// <returns><c>true</c> if is sort enabled; otherwise, <c>false</c>.</returns>
+		public bool IsSortEnabled()
+		{
+			if (DataSource.Comparison!=null)
+			{
+				return true;
+			}
+
+			return Sort && SortFunc!=null;
+		}
+
+		/// <summary>
+		/// Gets the index of the nearest item.
+		/// </summary>
+		/// <returns>The nearest index.</returns>
+		/// <param name="eventData">Event data.</param>
+		public virtual int GetNearestIndex(PointerEventData eventData)
+		{
+			if (IsSortEnabled())
+			{
+				return -1;
+			}
+
+			Vector2 point;
+			var rectTransform = Container as RectTransform;
+			if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, eventData.position, eventData.pressEventCamera, out point))
+			{
+				return DataSource.Count;
+			}
+			var rect = rectTransform.rect;
+			if (!rect.Contains(point))
+			{
+				return DataSource.Count;
+			}
+
+			return GetNearestIndex(point);
+		}
+
+		/// <summary>
+		/// Gets the index of the nearest item.
+		/// </summary>
+		/// <returns>The nearest item index.</returns>
+		/// <param name="point">Point.</param>
+		public virtual int GetNearestIndex(Vector2 point)
+		{
+			if (IsSortEnabled())
+			{
+				return -1;
+			}
+
+			var pos = IsHorizontal() ? point.x : -point.y;
+			var index = Mathf.RoundToInt(pos / GetItemSize());
+
+			return Mathf.Min(index, DataSource.Count);
+		}
+
+		/// <summary>
+		/// Gets the spacing between items.
+		/// </summary>
+		/// <returns>The item spacing.</returns>
+		public override float GetItemSpacing()
+		{
+			return LayoutBridge.GetSpacing();
+		}
+
+		/// <summary>
+		/// Gets the item.
+		/// </summary>
+		/// <returns>The item.</returns>
 		/// <param name="index">Index.</param>
 		protected TItem GetDataItem(int index)
 		{
@@ -491,7 +593,7 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Calculates the size of the vItem.
+		/// Calculates the size of the item.
 		/// </summary>
 		protected virtual void CalculateItemSize()
 		{
@@ -514,7 +616,7 @@ namespace UIWidgets
 		/// Determines whether this instance is horizontal.
 		/// </summary>
 		/// <returns><c>true</c> if this instance is horizontal; otherwise, <c>false</c>.</returns>
-		protected bool IsHorizontal()
+		public override bool IsHorizontal()
 		{
 			return direction==ListViewDirection.Horizontal;
 		}
@@ -552,8 +654,8 @@ namespace UIWidgets
 			CalculateMaxVisibleItems();
 			UpdateView();
 
-			Components.Sort(ComponentsComparer);
-			Components.ForEach(SetComponentAsLastSibling);
+			components.Sort(ComponentsComparer);
+			components.ForEach(SetComponentAsLastSibling);
 		}
 
 		/// <summary>
@@ -564,7 +666,7 @@ namespace UIWidgets
 		{
 			var scrollRectSpecified = scrollRect!=null;
 			var containerSpecified = Container!=null;
-			var currentLayout = containerSpecified ? (layout ?? Container.GetComponent<LayoutGroup>()) : null;
+			var currentLayout = containerSpecified ? ((layout!=null) ? layout : Container.GetComponent<LayoutGroup>()) : null;
 			var validLayout = currentLayout ? ((currentLayout is EasyLayout.EasyLayout) || (currentLayout is HorizontalOrVerticalLayoutGroup)) : false;
 			
 			return scrollRectSpecified && validLayout;
@@ -656,10 +758,10 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Add the specified vItem.
+		/// Add the specified item.
 		/// </summary>
 		/// <param name="item">Item.</param>
-		/// <returns>Index of added vItem.</returns>
+		/// <returns>Index of added item.</returns>
 		public virtual int Add(TItem item)
 		{
 			if (item==null)
@@ -673,7 +775,7 @@ namespace UIWidgets
 		}
 		
 		/// <summary>
-		/// Remove the specified vItem.
+		/// Remove the specified item.
 		/// </summary>
 		/// <param name="item">Item.</param>
 		/// <returns>Index of removed TItem.</returns>
@@ -691,9 +793,9 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Remove vItem by specifieitemsex.
+		/// Remove item by specifieitemsex.
 		/// </summary>
-		/// <returns>Index of removed vItem.</returns>
+		/// <returns>Index of removed item.</returns>
 		/// <param name="index">Index.</param>
 		public virtual void Remove(int index)
 		{
@@ -739,10 +841,10 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Scrolls to vItem with specifid index.
+		/// Scrolls to item with specifid index.
 		/// </summary>
 		/// <param name="index">Index.</param>
-		protected override void ScrollTo(int index)
+		public override void ScrollTo(int index)
 		{
 			if (!CanOptimize())
 			{
@@ -763,21 +865,21 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Gets the vItem position.
+		/// Gets the item position by index.
 		/// </summary>
-		/// <returns>The vItem position.</returns>
+		/// <returns>The item position.</returns>
 		/// <param name="index">Index.</param>
-		protected virtual float GetItemPosition(int index)
+		public override float GetItemPosition(int index)
 		{
-			return index * GetItemSize();
+			return index * GetItemSize() - GetItemSpacing();
 		}
 
 		/// <summary>
-		/// Gets the vItem position bottom.
+		/// Gets the item bottom position by index.
 		/// </summary>
-		/// <returns>The vItem position bottom.</returns>
+		/// <returns>The item bottom position.</returns>
 		/// <param name="index">Index.</param>
-		protected virtual float GetItemPositionBottom(int index)
+		public virtual float GetItemPositionBottom(int index)
 		{
 			return GetItemPosition(index) + GetItemSize() - LayoutBridge.GetSpacing() + LayoutBridge.GetMargin() - GetScrollSize();
 		}
@@ -838,11 +940,11 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Set the specified vItem.
+		/// Set the specified item.
 		/// </summary>
 		/// <param name="item">Item.</param>
 		/// <param name="allowDuplicate">If set to <c>true</c> allow duplicate.</param>
-		/// <returns>Index of vItem.</returns>
+		/// <returns>Index of item.</returns>
 		public int Set(TItem item, bool allowDuplicate=true)
 		{
 			int index;
@@ -864,42 +966,42 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Sets vComponenent data with specified vItem.
+		/// Sets component data with specified item.
 		/// </summary>
-		/// <param name="vComponenent">Component.</param>
-		/// <param name="vItem">Item.</param>
-		protected virtual void SetData(TComponent vComponenent, TItem vItem)
+		/// <param name="component">Component.</param>
+		/// <param name="item">Item.</param>
+		protected virtual void SetData(TComponent component, TItem item)
 		{
 		}
 
 		/// <summary>
-		/// Updates the Components count.
+		/// Updates the components count.
 		/// </summary>
 		protected void UpdateComponentsCount()
 		{
-			Components.RemoveAll(IsNullComponent);
+			components.RemoveAll(IsNullComponent);
 
-			if (Components.Count==visibleItems)
+			if (components.Count==visibleItems)
 			{
 				return ;
 			}
 
-			if (Components.Count < visibleItems)
+			if (components.Count < visibleItems)
 			{
 				componentsCache.RemoveAll(IsNullComponent);
 
-				Enumerable.Range(0, visibleItems - Components.Count).ForEach(AddComponent);
+				Enumerable.Range(0, visibleItems - components.Count).ForEach(AddComponent);
 			}
 			else
 			{
-				var to_cache = Components.GetRange(visibleItems, Components.Count - visibleItems).OrderByDescending<TComponent,int>(GetComponentIndex);
+				var to_cache = components.GetRange(visibleItems, components.Count - visibleItems).OrderByDescending<TComponent,int>(GetComponentIndex);
 
 				to_cache.ForEach(DeactivateComponent);
 				componentsCache.AddRange(to_cache);
-				Components.RemoveRange(visibleItems, Components.Count - visibleItems);
+				components.RemoveRange(visibleItems, components.Count - visibleItems);
 			}
 
-			base.Items = Components.Convert(x => x as ListViewItem);
+			base.Items = components.Convert(x => x as ListViewItem);
 		}
 
 		bool IsNullComponent(TComponent component)
@@ -918,12 +1020,13 @@ namespace UIWidgets
 			else
 			{
 				component = Instantiate(DefaultItem) as TComponent;
+				component.transform.SetParent(Container, false);
 				Utilites.FixInstantiated(DefaultItem, component);
 			}
 			component.Index = -1;
 			component.transform.SetAsLastSibling();
 			component.gameObject.SetActive(true);
-			Components.Add(component);
+			components.Add(component);
 		}
 
 		void DeactivateComponent(TComponent component)
@@ -938,9 +1041,27 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Gets the size of the vItem.
+		/// Gets the default width of the item.
 		/// </summary>
-		/// <returns>The vItem size.</returns>
+		/// <returns>The default item width.</returns>
+		public override float GetDefaultItemWidth()
+		{
+			return itemWidth;
+		}
+
+		/// <summary>
+		/// Gets the default height of the item.
+		/// </summary>
+		/// <returns>The default item height.</returns>
+		public override float GetDefaultItemHeight()
+		{
+			return itemHeight;
+		}
+
+		/// <summary>
+		/// Gets the size of the item.
+		/// </summary>
+		/// <returns>The item size.</returns>
 		protected float GetItemSize()
 		{
 			return (IsHorizontal())
@@ -1005,12 +1126,12 @@ namespace UIWidgets
 			{
 				//do nothing
 			}
-			// optimization on +-1 vItem scroll
+			// optimization on +-1 item scroll
 			else if (oldTopHiddenItems==(topHiddenItems + 1))
 			{
-				var bottomComponent = Components[Components.Count - 1];
-				Components.RemoveAt(Components.Count - 1);
-				Components.Insert(0, bottomComponent);
+				var bottomComponent = components[components.Count - 1];
+				components.RemoveAt(components.Count - 1);
+				components.Insert(0, bottomComponent);
 				bottomComponent.transform.SetAsFirstSibling();
 				
 				bottomComponent.Index = topHiddenItems;
@@ -1019,9 +1140,9 @@ namespace UIWidgets
 			}
 			else if (oldTopHiddenItems==(topHiddenItems - 1))
 			{
-				var topComponent = Components[0];
-				Components.RemoveAt(0);
-				Components.Add(topComponent);
+				var topComponent = components[0];
+				components.RemoveAt(0);
+				components.Add(topComponent);
 				topComponent.transform.SetAsLastSibling();
 				
 				topComponent.Index = topHiddenItems + visibleItems - 1;
@@ -1031,11 +1152,11 @@ namespace UIWidgets
 			// all other cases
 			else
 			{
-				var current_visible_range = Components.Convert<TComponent,int>(GetComponentIndex);
+				var current_visible_range = components.Convert<TComponent,int>(GetComponentIndex);
 				var new_visible_range = Enumerable.Range(topHiddenItems, visibleItems).ToArray();
 
 				var new_indicies_to_change = new_visible_range.Except(current_visible_range).ToList();
-				var components_to_change = new Stack<TComponent>(Components.Where(x => !new_visible_range.Contains(x.Index)));
+				var components_to_change = new Stack<TComponent>(components.Where(x => !new_visible_range.Contains(x.Index)));
 
 				new_indicies_to_change.ForEach(index => {
 					var component = components_to_change.Pop();
@@ -1045,8 +1166,8 @@ namespace UIWidgets
 					Coloring(component as ListViewItem);
 				});
 
-				Components.Sort(ComponentsComparer);
-				Components.ForEach(SetComponentAsLastSibling);
+				components.Sort(ComponentsComparer);
+				components.ForEach(SetComponentAsLastSibling);
 			}
 			
 			if (LayoutBridge!=null)
@@ -1057,7 +1178,7 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Compare Components by vComponenent index.
+		/// Compare components by component index.
 		/// </summary>
 		/// <returns>A signed integer that indicates the relative values of x and y.</returns>
 		/// <param name="x">The x coordinate.</param>
@@ -1115,7 +1236,7 @@ namespace UIWidgets
 			UpdateComponentsCount();
 
 			var indicies = Enumerable.Range(topHiddenItems, visibleItems).ToArray();
-			Components.ForEach((x, i) => {
+			components.ForEach((x, i) => {
 				x.Index = indicies[i];
 				SetData(x, DataSource[indicies[i]]);
 				Coloring(x as ListViewItem);
@@ -1127,15 +1248,15 @@ namespace UIWidgets
 			{
 				LayoutBridge.SetFiller(CalculateTopFillerSize(), CalculateBottomFillerSize());
 				LayoutBridge.UpdateLayout();
-			}
-			
-			if (ScrollRect!=null)
-			{
-				var item_ends = (DataSource.Count==0) ? 0f : Mathf.Max(0f, GetItemPositionBottom(DataSource.Count - 1));
-				
-				if (GetScrollValue() > item_ends)
+
+				if (ScrollRect!=null)
 				{
-					SetScrollValue(item_ends);
+					var item_ends = (DataSource.Count==0) ? 0f : Mathf.Max(0f, GetItemPositionBottom(DataSource.Count - 1));
+					
+					if (GetScrollValue() > item_ends)
+					{
+						SetScrollValue(item_ends);
+					}
 				}
 			}
 		}
@@ -1157,6 +1278,8 @@ namespace UIWidgets
 		/// <param name="newItems">New items.</param>
 		protected virtual void SetNewItems(ObservableList<TItem> newItems)
 		{
+			//Start();
+
 			DataSource.OnChange -= UpdateItems;
 			
 			if (Sort && SortFunc!=null)
@@ -1215,9 +1338,9 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Determines if vItem exists with the specified index.
+		/// Determines if item exists with the specified index.
 		/// </summary>
-		/// <returns><c>true</c> if vItem exists with the specified index; otherwise, <c>false</c>.</returns>
+		/// <returns><c>true</c> if item exists with the specified index; otherwise, <c>false</c>.</returns>
 		/// <param name="index">Index.</param>
 		public override bool IsValid(int index)
 		{
@@ -1225,7 +1348,7 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Coloring the specified vComponenent.
+		/// Coloring the specified component.
 		/// </summary>
 		/// <param name="component">Component.</param>
 		protected override void Coloring(ListViewItem component)
@@ -1245,7 +1368,7 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Set highlights colors of specified vComponenent.
+		/// Set highlights colors of specified component.
 		/// </summary>
 		/// <param name="component">Component.</param>
 		protected override void HighlightColoring(ListViewItem component)
@@ -1258,16 +1381,19 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Set highlights colors of specified vComponenent.
+		/// Set highlights colors of specified component.
 		/// </summary>
 		/// <param name="component">Component.</param>
 		protected virtual void HighlightColoring(TComponent component)
 		{
-			component.Background.color = HighlightedBackgroundColor;
+			if (component.Background!=null)
+			{
+				component.Background.color = HighlightedBackgroundColor;
+			}
 		}
 
 		/// <summary>
-		/// Set select colors of specified vComponenent.
+		/// Set select colors of specified component.
 		/// </summary>
 		/// <param name="component">Component.</param>
 		protected virtual void SelectColoring(ListViewItem component)
@@ -1281,16 +1407,19 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Set select colors of specified vComponenent.
+		/// Set select colors of specified component.
 		/// </summary>
 		/// <param name="component">Component.</param>
 		protected virtual void SelectColoring(TComponent component)
 		{
-			component.Background.color = SelectedBackgroundColor;
+			if (component.Background!=null)
+			{
+				component.Background.color = SelectedBackgroundColor;
+			}
 		}
 
 		/// <summary>
-		/// Set default colors of specified vComponenent.
+		/// Set default colors of specified component.
 		/// </summary>
 		/// <param name="component">Component.</param>
 		protected virtual void DefaultColoring(ListViewItem component)
@@ -1304,12 +1433,15 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Set default colors of specified vComponenent.
+		/// Set default colors of specified component.
 		/// </summary>
 		/// <param name="component">Component.</param>
 		protected virtual void DefaultColoring(TComponent component)
 		{
-			component.Background.color = DefaultBackgroundColor;
+			if (component.Background!=null)
+			{
+				component.Background.color = DefaultBackgroundColor;
+			}
 		}
 
 		/// <summary>
@@ -1317,7 +1449,7 @@ namespace UIWidgets
 		/// </summary>
 		void UpdateColors()
 		{
-			Components.ForEach(x => Coloring(x as ListViewItem));
+			components.ForEach(x => Coloring(x as ListViewItem));
 		}
 
 		/// <summary>
@@ -1339,7 +1471,7 @@ namespace UIWidgets
 		}
 
 		/// <summary>
-		/// Calls specified function with each vComponenent.
+		/// Calls specified function with each component.
 		/// </summary>
 		/// <param name="func">Func.</param>
 		public override void ForEachComponent(Action<ListViewItem> func)
@@ -1348,6 +1480,26 @@ namespace UIWidgets
 			func(DefaultItem);
 			componentsCache.Select(x => x as ListViewItem).ForEach(func);
 		}
+
+		/// <summary>
+		/// Determines whether item visible.
+		/// </summary>
+		/// <returns><c>true</c> if item visible; otherwise, <c>false</c>.</returns>
+		/// <param name="index">Index.</param>
+		public bool IsItemVisible(int index)
+		{
+			return topHiddenItems<=index && index<=(topHiddenItems + visibleItems - 1);
+		}
+
+		/// <summary>
+		/// Gets the visible indicies.
+		/// </summary>
+		/// <returns>The visible indicies.</returns>
+		public List<int> GetVisibleIndicies()
+		{
+			return Enumerable.Range(topHiddenItems, visibleItems).ToList();
+		}
+
 
 		/// <summary>
 		/// OnStartScrolling event.
@@ -1401,7 +1553,7 @@ namespace UIWidgets
 
 		void StartScrolling()
 		{
-			lastScrollingTime = Time.time;
+			lastScrollingTime = Time.unscaledTime;
 			if (scrolling)
 			{
 				return ;
@@ -1416,7 +1568,7 @@ namespace UIWidgets
 			{
 				return false;
 			}
-			return (lastScrollingTime + EndScrollDelay) <= Time.time;
+			return (lastScrollingTime + EndScrollDelay) <= Time.unscaledTime;
 		}
 
 		void EndScrolling()
@@ -1434,5 +1586,43 @@ namespace UIWidgets
 			}
 			needResize = true;
 		}
+
+		#region ListViewPaginator support
+		/// <summary>
+		/// Gets the ScrollRect.
+		/// </summary>
+		/// <returns>The ScrollRect.</returns>
+		public override ScrollRect GetScrollRect()
+		{
+			return ScrollRect;
+		}
+
+		/// <summary>
+		/// Gets the items count.
+		/// </summary>
+		/// <returns>The items count.</returns>
+		public override int GetItemsCount()
+		{
+			return DataSource.Count;
+		}
+
+		/// <summary>
+		/// Gets the items per block count.
+		/// </summary>
+		/// <returns>The items per block.</returns>
+		public override int GetItemsPerBlock()
+		{
+			return 1;
+		}
+
+		/// <summary>
+		/// Gets the index of the nearest item.
+		/// </summary>
+		/// <returns>The nearest item index.</returns>
+		public override int GetNearestItemIndex()
+		{
+			return Mathf.Clamp(Mathf.RoundToInt(GetScrollValue() / GetItemSize()), 0, DataSource.Count - 1);
+		}
+		#endregion
 	}
 }

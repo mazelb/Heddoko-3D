@@ -7,6 +7,7 @@ namespace UIWidgets {
 	/// TreeViewNode drop support.
 	/// Receive drops from TreeView and ListViewIcons.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/TreeViewNodeDropSupport")]
 	[RequireComponent(typeof(TreeViewComponent))]
 	public class TreeViewNodeDropSupport : MonoBehaviour, IDropSupport<TreeNode<TreeViewItem>>, IDropSupport<ListViewIconsItemDescription> {
 		TreeViewComponent source;
@@ -29,8 +30,7 @@ namespace UIWidgets {
 		/// <summary>
 		/// Determines whether this instance can receive drop with the specified data and eventData.
 		/// </summary>
-		/// <returns>true</returns>
-		/// <c>false</c>
+		/// <returns><c>true</c> if this instance can receive drop with the specified data and eventData; otherwise, <c>false</c>.</returns>
 		/// <param name="data">Data.</param>
 		/// <param name="eventData">Event data.</param>
 		public bool CanReceiveDrop(TreeNode<TreeViewItem> data, PointerEventData eventData)
@@ -62,8 +62,7 @@ namespace UIWidgets {
 		/// <summary>
 		/// Determines whether this instance can receive drop with the specified data and eventData.
 		/// </summary>
-		/// <returns>true</returns>
-		/// <c>false</c>
+		/// <returns><c>true</c> if this instance can receive drop with the specified data and eventData; otherwise, <c>false</c>.</returns>
 		/// <param name="data">Data.</param>
 		/// <param name="eventData">Event data.</param>
 		public bool CanReceiveDrop(ListViewIconsItemDescription data, PointerEventData eventData)

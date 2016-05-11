@@ -4,10 +4,11 @@ using System.Linq;
 using System;
 
 namespace UIWidgets {
-    /// <summary>
-    /// ListViewIcons vItem description.
-    /// </summary>
-    [System.Serializable]
+
+	[System.Serializable]
+	/// <summary>
+	/// ListViewIcons item description.
+	/// </summary>
 	public class ListViewIconsItemDescription {
 		/// <summary>
 		/// The icon.
@@ -37,7 +38,7 @@ namespace UIWidgets {
 	/// <summary>
 	/// ListViewIcons.
 	/// </summary>
-	[AddComponentMenu("UI/ListViewIcons", 252)]
+	[AddComponentMenu("UI/UIWidgets/ListViewIcons")]
 	public class ListViewIcons : ListViewCustom<ListViewIconsItemComponent,ListViewIconsItemDescription> {
 		/// <summary>
 		/// Awake this instance.
@@ -70,17 +71,17 @@ namespace UIWidgets {
 		}
 
 		/// <summary>
-		/// Sets vComponenent data with specified vItem.
+		/// Sets component data with specified item.
 		/// </summary>
-		/// <param name="vComponenent">Component.</param>
-		/// <param name="vItem">Item.</param>
-		protected override void SetData(ListViewIconsItemComponent vComponenent, ListViewIconsItemDescription vItem)
+		/// <param name="component">Component.</param>
+		/// <param name="item">Item.</param>
+		protected override void SetData(ListViewIconsItemComponent component, ListViewIconsItemDescription item)
 		{
-			vComponenent.SetData(vItem);
+			component.SetData(item);
 		}
 
 		/// <summary>
-		/// Set highlights colors of specified vComponenent.
+		/// Set highlights colors of specified component.
 		/// </summary>
 		/// <param name="component">Component.</param>
 		protected override void HighlightColoring(ListViewIconsItemComponent component)
@@ -90,7 +91,7 @@ namespace UIWidgets {
 		}
 
 		/// <summary>
-		/// Set select colors of specified vComponenent.
+		/// Set select colors of specified component.
 		/// </summary>
 		/// <param name="component">Component.</param>
 		protected override void SelectColoring(ListViewIconsItemComponent component)
@@ -100,7 +101,7 @@ namespace UIWidgets {
 		}
 
 		/// <summary>
-		/// Set default colors of specified vComponenent.
+		/// Set default colors of specified component.
 		/// </summary>
 		/// <param name="component">Component.</param>
 		protected override void DefaultColoring(ListViewIconsItemComponent component)
@@ -108,13 +109,5 @@ namespace UIWidgets {
 			base.DefaultColoring(component);
 			component.Text.color = DefaultColor;
 		}
-
-		#if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/UI/ListViewIcons", false, 1080)]
-		static void CreateObject()
-		{
-			Utilites.CreateWidgetFromAsset("ListViewIcons");
-		}
-		#endif
 	}
 }

@@ -26,6 +26,7 @@ namespace UIWidgets {
 			"textType",
 
 			"Speed",
+			"UnscaledTime",
 		};
 
 		protected void OnEnable()
@@ -62,6 +63,7 @@ namespace UIWidgets {
 			else
 			{
 				EditorGUILayout.PropertyField(serializedProperties["IndeterminateBar"]);
+				EditorGUILayout.PropertyField(serializedProperties["UnscaledTime"]);
 			}
 			EditorGUI.indentLevel--;
 

@@ -4,12 +4,12 @@ using UnityEngine.EventSystems;
 using System.Collections;
 
 namespace UIWidgets {
-	[AddComponentMenu("UI/Tooltip", 300)]
-	[RequireComponent(typeof(RectTransform))]
 	/// <summary>
 	/// Tooltip.
 	/// http://ilih.ru/images/unity-assets/UIWidgets/Tooltip.png
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/Tooltip")]
+	[RequireComponent(typeof(RectTransform))]
 	public class Tooltip : MonoBehaviour,
 		IPointerEnterHandler,
 		IPointerExitHandler,
@@ -19,7 +19,6 @@ namespace UIWidgets {
 		[SerializeField]
 		GameObject tooltipObject;
 
-	    [SerializeField] private Text TextField;
 		/// <summary>
 		/// Seconds before tooltip shown after pointer enter.
 		/// </summary>
@@ -52,7 +51,7 @@ namespace UIWidgets {
 
 			if (TooltipObject!=null)
 			{
-				canvasTransform = Utilites.FindCanvas(tooltipObjectParent);
+				canvasTransform = Utilites.FindTopmostCanvas(tooltipObjectParent);
 				TooltipObject.SetActive(false);
 			}
 		}
@@ -86,21 +85,6 @@ namespace UIWidgets {
 			StartCoroutine(currentCorutine);
 		}
 
-
-        /// <summary>
-        /// Show this tooltip with a custom message
-        /// </summary>
-        /// <param name="vMessage"></param>
-	    public void Show(string vMessage)
-	    {
-            if (TooltipObject == null || TextField == null)
-            {
-                return;
-            }
-
-            currentCorutine = ShowCorutine();
-            StartCoroutine(currentCorutine);
-        }
 		IEnumerator HideCoroutine()
 		{
 			if (currentCorutine!=null)

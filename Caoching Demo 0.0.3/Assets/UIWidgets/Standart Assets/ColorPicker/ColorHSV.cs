@@ -153,10 +153,10 @@ namespace UIWidgets {
 		public string ToString(string format)
 		{
 			return String.Format("HSVA({0}, {1}, {2}, {3})", new object[] {
-				H.ToString (format),
-				S.ToString (format),
-				V.ToString (format),
-				A.ToString (format)
+				H.ToString(format),
+				S.ToString(format),
+				V.ToString(format),
+				A.ToString(format)
 			});
 		}
 	}

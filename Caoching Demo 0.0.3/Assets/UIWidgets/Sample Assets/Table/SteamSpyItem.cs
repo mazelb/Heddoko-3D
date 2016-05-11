@@ -1,12 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UIWidgets;
 
 namespace UIWidgetsSamples {
 
 	[Serializable]
-	public class SteamSpyItem
+	public class SteamSpyItem : IItemHeight
 	{
+		public float Height {
+			get; set;
+		}
+
 		[SerializeField]
 		public string Name;
 

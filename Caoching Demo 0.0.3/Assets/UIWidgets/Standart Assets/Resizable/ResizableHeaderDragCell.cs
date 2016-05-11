@@ -20,8 +20,7 @@ namespace UIWidgets {
 		/// <summary>
 		/// Determines whether this instance can be dragged.
 		/// </summary>
-		/// <returns>true</returns>
-		/// <c>false</c>
+		/// <returns><c>true</c> if this instance can be dragged; otherwise, <c>false</c>.</returns>
 		/// <param name="eventData">Current event data.</param>
 		public override bool CanDrag(PointerEventData eventData)
 		{
@@ -41,8 +40,7 @@ namespace UIWidgets {
 		/// <summary>
 		/// Called when drop completed.
 		/// </summary>
-		/// <param name="success">true</param>
-		/// <c>false</c>
+		/// <param name="success"><c>true</c> if Drop component received data; otherwise, <c>false</c>.</param>
 		public override void Dropped(bool success)
 		{
 			ResizableHeader.ProcessCellReorder = false;

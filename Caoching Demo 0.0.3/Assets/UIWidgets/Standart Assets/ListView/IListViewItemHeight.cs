@@ -4,7 +4,7 @@ using System.Collections;
 namespace UIWidgets
 {
 	/// <summary>
-	/// Interface for ListViewCustomHeight Components.
+	/// Interface for ListViewCustomHeight components.
 	/// </summary>
 	public interface IListViewItemHeight {
 		/// <summary>

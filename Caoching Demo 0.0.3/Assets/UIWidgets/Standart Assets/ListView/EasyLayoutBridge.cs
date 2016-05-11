@@ -35,15 +35,21 @@ namespace UIWidgets {
 		
 		RectTransform DefaultItem;
 
+		ContentSizeFitter fitter;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="UIWidgets.EasyLayoutBridge"/> class.
 		/// </summary>
 		/// <param name="layout">Layout.</param>
 		/// <param name="defaultItem">Default item.</param>
-		public EasyLayoutBridge(EasyLayout.EasyLayout layout, RectTransform defaultItem)
+		/// <param name="updateContentSizeFitter">Update ContentSizeFitter on direction change.</param>
+		public EasyLayoutBridge(EasyLayout.EasyLayout layout, RectTransform defaultItem, bool updateContentSizeFitter=true)
 		{
 			Layout = layout;
 			DefaultItem = defaultItem;
+			UpdateContentSizeFitter = updateContentSizeFitter;
+
+			fitter = Layout.GetComponent<ContentSizeFitter>();
 		}
 		
 		void UpdateDirection()
@@ -52,8 +58,7 @@ namespace UIWidgets {
 			
 			if (UpdateContentSizeFitter)
 			{
-				var fitter = Layout.GetComponent<ContentSizeFitter>();
-				if (fitter)
+				if (fitter!=null)
 				{
 					fitter.horizontalFit = (IsHorizontal) ? ContentSizeFitter.FitMode.PreferredSize : ContentSizeFitter.FitMode.Unconstrained;
 					fitter.verticalFit = (!IsHorizontal) ? ContentSizeFitter.FitMode.PreferredSize : ContentSizeFitter.FitMode.Unconstrained;
@@ -81,6 +86,12 @@ namespace UIWidgets {
 		public void UpdateLayout()
 		{
 			Layout.UpdateLayout();
+
+			if (fitter!=null)
+			{
+				fitter.SetLayoutHorizontal();
+				fitter.SetLayoutVertical();
+			}
 		}
 
 		/// <summary>
@@ -103,8 +114,7 @@ namespace UIWidgets {
 		/// <returns>The item size.</returns>
 		public Vector2 GetItemSize()
 		{
-		    float y = DefaultItem.rect.height; 
-			return new Vector2(DefaultItem.rect.width, y);
+			return new Vector2(DefaultItem.rect.width, DefaultItem.rect.height);
 		}
 
 		/// <summary>

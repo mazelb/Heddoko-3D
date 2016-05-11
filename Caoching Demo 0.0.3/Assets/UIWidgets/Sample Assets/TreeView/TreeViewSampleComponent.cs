@@ -23,11 +23,11 @@ namespace UIWidgetsSamples {
 			}
 		}
 		
-		public override void SetData(TreeNode<ITreeViewSampleItem> vNode, int vDepth)
+		public override void SetData(TreeNode<ITreeViewSampleItem> node, int depth)
 		{
-			base.SetData(vNode, vDepth);
+			base.SetData(node, depth);
 			
-			Item = (vNode==null) ? null : vNode.Item;
+			Item = (node==null) ? null : node.Item;
 		}
 		
 		protected virtual void UpdateView()

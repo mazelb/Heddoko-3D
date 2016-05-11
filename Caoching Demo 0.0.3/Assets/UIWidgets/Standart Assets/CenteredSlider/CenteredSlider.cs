@@ -4,10 +4,10 @@ using UnityEngine.EventSystems;
 using System;
 
 namespace UIWidgets {
-	[AddComponentMenu("UI/CenteredSlider", 300)]
 	/// <summary>
 	/// Centered slider (zero at center, positive and negative parts have different scales).
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/CenteredSlider")]
 	public class CenteredSlider : CenteredSliderBase<int>
 	{
 		/// <summary>
@@ -90,7 +90,9 @@ namespace UIWidgets {
 		/// <param name="value">Value.</param>
 		protected override int InBounds(int value)
 		{
-			return Mathf.Clamp(value, limitMin, limitMax);
+			var v = Mathf.Clamp(value, LimitMin, LimitMax);
+
+			return (UseValueLimits) ? Mathf.Clamp(v, ValueMin, ValueMax) : v;
 		}
 
 		/// <summary>
@@ -117,15 +119,5 @@ namespace UIWidgets {
 		{
 			return Value > 0;
 		}
-
-
-		#if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/UI/CenteredSlider", false, 1010)]
-		static void CreateObject()
-		{
-			Utilites.CreateWidgetFromAsset("CenteredSlider");
-		}
-		#endif
 	}
 }
-

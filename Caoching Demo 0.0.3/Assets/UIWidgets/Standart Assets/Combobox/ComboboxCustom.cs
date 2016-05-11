@@ -82,17 +82,18 @@ namespace UIWidgets {
 		Transform listParent;
 
 		/// <summary>
-		/// The Components list.
+		/// The components list.
 		/// </summary>
 		protected List<TComponent> components = new List<TComponent>();
 
 		/// <summary>
-		/// The Components cache list.
+		/// The components cache list.
 		/// </summary>
 		protected List<TComponent> componentsCache = new List<TComponent>();
 
 		void Awake()
 		{
+			ListView.Sort = false;
 			Start();
 		}
 		
@@ -123,7 +124,7 @@ namespace UIWidgets {
 				listView.OnSelectObject.RemoveListener(UpdateView);
 				listView.OnDeselectObject.RemoveListener(UpdateView);
 
-				listCanvas = Utilites.FindCanvas(listParent);
+				listCanvas = Utilites.FindTopmostCanvas(listParent);
 
 				listView.gameObject.SetActive(true);
 				listView.Start();
@@ -253,6 +254,8 @@ namespace UIWidgets {
 				return ;
 			}
 
+			listView.gameObject.SetActive(true);
+			
 			ModalKey = ModalHelper.Open(this, null, new Color(0, 0, 0, 0f), HideList);
 
 			if (listCanvas!=null)
@@ -260,7 +263,6 @@ namespace UIWidgets {
 				listParent = listView.transform.parent;
 				listView.transform.SetParent(listCanvas);
 			}
-			listView.gameObject.SetActive(true);
 
 			if (listView.Layout!=null)
 			{
@@ -293,11 +295,11 @@ namespace UIWidgets {
 				return ;
 			}
 
-			listView.gameObject.SetActive(false);
 			if (listCanvas!=null)
 			{
 				listView.transform.SetParent(listParent);
 			}
+			listView.gameObject.SetActive(false);
 		}
 
 		/// <summary>
@@ -374,7 +376,8 @@ namespace UIWidgets {
 		/// <param name="go">Go.</param>
 		protected SelectListener GetDeselectListener(GameObject go)
 		{
-			return go.GetComponent<SelectListener>() ?? go.AddComponent<SelectListener>();
+			var result = go.GetComponent<SelectListener>();
+			return (result!=null) ? result : go.AddComponent<SelectListener>();
 		}
 
 		/// <summary>
@@ -490,7 +493,8 @@ namespace UIWidgets {
 			else
 			{
 				component = Instantiate(current) as TComponent;
-				component.transform.SetParent(current.transform.parent);
+				component.transform.SetParent(current.transform.parent, false);
+
 				Utilites.FixInstantiated(current, component);
 			}
 			component.Index = -1;
@@ -514,7 +518,7 @@ namespace UIWidgets {
 		}
 
 		/// <summary>
-		/// Updates the Components count.
+		/// Updates the components count.
 		/// </summary>
 		protected void UpdateComponentsCount()
 		{

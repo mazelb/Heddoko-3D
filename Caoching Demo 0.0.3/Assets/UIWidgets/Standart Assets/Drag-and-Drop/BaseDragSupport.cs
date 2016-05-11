@@ -21,7 +21,7 @@ namespace UIWidgets {
 			get {
 				if (canvasTransform==null)
 				{
-					canvasTransform = Utilites.FindCanvas(transform);
+					canvasTransform = Utilites.FindTopmostCanvas(transform);
 				}
 				return canvasTransform;
 			}

@@ -3,8 +3,9 @@ using UIWidgets;
 
 namespace UIWidgetsSamples
 {
+	// No more required
 	[CanEditMultipleObjects]
-	[CustomEditor(typeof(ListViewVariableHeight), true)]
+	//[CustomEditor(typeof(ListViewVariableHeight), true)]
 	public class ListViewVariableHeightEditor : ListViewCustomHeightEditor
 	{
 		public ListViewVariableHeightEditor()

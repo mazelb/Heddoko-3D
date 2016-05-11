@@ -13,9 +13,6 @@ namespace UIWidgets
 			// prefab override logic works on the entire property.
 			EditorGUI.BeginProperty(position, label, property);
 			
-			// Draw label
-			//position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
-
 			// Calculate rects
 			var width = (position.width - 30) / 2;
 			var openRect = new Rect(position.x, position.y, 30, position.height);

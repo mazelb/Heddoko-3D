@@ -81,10 +81,64 @@ namespace UIWidgetsSamples {
 		// get currently selected nodes
 		public void GetSelectedNodes()
 		{
+			Debug.Log(Tree.SelectedIndex);
+			Debug.Log(string.Join(",", Tree.SelectedIndicies.Select(x => x.ToString()).ToArray()));
 			var selectedNodes = Tree.SelectedNodes;
 			if (selectedNodes!=null)
 			{
 				selectedNodes.ForEach(node => Debug.Log(node.Item.Name));
+			}
+
+		}
+
+		public void GetNodePath()
+		{
+			var path = nodes[0].Nodes[0].Nodes[0].Path;
+			path.ForEach(node => Debug.Log(node.Item.Name));
+		}
+
+		public void SelectNodes()
+		{
+			if ((nodes.Count==0) || (nodes[0].Nodes.Count==0))
+			{
+				return ;
+			}
+			// replace on find node "Node 1 - 1"
+			var parent_node = nodes[0].Nodes[0];
+			var children = new List<TreeNode<TreeViewItem>>();
+			GetChildrenNodes(parent_node, children);
+
+			// add children to selected nodes
+			Tree.SelectedNodes = Tree.SelectedNodes.Union(children).ToList();
+
+			// select only children
+			//Tree.SelectedNodes = children;
+		}
+
+		public void DeselectNodes()
+		{
+			if ((nodes.Count==0) || (nodes[0].Nodes.Count==0))
+			{
+				return ;
+			}
+			// replace on find node "Node 1 - 1"
+			var parent_node = nodes[0].Nodes[0];
+			var children = new List<TreeNode<TreeViewItem>>();
+			GetChildrenNodes(parent_node, children);
+
+			// remove children from selected nodes
+			Tree.SelectedNodes = Tree.SelectedNodes.Except(children).ToList();
+
+			// deselect all
+			//Tree.SelectedNodes = new List<TreeNode<TreeViewItem>>();
+		}
+
+		void GetChildrenNodes(TreeNode<TreeViewItem> node, List<TreeNode<TreeViewItem>> children)
+		{
+			if (node.Nodes!=null)
+			{
+				children.AddRange(node.Nodes);
+				node.Nodes.ForEach(x => GetChildrenNodes(x, children));
 			}
 		}
 

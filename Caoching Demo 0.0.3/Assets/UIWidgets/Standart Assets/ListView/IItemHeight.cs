@@ -5,7 +5,7 @@ namespace UIWidgets {
 	/// </summary>
 	public interface IItemHeight {
 		/// <summary>
-		/// Gets or sets the height.
+		/// Gets or sets the height of item.
 		/// </summary>
 		/// <value>The height.</value>
 		float Height {

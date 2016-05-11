@@ -60,7 +60,7 @@ namespace UIWidgets {
 	/// </code>
 	/// </example>
 	/// </summary>
-	[AddComponentMenu("UI/Progressbar", 260)]
+	[AddComponentMenu("UI/UIWidgets/Progressbar")]
 	public class Progressbar : MonoBehaviour
 	{
 		/// <summary>
@@ -213,6 +213,12 @@ namespace UIWidgets {
 		}
 
 		/// <summary>
+		/// Use unscaled time.
+		/// </summary>
+		[SerializeField]
+		public bool UnscaledTime = false;
+
+		/// <summary>
 		/// Gets a value indicating whether this instance is animation run.
 		/// </summary>
 		/// <value><c>true</c> if this instance is animation run; otherwise, <c>false</c>.</value>
@@ -323,14 +329,15 @@ namespace UIWidgets {
 		{
 			while (true)
 			{
+				var time = UnscaledTime ? Time.unscaledTime : Time.time;
 				var r = IndeterminateBar.uvRect;
 				if (Direction==ProgressbarDirection.Horizontal)
 				{
-					r.x = (Time.time * Speed) % 1;
+					r.x = (time * Speed) % 1;
 				}
 				else
 				{
-					r.y = (Time.time * Speed) % 1;
+					r.y = (time * Speed) % 1;
 				}
 				IndeterminateBar.uvRect = r;
 				yield return null;
@@ -362,14 +369,17 @@ namespace UIWidgets {
 			UpdateText();
 		}
 
-		void UpdateText()
+		/// <summary>
+		/// Updates the text.
+		/// </summary>
+		protected virtual void UpdateText()
 		{
 			var text = textFunc(this);
-			if (FullBarText != null)
+			if (FullBarText!=null)
 			{
 				FullBarText.text = text;
 			}
-			if (EmptyBarText != null)
+			if (EmptyBarText!=null)
 			{
 				EmptyBarText.text = text;
 			}
@@ -407,13 +417,5 @@ namespace UIWidgets {
 				return ;
 			}
 		}
-
-#if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/UI/Progressbar", false, 1110)]
-		static void CreateObject()
-		{
-			Utilites.CreateWidgetFromAsset("Progressbar");
-		}
-#endif
 	}
 }

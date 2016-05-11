@@ -24,7 +24,11 @@ namespace UIWidgets {
 	/// <summary>
 	/// Switch.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/Switch")]
 	public class Switch : Selectable, ISubmitHandler, IPointerClickHandler  {
+		/// <summary>
+		/// Is on?
+		/// </summary>
 		[SerializeField]
 		protected bool isOn;
 
@@ -32,7 +36,7 @@ namespace UIWidgets {
 		/// Gets or sets a value indicating whether this instance is on.
 		/// </summary>
 		/// <value><c>true</c> if this instance is on; otherwise, <c>false</c>.</value>
-		public bool IsOn {
+		public virtual bool IsOn {
 			get {
 				return isOn;
 			}
@@ -40,11 +44,57 @@ namespace UIWidgets {
 				if (isOn!=value)
 				{
 					isOn = value;
+					if (Group!=null)
+					{
+						if (isOn || (!Group.AnySwitchesOn() && !Group.AllowSwitchOff))
+						{
+							isOn = true;
+							Group.NotifySwitchOn(this);
+						}
+					}
+
 					Changed();
 				}
 			}
 		}
 
+		/// <summary>
+		/// Switch group.
+		/// </summary>
+		[SerializeField]
+		protected SwitchGroup Group;
+
+		/// <summary>
+		/// Gets or sets the switch group.
+		/// </summary>
+		/// <value>The switch group.</value>
+		public virtual SwitchGroup SwitchGroup
+		{
+			get {
+				return Group;
+			}
+			set {
+				if (Group != null)
+				{
+					Group.UnregisterSwitch(this);
+				}
+
+				Group = value;
+
+				if (Group != null)
+				{
+					Group.RegisterSwitch(this);
+					if (IsOn)
+					{
+						Group.NotifySwitchOn(this);
+					}
+				}
+			}
+		}
+
+		/// <summary>
+		/// The direction.
+		/// </summary>
 		[SerializeField]
 		protected SwitchDirection direction = SwitchDirection.LeftToRight;
 
@@ -69,10 +119,51 @@ namespace UIWidgets {
 		public RectTransform Mark;
 
 		/// <summary>
+		/// The mark.
+		/// </summary>
+		[SerializeField]
+		public Graphic MarkGraphic;
+
+		/// <summary>
 		/// The background.
 		/// </summary>
 		[SerializeField]
-		public Image Background;
+		public Graphic Background;
+
+
+		[SerializeField]
+		Color markOnColor = new Color(1f, 1f, 1f, 1f);
+
+		/// <summary>
+		/// Gets or sets the color of the mark for On state.
+		/// </summary>
+		/// <value>The color of the mark for On state.</value>
+		public Color MarkOnColor {
+			get {
+				return markOnColor;
+			}
+			set {
+				markOnColor = value;
+				SetMarkColor();
+			}
+		}
+
+		[SerializeField]
+		Color markOffColor = new Color(1f, 215f/255f, 115f/255f, 1f);
+
+		/// <summary>
+		/// Gets or sets the color of the mark for Off State.
+		/// </summary>
+		/// <value>The color of the mark for Off State.</value>
+		public Color MarkOffColor {
+			get {
+				return markOffColor;
+			}
+			set {
+				markOffColor = value;
+				SetMarkColor();
+			}
+		}
 
 		[SerializeField]
 		Color backgroundOnColor = new Color(1f, 1f, 1f, 1f);
@@ -115,10 +206,22 @@ namespace UIWidgets {
 		public float AnimationDuration = 0.3f;
 
 		/// <summary>
+		/// Use unscaled time.
+		/// </summary>
+		[SerializeField]
+		public bool UnscaledTime;
+
+		/// <summary>
 		/// Callback executed when the IsOn of the switch is changed.
 		/// </summary>
 		[SerializeField]
 		public SwitchEvent OnValueChanged = new SwitchEvent();
+
+		protected override void Awake ()
+		{
+			base.Awake();
+			SwitchGroup = Group;
+		}
 
 		/// <summary>
 		/// Changed this instance.
@@ -128,6 +231,7 @@ namespace UIWidgets {
 			SetMarkPosition();
 
 			SetBackgroundColor();
+			SetMarkColor();
 
 			OnValueChanged.Invoke(IsOn);
 		}
@@ -170,11 +274,11 @@ namespace UIWidgets {
 
 			var prev_position = GetPosition(!IsOn);
 			var next_position = GetPosition(IsOn);
-			var end_time = Time.time + time;
+			var end_time = GetTime() + time;
 
-			while (Time.time <= end_time)
+			while (GetTime() <= end_time)
 			{
-				var distance = 1 - ((end_time - Time.time) / time);
+				var distance = 1 - ((end_time - GetTime()) / time);
 				var pos = Mathf.Lerp(prev_position, next_position, distance);
 
 				SetMarkPosition(pos);
@@ -182,6 +286,11 @@ namespace UIWidgets {
 				yield return null;
 			}
 			SetMarkPosition(GetPosition(IsOn));
+		}
+
+		protected float GetTime()
+		{
+			return UnscaledTime ? Time.unscaledTime : Time.time;
 		}
 
 		/// <summary>
@@ -229,11 +338,11 @@ namespace UIWidgets {
 				case SwitchDirection.LeftToRight:
 				case SwitchDirection.BottomToTop:
 					return (state) ? 1f : 0f;
-					break;
+					//break;
 				case SwitchDirection.RightToLeft:
 				case SwitchDirection.TopToBottom:
 					return (state) ? 0f : 1f;
-					break;
+					//break;
 			}
 			return 0f;
 		}
@@ -248,6 +357,18 @@ namespace UIWidgets {
 				return ;
 			}
 			Background.color = (IsOn) ? BackgroundOnColor : BackgroundOffColor;
+		}
+
+		/// <summary>
+		/// Sets the color of the mark.
+		/// </summary>
+		protected virtual void SetMarkColor()
+		{
+			if (MarkGraphic==null)
+			{
+				return ;
+			}
+			MarkGraphic.color = (IsOn) ? MarkOnColor : MarkOffColor;
 		}
 
 		/// <summary>
@@ -294,14 +415,7 @@ namespace UIWidgets {
 			base.OnValidate();
 			SetMarkPosition(false);
 			SetBackgroundColor();
-		}
-		#endif
-
-		#if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/UI/Switch", false, 1175)]
-		static void CreateObject()
-		{
-			Utilites.CreateWidgetFromAsset("Switch");
+			SetMarkColor();
 		}
 		#endif
 	}

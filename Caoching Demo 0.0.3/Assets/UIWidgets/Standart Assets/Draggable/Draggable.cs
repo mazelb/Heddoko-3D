@@ -6,6 +6,7 @@ namespace UIWidgets {
 	/// <summary>
 	/// Draggable UI object..
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/Draggable")]
 	[RequireComponent(typeof(RectTransform))]
 	public class Draggable : MonoBehaviour {
 
@@ -32,7 +33,7 @@ namespace UIWidgets {
 
 		void Start()
 		{
-			SetHandle(handle ?? gameObject);
+			SetHandle(handle!=null ? handle : gameObject);
 		}
 
 		/// <summary>

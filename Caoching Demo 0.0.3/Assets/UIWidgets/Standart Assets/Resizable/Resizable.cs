@@ -23,7 +23,10 @@ namespace UIWidgets
 	/// E - east (right).
 	/// W - west (left).
 	/// </summary>
-	public class Resizable : MonoBehaviour, IInitializePotentialDragHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
+	[AddComponentMenu("UI/UIWidgets/Resizable")]
+	public class Resizable : MonoBehaviour,
+		IInitializePotentialDragHandler, IBeginDragHandler, IEndDragHandler, IDragHandler,
+		IPointerEnterHandler, IPointerExitHandler
 	{
 		/// <summary>
 		/// Resize directions.
@@ -308,7 +311,11 @@ namespace UIWidgets
 			get {
 				if (layoutElement==null)
 				{
-					layoutElement = GetComponent<LayoutElement>() ?? gameObject.AddComponent<LayoutElement>();
+					layoutElement = GetComponent<LayoutElement>();
+					if (layoutElement==null)
+					{
+						layoutElement = gameObject.AddComponent<LayoutElement>();
+					}
 				}
 				return layoutElement;
 			}
@@ -347,17 +354,44 @@ namespace UIWidgets
 		/// </summary>
 		public void Init()
 		{
-			canvasRect = Utilites.FindCanvas(transform) as RectTransform;
+			canvasRect = Utilites.FindTopmostCanvas(transform) as RectTransform;
 			canvas = canvasRect.GetComponent<Canvas>();
 		}
 		
-		static bool globalCursorSetted;
-		bool cursorSetted;
-		
+		protected static bool globalCursorSetted;
+		protected bool cursorChanged;
+		protected bool IsCursorOver;
+
+		/// <summary>
+		/// Called by a BaseInputModule when an OnPointerEnter event occurs.
+		/// </summary>
+		/// <param name="eventData">Event data.</param>
+		public void OnPointerEnter(PointerEventData eventData)
+		{
+			IsCursorOver = true;
+		}
+
+		/// <summary>
+		/// Called by a BaseInputModule when an OnPointerExit event occurs.
+		/// </summary>
+		/// <param name="eventData">Event data.</param>
+		public void OnPointerExit(PointerEventData eventData)
+		{
+			IsCursorOver = false;
+
+			globalCursorSetted = false;
+			cursorChanged = false;
+			Cursor.SetCursor(DefaultCursorTexture, DefaultCursorHotSpot, Utilites.GetCursorMode());
+		}
+
 		void LateUpdate()
 		{
+			if (globalCursorSetted && !cursorChanged)
+			{
+				return ;
+			}
 			globalCursorSetted = false;
-			if (globalCursorSetted && !cursorSetted)
+			if (!IsCursorOver)
 			{
 				return ;
 			}
@@ -402,31 +436,31 @@ namespace UIWidgets
 			if (regions.NWSE)
 			{
 				globalCursorSetted = true;
-				cursorSetted = true;
+				cursorChanged = true;
 				Cursor.SetCursor(CursorNWSETexture, CursorNWSEHotSpot, Utilites.GetCursorMode());
 			}
 			else if (regions.NESW)
 			{
 				globalCursorSetted = true;
-				cursorSetted = true;
+				cursorChanged = true;
 				Cursor.SetCursor(CursorNESWTexture, CursorNESWHotSpot, Utilites.GetCursorMode());
 			}
 			else if (regions.NS)
 			{
 				globalCursorSetted = true;
-				cursorSetted = true;
+				cursorChanged = true;
 				Cursor.SetCursor(CursorNSTexture, CursorNSHotSpot, Utilites.GetCursorMode());
 			}
 			else if (regions.EW)
 			{
 				globalCursorSetted = true;
-				cursorSetted = true;
+				cursorChanged = true;
 				Cursor.SetCursor(CursorEWTexture, CursorEWHotSpot, Utilites.GetCursorMode());
 			}
-			else if (cursorSetted)
+			else if (cursorChanged)
 			{
 				globalCursorSetted = false;
-				cursorSetted = false;
+				cursorChanged = false;
 				Cursor.SetCursor(DefaultCursorTexture, DefaultCursorHotSpot, Utilites.GetCursorMode());
 			}
 		}
@@ -518,7 +552,7 @@ namespace UIWidgets
 		void ResetCursor()
 		{
 			globalCursorSetted = false;
-			cursorSetted = false;
+			cursorChanged = false;
 
 			Cursor.SetCursor(DefaultCursorTexture, DefaultCursorHotSpot, Utilites.GetCursorMode());
 		}
@@ -606,6 +640,12 @@ namespace UIWidgets
 			RectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, size.y);
 		}
 
+		/// <summary>
+		/// Fixs the aspect ratio.
+		/// </summary>
+		/// <returns>The aspect ratio.</returns>
+		/// <param name="newSize">New size.</param>
+		/// <param name="baseSize">Base size.</param>
 		protected Vector2 FixAspectRatio(Vector2 newSize, Vector2 baseSize)
 		{
 			var result = newSize;

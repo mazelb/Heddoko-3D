@@ -7,6 +7,7 @@ namespace UIWidgets {
 	/// <summary>
 	/// Color picker RGB block.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/ColorPicker RGB Block")]
 	public class ColorPickerRGBBlock : MonoBehaviour {
 		[SerializeField]
 		Slider rSlider;
@@ -279,12 +280,12 @@ namespace UIWidgets {
 		{
 			if (rInput!=null)
 			{
-				rInput.onEndEdit.RemoveListener(SpinnerValueChanged);
+				rInput.onValueChangeInt.RemoveListener(SpinnerValueChanged);
 			}
 			rInput = value;
 			if (rInput!=null)
 			{
-				rInput.onEndEdit.AddListener(SpinnerValueChanged);
+				rInput.onValueChangeInt.AddListener(SpinnerValueChanged);
 			}
 		}
 
@@ -358,12 +359,7 @@ namespace UIWidgets {
 
 		void SpinnerValueChanged(int value)
 		{
-			ValueChanged();
-		}
-
-		void SpinnerValueChanged(string str)
-		{
-			ValueChanged();
+			ValueChanged(isSlider: false);
 		}
 
 		void SliderValueChanged(float value)
@@ -379,16 +375,17 @@ namespace UIWidgets {
 		/// <summary>
 		/// Values the changed.
 		/// </summary>
-		protected virtual void ValueChanged()
+		/// <param name="isSlider">Is slider value changed?</param>
+		protected virtual void ValueChanged(bool isSlider=true)
 		{
 			if (inUpdateMode)
 			{
 				return ;
 			}
 			var color = new Color32(
-				GetRed(),
-				GetGreen(),
-				GetBlue(),
+				GetRed(isSlider),
+				GetGreen(isSlider),
+				GetBlue(isSlider),
 				currentColor.a
 			);
 			OnChangeRGB.Invoke(color);
@@ -397,10 +394,11 @@ namespace UIWidgets {
 		/// <summary>
 		/// Gets the red.
 		/// </summary>
+		/// <param name="isSlider">Is slider value changed?</param>
 		/// <returns>The red.</returns>
-		protected byte GetRed()
+		protected byte GetRed(bool isSlider=true)
 		{
-			if (rSlider!=null)
+			if ((rSlider!=null) && (isSlider))
 			{
 				return (byte)rSlider.value;
 			}
@@ -414,10 +412,11 @@ namespace UIWidgets {
 		/// <summary>
 		/// Gets the green.
 		/// </summary>
+		/// <param name="isSlider">Is slider value changed?</param>
 		/// <returns>The green.</returns>
-		protected byte GetGreen()
+		protected byte GetGreen(bool isSlider=true)
 		{
-			if (gSlider!=null)
+			if ((gSlider!=null) && (isSlider))
 			{
 				return (byte)gSlider.value;
 			}
@@ -431,10 +430,11 @@ namespace UIWidgets {
 		/// <summary>
 		/// Gets the blue.
 		/// </summary>
+		/// <param name="isSlider">Is slider value changed?</param>
 		/// <returns>The blue.</returns>
-		protected byte GetBlue()
+		protected byte GetBlue(bool isSlider=true)
 		{
-			if (bSlider!=null)
+			if ((bSlider!=null) && (isSlider))
 			{
 				return (byte)bSlider.value;
 			}
@@ -475,7 +475,7 @@ namespace UIWidgets {
 		/// </summary>
 		protected virtual void UpdateView()
 		{
-			#if UNITY_5_2 || UNITY_5_3
+			#if UNITY_5_2 || UNITY_5_3 || UNITY_5_4
 			UpdateMaterial();
 			#else
 			UpdateViewReal();

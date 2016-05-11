@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
-using System.Collections;
 
 namespace UIWidgets {
 	/// <summary>
 	/// ListViewIcons drag support.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/ListViewIconsDragSupport")]
 	[RequireComponent(typeof(ListViewIconsItemComponent))]
 	public class ListViewIconsDragSupport : DragSupport<ListViewIconsItemDescription> {
 		/// <summary>
@@ -19,6 +19,8 @@ namespace UIWidgets {
 		/// </summary>
 		[SerializeField]
 		public ListViewIconsItemComponent DragInfo;
+
+		int index = 0;
 
 		/// <summary>
 		/// Start this instance.
@@ -37,7 +39,9 @@ namespace UIWidgets {
 		/// <param name="eventData">Current event data.</param>
 		protected override void InitDrag(PointerEventData eventData)
 		{
-			Data = GetComponent<ListViewIconsItemComponent>().Item;
+			var component = GetComponent<ListViewIconsItemComponent>();
+			Data = component.Item;
+			index = component.Index;
 
 			ShowDragInfo();
 		}
@@ -74,8 +78,7 @@ namespace UIWidgets {
 		/// <summary>
 		/// Called when drop completed.
 		/// </summary>
-		/// <param name="success">true</param>
-		/// <c>false</c>
+		/// <param name="success"><c>true</c> if Drop component received data; otherwise, <c>false</c>.</param>
 		public override void Dropped(bool success)
 		{
 			HideDragInfo();
@@ -83,7 +86,20 @@ namespace UIWidgets {
 			// remove used from current ListViewIcons.
 			if (success && (ListView!=null))
 			{
-				ListView.DataSource.Remove(Data);
+				var first_index = ListView.DataSource.IndexOf(Data);
+				var last_index = ListView.DataSource.LastIndexOf(Data);
+				if (index==first_index)
+				{
+					ListView.DataSource.RemoveAt(index);
+				}
+				else if ((index+1)==last_index)
+				{
+					ListView.DataSource.RemoveAt(index+1);
+				}
+				else
+				{
+					ListView.DataSource.Remove(Data);
+				}
 			}
 
 			base.Dropped(success);

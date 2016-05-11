@@ -5,6 +5,14 @@ using System.Collections;
 using UIWidgets;
 
 namespace UIWidgetsSamples {
+	[System.Serializable]
+	public class CountryFlag {
+		[SerializeField]
+		public string Country;
+		[SerializeField]
+		public Sprite Flag;
+	}
+
 	public class SteamSpyComponent : ListViewItem, IResizableItem {
 		[SerializeField]
 		public Text Name;
@@ -27,6 +35,14 @@ namespace UIWidgetsSamples {
 		[SerializeField]
 		public Text TooltipText;
 
+		[SerializeField]
+		[HideInInspector]
+		public Image Flag;
+
+		[SerializeField]
+		[HideInInspector]
+		public CountryFlag[] Flags;
+
 		//SteamSpyItem Item;
 
 		/// <summary>
@@ -37,6 +53,7 @@ namespace UIWidgetsSamples {
 			get {
 				return new GameObject[] {
 					Name.transform.parent.gameObject,
+					//Flag.transform.parent.gameObject,
 					ScoreRank.transform.parent.gameObject,
 					Owners.transform.parent.gameObject,
 					Players.transform.parent.gameObject,
@@ -63,6 +80,20 @@ namespace UIWidgetsSamples {
 			PlayersIn2Week.text = item.PlayersIn2Week.ToString("N0") + "\n±" + item.PlayersIn2WeekVariance.ToString("N0");
 
 			TimeIn2Week.text = Minutes2String(item.AverageTimeIn2Weeks) + "\n(" + Minutes2String(item.MedianTimeIn2Weeks) + ")";
+
+			//Flag.sprite = GetFlag("uk");
+		}
+
+		Sprite GetFlag(string country)
+		{
+			foreach (var flag in Flags)
+			{
+				if (flag.Country==country)
+				{
+					return flag.Flag;
+				}
+			}
+			return null;
 		}
 
 		string Minutes2String(int minutes)

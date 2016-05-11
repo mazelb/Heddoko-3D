@@ -7,7 +7,7 @@ namespace UIWidgets {
 	/// <summary>
 	/// Centered slider base class (zero at center, positive and negative parts have different scales).
 	/// </summary>
-	public abstract class CenteredSliderBase<T> : MonoBehaviour, IPointerClickHandler
+	public abstract class CenteredSliderBase<T> : UIBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerUpHandler
 		where T : struct
 	{
 		/// <summary>
@@ -17,7 +17,7 @@ namespace UIWidgets {
 		public class OnChangeEvent: UnityEvent<T> {
 			
 		}
-		
+
 		/// <summary>
 		/// Value.
 		/// </summary>
@@ -34,25 +34,6 @@ namespace UIWidgets {
 			}
 			set {
 				SetValue(value);
-			}
-		}
-		
-		/// <summary>
-		/// The step.
-		/// </summary>
-		[SerializeField]
-		protected T step;
-		
-		/// <summary>
-		/// Gets or sets the step.
-		/// </summary>
-		/// <value>The step.</value>
-		public T Step {
-			get {
-				return step;
-			}
-			set {
-				step = value;
 			}
 		}
 		
@@ -95,7 +76,91 @@ namespace UIWidgets {
 				SetValue(_value);
 			}
 		}
+
+		/// <summary>
+		/// The use value limits.
+		/// </summary>
+		[SerializeField]
+		protected bool useValueLimits;
+
+		/// <summary>
+		/// Gets or sets use value limits.
+		/// </summary>
+		/// <value><c>true</c> if use value limits; otherwise, <c>false</c>.</value>
+		public bool UseValueLimits {
+			get {
+				return useValueLimits;
+			}
+			set {
+				useValueLimits = value;
+				SetValue(_value);
+			}
+		}
+
+		/// <summary>
+		/// The value minimum limit.
+		/// </summary>
+		[SerializeField]
+		protected T valueMin;
 		
+		/// <summary>
+		/// Gets or sets the value minimum limit.
+		/// </summary>
+		/// <value>The value minimum limit.</value>
+		public T ValueMin {
+			get {
+				return valueMin;
+			}
+			set {
+				valueMin = value;
+				SetValue(_value);
+			}
+		}
+		
+		/// <summary>
+		/// The value maximum limit.
+		/// </summary>
+		[SerializeField]
+		protected T valueMax;
+		
+		/// <summary>
+		/// Gets or sets the value maximum limit.
+		/// </summary>
+		/// <value>The maximum limit.</value>
+		public T ValueMax {
+			get {
+				return valueMax;
+			}
+			set {
+				valueMax = value;
+				SetValue(_value);
+			}
+		}
+
+		/// <summary>
+		/// The step.
+		/// </summary>
+		[SerializeField]
+		protected T step;
+		
+		/// <summary>
+		/// Gets or sets the step.
+		/// </summary>
+		/// <value>The step.</value>
+		public T Step {
+			get {
+				return step;
+			}
+			set {
+				step = value;
+			}
+		}
+
+		/// <summary>
+		/// Whole number of steps.
+		/// </summary>
+		public bool WholeNumberOfSteps = false;
+
 		/// <summary>
 		/// The handle.
 		/// </summary>
@@ -176,11 +241,6 @@ namespace UIWidgets {
 		public UnityEvent OnChange = new UnityEvent();
 
 		/// <summary>
-		/// Whole number of steps.
-		/// </summary>
-		public bool WholeNumberOfSteps = false;
-
-		/// <summary>
 		/// Is init called?
 		/// </summary>
 		bool isInitCalled;
@@ -199,6 +259,31 @@ namespace UIWidgets {
 			SetHandle(handle);
 			UpdateHandle();
 			UpdateFill();
+		}
+
+		/// <summary>
+		/// Implementation of a callback that is sent if an associated RectTransform has it's dimensions changed.
+		/// </summary>
+		protected override void OnRectTransformDimensionsChange()
+		{
+			UpdateHandle();
+			UpdateFill();
+		}
+
+		/// <summary>
+		/// Called by a BaseInputModule when an OnPointerDown event occurs.
+		/// </summary>
+		/// <param name="eventData">Event data.</param>
+		public void OnPointerDown(PointerEventData eventData)
+		{
+		}
+
+		/// <summary>
+		/// Called by a BaseInputModule when an OnPointerUp event occurs.
+		/// </summary>
+		/// <param name="eventData">Event data.</param>
+		public void OnPointerUp(PointerEventData eventData)
+		{
 		}
 
 		/// <summary>
@@ -233,7 +318,7 @@ namespace UIWidgets {
 		/// <summary>
 		/// Start this instance.
 		/// </summary>
-		protected virtual void Start()
+		protected override void Start()
 		{
 			Init();
 		}
@@ -253,7 +338,23 @@ namespace UIWidgets {
 			LimitMin = limitMin;
 			LimitMax = limitMax;
 		}
-		
+
+		/// <summary>
+		/// Sets the value limits.
+		/// </summary>
+		/// <param name="min">Minimum.</param>
+		/// <param name="max">Max.</param>
+		public void SetValueLimit(T min, T max)
+		{
+			// set limits to skip InBounds check
+			valueMin = min;
+			valueMax = max;
+			
+			// set limits with InBounds check and update handle's positions
+			ValueMin = valueMin;
+			ValueMax = valueMax;
+		}
+
 		/// <summary>
 		/// Determines whether this instance is horizontal.
 		/// </summary>
@@ -409,6 +510,11 @@ namespace UIWidgets {
 		/// <param name="eventData">Event data.</param>
 		public virtual void OnPointerClick(PointerEventData eventData)
 		{
+			if (eventData.button!=PointerEventData.InputButton.Left)
+			{
+				return;
+			}
+
 			Vector2 curCursor;
 			if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(UsableRangeRect, eventData.position, eventData.pressEventCamera, out curCursor))
 			{

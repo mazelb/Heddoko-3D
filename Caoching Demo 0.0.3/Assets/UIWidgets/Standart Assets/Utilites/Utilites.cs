@@ -29,7 +29,7 @@ namespace UIWidgets {
 
 			var go = UnityEngine.Object.Instantiate(prefab) as GameObject;
 
-			var go_parent = parent ?? Selection.activeTransform;
+			var go_parent = (parent!=null) ? parent : Selection.activeTransform;
 			if ((go_parent==null) || ((go_parent.gameObject.transform as RectTransform)==null))
 			{
 				go_parent = GetCanvasTransform();
@@ -57,7 +57,8 @@ namespace UIWidgets {
 		/// Creates the object from asset.
 		/// </summary>
 		/// <returns>The object from asset.</returns>
-		/// <param name="path">Path.</param>
+		/// <param name="searchString">Search string.</param>
+		/// <param name="undoName">Undo name.</param>
 		static public GameObject CreateObjectFromAsset(string searchString, string undoName)
 		{
 			var prefab = AssetDatabase.FindAssets(searchString);
@@ -120,6 +121,7 @@ namespace UIWidgets {
 		#endif
 
 
+
 		/// <summary>
 		/// Fixs the instantiated object (in some cases object have wrong position, rotation and scale).
 		/// </summary>
@@ -142,8 +144,7 @@ namespace UIWidgets {
 			var rectTransform = instance.transform as RectTransform;
 
 			rectTransform.localPosition = defaultRectTransform.localPosition;
-			rectTransform.position = defaultRectTransform.position;
-			rectTransform.rotation = defaultRectTransform.rotation;
+			rectTransform.localRotation = defaultRectTransform.localRotation;
 			rectTransform.localScale = defaultRectTransform.localScale;
 			rectTransform.anchoredPosition = defaultRectTransform.anchoredPosition;
 			rectTransform.sizeDelta = defaultRectTransform.sizeDelta;
@@ -162,6 +163,21 @@ namespace UIWidgets {
 				return null;
 			}
 			return canvas.transform;
+		}
+
+		/// <summary>
+		/// Finds the topmost canvas.
+		/// </summary>
+		/// <returns>The canvas.</returns>
+		/// <param name="currentObject">Current object.</param>
+		static public Transform FindTopmostCanvas(Transform currentObject)
+		{
+			var canvases = currentObject.GetComponentsInParent<Canvas>();
+			if (canvases.Length==0)
+			{
+				return null;
+			}
+			return canvases[canvases.Length - 1].transform;
 		}
 
 		/// <summary>
@@ -223,6 +239,10 @@ namespace UIWidgets {
 		/// <param name="layout">Layout.</param>
 		static public void UpdateLayout(LayoutGroup layout)
 		{
+			if (layout==null)
+			{
+				return ;
+			}
 			if (layout is EasyLayout.EasyLayout)
 			{
 				(layout as EasyLayout.EasyLayout).UpdateLayout();

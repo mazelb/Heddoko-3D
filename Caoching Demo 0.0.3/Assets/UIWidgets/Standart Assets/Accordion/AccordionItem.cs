@@ -3,19 +3,22 @@ using UnityEngine.UI;
 
 namespace UIWidgets {
 
-	[System.Serializable]
 	/// <summary>
 	/// Accordion item.
 	/// </summary>
+	[System.Serializable]
 	public class AccordionItem {
+
 		/// <summary>
 		/// The toggle object.
 		/// </summary>
 		public GameObject ToggleObject;
+
 		/// <summary>
 		/// The content object.
 		/// </summary>
 		public GameObject ContentObject;
+
 		/// <summary>
 		/// Default state of content object.
 		/// </summary>

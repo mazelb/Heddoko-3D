@@ -32,7 +32,7 @@ namespace UIWidgets {
 		/// <param name="tab">Tab.</param>
 		public virtual void SetData(TabIcons tab)
 		{
-
+			Name.text = tab.Name;
 		}
 	}
 }

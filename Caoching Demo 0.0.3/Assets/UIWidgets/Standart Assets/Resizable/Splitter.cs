@@ -25,7 +25,10 @@ namespace UIWidgets
 	/// <summary>
 	/// Splitter.
 	/// </summary>
-	public class Splitter : MonoBehaviour, IInitializePotentialDragHandler, IBeginDragHandler, IEndDragHandler, IDragHandler
+	[AddComponentMenu("UI/UIWidgets/Splitter")]
+	public class Splitter : MonoBehaviour,
+		IInitializePotentialDragHandler, IBeginDragHandler, IEndDragHandler, IDragHandler,
+		IPointerEnterHandler, IPointerExitHandler
 	{
 		/// <summary>
 		/// The type.
@@ -110,7 +113,11 @@ namespace UIWidgets
 			get {
 				if (leftTargetElement==null)
 				{
-					leftTargetElement = leftTarget.GetComponent<LayoutElement>() ?? leftTarget.gameObject.AddComponent<LayoutElement>();
+					leftTargetElement = leftTarget.GetComponent<LayoutElement>();
+					if (leftTargetElement==null)
+					{
+						leftTargetElement = leftTarget.gameObject.AddComponent<LayoutElement>();
+					}
 				}
 				return leftTargetElement;
 			}
@@ -122,7 +129,11 @@ namespace UIWidgets
 			get {
 				if (rightTargetElement==null)
 				{
-					rightTargetElement = rightTarget.GetComponent<LayoutElement>() ?? rightTarget.gameObject.AddComponent<LayoutElement>();
+					rightTargetElement = rightTarget.GetComponent<LayoutElement>();
+					if (rightTargetElement==null)
+					{
+						rightTargetElement = rightTarget.gameObject.AddComponent<LayoutElement>();
+					}
 				}
 				return rightTargetElement;
 			}
@@ -151,13 +162,40 @@ namespace UIWidgets
 		/// </summary>
 		public void Init()
 		{
-			canvas = Utilites.FindCanvas(transform).GetComponent<Canvas>();
+			canvas = Utilites.FindTopmostCanvas(transform).GetComponent<Canvas>();
 		}
 
-		bool cursorSetted = false;
+		bool cursorChanged = false;
+
+		protected bool IsCursorOver;
+
+		/// <summary>
+		/// Called by a BaseInputModule when an OnPointerEnter event occurs.
+		/// </summary>
+		/// <param name="eventData">Event data.</param>
+		public void OnPointerEnter(PointerEventData eventData)
+		{
+			IsCursorOver = true;
+		}
+
+		/// <summary>
+		/// Called by a BaseInputModule when an OnPointerExit event occurs.
+		/// </summary>
+		/// <param name="eventData">Event data.</param>
+		public void OnPointerExit(PointerEventData eventData)
+		{
+			IsCursorOver = false;
+
+			cursorChanged = false;
+			Cursor.SetCursor(DefaultCursorTexture, DefaultCursorHotSpot, Utilites.GetCursorMode());
+		}
 
 		void LateUpdate()
 		{
+			if (!IsCursorOver)
+			{
+				return ;
+			}
 			if (processDrag)
 			{
 				return ;
@@ -181,12 +219,12 @@ namespace UIWidgets
 			var rect = RectTransform.rect;
 			if (rect.Contains(point))
 			{
-				cursorSetted = true;
+				cursorChanged = true;
 				Cursor.SetCursor(CursorTexture, CursorHotSpot, Utilites.GetCursorMode());
 			}
-			else if (cursorSetted)
+			else if (cursorChanged)
 			{
-				cursorSetted = false;
+				cursorChanged = false;
 				Cursor.SetCursor(DefaultCursorTexture, DefaultCursorHotSpot, Utilites.GetCursorMode());
 			}
 		}
@@ -213,7 +251,7 @@ namespace UIWidgets
 			}
 
 			Cursor.SetCursor(CursorTexture, CursorHotSpot, Utilites.GetCursorMode());
-			cursorSetted = true;
+			cursorChanged = true;
 
 			processDrag = true;
 			
@@ -237,7 +275,7 @@ namespace UIWidgets
 		public void OnEndDrag(PointerEventData eventData)
 		{
 			Cursor.SetCursor(DefaultCursorTexture, DefaultCursorHotSpot, Utilites.GetCursorMode());
-			cursorSetted = false;
+			cursorChanged = false;
 
 			processDrag = false;
 

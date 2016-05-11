@@ -6,10 +6,11 @@ using System.Collections;
 
 namespace UIWidgets
 {
-	[RequireComponent(typeof(ScrollRect))]
 	/// <summary>
 	/// ScrollRect events.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/ScrollRectEvents")]
+	[RequireComponent(typeof(ScrollRect))]
 	public class ScrollRectEvents : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
 		/// <summary>
 		/// The required movement before raise events.
@@ -73,15 +74,7 @@ namespace UIWidgets
 		/// <param name="eventData">Event data.</param>
 		public virtual void OnBeginDrag(PointerEventData eventData)
 		{
-			initedPullUp = false;
-			initedPullDown = false;
-			initedPullLeft = false;
-			initedPullRight = false;
-
-			MovementUp = 0f;
-			MovementDown = 0f;
-			MovementLeft = 0f;
-			MovementRight = 0f;
+			ResetDrag();
 		}
 
 		/// <summary>
@@ -89,6 +82,14 @@ namespace UIWidgets
 		/// </summary>
 		/// <param name="eventData">Event data.</param>
 		public virtual void OnEndDrag(PointerEventData eventData)
+		{
+			ResetDrag();
+		}
+
+		/// <summary>
+		/// Resets the drag values.
+		/// </summary>
+		protected virtual void ResetDrag()
 		{
 			initedPullUp = false;
 			initedPullDown = false;
@@ -101,11 +102,11 @@ namespace UIWidgets
 			MovementRight = 0f;
 		}
 
-		/// <summary>
-		/// When draging is occuring this will be called every time the cursor is moved.
-		/// </summary>
-		/// <param name="eventData">Event data.</param>
-		public virtual void OnDrag(PointerEventData eventData)
+        /// <summary>
+        /// When draging is occuring this will be called every time the cursor is moved.
+        /// </summary>
+        /// <param name="eventData">Event data.</param>
+        public virtual void OnDrag(PointerEventData eventData)
 		{
 			var scrollRectTransform = (ScrollRect.transform as RectTransform);
 			var scroll_height = scrollRectTransform.rect.height;

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using UIWidgets;
 
 namespace UIWidgetsSamples {
-	public class ListViewVariableHeightComponent : ListViewItem, IListViewItemHeight {
+	public class ListViewVariableHeightComponent : ListViewItem/*, IListViewItemHeight*/ {
 		[SerializeField]
 		public Text Name;
 
@@ -25,7 +25,7 @@ namespace UIWidgetsSamples {
 
 		float CalculateHeight()
 		{
-			float default_total_height = 63;
+			float default_total_height = 58;
 			float default_name_height = 21;
 			float default_text_height = 17;
 

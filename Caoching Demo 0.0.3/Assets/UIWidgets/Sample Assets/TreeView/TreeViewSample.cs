@@ -5,17 +5,17 @@ namespace UIWidgetsSamples {
 	public class TreeViewSample : TreeViewCustom<TreeViewSampleComponent,ITreeViewSampleItem> {
 		
 		/// <summary>
-		/// Sets vComponenent data with specified vItem.
+		/// Sets component data with specified item.
 		/// </summary>
-		/// <param name="vComponent">Component.</param>
-		/// <param name="vItem">Item.</param>
-		protected override void SetData(TreeViewSampleComponent vComponent, ListNode<ITreeViewSampleItem> vItem)
+		/// <param name="component">Component.</param>
+		/// <param name="item">Item.</param>
+		protected override void SetData(TreeViewSampleComponent component, ListNode<ITreeViewSampleItem> item)
 		{
-			vComponent.SetData(vItem.Node, vItem.Depth);
+			component.SetData(item.Node, item.Depth);
 		}
 		
 		/// <summary>
-		/// Set highlights colors of specified vComponenent.
+		/// Set highlights colors of specified component.
 		/// </summary>
 		/// <param name="component">Component.</param>
 		protected override void HighlightColoring(TreeViewSampleComponent component)
@@ -25,7 +25,7 @@ namespace UIWidgetsSamples {
 		}
 		
 		/// <summary>
-		/// Set select colors of specified vComponenent.
+		/// Set select colors of specified component.
 		/// </summary>
 		/// <param name="component">Component.</param>
 		protected override void SelectColoring(TreeViewSampleComponent component)
@@ -35,7 +35,7 @@ namespace UIWidgetsSamples {
 		}
 		
 		/// <summary>
-		/// Set default colors of specified vComponenent.
+		/// Set default colors of specified component.
 		/// </summary>
 		/// <param name="component">Component.</param>
 		protected override void DefaultColoring(TreeViewSampleComponent component)

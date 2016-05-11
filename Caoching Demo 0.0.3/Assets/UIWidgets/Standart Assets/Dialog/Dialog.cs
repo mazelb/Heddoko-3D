@@ -7,6 +7,7 @@ namespace UIWidgets {
 	/// <summary>
 	/// Dialog.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/Dialog")]
 	public class Dialog : MonoBehaviour, ITemplatable
 	{
 		[SerializeField]
@@ -73,6 +74,22 @@ namespace UIWidgets {
 			}
 		}
 
+		DialogInfoBase dialogInfo;
+
+		/// <summary>
+		/// Gets the dialog info.
+		/// </summary>
+		/// <value>The dialog info.</value>
+		public DialogInfoBase DialogInfo {
+			get {
+				if (dialogInfo==null)
+				{
+					dialogInfo = GetComponent<DialogInfoBase>();
+				}
+				return dialogInfo;
+			}
+		}
+
 		bool isTemplate = true;
 		
 		/// <summary>
@@ -92,7 +109,10 @@ namespace UIWidgets {
 		/// Gets the name of the template.
 		/// </summary>
 		/// <value>The name of the template.</value>
-		public string TemplateName { get; set; }
+		public string TemplateName {
+			get;
+			set;
+		}
 
 		static Templates<Dialog> templates;
 
@@ -152,6 +172,26 @@ namespace UIWidgets {
 		}
 
 		/// <summary>
+		/// Return Dialog instance using current instance as template.
+		/// </summary>
+		public Dialog Template()
+		{
+			if ((TemplateName!=null) && Templates.Exists(TemplateName))
+			{
+				//do nothing
+			}
+			else if (!Templates.Exists(gameObject.name))
+			{
+				Templates.Add(gameObject.name, this);
+			}
+			else if (Templates.Get(gameObject.name)!=this)
+			{
+				Templates.Add(gameObject.name, this);
+			}
+			return Templates.Instance(gameObject.name);
+		}
+
+		/// <summary>
 		/// The modal key.
 		/// </summary>
 		protected int? ModalKey;
@@ -187,20 +227,9 @@ namespace UIWidgets {
 				position = new Vector3(0, 0, 0);
 			}
 
-			if ((title!=null) && (TitleText!=null))
-			{
-				TitleText.text = title;
-			}
-			if ((message!=null) && (ContentText!=null))
-			{
-				contentText.text = message;
-			}
-			if ((icon!=null) && (Icon!=null))
-			{
-				Icon.sprite = icon;
-			}
+			SetInfo(title, message, icon);
 
-			var parent = (canvas!=null) ? canvas.transform : Utilites.FindCanvas(gameObject.transform);
+			var parent = (canvas!=null) ? canvas.transform : Utilites.FindTopmostCanvas(gameObject.transform);
 			if (parent!=null)
 			{
 				transform.SetParent(parent, false);
@@ -223,7 +252,36 @@ namespace UIWidgets {
 			CreateButtons(buttons, focusButton);
 		    return gameObject;
 		}
-		
+
+		/// <summary>
+		/// Sets the info.
+		/// </summary>
+		/// <param name="title">Title.</param>
+		/// <param name="message">Message.</param>
+		/// <param name="icon">Icon.</param>
+		public virtual void SetInfo(string title=null, string message=null, Sprite icon=null)
+		{
+			if (DialogInfo!=null)
+			{
+				DialogInfo.SetInfo(title, message, icon);
+			}
+			else
+			{
+				if ((title!=null) && (TitleText!=null))
+				{
+					TitleText.text = title;
+				}
+				if ((message!=null) && (ContentText!=null))
+				{
+					ContentText.text = message;
+				}
+				if ((icon!=null) && (Icon!=null))
+				{
+					Icon.sprite = icon;
+				}
+			}
+		}
+
 		/// <summary>
 		/// Close dialog.
 		/// </summary>
@@ -282,10 +340,18 @@ namespace UIWidgets {
 				button.gameObject.SetActive(true);
 				button.transform.SetAsLastSibling();
 
-				var text = button.GetComponentInChildren<Text>();
-				if (text)
+				var dialog_button = button.GetComponentInChildren<DialogButtonComponent>();
+				if (dialog_button!=null)
 				{
-					text.text = x.Key;
+					dialog_button.SetButtonName(x.Key);
+				}
+				else
+				{
+					var text = button.GetComponentInChildren<Text>();
+					if (text!=null)
+					{
+						text.text = x.Key;
+					}
 				}
 
 				button.onClick.AddListener(buttonsActions[x.Key]);
@@ -310,8 +376,9 @@ namespace UIWidgets {
 
 			var button = Instantiate(DefaultButton) as Button;
 
-			Utilites.FixInstantiated(DefaultButton, button);
 			button.transform.SetParent(DefaultButton.transform.parent, false);
+
+			//Utilites.FixInstantiated(DefaultButton, button);
 
 			return button;
 		}
@@ -356,18 +423,11 @@ namespace UIWidgets {
 		{
 			var template = Templates.Get(TemplateName);
 
-			if ((TitleText!=null) && (template.TitleText!=null))
-			{
-				TitleText.text = template.TitleText.text;
-			}
-			if ((ContentText!=null) && (template.ContentText!=null))
-			{
-				ContentText.text = template.ContentText.text;
-			}
-			if ((Icon!=null) && (template.Icon!=null))
-			{
-				Icon.sprite = template.Icon.sprite;
-			}
+			var title = template.TitleText!=null ? template.TitleText.text : "";
+			var content = template.ContentText!=null ? template.ContentText.text : "";
+			var icon = template.Icon!=null ? template.Icon.sprite : null;
+
+			SetInfo(title, content, icon);
 		}
 
 		/// <summary>
@@ -377,13 +437,5 @@ namespace UIWidgets {
 		{
 			return true;
 		}
-
-		#if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/UI/Dialog Template", false, 1050)]
-		static void CreateObject()
-		{
-			Utilites.CreateWidgetFromAsset("DialogTemplate");
-		}
-		#endif
 	}
 }

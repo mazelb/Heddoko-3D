@@ -5,10 +5,10 @@ using System;
 
 namespace UIWidgets
 {
-	[AddComponentMenu("UI/RangeSlider", 300)]
 	/// <summary>
 	/// Range slider.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/RangeSlider")]
 	public class RangeSlider : RangeSliderBase<int>
 	{
 		/// <summary>
@@ -123,14 +123,6 @@ namespace UIWidgets
 		{
 			ValueMax -= step;
 		}
-
-#if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/UI/RangeSlider", false, 1120)]
-		static void CreateObject()
-		{
-			Utilites.CreateWidgetFromAsset("RangeSlider");
-		}
-#endif
 	}
 }
 

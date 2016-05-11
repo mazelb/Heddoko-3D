@@ -50,6 +50,13 @@ namespace UIWidgets
 		}
 
 		/// <summary>
+		/// The name of the default tab.
+		/// </summary>
+		[SerializeField]
+		[Tooltip("Tab name which will be active by default, if not specified will be opened first Tab.")]
+		public string DefaultTabName = string.Empty;
+
+		/// <summary>
 		/// If true does not deactivate hidden tabs.
 		/// </summary>
 		[SerializeField]
@@ -74,9 +81,18 @@ namespace UIWidgets
 		List<TButton> defaultButtons = new List<TButton>();
 		List<TButton> activeButtons = new List<TButton>();
 		List<UnityAction> callbacks = new List<UnityAction>();
-		
-		void Start()
+
+		bool isStarted;
+		/// <summary>
+		/// Start this instance.
+		/// </summary>
+		public void Start()
 		{
+			if (isStarted)
+			{
+				return ;
+			}
+			isStarted = true;
 			if (Container==null)
 			{
 				throw new NullReferenceException("Container is null. Set object of type GameObject to Container.");
@@ -111,7 +127,28 @@ namespace UIWidgets
 
 			AddCallbacks();
 
-			SelectTab(tabObjects[0]);
+			if (DefaultTabName!="")
+			{
+				var tab = GetTabByName(DefaultTabName);
+				if (tab!=null)
+				{
+					SelectTab(tab);
+				}
+				else
+				{
+					Debug.LogWarning(string.Format("Tab with specified DefaultTabName \"{0}\" not found. Opened first Tab.", DefaultTabName), this);
+					SelectTab(tabObjects[0]);
+				}
+			}
+			else
+			{
+				SelectTab(tabObjects[0]);
+			}
+		}
+
+		TTab GetTabByName(string tabName)
+		{
+			return tabObjects.FirstOrDefault(x => x.Name==tabName);
 		}
 
 		void AddCallback(TTab tab, int index)
@@ -147,6 +184,23 @@ namespace UIWidgets
 		void OnDestroy()
 		{
 			RemoveCallbacks();
+		}
+
+		/// <summary>
+		/// Selects the tab.
+		/// </summary>
+		/// <param name="tabName">Tab name.</param>
+		public void SelectTab(string tabName)
+		{
+			var tab = GetTabByName(tabName);
+			if (tab!=null)
+			{
+				SelectTab(tab);
+			}
+			else
+			{
+				Debug.LogWarning(string.Format("Tab with specified name \"{0}\" not found.", tabName), this);
+			}
 		}
 
 		/// <summary>

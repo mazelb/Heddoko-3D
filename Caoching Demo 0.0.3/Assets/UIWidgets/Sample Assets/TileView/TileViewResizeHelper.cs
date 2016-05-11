@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UIWidgets;
 
 namespace UIWidgetsSamples {
+	/// <summary>
+	/// TileView resize helper. Resize all items components when size one of them is changed.
+	/// </summary>
 	[RequireComponent(typeof(TileViewComponentSample))]
 	[RequireComponent(typeof(Resizable))]
 	public class TileViewResizeHelper : MonoBehaviour {

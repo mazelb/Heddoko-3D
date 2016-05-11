@@ -7,6 +7,7 @@ namespace UIWidgets {
 	/// <summary>
 	/// Color picker HSV sliders block.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/ColorPicker HSVBlock")]
 	public class ColorPickerHSVBlock : MonoBehaviour {
 		[SerializeField]
 		Slider hSlider;
@@ -360,7 +361,7 @@ namespace UIWidgets {
 		
 		void SpinnerValueChanged(int value)
 		{
-			ValueChanged();
+			ValueChanged(isSlider: false);
 		}
 		
 		void SliderValueChanged(float value)
@@ -376,16 +377,17 @@ namespace UIWidgets {
 		/// <summary>
 		/// Values the changed.
 		/// </summary>
-		protected virtual void ValueChanged()
+		/// <param name="isSlider">Is slider value changed?</param>
+		protected virtual void ValueChanged(bool isSlider=true)
 		{
 			if (inUpdateMode)
 			{
 				return ;
 			}
 			currentColorHSV = new ColorHSV(
-				GetHue(),
-				GetSaturation(),
-				GetBrightness(),
+				GetHue(isSlider),
+				GetSaturation(isSlider),
+				GetBrightness(isSlider),
 				currentColorHSV.A
 			);
 
@@ -395,10 +397,11 @@ namespace UIWidgets {
 		/// <summary>
 		/// Gets the hue.
 		/// </summary>
+		/// <param name="isSlider">Is slider value changed?</param>
 		/// <returns>The hue.</returns>
-		protected int GetHue()
+		protected int GetHue(bool isSlider=true)
 		{
-			if (hSlider!=null)
+			if ((hSlider!=null) && (isSlider))
 			{
 				return (int)hSlider.value;
 			}
@@ -412,10 +415,11 @@ namespace UIWidgets {
 		/// <summary>
 		/// Gets the saturation.
 		/// </summary>
+		/// <param name="isSlider">Is slider value changed?</param>
 		/// <returns>The saturation.</returns>
-		protected int GetSaturation()
+		protected int GetSaturation(bool isSlider=true)
 		{
-			if (sSlider!=null)
+			if ((sSlider!=null) && (isSlider))
 			{
 				return (int)sSlider.value;
 			}
@@ -429,10 +433,11 @@ namespace UIWidgets {
 		/// <summary>
 		/// Gets the brightness.
 		/// </summary>
+		/// <param name="isSlider">Is slider value changed?</param>
 		/// <returns>The brightness.</returns>
-		protected int GetBrightness()
+		protected int GetBrightness(bool isSlider=true)
 		{
-			if (vSlider!=null)
+			if ((vSlider!=null) && (isSlider))
 			{
 				return (int)vSlider.value;
 			}
@@ -475,7 +480,7 @@ namespace UIWidgets {
 		/// </summary>
 		protected virtual void UpdateView()
 		{
-			#if UNITY_5_2 || UNITY_5_3
+			#if UNITY_5_2 || UNITY_5_3 || UNITY_5_4
 			UpdateMaterial();
 			#else
 			UpdateViewReal();

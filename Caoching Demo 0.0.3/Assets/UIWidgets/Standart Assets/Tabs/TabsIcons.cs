@@ -5,7 +5,7 @@ namespace UIWidgets
 	/// <summary>
 	/// TabsIcons.
 	/// </summary>
-	[AddComponentMenu("UI/TabsIcons", 295)]
+	[AddComponentMenu("UI/UIWidgets/TabsIcons")]
 	public class TabsIcons : TabsCustom<TabIcons,TabIconButton>
 	{
 		/// <summary>
@@ -17,13 +17,5 @@ namespace UIWidgets
 		{
 			button.SetData(TabObjects[index]);
 		}
-		
-		#if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/UI/TabsIcons", false, 1185)]
-		static void CreateObject()
-		{
-			Utilites.CreateWidgetFromAsset("TabsIcons");
-		}
-		#endif
 	}
 }

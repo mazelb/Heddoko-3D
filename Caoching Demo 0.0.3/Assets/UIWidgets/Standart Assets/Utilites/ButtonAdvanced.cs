@@ -12,7 +12,6 @@ namespace UIWidgets {
 
 	}
 
-	[AddComponentMenu("UI/Progressbar", 210)]
 	/// <summary>
 	/// Button advanced. You can add callback on PointerEnter/Exit/Down/Up 
 	/// </summary>

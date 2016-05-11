@@ -20,11 +20,11 @@ namespace UIWidgets {
 	public class SubmitEventFloat : UnityEvent<float> {
 	}
 	
-	[AddComponentMenu("UI/SpinnerFloat", 270)]
 	/// <summary>
-	/// Spinner.
+	/// Spinner with float value.
 	/// http://ilih.ru/images/unity-assets/UIWidgets/Spinner.png
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/SpinnerFloat")]
 	public class SpinnerFloat : SpinnerBase<float> {
 		[SerializeField]
 		string format = "0.00";
@@ -211,13 +211,5 @@ namespace UIWidgets {
 		{
 			return Mathf.Clamp(value, _min, _max);
 		}
-
-		#if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/UI/SpinnerFloat", false, 1170)]
-		static void CreateObject()
-		{
-			Utilites.CreateWidgetFromAsset("SpinnerFloat");
-		}
-		#endif
 	}
 }

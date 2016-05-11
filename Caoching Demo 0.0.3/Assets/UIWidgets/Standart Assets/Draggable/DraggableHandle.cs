@@ -26,7 +26,7 @@ namespace UIWidgets {
 		/// <param name="eventData">Event data.</param>
 		public virtual void OnInitializePotentialDrag(PointerEventData eventData)
 		{
-			canvasRect = Utilites.FindCanvas(transform) as RectTransform;
+			canvasRect = Utilites.FindTopmostCanvas(transform) as RectTransform;
 			canvas = canvasRect.GetComponent<Canvas>();
 		}
 		

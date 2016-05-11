@@ -4,12 +4,12 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
 namespace UIWidgets {
-	[RequireComponent(typeof(InputField))]
-	[AddComponentMenu("UI/Combobox", 220)]
 	/// <summary>
 	/// Combobox.
 	/// http://ilih.ru/images/unity-assets/UIWidgets/Combobox.png
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/Combobox")]
+	//[RequireComponent(typeof(InputField))]
 	public class Combobox : MonoBehaviour, ISubmitHandler
 	{
 		[SerializeField]
@@ -61,7 +61,7 @@ namespace UIWidgets {
 			}
 		}
 		
-		InputField input;
+		protected IInputFieldProxy input;
 
 		/// <summary>
 		/// OnSelect event.
@@ -73,7 +73,7 @@ namespace UIWidgets {
 			get {
 				if (_listCanvas==null)
 				{
-					_listCanvas = Utilites.FindCanvas(listView.transform.parent);
+					_listCanvas = Utilites.FindTopmostCanvas(listView.transform.parent);
 				}
 				return _listCanvas;
 			}
@@ -99,7 +99,7 @@ namespace UIWidgets {
 			}
 			isStartedCombobox = true;
 
-			input = GetComponent<InputField>();
+			InitInputFieldProxy();
 			input.onEndEdit.AddListener(InputItem);
 			Editable = editable;
 
@@ -109,8 +109,6 @@ namespace UIWidgets {
 
 			if (listView!=null)
 			{
-				listView.OnSelectString.RemoveListener(SelectItem);
-
 				listView.gameObject.SetActive(true);
 				listView.Start();
 				if (listView.SelectedIndex!=-1)
@@ -118,9 +116,12 @@ namespace UIWidgets {
 					input.text = listView.DataSource[listView.SelectedIndex];
 				}
 				listView.gameObject.SetActive(false);
-
-				listView.OnSelectString.AddListener(SelectItem);
 			}
+		}
+
+		protected virtual void InitInputFieldProxy()
+		{
+			input = new InputFieldProxy(GetComponent<InputField>());
 		}
 
 		/// <summary>
@@ -215,14 +216,16 @@ namespace UIWidgets {
 			{
 				return ;
 			}
+
+			listView.gameObject.SetActive(true);
+
+			ModalKey = ModalHelper.Open(this, null, new Color(0, 0, 0, 0f), HideList);
+
 			if (listCanvas!=null)
 			{
-				ModalKey = ModalHelper.Open(this, null, new Color(0, 0, 0, 0f), HideList);
-
 				listParent = listView.transform.parent;
 				listView.transform.SetParent(listCanvas);
 			}
-			listView.gameObject.SetActive(true);
 
 			if (listView.Layout!=null)
 			{
@@ -254,11 +257,11 @@ namespace UIWidgets {
 			{
 				return ;
 			}
-			listView.gameObject.SetActive(false);
 			if (listCanvas!=null)
 			{
 				listView.transform.SetParent(listParent);
 			}
+			listView.gameObject.SetActive(false);
 		}
 
 		/// <summary>
@@ -334,7 +337,8 @@ namespace UIWidgets {
 		/// <param name="go">Go.</param>
 		protected SelectListener GetDeselectListener(GameObject go)
 		{
-			return go.GetComponent<SelectListener>() ?? go.AddComponent<SelectListener>();
+			var result = go.GetComponent<SelectListener>();
+			return (result!=null) ? result : go.AddComponent<SelectListener>();
 		}
 
 		/// <summary>
@@ -461,14 +465,5 @@ namespace UIWidgets {
 		{
 			ShowList();
 		}
-
-#if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/UI/Combobox", false, 1030)]
-		static void CreateObject()
-		{
-			Utilites.CreateWidgetFromAsset("Combobox");
-		}
-#endif
-
 	}
 }

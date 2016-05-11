@@ -3,10 +3,11 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
+using UnityEngine.Events;
 
 namespace UIWidgets
 {
-	[CanEditMultipleObjects]
+	//[CanEditMultipleObjects]
 	[CustomEditor(typeof(ListViewBase), true)]
 	public class ListViewCustomBaseEditor : Editor
 	{
@@ -58,7 +59,25 @@ namespace UIWidgets
 			//"OnPointerExitObject",
 			"OnStartScrolling",
 			"OnEndScrolling",
+		};
 
+		protected List<string> Exclude = new List<string>{
+			"selectedIndicies",
+			"sort",
+			"itemHeight",
+			"itemWidth",
+			"KeepSelection",
+
+			"OnSelectObject",
+			
+			"OnSubmit",
+			"OnCancel",
+			"OnItemSelect",
+			"OnItemCancel",
+			"OnFocusIn",
+			"OnFocusOut",
+			"OnPointerEnterObject",
+			"OnPointerExitObject",
 		};
 
 		static bool DetectGenericType(object instance, string name)
@@ -75,22 +94,53 @@ namespace UIWidgets
 			return false;
 		}
 
-		static bool DetectTileView(object instance)
+		protected virtual void FillProperties()
 		{
-			Type type = instance.GetType();
-			while (type != null)
+			var property = serializedObject.GetIterator();
+			property.NextVisible(true);
+			while (property.NextVisible(false))
 			{
-				if (type.FullName.StartsWith("UIWidgets.TileView`2", StringComparison.InvariantCulture))
-				{
-					return true;
-				}
-				type = type.BaseType;
+				AddProperty(property);
 			}
-			return false;
+		}
+
+		protected void AddProperty(SerializedProperty property)
+		{
+			if (Exclude.Contains(property.name))
+			{
+				return ;
+			}
+			if (Events.Contains(property.name) || Properties.Contains(property.name))
+			{
+				return ;
+			}
+
+			if (IsEvent(property))
+			{
+				Events.Add(property.name);
+			}
+			else
+			{
+				Properties.Add(property.name);
+			}
+		}
+
+		protected bool IsEvent(SerializedProperty property)
+		{
+			var object_type = property.serializedObject.targetObject.GetType();
+			var property_type = object_type.GetField(property.propertyPath, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+			if (property_type==null)
+			{
+				return false;
+			}
+
+			return typeof(UnityEventBase).IsAssignableFrom(property_type.FieldType);
 		}
 
 		protected virtual void OnEnable()
 		{
+			FillProperties();
+			
 			if (!IsListViewCustom)
 			{
 				IsListViewCustom = DetectGenericType(serializedObject.targetObject, "UIWidgets.ListViewCustom`2");
@@ -110,9 +160,28 @@ namespace UIWidgets
 
 			if (IsListViewCustomHeight)
 			{
-				if (!Properties.Contains("ForceAutoHeightCalculation"))
+				var isCanCalculateHeight = false;
+				var ourType = serializedObject.targetObject.GetType(); 
+				var mi = ourType.GetMethod("IsItemCanCalculateHeight", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
+				if (mi!=null)
 				{
-					Properties.Add("ForceAutoHeightCalculation");
+					var isCanCalculateHeightFunc = (Func<bool>)Delegate.CreateDelegate(typeof(Func<bool>), serializedObject.targetObject, mi);
+					isCanCalculateHeight = isCanCalculateHeightFunc.Invoke();
+				}
+
+				if (isCanCalculateHeight)
+				{
+					if (!Properties.Contains("ForceAutoHeightCalculation"))
+					{
+						Properties.Add("ForceAutoHeightCalculation");
+					}
+				}
+				else
+				{
+					if (Properties.Contains("ForceAutoHeightCalculation"))
+					{
+						Properties.Remove("ForceAutoHeightCalculation");
+					}
 				}
 				if (!Properties.Contains("itemHeight"))
 				{

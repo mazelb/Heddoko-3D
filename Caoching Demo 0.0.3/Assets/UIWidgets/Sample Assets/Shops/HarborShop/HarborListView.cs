@@ -1,14 +1,24 @@
-﻿using UnityEngine;
-using System.Collections;
-using UIWidgets;
+﻿using UIWidgets;
 
 namespace UIWidgetsSamples.Shops {
+	/// <summary>
+	/// Harbor list view.
+	/// </summary>
 	public class HarborListView : ListViewCustom<HarborListViewComponent,HarborOrderLine> {
-		protected override void SetData(HarborListViewComponent vComponent, HarborOrderLine vItem)
+		/// <summary>
+		/// Sets component data with specified item.
+		/// </summary>
+		/// <param name="component">Component.</param>
+		/// <param name="item">Item.</param>
+		protected override void SetData(HarborListViewComponent component, HarborOrderLine item)
 		{
-			vComponent.SetData(vItem);
+			component.SetData(item);
 		}
-		
+
+		/// <summary>
+		/// Set highlights colors of specified component.
+		/// </summary>
+		/// <param name="component">Component.</param>
 		protected override void HighlightColoring(HarborListViewComponent component)
 		{
 			base.HighlightColoring(component);
@@ -18,7 +28,11 @@ namespace UIWidgetsSamples.Shops {
 			component.AvailableBuyCount.color = HighlightedColor;
 			component.AvailableSellCount.color = HighlightedColor;
 		}
-		
+
+		/// <summary>
+		/// Set select colors of specified component.
+		/// </summary>
+		/// <param name="component">Component.</param>
 		protected override void SelectColoring(HarborListViewComponent component)
 		{
 			base.SelectColoring(component);
@@ -28,7 +42,11 @@ namespace UIWidgetsSamples.Shops {
 			component.AvailableBuyCount.color = SelectedColor;
 			component.AvailableSellCount.color = SelectedColor;
 		}
-		
+
+		/// <summary>
+		/// Set default colors of specified component.
+		/// </summary>
+		/// <param name="component">Component.</param>
 		protected override void DefaultColoring(HarborListViewComponent component)
 		{
 			base.DefaultColoring(component);

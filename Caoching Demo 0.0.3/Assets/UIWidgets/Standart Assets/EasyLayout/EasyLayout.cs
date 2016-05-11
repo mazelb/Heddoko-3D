@@ -7,10 +7,23 @@ using System.Linq;
 using System;
 
 namespace EasyLayout {
-	[Serializable]
+	/// <summary>
+	/// Grid constraints.
+	/// Flexible - Don't constrain the number of rows or columns.
+	/// FixedColumnCount - Constraint the number of columns to a specified number.
+	/// FixedRowCount - Constraint the number of rows to a specified number.
+	/// </summary>
+	public enum GridConstraints
+	{
+		Flexible = 0,
+		FixedColumnCount = 1,
+		FixedRowCount = 2,
+	}
+
 	/// <summary>
 	/// Padding.
 	/// </summary>
+	[Serializable]
 	public struct Padding
 	{
 		/// <summary>
@@ -67,7 +80,6 @@ namespace EasyLayout {
 		}
 	}
 
-	[Flags]
 	/// <summary>
 	/// Children size.
 	/// DoNothing - Don't change size of children.
@@ -75,6 +87,7 @@ namespace EasyLayout {
 	/// SetMaxFromPreferred - Set size of children to maximum size of children preferred.
 	/// FitContainer - Stretch size of children to fit container.
 	/// </summary>
+	[Flags]
 	public enum ChildrenSize {
 		DoNothing = 0,
 		SetPreferred = 1,
@@ -82,7 +95,6 @@ namespace EasyLayout {
 		FitContainer = 3,
 	}
 
-	[Flags]
 	/// <summary>
 	/// Anchors.
 	/// UpperLeft - UpperLeft.
@@ -95,6 +107,7 @@ namespace EasyLayout {
 	/// LowerCenter - LowerCenter.
 	/// LowerRight - LowerRight.
 	/// </summary>
+	[Flags]
 	public enum Anchors {
 		UpperLeft = 0,
 		UpperCenter = 1,
@@ -109,59 +122,61 @@ namespace EasyLayout {
 		LowerRight = 8,
 	}
 	
-	[Flags]
 	/// <summary>
 	/// Stackings.
 	/// Horizontal - Horizontal.
 	/// Vertical - Vertical.
 	/// </summary>
+	[Flags]
 	public enum Stackings {
 		Horizontal = 0,
 		Vertical = 1,
 	}
 
-	[Flags]
 	/// <summary>
 	/// Horizontal aligns.
 	/// Left - Left.
 	/// Center - Center.
 	/// Right - Right.
 	/// </summary>
+	[Flags]
 	public enum HorizontalAligns {
 		Left = 0,
 		Center = 1,
 		Right = 2,
 	}
 
-	[Flags]
 	/// <summary>
 	/// Inner aligns.
 	/// Top - Top.
 	/// Middle - Middle.
 	/// Bottom - Bottom.
 	/// </summary>
+	[Flags]
 	public enum InnerAligns {
 		Top = 0,
 		Middle = 1,
 		Bottom = 2,
 	}
 
-	[Flags]
 	/// <summary>
 	/// Layout type to use.
 	/// Compact - Compact.
 	/// Grid - Grid.
 	/// </summary>
+	[Flags]
 	public enum LayoutTypes {
 		Compact = 0,
 		Grid = 1,
 	}
 
-	[ExecuteInEditMode]
-	[RequireComponent(typeof(RectTransform))]
 	/// <summary>
 	/// EasyLayout.
+	/// Warning: using RectTransform relative size with positive size delta (like 100% + 10) with ContentSizeFitter can lead to infinite increased size.
 	/// </summary>
+	[ExecuteInEditMode]
+	[RequireComponent(typeof(RectTransform))]
+	[AddComponentMenu("UI/UIWidgets/EasyLayout")]
 	public class EasyLayout : UnityEngine.UI.LayoutGroup {
 		/// <summary>
 		/// The group position.
@@ -180,6 +195,18 @@ namespace EasyLayout {
 		/// </summary>
 		[SerializeField]
 		public LayoutTypes LayoutType = LayoutTypes.Compact;
+
+		/// <summary>
+		/// Which constraint to use for the Grid layout.
+		/// </summary>
+		[SerializeField]
+		public GridConstraints GridConstraint = GridConstraints.Flexible;
+
+		/// <summary>
+		/// How many cells there should be along the constrained axis.
+		/// </summary>
+		[SerializeField]
+		public int GridConstraintCount = 1;
 
 		/// <summary>
 		/// The row align.
@@ -389,29 +416,29 @@ namespace EasyLayout {
 			}
 		}
 
-		static readonly Dictionary<Anchors,Vector2> groupPositions = new Dictionary<Anchors,Vector2>{
-			{Anchors.LowerLeft,    new Vector2(0.0f, 0.0f)},
-			{Anchors.LowerCenter,  new Vector2(0.5f, 0.0f)},
-			{Anchors.LowerRight,   new Vector2(1.0f, 0.0f)},
+		static readonly List<Vector2> groupPositions = new List<Vector2>{
+			new Vector2(0.0f, 1.0f),//Anchors.UpperLeft
+			new Vector2(0.5f, 1.0f),//Anchors.UpperCenter
+			new Vector2(1.0f, 1.0f),//Anchors.UpperRight
+
+			new Vector2(0.0f, 0.5f),//Anchors.MiddleLeft
+			new Vector2(0.5f, 0.5f),//Anchors.MiddleCenter
+			new Vector2(1.0f, 0.5f),//Anchors.MiddleRight
 			
-			{Anchors.MiddleLeft,   new Vector2(0.0f, 0.5f)},
-			{Anchors.MiddleCenter, new Vector2(0.5f, 0.5f)},
-			{Anchors.MiddleRight,  new Vector2(1.0f, 0.5f)},
-			
-			{Anchors.UpperLeft,    new Vector2(0.0f, 1.0f)},
-			{Anchors.UpperCenter,  new Vector2(0.5f, 1.0f)},
-			{Anchors.UpperRight,   new Vector2(1.0f, 1.0f)},
+			new Vector2(0.0f, 0.0f),//Anchors.LowerLeft
+			new Vector2(0.5f, 0.0f),//Anchors.LowerCenter
+			new Vector2(1.0f, 0.0f),//Anchors.LowerRight
 		};
 
-		static readonly Dictionary<HorizontalAligns,float> rowAligns = new Dictionary<HorizontalAligns,float>{
-			{HorizontalAligns.Left,   0.0f},
-			{HorizontalAligns.Center, 0.5f},
-			{HorizontalAligns.Right,  1.0f},
+		static readonly List<float> rowAligns = new List<float>{
+			0.0f,//HorizontalAligns.Left
+			0.5f,//HorizontalAligns.Center
+			1.0f,//HorizontalAligns.Right
 		};
-		static readonly Dictionary<InnerAligns,float> innerAligns = new Dictionary<InnerAligns,float>{
-			{InnerAligns.Top,   0.0f},
-			{InnerAligns.Middle, 0.5f},
-			{InnerAligns.Bottom,  1.0f},
+		static readonly List<float> innerAligns = new List<float>{
+			0.0f,//InnerAligns.Top
+			0.5f,//InnerAligns.Middle
+			1.0f,//InnerAligns.Bottom
 		};
 
 		/// <summary>
@@ -444,7 +471,7 @@ namespace EasyLayout {
 		/// </summary>
 		public override void SetLayoutVertical()
 		{
-			//RepositionUIElements();
+			RepositionUIElements();
 		}
 
 		/// <summary>
@@ -461,7 +488,7 @@ namespace EasyLayout {
 		/// </summary>
 		public override void CalculateLayoutInputVertical()
 		{
-			//CalculateLayoutSize();
+			CalculateLayoutSize();
 		}
 
 		/// <summary>
@@ -474,34 +501,51 @@ namespace EasyLayout {
 		{
 			if (scaled)
 			{
-				return Stacking==Stackings.Horizontal ? ScaledWidth(ui) : ScaledHeight(ui);
+				return Stacking==Stackings.Horizontal ? EasyLayoutUtilites.ScaledWidth(ui) : EasyLayoutUtilites.ScaledHeight(ui);
 			}
 			return Stacking==Stackings.Horizontal ? ui.rect.width : ui.rect.height;
 		}
 
-		float GetRowWidth(List<RectTransform> row)
-		{
-			return row.Select<RectTransform,float>(ScaledWidth).Sum() + (Spacing.x * (row.Count - 1)); 
-		}
-
-		float GetRowHeight(List<RectTransform> row)
-		{
-			return row.Select<RectTransform,float>(ScaledHeight).Max() + Spacing.y; 
-		}
-
+		/// <summary>
+		/// Calculates the size of the group.
+		/// </summary>
+		/// <returns>The group size.</returns>
+		/// <param name="group">Group.</param>
 		Vector2 CalculateGroupSize(List<List<RectTransform>> group)
 		{
-			float width;
+			float width = 0f;
 			if (LayoutType==LayoutTypes.Compact)
 			{
-				width = group.Select<List<RectTransform>,float>(GetRowWidth).Max();
+				for (int i = 0; i < group.Count; i++)
+				{
+					float row_width = Spacing.x * (group[i].Count - 1);
+					for (int j = 0; j < group[i].Count; j++)
+					{
+						row_width += EasyLayoutUtilites.ScaledWidth(group[i][j]);
+					}
+					width = Mathf.Max(width, row_width);
+				}
 			}
 			else
 			{
-				var widths = GetMaxColumnsWidths(group);
-				width = widths.Sum() + widths.Length * Spacing.x - Spacing.x;
+				GetMaxColumnsWidths(group, MaxColumnsWidths);
+				for (int i = 0; i < MaxColumnsWidths.Count; i++)
+				{
+					width += MaxColumnsWidths[i];
+				}
+				width += MaxColumnsWidths.Count * Spacing.x - Spacing.x;
 			}
-			float height = group.Select<List<RectTransform>,float>(GetRowHeight).Sum() - Spacing.y;
+
+			float height = Spacing.y * (group.Count - 1);
+			for (int i = 0; i < group.Count; i++)
+			{
+				float row_height = 0f;
+				for (int j = 0; j < group[i].Count; j++)
+				{
+					row_height = Mathf.Max(row_height, EasyLayoutUtilites.ScaledHeight(group[i][j]));
+				}
+				height += row_height;
+			}
 
 			width += PaddingInner.Left + PaddingInner.Right;
 			height += PaddingInner.Top + PaddingInner.Bottom;
@@ -517,6 +561,9 @@ namespace EasyLayout {
 			UpdateLayout();
 		}
 
+		/// <summary>
+		/// Updates the size of the block.
+		/// </summary>
 		void UpdateBlockSize()
 		{
 			if (Symmetric)
@@ -525,7 +572,7 @@ namespace EasyLayout {
 			}
 			else
 			{
-				BlockSize = new Vector2(UISize.x + MarginLeft + MarginRight, UISize.y + MarginLeft + MarginRight);
+				BlockSize = new Vector2(UISize.x + MarginLeft + MarginRight, UISize.y + MarginTop + MarginBottom);
 			}
 		}
 
@@ -547,6 +594,9 @@ namespace EasyLayout {
 			UpdateBlockSize();
 		}
 
+		/// <summary>
+		/// Repositions the user interface elements.
+		/// </summary>
 		void RepositionUIElements()
 		{
 			var group = GroupUIElements();
@@ -562,7 +612,7 @@ namespace EasyLayout {
 			UISize = CalculateGroupSize(group);
 			UpdateBlockSize();
 			
-			var anchor_position = groupPositions[GroupPosition];
+			var anchor_position = groupPositions[(int)GroupPosition];
 			var start_position = new Vector2(
 				rectTransform.rect.width * (anchor_position.x - rectTransform.pivot.x),
 				rectTransform.rect.height * (anchor_position.y - rectTransform.pivot.y)
@@ -591,87 +641,119 @@ namespace EasyLayout {
 
 			RepositionUIElements();
 		}
-		
+
+		/// <summary>
+		/// Gets the user interface element position.
+		/// </summary>
+		/// <returns>The user interface position.</returns>
+		/// <param name="ui">User interface.</param>
+		/// <param name="position">Position.</param>
+		/// <param name="align">Align.</param>
 		Vector2 GetUIPosition(RectTransform ui, Vector2 position, Vector2 align)
 		{
-			var pivot_fix_x = ScaledWidth(ui) * ui.pivot.x;
-			var pivox_fix_y = ScaledHeight(ui) * ui.pivot.y;
+			var pivot_fix_x = EasyLayoutUtilites.ScaledWidth(ui) * ui.pivot.x;
+			var pivox_fix_y = EasyLayoutUtilites.ScaledHeight(ui) * ui.pivot.y;
 			var new_x = position.x + pivot_fix_x + align.x;
-			var new_y = position.y - ScaledHeight(ui) + pivox_fix_y - align.y;
+			var new_y = position.y - EasyLayoutUtilites.ScaledHeight(ui) + pivox_fix_y - align.y;
 			
 			return new Vector2(new_x, new_y);
 		}
 		
-		List<float> GetRowsWidths(List<List<RectTransform>> group)
+		void GetRowsWidths(List<List<RectTransform>> group, List<float> widths)
 		{
-			var widths = new List<float>();
+			widths.Clear();
 
-			foreach (var row_index in Enumerable.Range(0, group.Count))
+			for (int i = 0; i < group.Count; i++)
 			{
-				var width = group[row_index].Convert<RectTransform,float>(ScaledWidth).Sum();
-				widths.Add(width + (group[row_index].Count - 1) * Spacing.x);
+				float width = 0f;
+				for (int j = 0; j < group[i].Count; j++)
+				{
+					width += EasyLayoutUtilites.ScaledWidth(group[i][j]);
+				}
+				widths.Add(width + (group[i].Count - 1) * Spacing.x);
 			}
-			return widths;
 		}
 
-		float GetMaxColumnWidth(List<RectTransform> column)
+		void GetMaxColumnsWidths(List<List<RectTransform>> group, List<float> maxColumnsWidths)
 		{
-			return column.Convert<RectTransform,float>(ScaledWidth).Max();
+			maxColumnsWidths.Clear();
+
+			for (var i = 0; i < group.Count; i++)
+			{
+				for (var j = 0; j < group[i].Count; j++)
+				{
+					if (maxColumnsWidths.Count <= j)
+					{
+						maxColumnsWidths.Add(0);
+					}
+					maxColumnsWidths[j] = Mathf.Max(maxColumnsWidths[j], EasyLayoutUtilites.ScaledWidth(group[i][j]));
+				}
+			}
 		}
 
-		float[] GetMaxColumnsWidths(List<List<RectTransform>> group)
+		void GetColumnsHeights(List<List<RectTransform>> group, List<float> heights)
 		{
-			return Transpose(group).Select<List<RectTransform>,float>(GetMaxColumnWidth).ToArray();
-		}
-
-		List<float> GetColumnsHeights(List<List<RectTransform>> group)
-		{
-			var heights = new List<float>();
+			heights.Clear();
 			
-			foreach (var column_index in Enumerable.Range(0, group.Count))
+			for (int i = 0; i < group.Count; i++)
 			{
-				var height = group[column_index].Convert<RectTransform,float>(ScaledHeight).Sum();
-				heights.Add(height + (group[column_index].Count - 1) * Spacing.y);
+				float height = 0;
+				for (int j = 0; j < group[i].Count; j++)
+				{
+					height += EasyLayoutUtilites.ScaledHeight(group[i][j]);
+				}
+				heights.Add(height + (group[i].Count - 1) * Spacing.y);
 			}
-			return heights;
 		}
 
 		float GetMaxRowHeight(List<RectTransform> row)
 		{
-			return row.Select<RectTransform,float>(ScaledHeight).Max();
+			float height = 0;
+			for (int i = 0; i < row.Count; i++)
+			{
+				height = Mathf.Max(height, EasyLayoutUtilites.ScaledHeight(row[i]));
+			}
+			return height;
 		}
 
-		float[] GetMaxRowsHeights(List<List<RectTransform>> group)
+		void GetMaxRowsHeights(List<List<RectTransform>> group, List<float> heights)
 		{
-			return Transpose(group).Convert<List<RectTransform>,float>(GetMaxRowHeight).ToArray();
+			heights.Clear();
+			var transposed_group = EasyLayoutUtilites.Transpose(group);
+
+			for (int i = 0; i < transposed_group.Count; i++)
+			{
+				heights.Add(GetMaxRowHeight(transposed_group[i]));
+			}
 		}
 
 		Vector2 GetMaxCellSize(List<List<RectTransform>> group)
 		{
-			var rows_max = group.Convert<List<RectTransform>,Vector2>(GetMaxCellSize);
+			float x = 0f;
+			float y = 0f;
+			for (int i = 0; i < group.Count; i++)
+			{
+				for (int j = 0; j < group[i].Count; j++)
+				{
+					x = Mathf.Max(x, EasyLayoutUtilites.ScaledWidth(group[i][j]));
+					y = Mathf.Max(y, EasyLayoutUtilites.ScaledHeight(group[i][j]));
+				}
+			}
 
-			return new Vector2(
-				rows_max.Max<Vector2,float>(GetWidth),
-				rows_max.Max<Vector2,float>(GetHeight)
-			);
-		}
-
-		float GetWidth(Vector2 size)
-		{
-			return size.x;
-		}
-
-		float GetHeight(Vector2 size)
-		{
-			return size.y;
+			return new Vector2(x, y);
 		}
 
 		Vector2 GetMaxCellSize(List<RectTransform> row)
 		{
-			return new Vector2(
-				row.Max<RectTransform,float>(ScaledWidth),
-				row.Max<RectTransform,float>(ScaledHeight)
-			);
+			float x = 0f;
+			float y = 0f;
+			for (int i = 0; i < row.Count; i++)
+			{
+				x = Mathf.Max(x, EasyLayoutUtilites.ScaledWidth(row[i]));
+				y = Mathf.Max(y, EasyLayoutUtilites.ScaledHeight(row[i]));
+			}
+
+			return new Vector2(x, y);
 		}
 
 		Vector2 GetAlignByWidth(RectTransform ui, float maxWidth, Vector2 cellMaxSize, float emptyWidth)
@@ -679,17 +761,17 @@ namespace EasyLayout {
 			if (LayoutType==LayoutTypes.Compact)
 			{
 				return new Vector2(
-					emptyWidth * rowAligns[RowAlign],
-					(cellMaxSize.y - ScaledHeight(ui)) * innerAligns[InnerAlign]
+					emptyWidth * rowAligns[(int)RowAlign],
+					(cellMaxSize.y - EasyLayoutUtilites.ScaledHeight(ui)) * innerAligns[(int)InnerAlign]
 				);
 			}
 			else
 			{
-				var cell_align = groupPositions[CellAlign];
+				var cell_align = groupPositions[(int)CellAlign];
 
 				return new Vector2(
-					(maxWidth - ScaledWidth(ui)) * cell_align.x,
-					(cellMaxSize.y - ScaledHeight(ui)) * (1 - cell_align.y)
+					(maxWidth - EasyLayoutUtilites.ScaledWidth(ui)) * cell_align.x,
+					(cellMaxSize.y - EasyLayoutUtilites.ScaledHeight(ui)) * (1 - cell_align.y)
 				);
 			}
 		}
@@ -699,95 +781,106 @@ namespace EasyLayout {
 			if (LayoutType==LayoutTypes.Compact)
 			{
 				return new Vector2(
-					(cellMaxSize.x - ScaledWidth(ui)) * innerAligns[InnerAlign],
-					emptyHeight * rowAligns[RowAlign]
+					(cellMaxSize.x - EasyLayoutUtilites.ScaledWidth(ui)) * innerAligns[(int)InnerAlign],
+					emptyHeight * rowAligns[(int)RowAlign]
 				);
 			}
 			else
 			{
-				var cell_align = groupPositions[CellAlign];
+				var cell_align = groupPositions[(int)CellAlign];
 				
 				return new Vector2(
-					(cellMaxSize.x - ScaledWidth(ui)) * (1 - cell_align.x),
-					(maxHeight - ScaledHeight(ui)) * cell_align.y
+					(cellMaxSize.x - EasyLayoutUtilites.ScaledWidth(ui)) * (1 - cell_align.x),
+					(maxHeight - EasyLayoutUtilites.ScaledHeight(ui)) * cell_align.y
 				);
 			}
 		}
 
+		List<float> RowsWidths = new List<float>();
+		List<float> MaxColumnsWidths = new List<float>();
+
+		List<float> ColumnsHeights = new List<float>();
+		List<float> MaxRowsHeights = new List<float>();
+
+		RectTransform currentUIElement;
+
 		void SetPositions(List<List<RectTransform>> group, Vector2 startPosition, Vector2 groupSize)
 		{
-			var position = startPosition;
-
 			if (Stacking==Stackings.Horizontal)
 			{
-				var rows_widths = GetRowsWidths(group);
-				var max_widths = GetMaxColumnsWidths(group);
-
-				var align = new Vector2(0, 0);
-
-				int coord_x = 0;
-				foreach (var row in group)
-				{
-					var row_cell_max_size = GetMaxCellSize(row);
-
-					int coord_y = 0;
-					foreach (var ui_element in row)
-					{
-						align = GetAlignByWidth(ui_element, max_widths[coord_y], row_cell_max_size, groupSize.x - rows_widths[coord_x]);
-
-						var new_position = GetUIPosition(ui_element, position, align);
-						if (ui_element.localPosition.x != new_position.x || ui_element.localPosition.y != new_position.y)
-						{
-							ui_element.localPosition = new_position;
-						}
-
-						position.x += ((LayoutType==LayoutTypes.Compact)
-						    ? ScaledWidth(ui_element)
-							: max_widths[coord_y]) + Spacing.x;
-
-						coord_y += 1;
-					}
-					position.x = startPosition.x;
-					position.y -= row_cell_max_size.y + Spacing.y;
-
-					coord_x += 1;
-				}
+				SetPositionsHorizontal(group, startPosition, groupSize);
 			}
 			else
 			{
-				group = Transpose(group);
-				var rows_height = GetColumnsHeights(group);
-				var max_heights = GetMaxRowsHeights(group);
-				
-				var align = new Vector2(0, 0);
-				
-				int coord_y = 0;
-				foreach (var row in group)
+				SetPositionsVertical(group, startPosition, groupSize);
+			}
+		}
+
+		void SetPositionsHorizontal(List<List<RectTransform>> group, Vector2 startPosition, Vector2 groupSize)
+		{
+			var position = startPosition;
+
+			GetRowsWidths(group, RowsWidths);
+			GetMaxColumnsWidths(group, MaxColumnsWidths);
+
+			var align = new Vector2(0, 0);
+
+			for (int coord_x = 0; coord_x < group.Count; coord_x++)
+			{
+				var row_cell_max_size = GetMaxCellSize(group[coord_x]);
+
+				for (int coord_y = 0; coord_y < group[coord_x].Count; coord_y++)
 				{
-					var column_cell_max_size = GetMaxCellSize(row);
-					
-					int coord_x = 0;
-					foreach (var ui_element in row)
+					currentUIElement = group[coord_x][coord_y];
+					align = GetAlignByWidth(currentUIElement, MaxColumnsWidths[coord_y], row_cell_max_size, groupSize.x - RowsWidths[coord_x]);
+
+					var new_position = GetUIPosition(currentUIElement, position, align);
+					if (currentUIElement.localPosition.x != new_position.x || currentUIElement.localPosition.y != new_position.y)
 					{
-						align = GetAlignByHeight(ui_element, max_heights[coord_x], column_cell_max_size, groupSize.y - rows_height[coord_y]);
-						
-						var new_position = GetUIPosition(ui_element, position, align);
-						if (ui_element.localPosition.x != new_position.x || ui_element.localPosition.y != new_position.y)
-						{
-							ui_element.localPosition = new_position;
-						}
-						
-						position.y -= ((LayoutType==LayoutTypes.Compact)
-						               ? ScaledHeight(ui_element)
-						               : max_heights[coord_x]) + Spacing.y;
-						
-						coord_x += 1;
+						currentUIElement.localPosition = new_position;
 					}
-					position.y = startPosition.y;
-					position.x += column_cell_max_size.x + Spacing.x;
-					
-					coord_y += 1;
+
+					position.x += ((LayoutType==LayoutTypes.Compact)
+						? EasyLayoutUtilites.ScaledWidth(currentUIElement)
+						: MaxColumnsWidths[coord_y]) + Spacing.x;
 				}
+				position.x = startPosition.x;
+				position.y -= row_cell_max_size.y + Spacing.y;
+			}
+		}
+
+		void SetPositionsVertical(List<List<RectTransform>> group, Vector2 startPosition, Vector2 groupSize)
+		{
+			var position = startPosition;
+
+			group = EasyLayoutUtilites.Transpose(group);
+			GetColumnsHeights(group, ColumnsHeights);
+			GetMaxRowsHeights(group, MaxRowsHeights);
+			
+			var align = new Vector2(0, 0);
+			
+			for (int coord_y = 0; coord_y < group.Count; coord_y++)
+			{
+				var column_cell_max_size = GetMaxCellSize(group[coord_y]);
+				
+				for (int coord_x = 0; coord_x < group[coord_y].Count; coord_x++)
+				{
+					currentUIElement = group[coord_y][coord_x];
+
+					align = GetAlignByHeight(currentUIElement, MaxRowsHeights[coord_x], column_cell_max_size, groupSize.y - ColumnsHeights[coord_y]);
+					
+					var new_position = GetUIPosition(currentUIElement, position, align);
+					if (currentUIElement.localPosition.x != new_position.x || currentUIElement.localPosition.y != new_position.y)
+					{
+						currentUIElement.localPosition = new_position;
+					}
+					
+					position.y -= ((LayoutType==LayoutTypes.Compact)
+						? EasyLayoutUtilites.ScaledHeight(currentUIElement)
+						: MaxRowsHeights[coord_x]) + Spacing.y;
+				}
+				position.y = startPosition.y;
+				position.x += column_cell_max_size.x + Spacing.x;
 			}
 		}
 
@@ -809,153 +902,36 @@ namespace EasyLayout {
 			{
 				return ;
 			}
-			max_width = (ChildrenWidth==ChildrenSize.SetMaxFromPreferred) ? elements.Select<RectTransform,float>(GetPreferredWidth).Max() : -1f;
-			max_height = (ChildrenHeight==ChildrenSize.SetMaxFromPreferred) ? elements.Select<RectTransform,float>(GetPreferredHeight).Max() : -1f;
+			if (LayoutType==LayoutTypes.Grid && GridConstraint!=GridConstraints.Flexible)
+			{
+				//elements.ForEach(Add2Tracker);
+				//return ;
+			}
+
+			max_width = (ChildrenWidth==ChildrenSize.SetMaxFromPreferred) ? elements.Select<RectTransform,float>(EasyLayoutUtilites.GetPreferredWidth).Max() : -1f;
+			max_height = (ChildrenHeight==ChildrenSize.SetMaxFromPreferred) ? elements.Select<RectTransform,float>(EasyLayoutUtilites.GetPreferredHeight).Max() : -1f;
 
 			elements.ForEach(ResizeChild);
 		}
 
-		/// <summary>
-		/// Gets the preferred width of the RectTransform.
-		/// </summary>
-		/// <returns>The preferred width.</returns>
-		/// <param name="rect">Rect.</param>
-		public static float GetPreferredWidth(RectTransform rect)
-		{
-			#if UNITY_4_6 || UNITY_4_7
-			return Mathf.Max(1f, LayoutUtility.GetPreferredWidth(rect));
-			#else
-			if (rect==null)
-			{
-				return 1f;
-			}
-			if (rect.gameObject.activeInHierarchy)
-			{
-				return Mathf.Max(1, LayoutUtility.GetPreferredWidth(rect));
-			}
-			else
-			{
-				float result = 1f;
-				var elements = rect.GetComponents<ILayoutElement>();
-				var max_priority = elements.Max(x => x.layoutPriority);
-				foreach (var elem in elements)
-				{
-					if (elem.layoutPriority==max_priority)
-					{
-						result = Mathf.Max(result, Mathf.Max(elem.preferredWidth, elem.minWidth));
-					}
-				}
-				return result;
-			}
-			#endif
-		}
-
-		/// <summary>
-		/// Gets the preferred height of the RectTransform.
-		/// </summary>
-		/// <returns>The preferred height.</returns>
-		/// <param name="rect">Rect.</param>
-		public static float GetPreferredHeight(RectTransform rect)
-		{
-			#if UNITY_4_6 || UNITY_4_7
-			return Mathf.Max(1f, LayoutUtility.GetPreferredHeight(rect));
-			#else
-			if (rect==null)
-			{
-				return 1f;
-			}
-			if (rect.gameObject.activeInHierarchy)
-			{
-				return Mathf.Max(1, LayoutUtility.GetPreferredHeight(rect));
-			}
-			else
-			{
-				float result = 1f;
-				var elements = rect.GetComponents<ILayoutElement>();
-				var max_priority = elements.Max(x => x.layoutPriority);
-				foreach (var elem in elements)
-				{
-					if (elem.layoutPriority==max_priority)
-					{
-						result = Mathf.Max(result, Mathf.Max(elem.preferredHeight, elem.minHeight));
-					}
-				}
-				return result;
-			}
-			#endif
-		}
-
-		/// <summary>
-		/// Gets the flexible width of the RectTransform.
-		/// </summary>
-		/// <returns>The flexible width.</returns>
-		/// <param name="rect">Rect.</param>
-		public static float GetFlexibleWidth(RectTransform rect)
-		{
-			#if UNITY_4_6 || UNITY_4_7
-			return Mathf.Max(1, LayoutUtility.GetFlexibleWidth(rect));
-			#else
-			if (rect==null)
-			{
-				return 1f;
-			}
-			if (rect.gameObject.activeInHierarchy)
-			{
-				return Mathf.Max(1, LayoutUtility.GetFlexibleWidth(rect));
-			}
-			else
-			{
-				float result = 1f;
-				var elements = rect.GetComponents<ILayoutElement>();
-				var max_priority = elements.Max(x => x.layoutPriority);
-				foreach (var elem in elements)
-				{
-					if (elem.layoutPriority==max_priority)
-					{
-						result = Mathf.Max(result, elem.flexibleWidth);
-					}
-				}
-				return result;
-			}
-			#endif
-		}
-
-		/// <summary>
-		/// Gets the flexible height of the RectTransform.
-		/// </summary>
-		/// <returns>The flexible height.</returns>
-		/// <param name="rect">Rect.</param>
-		public static float GetFlexibleHeight(RectTransform rect)
-		{
-			#if UNITY_4_6 || UNITY_4_7
-			return Mathf.Max(1, LayoutUtility.GetFlexibleHeight(rect));
-			#else
-			if (rect==null)
-			{
-				return 1f;
-			}
-			if (rect.gameObject.activeInHierarchy)
-			{
-				return Mathf.Max(1, LayoutUtility.GetFlexibleHeight(rect));
-			}
-			else
-			{
-				float result = 1f;
-				var elements = rect.GetComponents<ILayoutElement>();
-				var max_priority = elements.Max(x => x.layoutPriority);
-				foreach (var elem in elements)
-				{
-					if (elem.layoutPriority==max_priority)
-					{
-						result = Mathf.Max(result, elem.flexibleHeight);
-					}
-				}
-				return result;
-			}
-			#endif
-		}
-
 		DrivenRectTransformTracker propertiesTracker;
+
+		void Add2Tracker(RectTransform child)
+		{
+			DrivenTransformProperties driven_properties = DrivenTransformProperties.None;
+
+			if (ChildrenWidth!=ChildrenSize.DoNothing)
+			{
+				driven_properties |= DrivenTransformProperties.SizeDeltaX;
+			}
+			if (ChildrenHeight!=ChildrenSize.DoNothing)
+			{
+				driven_properties |= DrivenTransformProperties.SizeDeltaY;
+			}
+
+			propertiesTracker.Add(this, child, driven_properties);
+		}
+
 		void ResizeChild(RectTransform child)
 		{
 			DrivenTransformProperties driven_properties = DrivenTransformProperties.None;
@@ -963,13 +939,13 @@ namespace EasyLayout {
 			if (ChildrenWidth!=ChildrenSize.DoNothing)
 			{
 				driven_properties |= DrivenTransformProperties.SizeDeltaX;
-				var width = (max_width!=-1) ? max_width : GetPreferredWidth(child);
+				var width = (max_width!=-1) ? max_width : EasyLayoutUtilites.GetPreferredWidth(child);
 				child.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
 			}
 			if (ChildrenHeight!=ChildrenSize.DoNothing)
 			{
 				driven_properties |= DrivenTransformProperties.SizeDeltaY;
-				var height = (max_height!=-1) ? max_height : GetPreferredHeight(child);
+				var height = (max_height!=-1) ? max_height : EasyLayoutUtilites.GetPreferredHeight(child);
 				child.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
 			}
 
@@ -1064,6 +1040,35 @@ namespace EasyLayout {
 			list.Reverse();
 		}
 
+		void ClearUIElementsGroup()
+		{
+			for (int i = 0; i < uiElementsGroup.Count; i++)
+			{
+				uiElementsGroup[i].Clear();
+				ListCache.Push(uiElementsGroup[i]);
+			}
+			uiElementsGroup.Clear();
+		}
+
+		static Stack<List<RectTransform>> ListCache = new Stack<List<RectTransform>>();
+
+		/// <summary>
+		/// Gets the List<RectTransform>.
+		/// </summary>
+		/// <returns>The rect transform list.</returns>
+		public List<RectTransform> GetRectTransformList()
+		{
+			if (ListCache.Count > 0)
+			{
+				return ListCache.Pop();
+			}
+			else
+			{
+				return new List<RectTransform>();
+			}
+		}
+
+		List<List<RectTransform>> uiElementsGroup = new List<List<RectTransform>>();
 		List<List<RectTransform>> GroupUIElements()
 		{
 			var base_length = GetLength(rectTransform, false);
@@ -1071,23 +1076,55 @@ namespace EasyLayout {
 
 			var ui_elements = GetUIElements();
 
-			var group = (LayoutType==LayoutTypes.Compact)
-				? EasyLayoutCompact.Group(ui_elements, base_length, this)
-				: EasyLayoutGrid.Group(ui_elements, base_length, this);
-
-			if (Stacking==Stackings.Vertical)
+			ClearUIElementsGroup();
+			if (LayoutType==LayoutTypes.Compact)
 			{
-				group = Transpose(group);
+				EasyLayoutCompact.Group(ui_elements, base_length, this, uiElementsGroup);
+
+				if (Stacking==Stackings.Vertical)
+				{
+					uiElementsGroup = EasyLayoutUtilites.Transpose(uiElementsGroup);
+				}
+			}
+			else
+			{
+				GridConstraintCount = Mathf.Max(1, GridConstraintCount);
+				if (GridConstraint==GridConstraints.Flexible)
+				{
+					EasyLayoutGrid.GroupFlexible(ui_elements, base_length, this, uiElementsGroup);
+				}
+				else if (GridConstraint==GridConstraints.FixedRowCount)
+				{
+					if (Stacking==Stackings.Vertical)
+					{
+						EasyLayoutGrid.GroupByRowsVertical(ui_elements, this, GridConstraintCount, uiElementsGroup);
+					}
+					else
+					{
+						EasyLayoutGrid.GroupByRowsHorizontal(ui_elements, this, GridConstraintCount, uiElementsGroup);
+					}
+				}
+				else if (GridConstraint==GridConstraints.FixedColumnCount)
+				{
+					if (Stacking==Stackings.Vertical)
+					{
+						EasyLayoutGrid.GroupByColumnsVertical(ui_elements, this, GridConstraintCount, uiElementsGroup);
+					}
+					else
+					{
+						EasyLayoutGrid.GroupByColumnsHorizontal(ui_elements, this, GridConstraintCount, uiElementsGroup);
+					}
+				}
 			}
 
 			if (!TopToBottom)
 			{
-				group.Reverse();
+				uiElementsGroup.Reverse();
 			}
 			
 			if (RightToLeft)
 			{
-				group.ForEach(ReverseList);
+				uiElementsGroup.ForEach(ReverseList);
 			}
 
 			var width = rectTransform.rect.width - (GetMarginLeft() + GetMarginRight());
@@ -1096,11 +1133,11 @@ namespace EasyLayout {
 			{
 				if (ChildrenWidth==ChildrenSize.FitContainer)
 				{
-					ResizeColumnWidthToFit(width, group);
+					EasyLayoutUtilites.ResizeColumnWidthToFit(width, uiElementsGroup, Spacing.x, PaddingInner.Left + PaddingInner.Right);
 				}
 				if (ChildrenHeight==ChildrenSize.FitContainer)
 				{
-					ResizeRowHeightToFit(height, group);
+					EasyLayoutUtilites.ResizeRowHeightToFit(height, uiElementsGroup, Spacing.y, PaddingInner.Top + PaddingInner.Bottom);
 				}
 			}
 			else
@@ -1109,188 +1146,27 @@ namespace EasyLayout {
 				{
 					if (ChildrenWidth==ChildrenSize.FitContainer)
 					{
-						ResizeWidthToFit(width, group);
+						EasyLayoutUtilites.ResizeWidthToFit(width, uiElementsGroup, Spacing.x);
 					}
 					if (ChildrenHeight==ChildrenSize.FitContainer)
 					{
-						ResizeRowHeightToFit(height, group);
+						EasyLayoutUtilites.ResizeRowHeightToFit(height, uiElementsGroup, Spacing.y, PaddingInner.Top + PaddingInner.Bottom);
 					}
 				}
 				else
 				{
 					if (ChildrenHeight==ChildrenSize.FitContainer)
 					{
-						ResizeHeightToFit(height, group);
+						EasyLayoutUtilites.ResizeHeightToFit(height, uiElementsGroup, Spacing.y);
 					}
 					if (ChildrenWidth==ChildrenSize.FitContainer)
 					{
-						ResizeColumnWidthToFit(width, group);
+						EasyLayoutUtilites.ResizeColumnWidthToFit(width, uiElementsGroup, Spacing.x, PaddingInner.Left + PaddingInner.Right);
 					}
 				}
 			}
 
-			return group;
-		}
-
-		float GetRectWidth(RectTransform rect)
-		{
-			return rect.rect.width;
-		}
-		
-		float GetRectHeight(RectTransform rect)
-		{
-			return rect.rect.height;
-		}
-
-		void ResizeWidthToFit(float width, List<List<RectTransform>> group)
-		{
-			foreach (var row in group)
-			{
-				float free_space = width - row.SumFloat(GetRectWidth) - ((row.Count - 1) * Spacing.x);
-				if (free_space<=0f)
-				{
-					continue ;
-				}
-				
-				var per_flexible = free_space / row.SumFloat(GetFlexibleWidth);
-				foreach (var element in row)
-				{
-					var flexible = GetFlexibleWidth(element);
-					element.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, element.rect.width + (per_flexible * flexible));
-				}
-			}
-		}
-
-		float GetMaxPreferredWidth(List<RectTransform> row)
-		{
-			return row.Max<RectTransform,float>(GetPreferredWidth);
-		}
-
-		float GetMaxFlexibleWidth(List<RectTransform> row)
-		{
-			return row.Max<RectTransform,float>(GetFlexibleWidth);
-		}
-
-		void ResizeColumnWidthToFit(float width, List<List<RectTransform>> group)
-		{
-			var transpore_group = Transpose(group);
-
-			var row_preferred_widths = transpore_group.Convert<List<RectTransform>,float>(GetMaxPreferredWidth);
-			var row_flexible_widths = transpore_group.Convert<List<RectTransform>,float>(GetMaxFlexibleWidth);
-			float free_space = width - row_preferred_widths.Sum() - ((transpore_group.Count - 1) * Spacing.x)  - PaddingInner.Left - PaddingInner.Right;
-
-			if (free_space<=0f)
-			{
-				return ;
-			}
-			var per_flexible = free_space / row_flexible_widths.Sum();
-
-			int column_index = 0;
-			foreach (var column in transpore_group)
-			{
-				foreach (var element in column)
-				{
-					element.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, row_preferred_widths[column_index] + (per_flexible * row_flexible_widths[column_index]));
-				}
-				column_index += 1;
-			}
-		}
-
-		void ResizeHeightToFit(float height, List<List<RectTransform>> group)
-		{
-			foreach (var column in Transpose(group))
-			{
-				float free_space = height - column.SumFloat(GetRectHeight) - ((column.Count - 1) * Spacing.y);
-				if (free_space<=0f)
-				{
-					continue ;
-				}
-				
-				var per_flexible = free_space / column.SumFloat(GetFlexibleHeight);
-				foreach (var element in column)
-				{
-					var flexible = Mathf.Max(1, GetFlexibleHeight(element));
-					element.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, element.rect.height + (per_flexible * flexible));
-				}
-			}
-		}
-		
-		float GetMaxPreferredHeight(List<RectTransform> column)
-		{
-			return column.Max<RectTransform,float>(GetPreferredWidth);
-		}
-		
-		float GetMaxFlexibleHeight(List<RectTransform> column)
-		{
-			return column.Max<RectTransform,float>(GetFlexibleHeight);
-		}
-
-		void ResizeRowHeightToFit(float height, List<List<RectTransform>> group)
-		{
-			var row_preferred_heights = group.Convert<List<RectTransform>,float>(GetMaxPreferredHeight);
-			var row_flexible_heights = group.Convert<List<RectTransform>,float>(GetMaxFlexibleHeight);
-			float free_space = height - row_preferred_heights.Sum() - ((group.Count - 1) * Spacing.y) - PaddingInner.Top - PaddingInner.Bottom;
-
-			if (free_space<=0f)
-			{
-				return ;
-			}
-			var per_flexible = free_space / row_flexible_heights.Sum();
-
-			int row_index = 0;
-			foreach (var row in group)
-			{
-				foreach (var element in row)
-				{
-					element.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, row_preferred_heights[row_index] + (per_flexible * row_flexible_heights[row_index]));
-				}
-				row_index += 1;
-			}
-		}
-
-		/// <summary>
-		/// Transpose the specified group.
-		/// </summary>
-		/// <param name="group">Group.</param>
-		/// <typeparam name="T">The 1st type parameter.</typeparam>
-		public static List<List<T>> Transpose<T>(List<List<T>> group)
-		{
-			var result = new List<List<T>>();
-
-			int i = 0;
-			foreach (var row in group)
-			{
-				int j = 0;
-				foreach (var element in row)
-				{
-					if (result.Count<=j)
-					{
-						result.Add(new List<T>());
-					}
-					result[j].Add(element);
-
-					j += 1;
-				}
-
-				i += 1;
-			}
-
-			return result;
-		}
-
-		static void Log(IEnumerable<float> values)
-		{
-			Debug.Log("[" + string.Join("; ", values.Select(x => x.ToString()).ToArray()) + "]");
-		}
-
-		float ScaledWidth(RectTransform ui)
-		{
-			return ui.rect.width * ui.localScale.x;
-		}
-
-		float ScaledHeight(RectTransform ui)
-		{
-			return ui.rect.height * ui.localScale.y;
+			return uiElementsGroup;
 		}
 
 		/// <summary>
@@ -1328,44 +1204,4 @@ namespace EasyLayout {
 		#pragma warning restore 0618
 	}
 
-	/// <summary>
-	/// For each extensions.
-	/// </summary>
-	public static class EasyLayoutExtensions
-	{
-		public static float SumFloat<T>(this List<T> list, Func<T,float> calculate)
-		{
-			var result = 0f;
-			for (int i = 0; i < list.Count; i++)
-			{
-				result += calculate(list[i]);
-			}
-			return result;
-		}
-		
-		static public List<TOutput> Convert<TInput,TOutput>(this List<TInput> input, Converter<TInput,TOutput> converter)
-		{
-			#if NETFX_CORE
-			var output = new List<TOutput>(input.Count);
-			for (int i = 0; i < input.Count; i++)
-			{
-				output.Add(converter(input[i]));
-			}
-			
-			return output;
-			#else
-			return input.ConvertAll<TOutput>(converter);
-			#endif
-		}
-		
-		#if NETFX_CORE
-		static public void ForEach<T>(this List<T> list, Action<T> action)
-		{
-			for (int i = 0; i < list.Count; i++)
-			{
-				action(list[i]);
-			}
-		}
-		#endif
-	}
 }

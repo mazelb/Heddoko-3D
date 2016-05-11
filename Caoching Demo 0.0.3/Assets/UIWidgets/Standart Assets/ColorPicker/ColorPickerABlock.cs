@@ -7,6 +7,7 @@ namespace UIWidgets {
 	/// <summary>
 	/// Color picker Alpha slider block.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/ColorPicker Alpha Block")]
 	public class ColorPickerABlock : MonoBehaviour {
 		[SerializeField]
 		Slider aSlider;
@@ -183,7 +184,7 @@ namespace UIWidgets {
 
 		void SpinnerValueChanged(int value)
 		{
-			ValueChanged();
+			ValueChanged(isSlider: false);
 		}
 
 		void SliderValueChanged(float value)
@@ -199,22 +200,24 @@ namespace UIWidgets {
 		/// <summary>
 		/// Values the changed.
 		/// </summary>
-		protected virtual void ValueChanged()
+		/// <param name="isSlider">Is slider value changed?</param>
+		protected virtual void ValueChanged(bool isSlider=true)
 		{
 			if (inUpdateMode)
 			{
 				return ;
 			}
-			OnChangeAlpha.Invoke(GetAlpha());
+			OnChangeAlpha.Invoke(GetAlpha(isSlider));
 		}
 
 		/// <summary>
 		/// Gets the alpha.
 		/// </summary>
+		/// <param name="isSlider">Is slider value changed?</param>
 		/// <returns>The alpha.</returns>
-		protected byte GetAlpha()
+		protected byte GetAlpha(bool isSlider=true)
 		{
-			if (aSlider!=null)
+			if ((aSlider!=null) && (isSlider))
 			{
 				return (byte)aSlider.value;
 			}

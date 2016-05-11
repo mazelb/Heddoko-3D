@@ -18,7 +18,7 @@ namespace UIWidgets {
 	/// <summary>
 	/// Accordion.
 	/// </summary>
-	[AddComponentMenu("UI/Accordion", 350)]
+	[AddComponentMenu("UI/UIWidgets/Accordion")]
 	public class Accordion : MonoBehaviour {
 		/// <summary>
 		/// The items.
@@ -110,7 +110,11 @@ namespace UIWidgets {
 			
 			item.ToggleObject.AddComponent<AccordionItemComponent>().OnClick.AddListener(callback);
 			item.ContentObjectRect = item.ContentObject.transform as RectTransform;
-			item.ContentLayoutElement = item.ContentObject.GetComponent<LayoutElement>() ?? item.ContentObject.AddComponent<LayoutElement>();
+			item.ContentLayoutElement = item.ContentObject.GetComponent<LayoutElement>();
+			if (item.ContentLayoutElement==null)
+			{
+				item.ContentLayoutElement = item.ContentObject.AddComponent<LayoutElement>();
+			}
 			item.ContentObjectHeight = item.ContentObjectRect.rect.height;
 			if (item.ContentObjectHeight==0f)
 			{
@@ -365,13 +369,5 @@ namespace UIWidgets {
 
 			OnToggleItem.Invoke(item);
 		}
-
-		#if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/UI/Accordion", false, 1000)]
-		static void CreateObject()
-		{
-			Utilites.CreateWidgetFromAsset("Accordion");
-		}
-		#endif
 	}
 }

@@ -13,6 +13,9 @@ namespace EasyLayout {
 			"GroupPosition",
 			"Stacking",
 			"LayoutType",
+			"GridConstraint",
+			"GridConstraintCount",
+
 			"RowAlign",
 			"InnerAlign",
 			"CellAlign",
@@ -57,14 +60,21 @@ namespace EasyLayout {
 			EditorGUILayout.PropertyField(sProperties["LayoutType"], true);
 
 			EditorGUI.indentLevel++;
-			if (sProperties["LayoutType"].enumValueIndex==0)
+			if (sProperties["LayoutType"].enumValueIndex==0)// compact layout
 			{
 				EditorGUILayout.PropertyField(sProperties["RowAlign"], true);
 				EditorGUILayout.PropertyField(sProperties["InnerAlign"], true);
 			}
-			if (sProperties["LayoutType"].enumValueIndex==1)
+			if (sProperties["LayoutType"].enumValueIndex==1)// grid layout
 			{
 				EditorGUILayout.PropertyField(sProperties["CellAlign"], true);
+				EditorGUILayout.PropertyField(sProperties["GridConstraint"], true);
+				if (sProperties["GridConstraint"].enumValueIndex!=0)// not flexible
+				{
+					EditorGUI.indentLevel++;
+					EditorGUILayout.PropertyField(sProperties["GridConstraintCount"], true);
+					EditorGUI.indentLevel--;
+				}
 			}
 			EditorGUI.indentLevel--;
 
@@ -88,18 +98,6 @@ namespace EasyLayout {
 
 			EditorGUILayout.PropertyField(sProperties["ChildrenWidth"], true);
 			EditorGUILayout.PropertyField(sProperties["ChildrenHeight"], true);
-			/*
-			EditorGUILayout.PropertyField(sProperties["ControlWidth"], true);
-			if (sProperties["ControlWidth"].boolValue)
-			{
-				EditorGUILayout.PropertyField(sProperties["MaxWidth"], true);
-			}
-			EditorGUILayout.PropertyField(sProperties["ControlHeight"], true);
-			if (sProperties["ControlHeight"].boolValue)
-			{
-				EditorGUILayout.PropertyField(sProperties["MaxHeight"], true);
-			}
-			*/
 
 			if (targets.Length==1)
 			{
@@ -127,7 +125,5 @@ namespace EasyLayout {
 		{
 			Array.ForEach(targets, x => ((EasyLayout)x).UpdateLayout());
 		}
-
-
 	}
 }

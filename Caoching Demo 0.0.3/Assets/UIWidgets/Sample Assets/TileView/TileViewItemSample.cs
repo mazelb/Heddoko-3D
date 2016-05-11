@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace UIWidgetsSamples {
 	[System.Serializable]
@@ -19,12 +18,21 @@ namespace UIWidgetsSamples {
 		[SerializeField]
 		public string Name;
 
+		/// <summary>
+		/// The capital.
+		/// </summary>
 		[SerializeField]
 		public string Capital;
 
+		/// <summary>
+		/// The area.
+		/// </summary>
 		[SerializeField]
 		public int Area;
 
+		/// <summary>
+		/// The population.
+		/// </summary>
 		[SerializeField]
 		public int Population;
 	}

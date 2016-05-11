@@ -3,8 +3,9 @@ using System.Collections;
 
 namespace UIWidgets {
 	/// <summary>
-	/// Tree view component.
+	/// TreeView component.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/TreeViewComponent")]
 	public class TreeViewComponent : TreeViewComponentBase<TreeViewItem> {
 		TreeViewItem item;
 
@@ -33,12 +34,12 @@ namespace UIWidgets {
 		/// <summary>
 		/// Sets the data.
 		/// </summary>
-		/// <param name="vNode">Node.</param>
-		/// <param name="vDepth">Depth.</param>
-		public override void SetData(TreeNode<TreeViewItem> vNode, int vDepth)
+		/// <param name="newNode">Node.</param>
+		/// <param name="depth">Depth.</param>
+		public override void SetData(TreeNode<TreeViewItem> newNode, int depth)
 		{
-			Node = vNode;
-			base.SetData(Node, vDepth);
+			Node = newNode;
+			base.SetData(Node, depth);
 
 			Item = (Node==null) ? null : Node.Item;
 		}

@@ -7,6 +7,7 @@ namespace UIWidgets {
 	/// <summary>
 	/// ListViewIcons item component.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/ListViewIconsItemComponent")]
 	public class ListViewIconsItemComponent : ListViewItem, IResizableItem {
 		/// <summary>
 		/// Gets the objects to resize.
@@ -29,7 +30,6 @@ namespace UIWidgets {
 		/// </summary>
 		[SerializeField]
 		public Text Text;
- 
 
 		/// <summary>
 		/// Set icon native size.

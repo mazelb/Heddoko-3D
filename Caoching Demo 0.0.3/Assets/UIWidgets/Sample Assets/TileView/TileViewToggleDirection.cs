@@ -4,6 +4,9 @@ using System.Collections;
 using UIWidgets;
 
 namespace UIWidgetsSamples {
+	/// <summary>
+	/// TileView toggle direction.
+	/// </summary>
 	public class TileViewToggleDirection : MonoBehaviour {
 		[SerializeField]
 		TileViewSample Tiles;
@@ -13,6 +16,12 @@ namespace UIWidgetsSamples {
 
 		[SerializeField]
 		Scrollbar HorizontalScrollbar;
+
+		[SerializeField]
+		ScrollRectPaginator VerticalPaginator;
+
+		[SerializeField]
+		ScrollRectPaginator HorizontalPaginator;
 
 		public void ToggleDirection()
 		{
@@ -25,8 +34,16 @@ namespace UIWidgetsSamples {
 				Tiles.ScrollRect.horizontalScrollbar = null;
 				Tiles.ScrollRect.verticalScrollbar = VerticalScrollbar;
 
-
 				HorizontalScrollbar.gameObject.SetActive(false);
+
+				if (HorizontalPaginator!=null)
+				{
+					HorizontalPaginator.gameObject.SetActive(false);
+				}
+				if (VerticalPaginator!=null)
+				{
+					VerticalPaginator.gameObject.SetActive(true);
+				}
 			}
 			else
 			{
@@ -38,6 +55,15 @@ namespace UIWidgetsSamples {
 				Tiles.ScrollRect.verticalScrollbar = null;
 
 				VerticalScrollbar.gameObject.SetActive(false);
+
+				if (VerticalPaginator!=null)
+				{
+					VerticalPaginator.gameObject.SetActive(false);
+				}
+				if (HorizontalPaginator!=null)
+				{
+					HorizontalPaginator.gameObject.SetActive(true);
+				}
 			}
 		}
 	}

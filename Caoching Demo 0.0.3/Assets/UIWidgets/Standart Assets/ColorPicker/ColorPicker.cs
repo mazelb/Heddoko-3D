@@ -62,6 +62,7 @@ namespace UIWidgets {
 	/// <summary>
 	/// ColorPicker.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/ColorPicker")]
 	public class ColorPicker : MonoBehaviour {
 		/// <summary>
 		/// Value limit in HSV gradients.
@@ -514,13 +515,5 @@ namespace UIWidgets {
 
 			ColorView = null;
 		}
-
-		#if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/UI/ColorPicker", false, 1025)]
-		static void CreateObject()
-		{
-			Utilites.CreateWidgetFromAsset("ColorPicker");
-		}
-		#endif
 	}
 }

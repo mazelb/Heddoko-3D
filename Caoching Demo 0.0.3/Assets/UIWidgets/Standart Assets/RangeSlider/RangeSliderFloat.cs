@@ -3,10 +3,10 @@ using System.Collections;
 
 namespace UIWidgets {
 
-	[AddComponentMenu("UI/RangeSliderFloat", 310)]
 	/// <summary>
 	/// Range slider with float values.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/RangeSliderFloat")]
 	public class RangeSliderFloat : RangeSliderBase<float>
 	{
 		/// <summary>
@@ -145,13 +145,5 @@ namespace UIWidgets {
 		{
 			ValueMax -= step;
 		}
-
-		#if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/UI/RangeSliderFloat", false, 1130)]
-		static void CreateObject()
-		{
-			Utilites.CreateWidgetFromAsset("RangeSliderFloat");
-		}
-		#endif
 	}
 }

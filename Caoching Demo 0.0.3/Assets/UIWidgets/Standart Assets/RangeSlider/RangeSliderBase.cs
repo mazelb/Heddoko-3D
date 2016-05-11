@@ -594,6 +594,11 @@ namespace UIWidgets {
 		/// <param name="eventData">Event data.</param>
 		public void OnPointerClick(PointerEventData eventData)
 		{
+			if (eventData.button!=PointerEventData.InputButton.Left)
+			{
+				return;
+			}
+
 			Vector2 curCursor;
 			if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(UsableRangeRect, eventData.position, eventData.pressEventCamera, out curCursor))
 			{

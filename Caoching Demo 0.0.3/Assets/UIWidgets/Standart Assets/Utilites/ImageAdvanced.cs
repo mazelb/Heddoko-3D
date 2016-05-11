@@ -4,7 +4,6 @@ using UnityEngine.EventSystems;
 
 namespace UIWidgets
 {
-	[AddComponentMenu("UI/ImageAdvanced", 240)]
 	/// <summary>
 	/// Image Advanced. You can add callback on PointerEnter/Exit/Down/Up 
 	/// </summary>
@@ -42,7 +41,7 @@ namespace UIWidgets
 		public virtual void OnPointerDown(PointerEventData eventData)
 		{
 			onPointerDown.Invoke(eventData);
-         }
+		}
 
 		/// <summary>
 		/// Raises the pointer up event.
@@ -51,7 +50,7 @@ namespace UIWidgets
 		public virtual void OnPointerUp(PointerEventData eventData)
 		{
 			onPointerUp.Invoke(eventData);
-         }
+		}
 
 		/// <summary>
 		/// Raises the pointer enter event.
@@ -60,7 +59,7 @@ namespace UIWidgets
 		public virtual void OnPointerEnter(PointerEventData eventData)
 		{
 			onPointerEnter.Invoke(eventData);
- 		}
+		}
 
 		/// <summary>
 		/// Raises the pointer exit event.
@@ -69,6 +68,6 @@ namespace UIWidgets
 		public virtual void OnPointerExit(PointerEventData eventData)
 		{
 			onPointerExit.Invoke(eventData);
-         }
+		}
 	}
 }

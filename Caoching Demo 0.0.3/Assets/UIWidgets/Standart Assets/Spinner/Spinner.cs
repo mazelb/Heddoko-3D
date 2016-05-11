@@ -24,11 +24,11 @@ namespace UIWidgets {
 
 	}
 
-	[AddComponentMenu("UI/Spinner", 270)]
 	/// <summary>
 	/// Spinner.
 	/// http://ilih.ru/images/unity-assets/UIWidgets/Spinner.png
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/Spinner")]
 	public class Spinner : SpinnerBase<int>
 	{
 		/// <summary>
@@ -78,8 +78,11 @@ namespace UIWidgets {
 			}
 			_value = InBounds(newValue);
 
-			text = _value.ToString();
 			onValueChangeInt.Invoke(_value);
+			if (text!=_value.ToString())
+			{
+				text = _value.ToString();
+			}
 		}
 
 		/// <summary>
@@ -166,7 +169,7 @@ namespace UIWidgets {
 					return (char)0;
 				}
 
-				_value = new_value;
+				//SetValue(new_value);
 			}
 
 			return addedChar;
@@ -181,13 +184,5 @@ namespace UIWidgets {
 		{
 			return Mathf.Clamp(value, _min, _max);
 		}
-
-#if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/UI/Spinner", false, 1160)]
-		static void CreateObject()
-		{
-			Utilites.CreateWidgetFromAsset("Spinner");
-		}
-#endif
 	}
 }

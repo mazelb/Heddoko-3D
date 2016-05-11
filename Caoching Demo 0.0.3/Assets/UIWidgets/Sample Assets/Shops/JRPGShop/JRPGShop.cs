@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using UIWidgets;
 
 namespace UIWidgetsSamples.Shops {
+	/// <summary>
+	/// JRPG shop.
+	/// </summary>
 	public class JRPGShop : MonoBehaviour {
 		Trader Shop;
 
@@ -31,6 +34,9 @@ namespace UIWidgetsSamples.Shops {
 		[SerializeField]
 		Text PlayerTotal;
 
+		[SerializeField]
+		Notify notify;
+
 		void Start()
 		{
 			Shop = new Trader();
@@ -52,6 +58,9 @@ namespace UIWidgetsSamples.Shops {
 			UpdatePlayerMoneyInfo();
 		}
 
+		/// <summary>
+		/// Init this instance.
+		/// </summary>
 		public void Init()
 		{
 			Shop.Money = -1;
@@ -89,12 +98,18 @@ namespace UIWidgetsSamples.Shops {
 			Player.Inventory.AddRange(player_items);
 		}
 
+		/// <summary>
+		/// Updates the shop total.
+		/// </summary>
 		public void UpdateShopTotal()
 		{
 			var order = new JRPGOrder(ShopItems.DataSource);
 			ShopTotal.text = order.Total().ToString();
 		}
 
+		/// <summary>
+		/// Updates the player total.
+		/// </summary>
 		public void UpdatePlayerTotal()
 		{
 			var order = new JRPGOrder(PlayerItems.DataSource);
@@ -135,7 +150,7 @@ namespace UIWidgetsSamples.Shops {
 			else
 			{
 				var message = string.Format("Not enough money to buy items. Available: {0}; Required: {1}", Player.Money, order.Total());
-				Notify.Template("NotifyTemplateSimple").Show(message, customHideDelay: 3f, sequenceType: NotifySequence.First, clearSequence: true);
+				notify.Template().Show(message, customHideDelay: 3f, sequenceType: NotifySequence.First, clearSequence: true);
 			}
 		}
 
@@ -151,7 +166,7 @@ namespace UIWidgetsSamples.Shops {
 			else
 			{
 				var message = string.Format("Not enough money in shop to sell items. Available: {0}; Required: {1}", Shop.Money, order.Total());
-				Notify.Template("NotifyTemplateSimple").Show(message, customHideDelay: 3f, sequenceType: NotifySequence.First, clearSequence: true);
+				notify.Template().Show(message, customHideDelay: 3f, sequenceType: NotifySequence.First, clearSequence: true);
 			}
 		}
 

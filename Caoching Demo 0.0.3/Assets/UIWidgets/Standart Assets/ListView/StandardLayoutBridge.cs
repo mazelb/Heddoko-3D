@@ -13,10 +13,8 @@ namespace UIWidgets {
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is horizontal.
-		/// StandardLayoutBridge not support changes.
 		/// </summary>
-		/// <value>true</value>
-		/// <c>false</c>
+		/// <value><c>true</c> if this instance is horizontal; otherwise, <c>false</c>.</value>
 		public bool IsHorizontal {
 			get {
 				return isHorizontal;
@@ -42,29 +40,41 @@ namespace UIWidgets {
 		
 		LayoutElement LastFiller;
 
+		ContentSizeFitter fitter;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="UIWidgets.StandardLayoutBridge"/> class.
 		/// </summary>
 		/// <param name="layout">Layout.</param>
 		/// <param name="defaultItem">Default item.</param>
-		public StandardLayoutBridge(HorizontalOrVerticalLayoutGroup layout, RectTransform defaultItem)
+		/// <param name="updateContentSizeFitter">Update ContentSizeFitter on direction change.</param>
+		public StandardLayoutBridge(HorizontalOrVerticalLayoutGroup layout, RectTransform defaultItem, bool updateContentSizeFitter=true)
 		{
 			Utilites.UpdateLayout(layout);
 			
 			Layout = layout;
 			DefaultItem = defaultItem;
-			
+			UpdateContentSizeFitter = updateContentSizeFitter;
+
 			isHorizontal = layout is HorizontalLayoutGroup;
 			
 			var firstFillerGO = new GameObject("FirstFiller");
-			var firstFillerTransform = (firstFillerGO.transform as RectTransform) ?? firstFillerGO.AddComponent<RectTransform>();
-			firstFillerTransform.SetParent(Layout.transform);
+			var firstFillerTransform = firstFillerGO.transform as RectTransform;
+			if (firstFillerTransform==null)
+			{
+				firstFillerTransform = firstFillerGO.AddComponent<RectTransform>();
+			}
+			firstFillerTransform.SetParent(Layout.transform, false);
 			firstFillerTransform.localScale = Vector3.one;
 			FirstFiller = firstFillerGO.AddComponent<LayoutElement>();
 			
 			var lastFillerGO = new GameObject("LastFiller");
-			var lastFillerTransform = (lastFillerGO.transform as RectTransform) ?? lastFillerGO.AddComponent<RectTransform>();
-			lastFillerTransform.SetParent(Layout.transform);
+			var lastFillerTransform = lastFillerGO.transform as RectTransform;
+			if (lastFillerTransform==null)
+			{
+				lastFillerTransform = lastFillerGO.AddComponent<RectTransform>();
+			}
+			lastFillerTransform.SetParent(Layout.transform, false);
 			lastFillerTransform.localScale = Vector3.one;
 			LastFiller = lastFillerGO.AddComponent<LayoutElement>();
 			
@@ -79,6 +89,8 @@ namespace UIWidgets {
 				firstFillerTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
 				lastFillerTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, size.x);
 			}
+
+			fitter = Layout.GetComponent<ContentSizeFitter>();
 		}
 
 		/// <summary>
@@ -87,6 +99,12 @@ namespace UIWidgets {
 		public void UpdateLayout()
 		{
 			Utilites.UpdateLayout(Layout);
+
+			if (fitter!=null)
+			{
+				fitter.SetLayoutHorizontal();
+				fitter.SetLayoutVertical();
+			}
 		}
 
 		/// <summary>

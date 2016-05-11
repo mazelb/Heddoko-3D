@@ -10,13 +10,19 @@ namespace UIWidgets {
 		/// Gets or sets a value indicating whether this instance is horizontal.
 		/// </summary>
 		/// <value><c>true</c> if this instance is horizontal; otherwise, <c>false</c>.</value>
-		bool IsHorizontal { get; set; }
+		bool IsHorizontal {
+			get;
+			set;
+		}
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="UIWidgets.ILayoutBridge"/> update content size fitter.
 		/// </summary>
 		/// <value><c>true</c> if update content size fitter; otherwise, <c>false</c>.</value>
-		bool UpdateContentSizeFitter { get; set; }
+		bool UpdateContentSizeFitter {
+			get;
+			set;
+		}
 
 		/// <summary>
 		/// Updates the layout.

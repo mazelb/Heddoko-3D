@@ -39,6 +39,7 @@ namespace UIWidgets
 			"scrollRect",
 
 			"OnSelectString",
+			"OnDeselectString",
 		};
 		
 		protected virtual void OnEnable()
@@ -87,6 +88,7 @@ namespace UIWidgets
 			EditorGUILayout.PropertyField(serializedProperties["scrollRect"]);
 
 			EditorGUILayout.PropertyField(serializedProperties["OnSelectString"]);
+			EditorGUILayout.PropertyField(serializedProperties["OnDeselectString"]);
 
 			serializedObject.ApplyModifiedProperties();
 		}

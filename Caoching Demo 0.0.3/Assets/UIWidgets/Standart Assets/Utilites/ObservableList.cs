@@ -111,11 +111,11 @@ namespace UIWidgets {
 		{
 			if (IsItemsObservable)
 			{
-				((IObservable)item).OnChange += CollectionItemChanged;
+				(item as IObservable).OnChange += CollectionItemChanged;
 			}
 			else if (IsItemsSupportNotifyPropertyChanged)
 			{
-				((INotifyPropertyChanged)item).PropertyChanged += ItemPropertyChanged;
+				(item as INotifyPropertyChanged).PropertyChanged += ItemPropertyChanged;
 			}
 		}
 
@@ -491,6 +491,21 @@ namespace UIWidgets {
 		}
 
 		/// <summary>
+		/// Searches the entire sorted ObservableList<T> for an element using the specified comparison and returns the zero-based index of the element.
+		/// </summary>
+		/// <returns>The zero-based index of item in the sorted ObservableList<T>, if item is found; otherwise, a negative number that is the bitwise complement of the index of the next element that is larger than item or, if there is no larger element, the bitwise complement of Count.</returns>
+		/// <param name="item">The object to locate. The value can be null for reference types.</param>
+		/// <param name="comparison">The Comparison<T> implementation to use when comparing elements, or null to use the default comparer Comparer<T>.Default.</param>
+		public int BinarySearch(T item, Comparison<T> comparison)
+		{
+			if (comparison==null)
+			{
+				return BinarySearch(item);
+			}
+			return BinarySearch(item, new ComparisonComparer<T>(comparison));
+		}
+
+		/// <summary>
 		/// Converts the elements in the current ObservableList<T> to another type, and returns a list containing the converted elements.
 		/// </summary>
 		/// <returns>A ObservableList<T> of the target type containing the converted elements from the current ObservableList<T>.</returns>
@@ -862,10 +877,7 @@ namespace UIWidgets {
 		/// <summary>
 		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 		/// </summary>
-		/// <remarks>Call <see cref="Dispose"/> when you are finished using the <see cref="UIWidgets.ObservableList`1"/>. The
-		/// <see cref="Dispose"/> method leaves the <see cref="UIWidgets.ObservableList`1"/> in an unusable state. After
-		/// calling <see cref="Dispose"/>, you must release all references to the <see cref="UIWidgets.ObservableList`1"/> so
-		/// the garbage collector can reclaim the memory that the <see cref="UIWidgets.ObservableList`1"/> was occupying.</remarks>
+		/// <remarks>Call <see cref="Dispose"/> when you are finished using the <see cref="UIWidgets.ObservableList`1"/>. The <see cref="Dispose"/> method leaves the <see cref="UIWidgets.ObservableList`1"/> in an unusable state. After calling <see cref="Dispose"/>, you must release all references to the <see cref="UIWidgets.ObservableList`1"/> so the garbage collector can reclaim the memory that the <see cref="UIWidgets.ObservableList`1"/> was occupying.</remarks>
 		public void Dispose()
 		{
 			Dispose(true);

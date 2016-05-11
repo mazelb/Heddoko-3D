@@ -11,31 +11,41 @@ namespace UIWidgets {
 		/// Gets or sets the input mode.
 		/// </summary>
 		/// <value>The input mode.</value>
-		ColorPickerInputMode InputMode { get; set; }
+		ColorPickerInputMode InputMode {
+			get; set;
+		}
 
 		/// <summary>
 		/// Gets or sets the palette mode.
 		/// </summary>
 		/// <value>The palette mode.</value>
-		ColorPickerPaletteMode PaletteMode { get; set; }
+		ColorPickerPaletteMode PaletteMode {
+			get; set;
+		}
 
 		/// <summary>
 		/// OnChangeRGB event.
 		/// </summary>
 		/// <value>The on change RG.</value>
-		ColorRGBChangedEvent OnChangeRGB { get; }
+		ColorRGBChangedEvent OnChangeRGB {
+			get;
+		}
 
 		/// <summary>
 		/// OnChangeHSV event.
 		/// </summary>
 		/// <value>The on change HS.</value>
-		ColorHSVChangedEvent OnChangeHSV { get; }
+		ColorHSVChangedEvent OnChangeHSV {
+			get;
+		}
 
 		/// <summary>
 		/// OnChangeAlpha event.
 		/// </summary>
 		/// <value>The on change alpha.</value>
-		ColorAlphaChangedEvent OnChangeAlpha { get; }
+		ColorAlphaChangedEvent OnChangeAlpha {
+			get;
+		}
 
 		/// <summary>
 		/// Start this instance.

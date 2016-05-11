@@ -34,7 +34,10 @@ namespace UIWidgets
 		/// Gets the name of the template.
 		/// </summary>
 		/// <value>The name of the template.</value>
-		public string TemplateName { get; set; }
+		public string TemplateName {
+			get;
+			set;
+		}
 
 		UnityEvent OnClick = new UnityEvent();
 		
@@ -55,6 +58,11 @@ namespace UIWidgets
 		/// <param name="eventData">Event data.</param>
 		public void OnPointerClick(PointerEventData eventData)
 		{
+			if (eventData.button!=PointerEventData.InputButton.Left)
+			{
+				return;
+			}
+
 			OnClick.Invoke();
 		}
 
@@ -77,7 +85,7 @@ namespace UIWidgets
 			
 			var modal = Templates.Instance(key);
 			
-			modal.transform.SetParent(Utilites.FindCanvas(parent.transform), false);
+			modal.transform.SetParent(Utilites.FindTopmostCanvas(parent.transform), false);
 			modal.gameObject.SetActive(true);
 			modal.transform.SetAsLastSibling();
 			
@@ -118,6 +126,8 @@ namespace UIWidgets
 			template.AddComponent<Image>();
 			
 			Templates.Add(key, modal);
+
+			template.gameObject.SetActive(false);
 		}
 		
 		/// <summary>

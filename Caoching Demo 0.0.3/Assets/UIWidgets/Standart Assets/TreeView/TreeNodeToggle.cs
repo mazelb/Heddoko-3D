@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
- 
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
- 
+using System.Collections;
 
 namespace UIWidgets {
 	/// <summary>
@@ -19,10 +19,10 @@ namespace UIWidgets {
 		/// Raises the pointer up event.
 		/// </summary>
 		/// <param name="eventData">Event data.</param>
-		public void OnPointerUp (PointerEventData eventData)
+		public void OnPointerUp(PointerEventData eventData)
 		{
-           
-        }
+			
+		}
 		#endregion
 
 		#region IPointerDownHandler implementation
@@ -30,10 +30,10 @@ namespace UIWidgets {
 		/// Raises the pointer down event.
 		/// </summary>
 		/// <param name="eventData">Event data.</param>
-		public void OnPointerDown (PointerEventData eventData)
+		public void OnPointerDown(PointerEventData eventData)
 		{
-             
-        }
+			
+		}
 		#endregion
 
 		/// <summary>
@@ -42,7 +42,12 @@ namespace UIWidgets {
 		/// <param name="eventData">Event data.</param>
 		public void OnPointerClick(PointerEventData eventData)
 		{
-			OnClick.Invoke(); 
-        }
+			if (eventData.button!=PointerEventData.InputButton.Left)
+			{
+				return;
+			}
+
+			OnClick.Invoke();
+		}
 	}
 }

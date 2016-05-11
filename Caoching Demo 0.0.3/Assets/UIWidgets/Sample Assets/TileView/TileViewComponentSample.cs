@@ -20,15 +20,27 @@ namespace UIWidgetsSamples {
 		[SerializeField]
 		public Text Name;
 
+		/// <summary>
+		/// The capital.
+		/// </summary>
 		[SerializeField]
 		public Text Capital;
 
+		/// <summary>
+		/// The area.
+		/// </summary>
 		[SerializeField]
 		public Text Area;
 
+		/// <summary>
+		/// The population.
+		/// </summary>
 		[SerializeField]
 		public Text Population;
 
+		/// <summary>
+		/// The density.
+		/// </summary>
 		[SerializeField]
 		public Text Density;
 
@@ -37,8 +49,27 @@ namespace UIWidgetsSamples {
 		/// </summary>
 		public bool SetNativeSize = true;
 
+		/// <summary>
+		/// TileView.
+		/// </summary>
 		public TileViewSample Tiles;
 
+		/// <summary>
+		/// Current item.
+		/// </summary>
+		public TileViewItemSample Item;
+
+		/// <summary>
+		/// Duplicate current item in TileView.DataSource.
+		/// </summary>
+		public void Duplicate()
+		{
+			Tiles.DataSource.Add(Item);
+		}
+
+		/// <summary>
+		/// Remove current item from TileView.DataSource.
+		/// </summary>
 		public void Remove()
 		{
 			Tiles.DataSource.RemoveAt(Index);
@@ -50,33 +81,73 @@ namespace UIWidgetsSamples {
 		/// <param name="item">Item.</param>
 		public void SetData(TileViewItemSample item)
 		{
-			if (item==null)
+			Item = item;
+			if (Item==null)
 			{
-				Icon.sprite = null;
-				Name.text = string.Empty;
-				Capital.text = string.Empty;
-				Area.text = string.Empty;
-				Population.text = string.Empty;
-				Density.text = string.Empty;
+				if (Icon!=null)
+				{
+					Icon.sprite = null;
+				}
+				if (Name!=null)
+				{
+					Name.text = string.Empty;
+				}
+				if (Capital!=null)
+				{
+					Capital.text = string.Empty;
+				}
+				if (Area!=null)
+				{
+					Area.text = string.Empty;
+				}
+				if (Population!=null)
+				{
+					Population.text = string.Empty;
+				}
+				if (Density!=null)
+				{
+					Density.text = string.Empty;
+				}
 			}
 			else
 			{
-				Icon.sprite = item.Icon;
-				Name.text = item.Name;
-				Capital.text = "Capital: " + item.Capital;
-				Area.text = "Area: " + item.Area.ToString("N0") + " sq. km";
-				Population.text = "Population: " + item.Population.ToString("N0");
-				var density = item.Area==0 ? "n/a" : Mathf.CeilToInt(item.Population / item.Area).ToString("N") + " / sq. km";
-				Density.text = "Density: " + density;
+				if (Icon!=null)
+				{
+					Icon.sprite = Item.Icon;
+				}
+				if (Name!=null)
+				{
+					Name.text = Item.Name;
+				}
+				if (Capital!=null)
+				{
+					Capital.text = "Capital: " + Item.Capital;
+				}
+				if (Area!=null)
+				{
+					Area.text = "Area: " + Item.Area.ToString("N0") + " sq. km";
+				}
+				if (Population!=null)
+				{
+					Population.text = "Population: " + Item.Population.ToString("N0");
+				}
+				if (Density!=null)
+				{
+					var density = Item.Area==0 ? "n/a" : Mathf.CeilToInt(((float)Item.Population) / Item.Area).ToString("N") + " / sq. km";
+					Density.text = "Density: " + density;
+				}
 			}
-			
-			if (SetNativeSize)
+
+			if (Icon!=null)
 			{
-				Icon.SetNativeSize();
+				if (SetNativeSize)
+				{
+					Icon.SetNativeSize();
+				}
+				
+				//set transparent color if no icon
+				Icon.color = (Icon.sprite==null) ? Color.clear : Color.white;
 			}
-			
-			//set transparent color if no icon
-			Icon.color = (Icon.sprite==null) ? Color.clear : Color.white;
 		}
 	}
 }

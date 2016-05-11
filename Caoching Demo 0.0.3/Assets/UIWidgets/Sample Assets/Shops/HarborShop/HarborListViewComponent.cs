@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
 using UIWidgets;
 
 namespace UIWidgetsSamples.Shops {
+	/// <summary>
+	/// HarborListViewComponent.
+	/// </summary>
 	public class HarborListViewComponent : ListViewItem {
 		[SerializeField]
 		public Text Name;
@@ -21,35 +23,41 @@ namespace UIWidgetsSamples.Shops {
 		[SerializeField]
 		public Text AvailableSellCount;
 
-
 		[SerializeField]
 		CenteredSlider Count;
 		
-		HarborOrderLine OrderLine;
-		
+		public HarborOrderLine OrderLine;
+
 		protected override void Start()
 		{
 			Count.OnValuesChange.AddListener(ChangeCount);
 			base.Start();
 		}
-		
-		public override void OnMove (AxisEventData eventData)
+
+		/// <summary>
+		/// Change count on left and right movements.
+		/// </summary>
+		/// <param name="eventData">Event data.</param>
+		public override void OnMove(AxisEventData eventData)
 		{
 			switch (eventData.moveDir)
 			{
-			case MoveDirection.Left:
-				Count.Value -= 1;
-				break;
-			case MoveDirection.Right:
-				Count.Value += 1;
-				break;
-			default:
-				base.OnMove(eventData);
-				break;
+				case MoveDirection.Left:
+					Count.Value -= 1;
+					break;
+				case MoveDirection.Right:
+					Count.Value += 1;
+					break;
+				default:
+					base.OnMove(eventData);
+					break;
 			}
-			
 		}
-		
+
+		/// <summary>
+		/// Sets the data.
+		/// </summary>
+		/// <param name="orderLine">Order line.</param>
 		public void SetData(HarborOrderLine orderLine)
 		{
 			OrderLine = orderLine;
@@ -62,16 +70,16 @@ namespace UIWidgetsSamples.Shops {
 			AvailableBuyCount.text = OrderLine.BuyCount.ToString();
 			AvailableSellCount.text = OrderLine.SellCount.ToString();
 
-			Count.Value = 0;
 			Count.LimitMin = -OrderLine.SellCount;
 			Count.LimitMax = OrderLine.BuyCount;
+			Count.Value = OrderLine.Count;
 		}
 		
 		void ChangeCount(int value)
 		{
 			OrderLine.Count = value;
 		}
-		
+
 		protected override void OnDestroy()
 		{
 			if (Count!=null)

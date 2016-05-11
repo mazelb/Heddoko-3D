@@ -9,6 +9,8 @@ namespace UIWidgets
 	/// </summary>
 	public class SlideUp : MonoBehaviour
 	{
+		public bool UnscaledTime;
+
 		RectTransform rect;
 		void Awake()
 		{
@@ -41,11 +43,11 @@ namespace UIWidgets
 			var speed = 200f;//pixels per second
 			
 			var time = max_height / speed;
-			var end_time = Time.time + time;
+			var end_time = GetTime() + time;
 			
-			while (Time.time <= end_time)
+			while (GetTime() <= end_time)
 			{
-				var height = Mathf.Lerp(max_height, 0, 1 - (end_time - Time.time) / time);
+				var height = Mathf.Lerp(max_height, 0, 1 - (end_time - GetTime()) / time);
 
 				rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
 				yield return null;
@@ -53,6 +55,11 @@ namespace UIWidgets
 			
 			//return height back for future use
 			rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, max_height);
+		}
+
+		float GetTime()
+		{
+			return UnscaledTime ? Time.unscaledTime : Time.time;
 		}
 	}
 }

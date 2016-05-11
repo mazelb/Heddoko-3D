@@ -31,18 +31,18 @@ namespace UIWidgets
 		/// </summary>
 		public UnityEvent OnResize = new UnityEvent();
 
-		Rect old_rect;
+		Rect oldRect;
 
 		/// <summary>
 		/// Raises the rect transform dimensions change event.
 		/// </summary>
 		protected override void OnRectTransformDimensionsChange()
 		{
-			if (old_rect.Equals(RectTransform.rect))
+			if (oldRect.Equals(RectTransform.rect))
 			{
 				return ;
 			}
-			old_rect = RectTransform.rect;
+			oldRect = RectTransform.rect;
 			OnResize.Invoke();
 		}
 	}

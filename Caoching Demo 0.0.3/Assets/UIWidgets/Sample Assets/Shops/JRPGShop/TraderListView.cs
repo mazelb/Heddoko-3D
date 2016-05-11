@@ -3,12 +3,24 @@ using System.Collections;
 using UIWidgets;
 
 namespace UIWidgetsSamples.Shops {
+	/// <summary>
+	/// Trader list view.
+	/// </summary>
 	public class TraderListView : ListViewCustom<TraderListViewComponent,JRPGOrderLine> {
-		protected override void SetData(TraderListViewComponent vComponent, JRPGOrderLine vItem)
+		/// <summary>
+		/// Sets component data with specified item.
+		/// </summary>
+		/// <param name="component">Component.</param>
+		/// <param name="item">Item.</param>
+		protected override void SetData(TraderListViewComponent component, JRPGOrderLine item)
 		{
-			vComponent.SetData(vItem);
+			component.SetData(item);
 		}
-		
+
+		/// <summary>
+		/// Set highlights colors of specified component.
+		/// </summary>
+		/// <param name="component">Component.</param>
 		protected override void HighlightColoring(TraderListViewComponent component)
 		{
 			base.HighlightColoring(component);
@@ -16,7 +28,11 @@ namespace UIWidgetsSamples.Shops {
 			component.Price.color = HighlightedColor;
 			component.AvailableCount.color = HighlightedColor;
 		}
-		
+
+		/// <summary>
+		/// Set select colors of specified component.
+		/// </summary>
+		/// <param name="component">Component.</param>
 		protected override void SelectColoring(TraderListViewComponent component)
 		{
 			base.SelectColoring(component);
@@ -24,7 +40,11 @@ namespace UIWidgetsSamples.Shops {
 			component.Price.color = SelectedColor;
 			component.AvailableCount.color = SelectedColor;
 		}
-		
+
+		/// <summary>
+		/// Set default colors of specified component.
+		/// </summary>
+		/// <param name="component">Component.</param>
 		protected override void DefaultColoring(TraderListViewComponent component)
 		{
 			base.DefaultColoring(component);

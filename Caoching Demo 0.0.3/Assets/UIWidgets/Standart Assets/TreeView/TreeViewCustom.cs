@@ -27,7 +27,7 @@ namespace UIWidgets {
 		/// Gets or sets the nodes.
 		/// </summary>
 		/// <value>The nodes.</value>
-		public IObservableList<TreeNode<TItem>> Nodes {
+		public virtual IObservableList<TreeNode<TItem>> Nodes {
 			get {
 				return nodes;
 			}
@@ -56,12 +56,7 @@ namespace UIWidgets {
 		/// <value>The selected node.</value>
 		public TreeNode<TItem> SelectedNode {
 			get {
-				var n = SelectedNodes.Count;
-				if (n > 0)
-				{
-					return SelectedNodes[n - 1];
-				}
-				return null;
+				return SelectedNodes.LastOrDefault();
 			}
 		}
 
@@ -176,7 +171,7 @@ namespace UIWidgets {
 		{
 			var scrollRectSpecified = scrollRect!=null;
 			var containerSpecified = Container!=null;
-			var currentLayout = containerSpecified ? (layout ?? Container.GetComponent<LayoutGroup>()) : null;
+			var currentLayout = containerSpecified ? ((layout!=null) ? layout : Container.GetComponent<LayoutGroup>()) : null;
 			var validLayout = currentLayout is EasyLayout.EasyLayout;
 			
 			return scrollRectSpecified && validLayout;
@@ -387,10 +382,10 @@ namespace UIWidgets {
 		}
 
 		/// <summary>
-		/// [Not supported for TreeView] Add the specified vItem.
+		/// [Not supported for TreeView] Add the specified item.
 		/// </summary>
 		/// <param name="item">Item.</param>
-		/// <returns>Index of added vItem.</returns>
+		/// <returns>Index of added item.</returns>
 		[Obsolete("Not supported for TreeView", true)]
 		public int Add(TItem item)
 		{
@@ -398,7 +393,7 @@ namespace UIWidgets {
 		}
 		
 		/// <summary>
-		/// [Not supported for TreeView] Remove the specified vItem.
+		/// [Not supported for TreeView] Remove the specified item.
 		/// </summary>
 		/// <param name="item">Item.</param>
 		/// <returns>Index of removed TItem.</returns>
@@ -409,9 +404,9 @@ namespace UIWidgets {
 		}
 
 		/// <summary>
-		/// [Not supported for TreeView] Remove vItem by specifieitemsex.
+		/// [Not supported for TreeView] Remove item by specifieitemsex.
 		/// </summary>
-		/// <returns>Index of removed vItem.</returns>
+		/// <returns>Index of removed item.</returns>
 		/// <param name="index">Index.</param>
 		public override void Remove(int index)
 		{
@@ -419,11 +414,11 @@ namespace UIWidgets {
 		}
 
 		/// <summary>
-		/// [Not supported for TreeView] Set the specified vItem.
+		/// [Not supported for TreeView] Set the specified item.
 		/// </summary>
 		/// <param name="item">Item.</param>
 		/// <param name="allowDuplicate">If set to <c>true</c> allow duplicate.</param>
-		/// <returns>Index of vItem.</returns>
+		/// <returns>Index of item.</returns>
 		[Obsolete("Not supported for TreeView", true)]
 		public int Set(TItem item, bool allowDuplicate=true)
 		{
@@ -434,7 +429,7 @@ namespace UIWidgets {
 		/// Removes first elements that match the conditions defined by the specified predicate.
 		/// </summary>
 		/// <param name="match">Match.</param>
-		/// <returns>true if vItem is successfully removed; otherwise, false.</returns>
+		/// <returns>true if item is successfully removed; otherwise, false.</returns>
 		public bool Remove(Predicate<TreeNode<TItem>> match)
 		{
 			var index = FindIndex(nodes, match);
@@ -496,11 +491,11 @@ namespace UIWidgets {
 		}
 
 		/// <summary>
-		/// Sets vComponenent data with specified vItem.
+		/// Sets component data with specified item.
 		/// </summary>
-		/// <param name="vComponenent">Component.</param>
-		/// <param name="vItem">Item.</param>
-		protected override void SetData(TComponent vComponenent, ListNode<TItem> vItem)
+		/// <param name="component">Component.</param>
+		/// <param name="item">Item.</param>
+		protected override void SetData(TComponent component, ListNode<TItem> item)
 		{
 
 		}

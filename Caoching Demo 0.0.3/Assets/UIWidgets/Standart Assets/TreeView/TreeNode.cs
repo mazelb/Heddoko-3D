@@ -165,6 +165,25 @@ namespace UIWidgets {
 			}
 		}
 
+		public List<TreeNode<TItem>> Path {
+			get {
+				var result = new List<TreeNode<TItem>>();
+				var current_parent = Parent;
+
+				while (current_parent!=null)
+				{
+					result.Add(current_parent);
+					current_parent = current_parent.Parent;
+				}
+				var last = result.Count - 1;
+				if ((last>=0) && (result[last].Item==null))
+				{
+					result.RemoveAt(last);
+				}
+				return result;
+			}
+		}
+
 		/// <summary>
 		/// Determines whether this instance is parent of node the specified node.
 		/// </summary>
@@ -408,10 +427,7 @@ namespace UIWidgets {
 		/// <summary>
 		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
 		/// </summary>
-		/// <remarks>Call <see cref="Dispose"/> when you are finished using the <see cref="UIWidgets.ObservableList`1"/>. The
-		/// <see cref="Dispose"/> method leaves the <see cref="UIWidgets.ObservableList`1"/> in an unusable state. After
-		/// calling <see cref="Dispose"/>, you must release all references to the <see cref="UIWidgets.ObservableList`1"/> so
-		/// the garbage collector can reclaim the memory that the <see cref="UIWidgets.ObservableList`1"/> was occupying.</remarks>
+		/// <remarks>Call <see cref="Dispose"/> when you are finished using the <see cref="UIWidgets.ObservableList`1"/>. The <see cref="Dispose"/> method leaves the <see cref="UIWidgets.ObservableList`1"/> in an unusable state. After calling <see cref="Dispose"/>, you must release all references to the <see cref="UIWidgets.ObservableList`1"/> so the garbage collector can reclaim the memory that the <see cref="UIWidgets.ObservableList`1"/> was occupying.</remarks>
 		public void Dispose()
 		{
 			Dispose(true);

@@ -8,6 +8,7 @@ namespace UIWidgets {
 	/// <summary>
 	/// Color picker HSV palette.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/ColorPicker HSV Palette")]
 	public class ColorPickerHSVPalette : MonoBehaviour {
 		[SerializeField]
 		Image palette;
@@ -200,7 +201,11 @@ namespace UIWidgets {
 			if (palette!=null)
 			{
 				paletteRect = palette.transform as RectTransform;
-				dragListener = palette.GetComponent<OnDragListener>() ?? palette.gameObject.AddComponent<OnDragListener>();
+				dragListener = palette.GetComponent<OnDragListener>();
+				if (dragListener==null)
+				{
+					dragListener = palette.gameObject.AddComponent<OnDragListener>();
+				}
 				dragListener.OnDragEvent.AddListener(OnDrag);
 				UpdateMaterial();
 			}
@@ -360,7 +365,7 @@ namespace UIWidgets {
 		/// </summary>
 		protected virtual void UpdateView()
 		{
-			#if UNITY_5_2 || UNITY_5_3
+			#if UNITY_5_2 || UNITY_5_3 || UNITY_5_4
 			UpdateMaterial();
 			#else
 			UpdateViewReal();

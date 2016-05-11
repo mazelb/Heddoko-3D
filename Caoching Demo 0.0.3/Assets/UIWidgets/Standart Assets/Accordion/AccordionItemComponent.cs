@@ -7,6 +7,7 @@ namespace UIWidgets {
 	/// <summary>
 	/// OnClick listener.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/AccordionItemComponent")]
 	public class AccordionItemComponent : MonoBehaviour, IPointerClickHandler, ISubmitHandler {
 
 		/// <summary>
@@ -20,6 +21,11 @@ namespace UIWidgets {
 		/// <param name="eventData">Event data.</param>
 		public virtual void OnPointerClick(PointerEventData eventData)
 		{
+			if (eventData.button!=PointerEventData.InputButton.Left)
+			{
+				return;
+			}
+
 			OnClick.Invoke();
 		}
 

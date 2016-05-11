@@ -22,7 +22,7 @@ namespace UIWidgets {
 		{
 			var scrollRectSpecified = scrollRect!=null;
 			var containerSpecified = Container!=null;
-			var currentLayout = containerSpecified ? (layout ?? Container.GetComponent<LayoutGroup>()) : null;
+			var currentLayout = containerSpecified ? ((layout!=null) ? layout : Container.GetComponent<LayoutGroup>()) : null;
 			var validLayout = currentLayout is EasyLayout.EasyLayout;
 			
 			return scrollRectSpecified && validLayout;
@@ -32,7 +32,7 @@ namespace UIWidgets {
 		/// Scrolls to item with specifid index.
 		/// </summary>
 		/// <param name="index">Index.</param>
-		protected override void ScrollTo(int index)
+		public override void ScrollTo(int index)
 		{
 			if (!CanOptimize())
 			{
@@ -58,10 +58,10 @@ namespace UIWidgets {
 		/// </summary>
 		/// <returns>The item position.</returns>
 		/// <param name="index">Index.</param>
-		protected override float GetItemPosition(int index)
+		public override float GetItemPosition(int index)
 		{
 			var block_index = Mathf.FloorToInt((float)index / (float)ItemsPerBlock());
-			return block_index * GetItemSize();
+			return block_index * GetItemSize() - GetItemSpacing();
 		}
 
 		/// <summary>
@@ -157,10 +157,10 @@ namespace UIWidgets {
 			bottomHiddenItems = Mathf.Max(0, DataSource.Count - visibleItems - topHiddenItems);
 
 			var new_visible_range = Enumerable.Range(topHiddenItems, visibleItems).ToList();
-			var current_visible_range = Components.Convert<TComponent,int>(GetComponentIndex);
+			var current_visible_range = components.Convert<TComponent,int>(GetComponentIndex);
 
 			var new_indicies_to_change = new_visible_range.Except(current_visible_range).ToList();
-			var components_to_change = new Stack<TComponent>(Components.Where(x => !new_visible_range.Contains(x.Index)));
+			var components_to_change = new Stack<TComponent>(components.Where(x => !new_visible_range.Contains(x.Index)));
 
 			new_indicies_to_change.ForEach(index => {
 				var component = components_to_change.Pop();
@@ -170,8 +170,8 @@ namespace UIWidgets {
 				Coloring(component as ListViewItem);
 			});
 
-			Components.Sort(ComponentsComparer);
-			Components.ForEach(SetComponentAsLastSibling);
+			components.Sort(ComponentsComparer);
+			components.ForEach(SetComponentAsLastSibling);
 
 			AddCallbacks();
 
@@ -223,6 +223,30 @@ namespace UIWidgets {
 		}
 
 		/// <summary>
+		/// Gets the index of the nearest item.
+		/// </summary>
+		/// <returns>The nearest item index.</returns>
+		/// <param name="point">Point.</param>
+		public override int GetNearestIndex(Vector2 point)
+		{
+			if (IsSortEnabled())
+			{
+				return -1;
+			}
+
+			// block index
+			var pos_block = IsHorizontal() ? point.x : -point.y;
+			var block = Mathf.RoundToInt(pos_block / GetItemSize());
+
+			// item index in block
+			var pos_elem = IsHorizontal() ? -point.y : point.x;
+			var size = (IsHorizontal()) ? itemHeight + LayoutBridge.GetSpacing() : itemWidth + LayoutBridge.GetSpacing();
+			var k = Mathf.FloorToInt(pos_elem / size);
+
+			return block * GetItemsPerBlock() + k;
+		}
+
+		/// <summary>
 		/// Count of items the per block.
 		/// </summary>
 		/// <returns>The per block.</returns>
@@ -268,5 +292,25 @@ namespace UIWidgets {
 			}
 			return Mathf.Max(0, GetBlocksCount(topHiddenItems) * GetItemSize() - LayoutBridge.GetSpacing());
 		}
+
+		#region ListViewPaginator support
+		/// <summary>
+		/// Gets the items per block count.
+		/// </summary>
+		/// <returns>The items per block.</returns>
+		public override int GetItemsPerBlock()
+		{
+			return ItemsPerBlock();
+		}
+
+		/// <summary>
+		/// Gets the index of the nearest item.
+		/// </summary>
+		/// <returns>The nearest item index.</returns>
+		public override int GetNearestItemIndex()
+		{
+			return base.GetNearestItemIndex() * ItemsPerBlock();
+		}
+		#endregion
 	}
 }

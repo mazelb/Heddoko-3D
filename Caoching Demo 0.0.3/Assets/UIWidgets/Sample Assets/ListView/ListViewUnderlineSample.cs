@@ -1,24 +1,13 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using System;
 using UIWidgets;
 
 namespace UIWidgetsSamples {
 	
-	[System.Serializable]
-	public class ListViewUnderlineSampleItemDescription {
-		[SerializeField]
-		public Sprite Icon;
-		[SerializeField]
-		public string Name;
-	}
-	
 	public class ListViewUnderlineSample : ListViewCustom<ListViewUnderlineSampleComponent,ListViewUnderlineSampleItemDescription> {
 		bool isStartedListViewCustomSample = false;
 
-		Comparison<ListViewUnderlineSampleItemDescription> itemsComparison = (x, y) => {
-			return x.Name.CompareTo(y.Name);
-		};
+		Comparison<ListViewUnderlineSampleItemDescription> itemsComparison = (x, y) => x.Name.CompareTo(y.Name);
 
 		protected override void Awake()
 		{
@@ -37,9 +26,9 @@ namespace UIWidgetsSamples {
 			DataSource.Comparison = itemsComparison;
 		}
 		
-		protected override void SetData(ListViewUnderlineSampleComponent vComponenent, ListViewUnderlineSampleItemDescription vItem)
+		protected override void SetData(ListViewUnderlineSampleComponent component, ListViewUnderlineSampleItemDescription item)
 		{
-			vComponenent.SetData(vItem);
+			component.SetData(item);
 		}
 		
 		protected override void HighlightColoring(ListViewUnderlineSampleComponent component)

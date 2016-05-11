@@ -8,6 +8,7 @@ namespace UIWidgets {
 	/// Bring to front UI object on click.
 	/// Use carefully: it change hierarchy. Objects under layout control will be at another positions.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/BringToFront")]
 	public class BringToFront : MonoBehaviour, IPointerDownHandler {
 
 		/// <summary>

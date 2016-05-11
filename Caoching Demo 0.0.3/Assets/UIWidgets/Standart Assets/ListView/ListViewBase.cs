@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
@@ -103,8 +104,8 @@ namespace UIWidgets
 				return new List<int>(selectedIndicies);
 			}
 			set {
-				var deselect = selectedIndicies.Except(value);
-				var select = value.Except(selectedIndicies);
+				var deselect = selectedIndicies.Except(value).ToArray();
+				var select = value.Except(selectedIndicies).ToArray();
 
 				deselect.ForEach(Deselect);
 				select.ForEach(Select);
@@ -215,6 +216,42 @@ namespace UIWidgets
 		public virtual void UpdateItems()
 		{
 			UpdateItems(items);
+		}
+
+		/// <summary>
+		/// Determines whether this instance is horizontal. Not implemented for ListViewBase.
+		/// </summary>
+		/// <returns><c>true</c> if this instance is horizontal; otherwise, <c>false</c>.</returns>
+		public virtual bool IsHorizontal()
+		{
+			throw new NotSupportedException();
+		}
+
+		/// <summary>
+		/// Gets the default height of the item. Not implemented for ListViewBase.
+		/// </summary>
+		/// <returns>The default item height.</returns>
+		public virtual float GetDefaultItemHeight()
+		{
+			throw new NotSupportedException();
+		}
+
+		/// <summary>
+		/// Gets the default width of the item. Not implemented for ListViewBase.
+		/// </summary>
+		/// <returns>The default item width.</returns>
+		public virtual float GetDefaultItemWidth()
+		{
+			throw new NotSupportedException();
+		}
+
+		/// <summary>
+		/// Gets the spacing between items. Not implemented for ListViewBase.
+		/// </summary>
+		/// <returns>The item spacing.</returns>
+		public virtual float GetItemSpacing()
+		{
+			throw new NotSupportedException();
 		}
 
 		/// <summary>
@@ -351,7 +388,7 @@ namespace UIWidgets
 		/// Scrolls to item with specifid index.
 		/// </summary>
 		/// <param name="index">Index.</param>
-		protected virtual void ScrollTo(int index)
+		public virtual void ScrollTo(int index)
 		{
 
 		}
@@ -364,7 +401,10 @@ namespace UIWidgets
 		/// <returns>Index of added item.</returns>
 		public virtual int Add(ListViewItem item)
 		{
-			item.transform.SetParent(Container, false);
+			if (item.transform.parent!=Container)
+			{
+				item.transform.SetParent(Container, false);
+			}
 			AddCallback(item, items.Count);
 
 			items.Add(item);
@@ -618,7 +658,6 @@ namespace UIWidgets
 		/// <param name="item">Item.</param>
 		void Toggle(ListViewItem item)
 		{
-
 			var shift_pressed =  Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
 			var have_selected = selectedIndicies.Count > 0;
 			if (Multiple && shift_pressed && have_selected && selectedIndicies[0]!=item.Index)
@@ -781,5 +820,53 @@ namespace UIWidgets
 		{
 			items.ForEach(func);
 		}
+
+		#region ListViewPaginator support
+		/// <summary>
+		/// Gets the ScrollRect.
+		/// </summary>
+		/// <returns>The ScrollRect.</returns>
+		public virtual ScrollRect GetScrollRect()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Gets the items count.
+		/// </summary>
+		/// <returns>The items count.</returns>
+		public virtual int GetItemsCount()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Gets the items per block count.
+		/// </summary>
+		/// <returns>The items per block.</returns>
+		public virtual int GetItemsPerBlock()
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Gets the item position by index.
+		/// </summary>
+		/// <returns>The item position.</returns>
+		/// <param name="index">Index.</param>
+		public virtual float GetItemPosition(int index)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		/// Gets the index of the nearest item.
+		/// </summary>
+		/// <returns>The nearest item index.</returns>
+		public virtual int GetNearestItemIndex()
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
 	}
 }

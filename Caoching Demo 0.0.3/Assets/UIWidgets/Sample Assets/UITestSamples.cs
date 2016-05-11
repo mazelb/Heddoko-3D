@@ -10,9 +10,33 @@ namespace UIWidgetsSamples {
 		[SerializeField]
 		Sprite attentionIcon;
 
+		[SerializeField]
+		Notify notifySimple;
+
+		[SerializeField]
+		Notify notifyAutoHide;
+
+		[SerializeField]
+		Dialog dialogSample;
+
+		[SerializeField]
+		Dialog dialogSignIn;
+
+		[SerializeField]
+		Dialog dialogTreeView;
+
+		[SerializeField]
+		Popup popupSample;
+
+		[SerializeField]
+		Popup popupModalSample;
+
 		public void ShowNotifySticky()
 		{
-			Notify.Template("NotifyTemplateSimple").Show("Sticky Notification. Click on the × above to close.", customHideDelay: 0f);
+			notifySimple.Template().Show("Sticky Notification. Click on the × above to close.",
+				customHideDelay: 0f,
+				container: GameObject.Find("NotifyContainer").transform
+			);
 		}
 
 		// Show 3 notification, one by one in this row:
@@ -21,15 +45,15 @@ namespace UIWidgetsSamples {
 		// Queue Notification 1.
 		public void ShowNotifyStack()
 		{
-			Notify.Template("NotifyTemplateSimple").Show("Stack Notification 1.",
-			                                             customHideDelay: 3f,
-			                                             sequenceType: NotifySequence.First);
-			Notify.Template("NotifyTemplateSimple").Show("Stack Notification 2.",
-			                                             customHideDelay: 3f,
-			                                             sequenceType: NotifySequence.First);
-			Notify.Template("NotifyTemplateSimple").Show("Stack Notification 3.",
-			                                             customHideDelay: 3f,
-			                                             sequenceType: NotifySequence.First);
+			notifySimple.Template().Show("Stack Notification 1.",
+											customHideDelay: 3f,
+											sequenceType: NotifySequence.First);
+			notifySimple.Template().Show("Stack Notification 2.",
+			                                customHideDelay: 3f,
+											sequenceType: NotifySequence.First);
+			notifySimple.Template().Show("Stack Notification 3.",
+											customHideDelay: 3f,
+											sequenceType: NotifySequence.First);
 		}
 
 		// Show 3 notification, one by one in this row:
@@ -38,36 +62,36 @@ namespace UIWidgetsSamples {
 		// Queue Notification 3.
 		public void ShowNotifyQueue()
 		{
-			Notify.Template("NotifyTemplateSimple").Show("Queue Notification 1.",
-			                                             customHideDelay: 3f,
-			                                             sequenceType: NotifySequence.Last);
-			Notify.Template("NotifyTemplateSimple").Show("Queue Notification 2.",
-			                                             customHideDelay: 3f,
-			                                             sequenceType: NotifySequence.Last);
-			Notify.Template("NotifyTemplateSimple").Show("Queue Notification 3.",
-			                                             customHideDelay: 3f,
-			                                             sequenceType: NotifySequence.Last);
+			notifySimple.Template().Show("Queue Notification 1.",
+											customHideDelay: 3f,
+											sequenceType: NotifySequence.Last);
+			notifySimple.Template().Show("Queue Notification 2.",
+											customHideDelay: 3f,
+											sequenceType: NotifySequence.Last);
+			notifySimple.Template().Show("Queue Notification 3.",
+											customHideDelay: 3f,
+											sequenceType: NotifySequence.Last);
 		}
 
 		// Show only one notification and hide current notification from sequence, if exists:
 		// Queue Notification 3.
 		public void ShowNotifySequenceClear()
 		{
-			Notify.Template("NotifyTemplateSimple").Show("Stack Notification 1.",
-			                                             customHideDelay: 3f,
-			                                             sequenceType: NotifySequence.First);
-			Notify.Template("NotifyTemplateSimple").Show("Stack Notification 2.",
-			                                             customHideDelay: 3f,
-			                                             sequenceType: NotifySequence.First);
-			Notify.Template("NotifyTemplateSimple").Show("Stack Notification 3.",
-			                                             customHideDelay: 3f,
-			                                             sequenceType: NotifySequence.First,
-			                                             clearSequence: true);
+			notifySimple.Template().Show("Stack Notification 1.",
+											customHideDelay: 3f,
+											sequenceType: NotifySequence.First);
+			notifySimple.Template().Show("Stack Notification 2.",
+											customHideDelay: 3f,
+											sequenceType: NotifySequence.First);
+			notifySimple.Template().Show("Stack Notification 3.",
+											customHideDelay: 3f,
+											sequenceType: NotifySequence.First,
+											clearSequence: true);
 		}
 
 		public void ShowNotifyAutohide()
 		{
-			Notify.Template("NotifyTemplateAutoHide").Show("Achievement unlocked. Hide after 3 seconds.", customHideDelay: 3f);
+			notifyAutoHide.Template().Show("Achievement unlocked. Hide after 3 seconds.", customHideDelay: 3f);
 		}
 
 		bool CallShowNotifyAutohide()
@@ -78,7 +102,7 @@ namespace UIWidgetsSamples {
 
 		public void ShowNotifyAutohideRotate()
 		{
-			Notify.Template("NotifyTemplateAutoHide").Show(
+			notifyAutoHide.Template().Show(
 				"Achievement unlocked. Hide after 4 seconds.",
 				customHideDelay: 4f,
 				hideAnimation: Notify.AnimationRotate
@@ -87,7 +111,7 @@ namespace UIWidgetsSamples {
 
 		public void ShowNotifyBlack()
 		{
-			Notify.Template("NotifyTemplateBlack").Show(
+			notifyAutoHide.Template().Show(
 				"Another Notification. Hide after 5 seconds or click on the × above to close.",
 				customHideDelay: 5f,
 				hideAnimation: Notify.AnimationCollapse,
@@ -97,25 +121,39 @@ namespace UIWidgetsSamples {
 
 		bool ShowNotifyYes()
 		{
-			Notify.Template("NotifyTemplateAutoHide").Show("Action on 'Yes' button click.", customHideDelay: 3f);
+			notifyAutoHide.Template().Show("Action on 'Yes' button click.", customHideDelay: 3f);
 			return true;
 		}
 
 		bool ShowNotifyNo()
 		{
-			Notify.Template("NotifyTemplateAutoHide").Show("Action on 'No' button click.", customHideDelay: 3f);
+			notifyAutoHide.Template().Show("Action on 'No' button click.", customHideDelay: 3f);
 			return true;
 		}
 
 		public void ShowDialogSimple()
 		{
-			Dialog.Template("DialogTemplateSample").Show(
+			dialogSample.Template().Show(
 				title: "Simple Dialog",
 				message: "Simple dialog with only close button.",
 				buttons: new DialogActions(){
 					{"Close", Dialog.Close},
 				},
 				focusButton: "Close"
+			);
+		}
+
+		public void ShowDialogInPosition()
+		{
+			var dialog = dialogSample.Template();
+			dialog.Show(
+				title: "Simple Dialog",
+				message: "Simple dialog with only close button.",
+				buttons: new DialogActions(){
+					{"Close", Dialog.Close},
+				},
+				focusButton: "Close",
+				position: dialog.transform.localPosition
 			);
 		}
 
@@ -127,7 +165,7 @@ namespace UIWidgetsSamples {
 
 		public void ShowDialogYesNoCancel()
 		{
-			Dialog.Template("DialogTemplateSample").Show(
+			dialogSample.Template().Show(
 				title: "Dialog Yes No Cancel",
 				message: "Question?",
 				buttons: new DialogActions(){
@@ -142,7 +180,7 @@ namespace UIWidgetsSamples {
 
 		public void ShowDialogExtended()
 		{
-			Dialog.Template("DialogTemplateSample").Show(
+			dialogSample.Template().Show(
 				title: "Another Dialog",
 				message: "Same template with another position and long text.\nChange\nheight\nto\nfit\ntext.",
 				buttons: new DialogActions(){
@@ -157,7 +195,7 @@ namespace UIWidgetsSamples {
 
 		public void ShowDialogModal()
 		{
-			Dialog.Template("DialogTemplateSample").Show(
+			dialogSample.Template().Show(
 				title: "Modal Dialog",
 				message: "Simple Modal Dialog.",
 				buttons: new DialogActions(){
@@ -172,7 +210,7 @@ namespace UIWidgetsSamples {
 		public void ShowDialogSignIn()
 		{
 			// create dialog from template
-			var dialog = Dialog.Template("DialogSignInTemplateSample");
+			var dialog = dialogSignIn.Template();
 			// helper component with references to input fields
 			var helper = dialog.GetComponent<DialogInputHelper>();
 			// reset input fields to default
@@ -205,7 +243,7 @@ namespace UIWidgetsSamples {
 
 			// using dialog input 
 			var message = "Sign in.\nUsername: " + helper.Username.text + "\nPassword: <hidden>";
-			Notify.Template("NotifyTemplateAutoHide").Show(message, customHideDelay: 3f);
+			notifyAutoHide.Template().Show(message, customHideDelay: 3f);
 
 			// return true to close dialog
 			return true;
@@ -214,24 +252,42 @@ namespace UIWidgetsSamples {
 		public void ShowDialogTreeView()
 		{
 			// create dialog from template
-			var dialog = Dialog.Template("DialogTreeView");
+			var dialog = dialogTreeView.Template();
 			// helper component with references to input fields
 			var helper = dialog.GetComponent<DialogTreeViewInputHelper>();
 			
 			// open dialog
 			dialog.Show(
-				title: "Sign into your Account",
+				title: "Dialog with TreeView",
 				buttons: new DialogActions(){
-				// on click close dialog
-				{"Close", Dialog.Close},
-			},
-			focusButton: "Sign in",
-			modal: true,
-			modalColor: new Color(0, 0, 0, 0.8f)
+					// on click close dialog
+					{"Close", Dialog.Close},
+				},
+				focusButton: "Close",
+				modal: true,
+				modalColor: new Color(0, 0, 0, 0.8f)
 			);
 			
 			// reset input fields to default
 			helper.Refresh();
+		}
+
+		public void ShowPopup()
+		{
+			popupSample.Template().Show(
+				title: "Simple Popup",
+				message: "Simple Popup."
+			);
+		}
+
+		public void ShowPopupModal()
+		{
+			popupModalSample.Template().Show(
+				title: "Modal Popup",
+				message: "Alert text.",
+				modal: true,
+				modalColor: new Color(0.0f, 0.0f, 0.0f, 0.8f)
+			);
 		}
 	}
 }

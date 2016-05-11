@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using System.Collections;
 using System.Collections.Generic;
 using UIWidgets;
 
 namespace UIWidgetsSamples.Shops {
+	/// <summary>
+	/// Harbor shop.
+	/// </summary>
 	public class HarborShop : MonoBehaviour {
 		Trader Harbor;
 		
@@ -21,6 +23,9 @@ namespace UIWidgetsSamples.Shops {
 
 		[SerializeField]
 		Text PlayerMoney;
+
+		[SerializeField]
+		Notify notify;
 
 		void Start()
 		{
@@ -40,7 +45,10 @@ namespace UIWidgetsSamples.Shops {
 			
 			UpdatePlayerMoneyInfo();
 		}
-		
+
+		/// <summary>
+		/// Init this instance.
+		/// </summary>
 		public void Init()
 		{
 			Harbor.Money = -1;
@@ -60,7 +68,7 @@ namespace UIWidgetsSamples.Shops {
 				new Item("Tobacco", 20),
 			};
 			Harbor.Inventory.AddRange(shop_items);
-			
+
 			Player.Money = 5000;
 			Player.PriceFactor = 0.5f;
 			Player.Inventory.Clear();
@@ -72,7 +80,10 @@ namespace UIWidgetsSamples.Shops {
 			};
 			Player.Inventory.AddRange(player_items);
 		}
-		
+
+		/// <summary>
+		/// Updates the total.
+		/// </summary>
 		public void UpdateTotal()
 		{
 			var order = new HarborOrder(TradeView.DataSource);
@@ -97,7 +108,7 @@ namespace UIWidgetsSamples.Shops {
 		{
 			TradeView.DataSource = CreateOrderLines(Harbor, Player);
 		}
-		
+
 		void UpdatePlayerMoneyInfo()
 		{
 			PlayerMoney.text = Player.Money.ToString();
@@ -112,11 +123,12 @@ namespace UIWidgetsSamples.Shops {
 				Harbor.Sell(order);
 				Player.Buy(order);
 
+				//UpdateTotal();
 			}
 			else
 			{
 				var message = string.Format("Not enough money to buy items. Available: {0}; Required: {1}", Player.Money, order.Total());
-				Notify.Template("NotifyTemplateSimple").Show(message, customHideDelay: 3f, sequenceType: NotifySequence.First, clearSequence: true);
+				notify.Template().Show(message, customHideDelay: 3f, sequenceType: NotifySequence.First, clearSequence: true);
 			}
 		}
 

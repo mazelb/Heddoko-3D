@@ -5,6 +5,7 @@ namespace UIWidgets {
 	/// <summary>
 	/// Color picker color view block.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/ColorPicker ColorBlock")]
 	public class ColorPickerColorBlock : MonoBehaviour {
 		[SerializeField]
 		Image colorView;

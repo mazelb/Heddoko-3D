@@ -34,10 +34,11 @@ namespace UIWidgets
 				if (defaultItemCopy==null)
 				{
 					defaultItemCopy = Instantiate(DefaultItem) as TComponent;
-					defaultItemCopy.transform.SetParent(DefaultItem.transform.parent);
-					Utilites.FixInstantiated(DefaultItem, defaultItemCopy);
+					defaultItemCopy.transform.SetParent(DefaultItem.transform.parent, false);
 					defaultItemCopy.gameObject.name = "DefaultItemCopy";
 					defaultItemCopy.gameObject.SetActive(false);
+
+					Utilites.FixInstantiated(DefaultItem, defaultItemCopy);
 				}
 				return defaultItemCopy;
 			}
@@ -76,10 +77,14 @@ namespace UIWidgets
 		/// </summary>
 		protected override void CalculateMaxVisibleItems()
 		{
-			SetItemsHeight(DataSource);
+			SetItemsHeight(DataSource, false);
+			CalculateMaxVisibleItems(DataSource);
+		}
 
+		protected virtual void CalculateMaxVisibleItems(ObservableList<TItem> data)
+		{
 			var height = scrollHeight;
-			maxVisibleItems = DataSource.OrderBy<TItem,float>(GetItemHeight).TakeWhile(x => {
+			maxVisibleItems = data.OrderBy<TItem,float>(GetItemHeight).TakeWhile(x => {
 				height -= x.Height;
 				return height > 0;
 			}).Count() + 2;
@@ -112,7 +117,7 @@ namespace UIWidgets
 		/// Scrolls to item with specifid index.
 		/// </summary>
 		/// <param name="index">Index.</param>
-		protected override void ScrollTo(int index)
+		public override void ScrollTo(int index)
 		{
 			if (!CanOptimize())
 			{
@@ -142,13 +147,7 @@ namespace UIWidgets
 		/// <returns>The bottom filler size.</returns>
 		protected override float CalculateBottomFillerSize()
 		{
-			if (bottomHiddenItems==0)
-			{
-				return 0f;
-			}
-			var height = DataSource.GetRange(topHiddenItems + visibleItems, bottomHiddenItems).SumFloat(GetItemHeight);
-
-			return Mathf.Max(0, height + (LayoutBridge.GetSpacing() * (bottomHiddenItems - 1)));
+			return GetItemsHeight(topHiddenItems + visibleItems, bottomHiddenItems);
 		}
 
 		/// <summary>
@@ -157,19 +156,44 @@ namespace UIWidgets
 		/// <returns>The top filler size.</returns>
 		protected override float CalculateTopFillerSize()
 		{
-			if (topHiddenItems==0)
+			return GetItemsHeight(0, topHiddenItems);
+		}
+
+		float GetItemsHeight(int start, int count)
+		{
+			if (count==0)
 			{
 				return 0f;
 			}
 
-			var height = DataSource.GetRange(0, topHiddenItems).SumFloat(GetItemHeight);
+			var height = DataSource.GetRange(start, count).SumFloat(GetItemHeight);
 
-			return Mathf.Max(0, height + (LayoutBridge.GetSpacing() * (topHiddenItems - 1)));
+			return Mathf.Max(0, height + (LayoutBridge.GetSpacing() * (count - 1)));
 		}
 
 		float GetItemHeight(TItem item)
 		{
 			return item.Height;
+		}
+
+		/// <summary>
+		/// Gets the item position.
+		/// </summary>
+		/// <returns>The item position.</returns>
+		/// <param name="index">Index.</param>
+		public override float GetItemPosition(int index)
+		{
+			return Mathf.Max(0, DataSource.GetRange(0, index).SumFloat(GetItemHeight) + (LayoutBridge.GetSpacing() * (index - 1)));
+		}
+
+		/// <summary>
+		/// Gets the item position bottom.
+		/// </summary>
+		/// <returns>The item position bottom.</returns>
+		/// <param name="index">Index.</param>
+		public override float GetItemPositionBottom(int index)
+		{
+			return GetItemPosition(index) + DataSource[index].Height - LayoutBridge.GetSpacing() + LayoutBridge.GetMargin() - GetScrollSize();
 		}
 
 		/// <summary>
@@ -235,11 +259,7 @@ namespace UIWidgets
 		/// </summary>
 		public override void Resize()
 		{
-			//defaultItemCopy.gameObject.SetActive(true);
-			//(defaultItemCopy.transform as RectTransform).sizeDelta = (DefaultItem.transform as ButtonContainerRectTransform).sizeDelta;
-
 			SetItemsHeight(DataSource, true);
-			//defaultItemCopy.gameObject.SetActive(false);
 
 			base.Resize();
 		}
@@ -251,6 +271,7 @@ namespace UIWidgets
 		protected override void SetNewItems(ObservableList<TItem> newItems)
 		{
 			SetItemsHeight(newItems);
+			CalculateMaxVisibleItems(newItems);
 
 			base.SetNewItems(newItems);
 		}
@@ -301,7 +322,7 @@ namespace UIWidgets
 			return Mathf.Min(first_visible_index, Mathf.Max(0, DataSource.Count - visibleItems));
 		}
 		
-		LayoutGroup defaultItemlayoutGroup;
+		LayoutGroup defaultItemLayoutGroup;
 
 		/// <summary>
 		/// Gets the height of the item.
@@ -310,26 +331,26 @@ namespace UIWidgets
 		/// <param name="item">Item.</param>
 		float CalculateItemHeight(TItem item)
 		{
-			if (defaultItemlayoutGroup==null)
+			if (defaultItemLayoutGroup==null)
 			{
-				defaultItemlayoutGroup = DefaultItemCopy.GetComponent<LayoutGroup>();
+				defaultItemLayoutGroup = DefaultItemCopy.GetComponent<LayoutGroup>();
 			}
 
 			float height = 0f;
-			if ((!IsCanCalculateHeight || ForceAutoHeightCalculation) && (defaultItemlayoutGroup!=null))
+			if (!IsCanCalculateHeight || ForceAutoHeightCalculation)
 			{
-				DefaultItemCopy.gameObject.SetActive(true);
+				if (defaultItemLayoutGroup!=null)
+				{
+					DefaultItemCopy.gameObject.SetActive(true);
 
-				SetData(DefaultItemCopy, item);
+					SetData(DefaultItemCopy, item);
 
-				defaultItemlayoutGroup.CalculateLayoutInputHorizontal();
-				defaultItemlayoutGroup.SetLayoutHorizontal();
-				defaultItemlayoutGroup.CalculateLayoutInputVertical();
-				defaultItemlayoutGroup.SetLayoutVertical();
+					Utilites.UpdateLayout(defaultItemLayoutGroup);
 
-				height = LayoutUtility.GetPreferredHeight(DefaultItemCopyRect);
+					height = LayoutUtility.GetPreferredHeight(DefaultItemCopyRect);
 
-				DefaultItemCopy.gameObject.SetActive(false);
+					DefaultItemCopy.gameObject.SetActive(false);
+				}
 			}
 			else
 			{
@@ -342,6 +363,47 @@ namespace UIWidgets
 		}
 
 		/// <summary>
+		/// Adds the callback.
+		/// </summary>
+		/// <param name="item">Item.</param>
+		/// <param name="index">Index.</param>
+		protected override void AddCallback(ListViewItem item, int index)
+		{
+			item.onResize.AddListener(SizeChanged);
+			base.AddCallback(item, index);
+		}
+
+		/// <summary>
+		/// Removes the callback.
+		/// </summary>
+		/// <param name="item">Item.</param>
+		/// <param name="index">Index.</param>
+		protected override void RemoveCallback(ListViewItem item, int index)
+		{
+			item.onResize.RemoveListener(SizeChanged);
+			base.RemoveCallback(item, index);
+		}
+
+		void SizeChanged(int index, Vector2 size)
+		{
+			if (DataSource[index].Height!=size.y)
+			{
+				DataSource[index].Height = size.y;
+
+				var old = maxVisibleItems;
+				CalculateMaxVisibleItems();
+				if (maxVisibleItems > old)
+				{
+					UpdateView();
+				}
+				else
+				{
+					ScrollUpdate();
+				}
+			}
+		}
+
+		/// <summary>
 		/// Calls specified function with each component.
 		/// </summary>
 		/// <param name="func">Func.</param>
@@ -350,5 +412,45 @@ namespace UIWidgets
 			base.ForEachComponent(func);
 			func(DefaultItemCopy);
 		}
+
+		/// <summary>
+		/// Gets the index of the nearest item.
+		/// </summary>
+		/// <returns>The nearest item index.</returns>
+		/// <param name="point">Point.</param>
+		public override int GetNearestIndex(Vector2 point)
+		{
+			if (IsSortEnabled())
+			{
+				return -1;
+			}
+			var index = GetIndexByHeight(-point.y);
+			if (index!=(DataSource.Count - 1))
+			{
+				var height = GetItemsHeight(0, index);
+				var top = -point.y - height;
+				var bottom = -point.y - (height + DataSource[index+1].Height + LayoutBridge.GetSpacing());
+				if (bottom < top)
+				{
+					index += 1;
+				}
+			}
+
+			return Mathf.Min(index, DataSource.Count - 1);
+		}
+
+		#region ListViewPaginator support
+		public override int GetNearestItemIndex()
+		{
+			return GetIndexByHeight(GetScrollValue());
+		}
+		#endregion
+
+		#if UNITY_EDITOR
+		bool IsItemCanCalculateHeight()
+		{
+			return IsCanCalculateHeight;
+		}
+		#endif
 	}
 }

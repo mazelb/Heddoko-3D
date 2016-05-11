@@ -6,6 +6,12 @@ using System;
 
 namespace UIWidgets {
 	[Serializable]
+	public class ListViewItemResize : UnityEvent<int,Vector2>
+	{
+		
+	}
+
+	[Serializable]
 	public class ListViewItemSelect : UnityEvent<ListViewItem>
 	{
 		
@@ -22,7 +28,7 @@ namespace UIWidgets {
 	/// Item for ListViewBase.
 	/// </summary>
 	[RequireComponent(typeof(Image))]
-	public class ListViewItem : UIBehaviour,
+	public abstract class ListViewItem : UIBehaviour,
 		IPointerClickHandler,
 		IPointerEnterHandler, IPointerExitHandler,
 		ISubmitHandler, ICancelHandler,
@@ -81,17 +87,55 @@ namespace UIWidgets {
 		public PointerUnityEvent onPointerExit = new PointerUnityEvent();
 
 		/// <summary>
+		/// OnResize event.
+		/// </summary>
+		public ListViewItemResize onResize = new ListViewItemResize();
+
+		Image background;
+
+		/// <summary>
 		/// The background.
 		/// </summary>
-		[System.NonSerialized]
-		public ImageAdvanced Background;
+		public Image Background {
+			get {
+				if (background==null)
+				{
+					background = GetComponent<Image>();
+				}
+				return background;
+			}
+		}
+
+		RectTransform rectTransform;
+
+		/// <summary>
+		/// Gets the RectTransform.
+		/// </summary>
+		/// <value>The RectTransform.</value>
+		protected RectTransform RectTransform {
+			get {
+				if (rectTransform==null)
+				{
+					rectTransform = transform as RectTransform;
+				}
+				return rectTransform;
+			}
+		}
+
+		[SerializeField]
+		protected bool LocalPositionZReset;
 
 		/// <summary>
 		/// Awake this instance.
 		/// </summary>
 		protected override void Awake()
 		{
-			Background = GetComponent<ImageAdvanced>();
+			if ((LocalPositionZReset) && (transform.localPosition.z!=0f))
+			{
+				var pos = transform.localPosition;
+				pos.z = 0f;
+				transform.localPosition = pos;
+			}
 		}
 
 		/// <summary>
@@ -147,6 +191,12 @@ namespace UIWidgets {
 		public virtual void OnPointerClick(PointerEventData eventData)
 		{
 			onPointerClick.Invoke(eventData);
+
+			if (eventData.button!=PointerEventData.InputButton.Left)
+			{
+				return;
+			}
+
 			onClick.Invoke();
 			Select();
 		}
@@ -185,6 +235,17 @@ namespace UIWidgets {
 			EventSystem.current.SetSelectedGameObject(ev.NewSelectedObject, ev);
 		}
 
+		Rect oldRect;
+		protected override void OnRectTransformDimensionsChange()
+		{
+			if (oldRect.Equals(RectTransform.rect))
+			{
+				return ;
+			}
+			oldRect = RectTransform.rect;
+			onResize.Invoke(Index, oldRect.size);
+		}
+		
 		/// <summary>
 		/// Compares the current object with another object of the same type by Index.
 		/// </summary>

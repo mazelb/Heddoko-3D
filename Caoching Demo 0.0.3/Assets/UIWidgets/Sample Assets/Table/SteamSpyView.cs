@@ -15,7 +15,7 @@ namespace UIWidgetsSamples {
 		Time,
 	}
 
-	public class SteamSpyView : ListViewCustom<SteamSpyComponent,SteamSpyItem> {
+	public class SteamSpyView : ListViewCustomHeight<SteamSpyComponent,SteamSpyItem> {
 		bool isSteamSpyViewStarted;
 
 		public override void Start()
@@ -94,14 +94,14 @@ namespace UIWidgetsSamples {
 			DataSource.Add(item);
 		}
 
-		protected override void SetData(SteamSpyComponent vComponenent, SteamSpyItem vItem)
+		protected override void SetData(SteamSpyComponent component, SteamSpyItem item)
 		{
-			vComponenent.SetData(vItem);
+			component.SetData(item);
 		}
 		
 		protected override void HighlightColoring(SteamSpyComponent component)
 		{
-			//base.HighlightColoring(vComponenent);
+			//base.HighlightColoring(component);
 
 			component.Name.color = HighlightedColor;
 			component.ScoreRank.color = HighlightedColor;
@@ -113,7 +113,7 @@ namespace UIWidgetsSamples {
 		
 		protected override void SelectColoring(SteamSpyComponent component)
 		{
-			//base.SelectColoring(vComponenent);
+			//base.SelectColoring(component);
 
 			component.Name.color = SelectedColor;
 			component.ScoreRank.color = SelectedColor;
@@ -125,7 +125,7 @@ namespace UIWidgetsSamples {
 		
 		protected override void DefaultColoring(SteamSpyComponent component)
 		{
-			//base.DefaultColoring(vComponenent);
+			//base.DefaultColoring(component);
 
 			component.Name.color = DefaultColor;
 			component.ScoreRank.color = DefaultColor;
@@ -153,6 +153,7 @@ namespace UIWidgetsSamples {
 			}
 		}
 
+		#region used in Button.OnClick()
 		public void SortByName()
 		{
 			ToggleSort(SteamSpySortFields.Name);
@@ -182,7 +183,9 @@ namespace UIWidgetsSamples {
 		{
 			ToggleSort(SteamSpySortFields.Time);
 		}
+		#endregion
 
+		#region Items comparers
 		static protected int NameComparer(SteamSpyItem x, SteamSpyItem y)
 		{
 			return x.Name.CompareTo(y.Name);
@@ -212,5 +215,6 @@ namespace UIWidgetsSamples {
 		{
 			return x.AverageTimeIn2Weeks.CompareTo(y.AverageTimeIn2Weeks);
 		}
+		#endregion
 	}
 }

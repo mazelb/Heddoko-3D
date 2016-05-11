@@ -7,6 +7,9 @@ using System;
 
 namespace UIWidgets
 {
+	/// <summary>
+	/// TabSelectEvent.
+	/// </summary>
 	[Serializable]
 	public class TabSelectEvent : UnityEvent<int>
 	{
@@ -16,7 +19,7 @@ namespace UIWidgets
 	/// Tabs.
 	/// http://ilih.ru/images/unity-assets/UIWidgets/Tabs.png
 	/// </summary>
-	[AddComponentMenu("UI/Tabs", 290)]
+	[AddComponentMenu("UI/UIWidgets/Tabs")]
 	public class Tabs : MonoBehaviour
 	{
 		/// <summary>
@@ -55,6 +58,13 @@ namespace UIWidgets
 		}
 
 		/// <summary>
+		/// The name of the default tab.
+		/// </summary>
+		[SerializeField]
+		[Tooltip("Tab name which will be active by default, if not specified will be opened first Tab.")]
+		public string DefaultTabName = string.Empty;
+
+		/// <summary>
 		/// If true does not deactivate hidden tabs.
 		/// </summary>
 		[SerializeField]
@@ -79,8 +89,11 @@ namespace UIWidgets
 		List<Button> defaultButtons = new List<Button>();
 		List<Button> activeButtons = new List<Button>();
 		List<UnityAction> callbacks = new List<UnityAction>();
-		
-		void Start()
+
+		/// <summary>
+		/// Start this instance.
+		/// </summary>
+		public void Start()
 		{
 			if (Container==null)
 			{
@@ -116,7 +129,27 @@ namespace UIWidgets
 
 			AddCallbacks();
 
-			SelectTab(tabObjects[0].Name);
+			if (DefaultTabName!="")
+			{
+				if (IsExistsTabName(DefaultTabName))
+				{
+					SelectTab(DefaultTabName);
+				}
+				else
+				{
+					Debug.LogWarning(string.Format("Tab with specified DefaultTabName \"{0}\" not found. Opened first Tab.", DefaultTabName), this);
+					SelectTab(tabObjects[0].Name);
+				}
+			}
+			else
+			{
+				SelectTab(tabObjects[0].Name);
+			}
+		}
+
+		bool IsExistsTabName(string tabName)
+		{
+			return tabObjects.Any(x => x.Name==tabName);
 		}
 
 		void AddCallback(Tab tab, int index)
@@ -248,22 +281,18 @@ namespace UIWidgets
 		/// </summary>
 		/// <param name="button">Button.</param>
 		/// <param name="index">Index.</param>
-		void SetButtonName(Button button, int index)
+		protected virtual void SetButtonName(Button button, int index)
 		{
-			button.gameObject.SetActive(true);
-			var text = button.GetComponentInChildren<Text>();
-			if (text)
+			var tab_button = button.GetComponent<TabButtonComponent>();
+			if (tab_button==null)
 			{
-				text.text = tabObjects[index].Name;
+				button.gameObject.SetActive(true);
+				button.GetComponentInChildren<Text>().text = TabObjects[index].Name;
+			}
+			else
+			{
+				tab_button.SetButtonData(TabObjects[index]);
 			}
 		}
-		
-		#if UNITY_EDITOR
-		[UnityEditor.MenuItem("GameObject/UI/Tabs", false, 1180)]
-		static void CreateObject()
-		{
-			Utilites.CreateWidgetFromAsset("Tabs");
-		}
-		#endif
 	}
 }

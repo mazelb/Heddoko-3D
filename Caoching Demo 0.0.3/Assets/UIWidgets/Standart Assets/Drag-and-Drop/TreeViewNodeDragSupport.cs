@@ -6,6 +6,7 @@ namespace UIWidgets {
 	/// <summary>
 	/// TreeViewNode drag support.
 	/// </summary>
+	[AddComponentMenu("UI/UIWidgets/TreeViewNodeDragSupport")]
 	[RequireComponent(typeof(TreeViewComponent))]
 	public class TreeViewNodeDragSupport : DragSupport<TreeNode<TreeViewItem>> {
 		/// <summary>
@@ -73,8 +74,7 @@ namespace UIWidgets {
 		/// <summary>
 		/// Called when drop completed.
 		/// </summary>
-		/// <param name="success">true</param>
-		/// <c>false</c>
+		/// <param name="success"><c>true</c> if Drop component received data; otherwise, <c>false</c>.</param>
 		public override void Dropped(bool success)
 		{
 			HideDragInfo();

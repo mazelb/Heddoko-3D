@@ -109,7 +109,7 @@ namespace UIWidgets
 			EditorGUILayout.PropertyField(serializedProperties[EndEdit]);
 
 			EditorGUILayout.PropertyField(serializedProperties["onValueChangeInt"]);
-			EditorGUILayout.PropertyField(serializedProperties["onMinusClick"]);
+			EditorGUILayout.PropertyField(serializedProperties["onPlusClick"]);
 			EditorGUILayout.PropertyField(serializedProperties["onMinusClick"]);
 
 			EditorGUI.EndDisabledGroup();

@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 namespace UIWidgetsSamples.Shops {
+	/// <summary>
+	/// Prices.
+	/// </summary>
 	public class Prices {
 		static Dictionary<string,int> prices = new Dictionary<string, int>();
 
@@ -39,6 +42,12 @@ namespace UIWidgetsSamples.Shops {
 			prices.Add("Tobacco", 120);
 		}
 
+		/// <summary>
+		/// Gets the price.
+		/// </summary>
+		/// <returns>The price.</returns>
+		/// <param name="item">Item.</param>
+		/// <param name="priceFactor">Price factor.</param>
 		public static int GetPrice(Item item, float priceFactor)
 		{
 			if (!prices.ContainsKey(item.Name))

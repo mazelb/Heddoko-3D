@@ -6,6 +6,11 @@ using System;
 using System.Collections;
 
 namespace UIWidgets {
+	public enum NodeToggle {
+		Rotate = 0,
+		ChangeSprite = 1,
+	}
+	
 	/// <summary>
 	/// Node toggle event.
 	/// </summary>
@@ -33,6 +38,18 @@ namespace UIWidgets {
 		/// </summary>
 		public TreeNodeToggle Toggle;
 
+		Image toggleImage;
+
+		protected Image ToggleImage {
+			get {
+				if (toggleImage==null)
+				{
+					toggleImage = Toggle.GetComponent<Image>();
+				}
+				return toggleImage;
+			}
+		}
+
 		/// <summary>
 		/// The toggle event.
 		/// </summary>
@@ -43,10 +60,16 @@ namespace UIWidgets {
 		/// </summary>
 		public LayoutElement Filler;
 
+		public NodeToggle OnNodeExpand = NodeToggle.Rotate;
+
 		/// <summary>
 		/// Is need animate arrow?
 		/// </summary>
 		public bool AnimateArrow;
+
+		public Sprite NodeOpened;
+
+		public Sprite NodeClosed;
 
 		/// <summary>
 		/// The node.
@@ -97,15 +120,27 @@ namespace UIWidgets {
 			{
 				StopCoroutine(AnimationCorutine);
 			}
-			SetToggleRotation(Node.IsExpanded);
+			SetToggle(Node.IsExpanded);
 
 			ToggleEvent.Invoke(Index);
 
-			if (AnimateArrow)
+			if (OnNodeExpand==NodeToggle.Rotate)
 			{
-				AnimationCorutine = Node.IsExpanded ? CloseCorutine() : OpenCorutine();
-				StartCoroutine(AnimationCorutine);
+				if (AnimateArrow)
+				{
+					AnimationCorutine = Node.IsExpanded ? CloseCorutine() : OpenCorutine();
+					StartCoroutine(AnimationCorutine);
+				}
 			}
+			else
+			{
+				SetToggle(Node.IsExpanded);
+			}
+		}
+
+		protected virtual void SeToggleSprite(bool isExpanded)
+		{
+			ToggleImage.sprite = isExpanded ? NodeOpened : NodeClosed;
 		}
 
 		/// <summary>
@@ -143,8 +178,19 @@ namespace UIWidgets {
 			{
 				return ;
 			}
-			var rect = Toggle.transform as RectTransform;
-			rect.rotation = Quaternion.Euler(0, 0, (isExpanded) ? -90 : 0);
+			Toggle.transform.localRotation = Quaternion.Euler(0, 0, (isExpanded) ? -90 : 0);
+		}
+
+		protected virtual void SetToggle(bool isExpanded)
+		{
+			if (OnNodeExpand==NodeToggle.Rotate)
+			{
+				SetToggleRotation(isExpanded);
+			}
+			else
+			{
+				SeToggleSprite(isExpanded);
+			}
 		}
 
 		/// <summary>
@@ -157,7 +203,7 @@ namespace UIWidgets {
 			if (node!=null)
 			{
 				Node = node;
-				SetToggleRotation(Node.IsExpanded);
+				SetToggle(Node.IsExpanded);
 			}
 			if (Filler!=null)
 			{
