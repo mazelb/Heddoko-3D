@@ -409,16 +409,12 @@ public class Body
     /// <param name="vBody">Body vBody: The body to apply tracking to. </param> 
     /// <param name="vDic">Dictionary vDic: The tracking matrices to be applied. </param> 
     public static void ApplyTracking(Body vBody, Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic)
-    {
-               //unity debug
-        Profiler.BeginSample("BODY: ApplyTracking");
+    { 
         //get the list of segments of the speicfied vBody
         List<BodySegment> vListBodySegments = vBody.BodySegments;
 
-        //foreach (BodySegment vBodySegment in vListBodySegments)
-        for (int i = 0; i < vListBodySegments.Count; i++)
-        {
-            Profiler.BeginSample("BODY:   foreach (BodySegment vBodySegment)");
+         for (int i = 0; i < vListBodySegments.Count; i++)
+        { 
             //of the current body segment, get the appropriate subsegments
             List<BodyStructureMap.SensorPositions> vSensPosList =
                 BodyStructureMap.Instance.SegmentToSensorPosMap[vListBodySegments[i].SegmentType];
@@ -427,27 +423,16 @@ public class Body
             //to the segment
             Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vFilteredDictionary = new Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure>(2);
 
-            //foreach (BodyStructureMap.SensorPositions vSenPos in vSensPosList)
-            for (int j = 0; j < vSensPosList.Count; j++)
-            {
-                Profiler.BeginSample("BODY:   foreach (BodyStructureMap.SensorPositions)");
+             for (int j = 0; j < vSensPosList.Count; j++)
+            { 
                 //    if (vDic.ContainsKey(vSenPos))
                 if (vDic.ContainsKey(vSensPosList[j]))
-                {
-                    //BodyStructureMap.TrackingStructure vTrackedMatrices = vDic[vSenPos];
-                    //  vFilteredDictionary.Add(vSenPos, vTrackedMatrices);
+                { 
                     BodyStructureMap.TrackingStructure vTrackedMatrices = vDic[vSensPosList[j]];
                     vFilteredDictionary.Add(vSensPosList[j], vTrackedMatrices);
                 }
-                Profiler.EndSample();
-            }
-            Profiler.EndSample();
-            //DebugLogger.Instance.LogMessage(Assets.Scripts.Utils.DebugContext.logging.LogType.SegmentUpdateStart, "Segment Update start: " + vBodySegment.SegmentType.ToString());
-
-            //  vBodySegment.UpdateSegment(vFilteredDictionary);
-            vListBodySegments[i].UpdateSegment(vFilteredDictionary);
-            //   DebugLogger.Instance.LogMessage(Assets.Scripts.Utils.DebugContext.logging.LogType.SegmentUpdateStart, "Segment Update finish  : " + vBodySegment.SegmentType.ToString());
-
+            }  
+            vListBodySegments[i].UpdateSegment(vFilteredDictionary); 
         }
     }
     /**
