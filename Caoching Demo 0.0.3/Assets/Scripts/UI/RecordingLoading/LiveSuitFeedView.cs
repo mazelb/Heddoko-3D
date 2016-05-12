@@ -5,10 +5,11 @@
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
 
+using System;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.Layouts;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 using Assets.Scripts.Body_Pipeline.Analysis.Views;
 using Assets.Scripts.Communication.View.Table;
 using Assets.Scripts.UI.AbstractViews.Enums;
@@ -36,12 +37,14 @@ namespace Assets.Scripts.UI.RecordingLoading
         public Button RenameRecordingButton;
         public Image RenameRecordingImage;
         public Text RenameRecordingText;
+
+        public PanelNode RootNode { get { return mRootNode; } }
         void Awake()
         {
             List<ControlPanelType> vLeftSide = new List<ControlPanelType>();
             vLeftSide.Add(ControlPanelType.LiveBPFeedView);
             ControlPanelTypeList.Add(vLeftSide);
-            CreateDefaultLayout();
+      
         }
 
 
@@ -56,8 +59,8 @@ namespace Assets.Scripts.UI.RecordingLoading
             mPanelNodes = CurrentLayout.ContainerStructure.RenderingPanelNodes;
             mRootNode = mPanelNodes[0];
             mRootNode.name = "Main";
-           
-            mRootNode.PanelSettings.Init(ControlPanelTypeList[0], false, BrainpackBody);
+
+            mRootNode.PanelSettings.Init(ControlPanelTypeList[0], true, BrainpackBody);
             mLiveFeedViewControlPanel = (LiveFeedViewControlPanel)mRootNode.PanelSettings.GetPanelOfType(ControlPanelType.LiveBPFeedView);
             mLiveFeedViewControlPanel.SuitConnection = BpController;
             mLiveFeedViewControlPanel.Body = BrainpackBody;
@@ -80,8 +83,8 @@ namespace Assets.Scripts.UI.RecordingLoading
                 CreateDefaultLayout();
             }
             else
-            { 
-               mPanelNodes[0].PanelSettings.RequestResources();
+            {
+                mPanelNodes[0].PanelSettings.RequestResources();
             }
             BrainpackBody.StreamFromBrainpack();
             try
@@ -91,7 +94,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
             catch
             {
-                
+
             }
             BodySegment.IsUsingInterpolation = vIsLerp;
             SetContextualInfo();
@@ -109,6 +112,9 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
         }
 
+        /// <summary>
+        /// Set information relative to the context of this view
+        /// </summary>
         private void SetContextualInfo()
         {
             BodyFrameDataControl.Clear();
@@ -118,6 +124,16 @@ namespace Assets.Scripts.UI.RecordingLoading
 
         public override void Hide()
         {
+            bool vIsLerp = BodySegment.IsUsingInterpolation;
+            try
+            {
+                BodySegment.IsUsingInterpolation = false;
+                BrainpackBody.View.ResetInitialFrame(); 
+            }
+            catch
+            {
+
+            }
             //it is entirely possible that the view hasn't been initialized. verify this before proceeding
             if (mIsInitialized)
             {
@@ -125,7 +141,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                 {
                     vPanelNodes.PanelSettings.ReleaseResources();
                 }
-            } 
+            }
             gameObject.SetActive(false);
             if (PreviousView != null)
             {
@@ -134,13 +150,24 @@ namespace Assets.Scripts.UI.RecordingLoading
             BpController.ConnectedStateEvent -= SetRenameRecordingInteractibility;
             BpController.DisconnectedStateEvent -= UnsetRenameRecordingInteractibility;
             UnsetRenameRecordingInteractibility();
+           
+           
+            try
+            { 
+                BrainpackBody.StopThread();
+            }
+            catch
+            {
+
+            }
+            BodySegment.IsUsingInterpolation = vIsLerp;
         }
 
         void SetRenameRecordingInteractibility()
         {
             RenameRecordingButton.interactable = true;
             Color vColorImage = RenameRecordingImage.color;
-            vColorImage.a =1 ;
+            vColorImage.a = 1;
             RenameRecordingImage.color = vColorImage;
             Color vColorText = RenameRecordingText.color;
             vColorText.a = 1;
@@ -157,5 +184,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             vColorText.a = 0.25f;
             RenameRecordingText.color = vColorText;
         }
+
+       
     }
 }

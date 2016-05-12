@@ -9,8 +9,7 @@
 using System;
 using System.Collections.Generic;
 using Assets.Scripts.Frames_Pipeline;
-using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
-using Assets.Scripts.Utils.DebugContext.logging;
+using Assets.Scripts.Frames_Pipeline.BodyFrameConversion; 
 using HeddokoLib.adt;
 using HeddokoLib.networking;
 using HeddokoLib.utils;
@@ -36,7 +35,7 @@ public class BodyFrameThread : ThreadedJob
 
 
 
-    private CircularQueue<HeddokoPacket> mInboundSuitBuffer;//= new CircularQueue<HeddokoPacket>(100, true);
+    private CircularQueue<HeddokoPacket> mInboundSuitBuffer = new CircularQueue<HeddokoPacket>(64, true);
     
     private object mWorkerThreadLockHandle = new object();
     private Vector3[] vPreviouslyValidValues = new Vector3[9];
@@ -137,7 +136,6 @@ public class BodyFrameThread : ThreadedJob
     }
     public BodyFrameThread(BodyFramesRecording vFrameRecording, BodyFrameBuffer vBuffer)
     {
-        this.mRawFrames = mRawFrames;
         this.mBuffer = vBuffer;
         mDataSourceType = SourceDataType.Recording;
         mPlaybackTask = new RecordingPlaybackTask(vFrameRecording, BodyFrameBuffer);
@@ -187,9 +185,6 @@ public class BodyFrameThread : ThreadedJob
         PausedWorker = !mPausedWorker;
         mPlaybackTask.IsPaused = PausedWorker;
     }
-
- 
-
 
     /**
     * ThreadFunction()
@@ -284,7 +279,6 @@ public class BodyFrameThread : ThreadedJob
             string vLogMessage = "";
             if (!ContinueWorking)
             {
-                //finished working
                 break;
             }
 
@@ -300,18 +294,12 @@ public class BodyFrameThread : ThreadedJob
             }
 
             string vUnwrappedString = "";
-
             try
             {
                 bool vAllClear = false;
                 //first unwrap the string and break it down 
                 vUnwrappedString = HeddokoPacket.Unwrap(vPacket.Payload);
-
-                //Debug here
-
-                //todo place a check here for valid data
                 string[] vExploded = vUnwrappedString.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                //WriteToDiskSubTask(vUnwrappedString);
                 //this data is invalid
                 if (vExploded.Length != 12)
                 {
@@ -323,20 +311,20 @@ public class BodyFrameThread : ThreadedJob
                 {
                     vStartTime = vTimeStamp;
                 }
-                DebugLogger.Instance.LogMessage(LogType.BodyFrameThreadStart, "Starting frame conversion with timestamp "+ vStartTime);
-
+           //     DebugLogger.Instance.LogMessage(LogType.BodyFrameThreadStart, "Starting frame conversion with timestamp "+ vStartTime);
                 //get the bitmask from index 1
                 Int16 vBitmask = Convert.ToInt16(vExploded[1], 16);
-
                 int vStartIndex = 2;
                 int vEndIndex = 11;
                 int vBitmaskCheck = 0;
-
                 //is used to set vPreviouslyValid values indicies 
                 int vSetterIndex = 0;
-
                 for (int i = vStartIndex; i < vEndIndex; i++, vBitmaskCheck++, vSetterIndex++)
                 {
+                    if (!ContinueWorking)
+                    {
+                        break;
+                    }
                     //get the bitmask and check if the sensors values are valid(not disconnected)
                     //data is valid 
                     if ((vBitmask & (1 << vBitmaskCheck)) == (1 << vBitmaskCheck))
@@ -348,12 +336,19 @@ public class BodyFrameThread : ThreadedJob
                         float vYaw = ConversionTools.ConvertHexStringToFloat((v3data[2]));
                         vPreviouslyValidValues[vSetterIndex] = new Vector3(vPitch, vRoll, vYaw);
                     }
+                    if (!ContinueWorking)
+                    {
+                        break;
+                    }
                 }
-                BodyFrame vBodyFrame = RawFrameConverter.CreateBodyFrame(vPreviouslyValidValues);
-                //Todo: convert the timestamp to a float
+                BodyFrame vBodyFrame = RawFrameConverter.CreateBodyFrame(vPreviouslyValidValues); 
                 vBodyFrame.Timestamp = (float)(vTimeStamp - vStartTime) / 1000f; 
                 BodyFrameBuffer.Enqueue(vBodyFrame);
-                DebugLogger.Instance.LogMessage(LogType.BodyFrameThreadEnd, "Completed frame conversion with timestamp " + vStartTime);
+                if (!ContinueWorking)
+                {
+                    break;
+                }
+                //  DebugLogger.Instance.LogMessage(LogType.BodyFrameThreadEnd, "Completed frame conversion with timestamp " + vStartTime);
             }
             catch (IndexOutOfRangeException)
             {
@@ -455,11 +450,8 @@ public class BodyFrameThread : ThreadedJob
     /// </summary>
     public void InitializeInboundSuitBuffer()
     {
-        if (InboundSuitBuffer == null)
-        {
-            mInboundSuitBuffer  = new CircularQueue<HeddokoPacket>(InboundSuitBufferCap,true);
-        }
         mDataSourceType= SourceDataType.BrainFrame;
         InboundSuitBuffer.Clear();
+
     }
 }

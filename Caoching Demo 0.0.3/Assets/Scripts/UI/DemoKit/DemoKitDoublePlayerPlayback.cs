@@ -28,7 +28,8 @@ namespace Assets.Scripts.UI.DemoKit
     {
         public BezierCurve PathToTop;
         public BezierCurve PathToSide;
-        
+        private RulaVisualAngleAnalysis vTrunkFlexionExtension;
+        private RulaVisualAngleAnalysis vTrunkRotation;
         private PanelCamera mLeftCamera;
         private PanelCamera mRightCamera;
         public Transform LookAtTarget;
@@ -67,17 +68,19 @@ namespace Assets.Scripts.UI.DemoKit
             //the other to just render data but, set the arc's layer to be something completely different from another
             BodySegment.IsTrackingHeight = false;
             mPanelNodes[2].PanelSettings.Init(mMainControlPanel, true, DefaultBody);
-            mPanelNodes[3].PanelSettings.Init(mLeftControlPanel, false, DefaultBody);
-
             mPanelNodes[3].PanelCamUpdated += UpdateLayerMasksAfterPanelCamUpdate;
+            mPanelNodes[3].PanelSettings.Init(mLeftControlPanel, false, DefaultBody);
 
             mDemoPointCounting = Instantiate(Prefab);
             mPanelNodes[4].gameObject.AddComponent<VerticalLayoutGroup>();
             mDemoPointCounting.transform.SetParent(mPanelNodes[4].transform, false);
         }
 
-        private RulaVisualAngleAnalysis vTrunkFlexionExtension;
-        private RulaVisualAngleAnalysis vTrunkRotation;
+ 
+       /// <summary>
+       /// After the panel cameras have been updated, update the Anaylsis feedback containers masks
+       /// </summary>
+       /// <param name="vNode"></param>
         void UpdateLayerMasksAfterPanelCamUpdate(PanelNode vNode)
         {
             mPlayer = mPanelNodes[2].GetComponentInChildren<DemoPlayer>();
@@ -87,7 +90,6 @@ namespace Assets.Scripts.UI.DemoKit
             int vCoronalMask = LayerMask.NameToLayer("DemoArcModel2");
             int vFinalMask = (1 << vRotMask) | (1 << DefaultBody.RenderedBody.CurrentLayerMask.value);
             int vFinalCorMask = (1 << vCoronalMask) | (1 << DefaultBody.RenderedBody.CurrentLayerMask.value);
-
 
             vTrunkFlexionExtension = DefaultBody.RenderedBody.GetRulaVisualAngleAnalysis(
                   AnaylsisFeedBackContainer.PosturePosition.TrunkFlexionExtension);
@@ -168,8 +170,8 @@ namespace Assets.Scripts.UI.DemoKit
                 mRightCamera.PanelRenderingCamera.transform.LookAt(LookAtTarget);
                 if (!Animated)
                 {
-                    vTrunkRotation.Show();
-                    vTrunkFlexionExtension.Show();
+                    vTrunkRotation.Show(true);
+                    vTrunkFlexionExtension.Show(true);
                     Animated = true;
                 }
 

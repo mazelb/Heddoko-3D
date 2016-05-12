@@ -5,6 +5,8 @@
 * @date March 2016
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
+
+using System.Collections;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.Utils.DebugContext;
@@ -28,9 +30,9 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.Abs
         private string mWaitingText = "WAITING FOR RESPONSE";
         private string mInRecordingStateTxt = "STOP RECORDING";
         private string mInIdleStateTxt = "START RECORDING";
-        private string mInErrorStateTxt = "ERROR: CLICK TO \nRESET BRAINPACK";
-        private string mInResetStateTxt = "BRAINPACK\nREINITIALIZING";
-        private string mInDisconnectStatetxt = "BRAINPACK\nDISCONNECTED";
+        private string mInErrorStateTxt = "ERROR: CLICK TO \nRESET BATTERY PACK";
+        private string mInResetStateTxt = "BATTERY PACK\nREINITIALIZING";
+        private string mInDisconnectStatetxt = "BATTERY PACK\nDISCONNECTED";
 
         public ColorBlock RecordingStateColorBlock;
         public ColorBlock IdleStateBlock;
@@ -63,9 +65,15 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.Abs
             SuitStateControl.colors = DisconnectedBlock;
             ControlText.text = mInDisconnectStatetxt;
             base.OnDisconnect();
+            StartCoroutine(PutInStartState());
         }
 
+        IEnumerator PutInStartState()
+        {
+            yield return new WaitForSeconds(1.5f);
+            OnStatusUpdate(SuitState.Start);
 
+        }
         public override void OnDisable()
         {
             SuitState = SuitState.Start;
@@ -73,10 +81,14 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.Abs
             base.OnDisable();
         }
 
+        /// <summary>
+        /// Changes the state of the suit control
+        /// </summary>
+        /// <param name="vSuitState"></param>
         public override void OnStatusUpdate(SuitState vSuitState)
         {
             //dont change states to the current state
-            if (vSuitState == SuitState)
+            if (vSuitState == SuitState && vSuitState != SuitState.Error)
             {
                 return;
             }
@@ -111,9 +123,16 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.Abs
                     }
                     break;
                 case SuitState.Undefined:
-                    //todo
+                    SuitConnection.DisconnectBrainpack();
+                    SuitStateControl.interactable = true;
+                    SuitStateControl.colors = InErrorStateBlock;
+                    ControlText.text = "RECONNECT";
                     break;
-
+                case SuitState.Start: 
+                    SuitStateControl.interactable = false;
+                    SuitStateControl.colors = InErrorStateBlock;
+                    ControlText.text = "WAITING TO CONNECT";
+                    break;
             }
             SuitState = vSuitState;
         }

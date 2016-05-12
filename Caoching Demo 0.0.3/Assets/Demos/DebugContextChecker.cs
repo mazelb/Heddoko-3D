@@ -23,8 +23,7 @@ namespace Assets.Demos
     public class DebugContextChecker : MonoBehaviour
     {
         public bool DisableDebugging = false;
-        public BrainpackComPortText BrainpackComPortText;
-        private bool ResetTPosButtonEnabled;
+        
         private int mHomeTPoseKeyCounter = 0;
         private int mDebugContextEnablerCounter = 0;
         [SerializeField]
@@ -33,22 +32,24 @@ namespace Assets.Demos
         private GameObject[] mDebuggingItems;
 
         private bool mEscapableFlags = false;
-        public GameObject[] mEscapables;
+        public GameObject[] Escapables;
         [SerializeField]
         private GameObject mSegmentOptions;
         public PlayerStreamManager PlayerStreamManager;
         public Text DebugToggleInfo;
         public Animator DebugTextAnimator;
-       
+
         [SerializeField]
         private bool mDebuggingActive = false;
 
+
+
         void Awake()
         {
-            DebugLogger.Settings.LogAll = false ;
+            DebugLogger.Settings.AllFalse();
             if (!DisableDebugging)
             {
-                DebugLogger.Settings.LogAll = true;
+                //DebugLogger.Settings.LogAll = true;
                 bool vIsDebug = false;
 #if UNITY_EDITOR
                 vIsDebug = true;
@@ -68,7 +69,6 @@ namespace Assets.Demos
             if (DisableDebugging)
             {
                 DebugLogger.Settings.LogAll = false;
-                bool vIsDebug = false; 
                 mDebuggingActive = false;
                 mChildren.SetActive(false);
                 mSegmentOptions.SetActive(false);
@@ -82,8 +82,7 @@ namespace Assets.Demos
         }
         public void ToggleDebugContext()
         {
-            //DebugTextAnimator.clip = Clip; 
-           
+
             mDebuggingActive = !mDebuggingActive;
             if (DebugTextAnimator && DebugToggleInfo)
             {
@@ -96,49 +95,36 @@ namespace Assets.Demos
             }
             mChildren.SetActive(mDebuggingActive);
             mSegmentOptions.SetActive(mDebuggingActive);
-     
+
             foreach (var vDebuggingItems in mDebuggingItems)
             {
                 vDebuggingItems.SetActive(mDebuggingActive);
             }
+            DebugLogger.Settings.LogAll = mDebuggingActive;
         }
 
 
+        // ReSharper disable once InconsistentNaming
         void OnGUI()
         {
             if (!DisableDebugging)
             {
                 Event e = Event.current;
-                if (!ResetTPosButtonEnabled && Input.anyKeyDown && e.isKey)
-                {
-                    if (e.keyCode == KeyCode.Home)
-                    {
-                        mHomeTPoseKeyCounter++;
-                        if (mHomeTPoseKeyCounter == 5)
-                        {
-                            InputHandler.RegisterKeyboardAction(HeddokoDebugKeyMappings.ResetFrame, PlayerStreamManager.ResetBody);
-                            mHomeTPoseKeyCounter = 0;
-                        }
-                    }
+                if (Input.anyKeyDown && e.isKey)
+                { 
+
                     if (e.keyCode == KeyCode.F12)
                     {
                         mDebugContextEnablerCounter++;
                         if (mDebugContextEnablerCounter == 5)
                         {
                             ToggleDebugContext();
-                            if (BrainpackComPortText)
-                            {
-                                BrainpackComPortText.EnableDisable();
-                            }
                             mDebugContextEnablerCounter = 0;
                         }
                     }
 
-                    else if (e.keyCode != KeyCode.Home)
-                    {
-                        mHomeTPoseKeyCounter = 0;
-                    }
-                    else if (e.keyCode == KeyCode.F12)
+                    
+                    else if (e.keyCode != KeyCode.F12)
                     {
                         mDebugContextEnablerCounter = 0;
                     }
@@ -148,14 +134,14 @@ namespace Assets.Demos
                     if (e.keyCode == KeyCode.Escape)
                     {
                         mEscapableFlags = !mEscapableFlags;
-                        foreach (var vEscapables in mEscapables)
+                        foreach (var vEscapables in Escapables)
                         {
                             vEscapables.SetActive(mEscapableFlags);
                         }
                     }
                 }
             }
-            
+
 
         }
     }

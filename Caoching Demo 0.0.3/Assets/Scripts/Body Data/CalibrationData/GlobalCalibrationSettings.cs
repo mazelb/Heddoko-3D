@@ -18,6 +18,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
     public static class GlobalCalibrationSettings
     {
         private static bool sIsInitialized;
+        private static CalibrationType sType;
         /// <summary>
         /// Transition period between the number of calibrations
         /// </summary>
@@ -66,8 +67,21 @@ namespace Assets.Scripts.Body_Data.CalibrationData
                 return sCalibrationTypes;
             }
         }
-        public static CalibrationType FinalPose { get; private set; }
-        public static Dictionary<CalibrationType, float> CalibrationTimes
+
+        public static CalibrationType FinalPose
+        {
+            get
+            {
+                if (!sIsInitialized)
+                {
+                    Init();
+                }
+                return sType;
+            }
+            private set { sType = value; }
+        }
+
+        public static Dictionary<CalibrationType, float> CalibrationTimestamps
         {
             get
             {
@@ -92,6 +106,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
         /// </summary>
         private static void Init()
         {
+            sIsInitialized = true;
             sCalibrationTypes = new List<CalibrationType>();
             //set calibration times according to their current order
             float vMultipler = 1;
@@ -101,8 +116,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
             sCalibrationTimes.Add(CalibrationType.ArmsForward, CalibrationTimer * vMultipler++);
             sCalibrationTimes.Add(CalibrationType.ArmsForwardToArmsDown, CalibrationTimer * vMultipler++);
             sCalibrationTimes.Add(CalibrationType.ArmsDown, CalibrationTimer * vMultipler);
-       
-            FinalPose = CalibrationType.ArmsForwardToArmsDown;
+            FinalPose = CalibrationType.ArmsDown;
         }
     }
 
@@ -113,12 +127,13 @@ namespace Assets.Scripts.Body_Data.CalibrationData
     /// </summary>
     public enum CalibrationType
     {
+        Invalid = -1,
         NullToTPose = 0,
         Tpose=1,
         TPoseToArmsForward=2,
         ArmsForward = 3,
-        ArmsForwardToArmsDown=4,
-        ArmsDown=5,
-        Count=6
+        ArmsForwardToArmsDown = 4,
+        ArmsDown = 5,
+        Count = 6
     }
 }

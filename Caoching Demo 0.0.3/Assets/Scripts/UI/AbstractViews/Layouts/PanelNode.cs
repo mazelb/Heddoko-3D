@@ -93,8 +93,8 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
                 vRectTransform = this.gameObject.AddComponent<RectTransform>();
 
             }
-
-            PanelSettings = new PanelSettings(this);
+            
+            PanelSettings = new PanelSettings(this); 
             if (vTemplate.HorizontalOrVerticalLayoutType != HorizontalOrVerticalLayoutGroupType.Null)
             {
                 PanelSettings.Group = PanelNodeTemplate.AttachHorizontalOrVerticalLayoutGroup(this, vTemplate);
@@ -254,7 +254,7 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
             }
             else
             {
-                //StartCoroutine(UpdateCameraAfterEndOfFrame(vBody));
+                StartCoroutine(UpdateCameraAfterEndOfFrame(vBody));
             }
         }
 

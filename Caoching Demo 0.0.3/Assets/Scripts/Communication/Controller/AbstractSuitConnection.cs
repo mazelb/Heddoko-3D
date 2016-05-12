@@ -34,7 +34,7 @@ namespace Assets.Scripts.Communication.Controller
         public SuitStateHandler OnSuitStateUpdate;
          
 
-        internal const string  mSuitStatePattern = "(?i)Reset(?-i)|(?i)Idle(?-i)|(?i)Recording(?-i)|(?i)Error(?-i)";
+        internal const string  mSuitStatePattern = "(?i)Reset(?-i)|(?i)Idle(?-i)|(?i)Recording(?-i)|(?i)Error(?-i)|(?i)Timeout(?-i)";
         public abstract void ConnectToBrainpack();
         public abstract void StartHeartBeat();
 
@@ -51,6 +51,8 @@ namespace Assets.Scripts.Communication.Controller
         public abstract void Reset();
 
         public abstract void TimeoutHandler();
+
+        public abstract void DisconnectBrainpack();
     }
     public enum BrainpackConnectionState
     {

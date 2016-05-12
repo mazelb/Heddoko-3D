@@ -16,6 +16,7 @@ namespace Assets.Scripts.Utils.DebugContext.logging
     [DataContract]
     public class DebugLogSettings : IExtensibleDataObject
     {
+        
         [DataMember]
         public bool LogAll = true;
         [DataMember]
