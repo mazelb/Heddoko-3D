@@ -149,8 +149,8 @@ namespace Calibration1.CalibrationTransformation
 
             ///From rotation axis vectors we obtain a rotation axis perpendicular to the plan containing the rotation 
             ///axis (vRotationAxisA) of Real movement (vAMatrixPose) and the rotation axis (vRotationAxisB) of sensor data vBMatrixSensor
-            Vector<float> vVectorPerpenToa1b1Plan = CrossProduct(vRotationAxisA1, vRotationAxisB1);
-            Vector<float> vVectorPerpenToa2b2Plan = CrossProduct(vRotationAxisA2, vRotationAxisB2);
+            Vector<float> vVectorPerpenToa1b1Plan = CrossProduct(vRotationAxisB1, vRotationAxisA1);
+            Vector<float> vVectorPerpenToa2b2Plan = CrossProduct(vRotationAxisB2, vRotationAxisA2);
 
             ///Normalisation of vector vVectorPerpenToa1b1Plan and vVectorPerpenToa2b2Plan             
             Vector<float> k1 = vVectorPerpenToa1b1Plan.Normalize(2);
@@ -168,7 +168,10 @@ namespace Calibration1.CalibrationTransformation
 
             Xp1 = Xpreliminairy(W1, k1);
             Xp2 = Xpreliminairy(W2, k2);
-            
+            Console.WriteLine("Xp1 Xp2");
+            Console.WriteLine(Xp1);
+            Console.WriteLine(Xp1);
+            Console.Read();
             ///instantiation of containter for the linear system to be form
             LinearSystem Axb = new LinearSystem();
 
@@ -282,52 +285,11 @@ namespace Calibration1.CalibrationTransformation
         /// <returns>Matrix<float> : first part of the solution</returns>
         public Matrix<float> Xpreliminairy(float AngleOfRotation, Vector<float> AxisOfRotation)
         {
-            Matrix<float> Xp = Matrix<float>.Build.Dense(3, 3, 0);
+            Matrix<float> Xp = Matrix<float>.Build.Dense(3,3,0);
             //Skew part
-            Xp[1, 0] =  AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
-            Xp[0, 1] = -AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
-            Xp[2, 0] = -AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
-            Xp[0, 2] =  AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
-            Xp[2, 1] = -AxisOfRotation[0] * Mathf.Sin(AngleOfRotation);
-            Xp[1, 2] =  AxisOfRotation[0] * Mathf.Sin(AngleOfRotation);
-
-            /*
-            Xp[1, 0] = AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
-            Xp[0, 1] = AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
-            Xp[2, 0] = AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
-            Xp[0, 2] = AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
-            Xp[2, 1] = AxisOfRotation[0] * Mathf.Sin(AngleOfRotation);
-            Xp[1, 2] = AxisOfRotation[0] * Mathf.Sin(AngleOfRotation);
-            float Tr    = 0F;
-            float theta = 0F;
-            Tr    = vRotationMatrix.Trace();
-            theta = Mathf.Acos((Tr - 1.0F)/2.0F);
-            Console.WriteLine("Matrix, TRACE and Angle");
-            Print(vRotationMatrix);
-            Console.WriteLine(Tr);
-            Console.WriteLine(theta);
-            /*vRotationAxis[0] = (vRotationMatrix[2, 1] - vRotationMatrix[1, 2]) / (2.0F * Mathf.Sin(theta));
-            vRotationAxis[1] = (vRotationMatrix[0, 2] - vRotationMatrix[2, 0]) / (2.0F * Mathf.Sin(theta));
-            vRotationAxis[2] = (vRotationMatrix[1, 0] - vRotationMatrix[0, 1]) / (2.0F * Mathf.Sin(theta));
-            */
-
-            float A = 0.0F;
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    A = 0.0F;
-                    //just for Diagonal elements
-                    if (i == j)
-                    {
-                        A = 1.0F;
-                    }
-                    Xp[i, j] = Xp[i, j] +
-                              (A * Mathf.Cos(AngleOfRotation)) +
-                              ((1.0F - Mathf.Cos(AngleOfRotation)) * AxisOfRotation[i] * AxisOfRotation[j]);
-                    ///AxisOfRotation[i]*AxisOfRotation[j] is a matrix.
-                }
-            }
+            Xp = Skew(AxisOfRotation) * Mathf.Sin(AngleOfRotation) +
+                 Matrix<float>.Build.DenseIdentity(3, 3) * Mathf.Cos(AngleOfRotation) +
+                 (1.0F - Mathf.Cos(AngleOfRotation)) * VV(AxisOfRotation);
             return Xp;
         }
         /// <summary>
@@ -538,8 +500,78 @@ namespace Calibration1.CalibrationTransformation
             }
             Console.WriteLine(Mr);
         }
+        public Matrix<float> Skew(Vector<float> k)
+        {
+            Matrix < float > sk= Matrix<float>.Build.Dense(3, 3, 0);
+            sk[0, 1] = -k[2];
+            sk[0, 2] =  k[1];
+            sk[1, 0] =  k[2];
+            sk[1, 2] = -k[0];
+            sk[2, 0] = -k[1];
+            sk[2, 1] =  k[0];
+            return sk;
+        }
+        public Matrix<float> VV(Vector<float> k)
+        {
+            Matrix<float> vv = Matrix<float>.Build.Dense(3, 3, 0);
+            for(int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 3; j++)
+                {
+                    vv[i, j] = k[i] * k[j];
+                }
+            }
+            return vv;
+        }
     }
 }
+//float A = 0.0F;
+//for (int i = 0; i < 3; i++)
+//{
+//    for (int j = 0; j < 3; j++)
+//    {
+//        A = 0.0F;
+//        //just for Diagonal elements
+//        if (i == j)
+//        {
+//            A = 1.0F;
+//        }
+//        Xp[i, j] = Xp[i, j] +
+//                  (A * Mathf.Cos(AngleOfRotation)) +
+//                  ((1.0F - Mathf.Cos(AngleOfRotation)) * AxisOfRotation[i] * AxisOfRotation[j]);
+//                  ///AxisOfRotation[i]*AxisOfRotation[j] is a matrix.
+//    }
+//}
 
 
+
+
+//Skew part
+/*Xp[1, 0] =  AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
+Xp[0, 1] = -AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
+Xp[2, 0] = -AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
+Xp[0, 2] =  AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
+Xp[2, 1] =  AxisOfRotation[0] * Mathf.Sin(AngleOfRotation);
+Xp[1, 2] = -AxisOfRotation[0] * Mathf.Sin(AngleOfRotation);*/
+
+
+/*
+          Xp[1, 0] = AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
+          Xp[0, 1] = AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
+          Xp[2, 0] = AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
+          Xp[0, 2] = AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
+          Xp[2, 1] = AxisOfRotation[0] * Mathf.Sin(AngleOfRotation);
+          Xp[1, 2] = AxisOfRotation[0] * Mathf.Sin(AngleOfRotation);
+          float Tr    = 0F;
+          float theta = 0F;
+          Tr    = vRotationMatrix.Trace();
+          theta = Mathf.Acos((Tr - 1.0F)/2.0F);
+          Console.WriteLine("Matrix, TRACE and Angle");
+          Print(vRotationMatrix);
+          Console.WriteLine(Tr);
+          Console.WriteLine(theta);
+          /*vRotationAxis[0] = (vRotationMatrix[2, 1] - vRotationMatrix[1, 2]) / (2.0F * Mathf.Sin(theta));
+          vRotationAxis[1] = (vRotationMatrix[0, 2] - vRotationMatrix[2, 0]) / (2.0F * Mathf.Sin(theta));
+          vRotationAxis[2] = (vRotationMatrix[1, 0] - vRotationMatrix[0, 1]) / (2.0F * Mathf.Sin(theta));
+          */
 
