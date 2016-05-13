@@ -170,7 +170,7 @@ namespace Calibration1.CalibrationTransformation
             Xp2 = Xpreliminairy(W2, k2);
             Console.WriteLine("Xp1 Xp2");
             Console.WriteLine(Xp1);
-            Console.WriteLine(Xp1);
+            Console.WriteLine(Xp2);
             Console.Read();
             ///instantiation of containter for the linear system to be form
             LinearSystem Axb = new LinearSystem();
@@ -181,6 +181,9 @@ namespace Calibration1.CalibrationTransformation
 
             ///Update of the linear Systeme
             Axb.AddEquation(sA, sb);
+            //Console.WriteLine(Axb.mA);
+            //Console.WriteLine(Axb.mB);
+
 
             ///Formation of ShiuMatrix and update of the Matrices sA and sb
             ///by using the informations of the second pose                 
@@ -193,23 +196,24 @@ namespace Calibration1.CalibrationTransformation
             Beta = Axb.Solve();
             float theta1 = Mathf.Atan2(Beta[1, 0], Beta[0, 0]);
             float theta2 = Mathf.Atan2(Beta[3, 0], Beta[2, 0]);
-            Console.WriteLine("------ka1 and ka2:-------------");
+            /*Console.WriteLine("------ka1 and ka2:-------------");
             Console.WriteLine(ka1);
             Console.WriteLine(ka2);
-            Console.WriteLine("----------------------------------------------------------------");
+            Console.WriteLine("----------------------------------------------------------------");*/
             Matrix<float> RA1 = Xpreliminairy(theta1, ka1);
             Matrix<float> RA2 = Xpreliminairy(theta2, ka2);
             Matrix<float> R1 = RA1 * Xp1;
             Matrix<float> R2 = RA2 * Xp2;
-            /*Console.WriteLine("------Transformations(Solution of Algo1):RA1 and RA2:-------------");
+            Console.WriteLine("------Transformations(Solution of Algo1):RA1 and RA2:-------------");
             Print(RA1);
             Print(RA2);
             Console.WriteLine("------Transformations(Solution of Algo1):Xp1 and Xp2:-------------");
             Print(Xp1);
-            Print(Xp2);*/
+            Print(Xp2);
             Console.WriteLine("------Transformations(Solution of Algo1):R1 and R2:-------------");
             Print(R1);
             Print(R2);
+            Console.ReadLine();
             Console.WriteLine("----------------------------------------------------------------");
             return R1;
         }
@@ -290,6 +294,14 @@ namespace Calibration1.CalibrationTransformation
             Xp = Skew(AxisOfRotation) * Mathf.Sin(AngleOfRotation) +
                  Matrix<float>.Build.DenseIdentity(3, 3) * Mathf.Cos(AngleOfRotation) +
                  (1.0F - Mathf.Cos(AngleOfRotation)) * VV(AxisOfRotation);
+
+            Console.WriteLine("part by part");
+            Print(Skew(AxisOfRotation) * Mathf.Sin(AngleOfRotation));
+            Print(Matrix<float>.Build.DenseIdentity(3, 3) * Mathf.Cos(AngleOfRotation));
+            Print((1.0F - Mathf.Cos(AngleOfRotation)) * VV(AxisOfRotation));
+            Console.WriteLine(1.0F - Mathf.Cos(AngleOfRotation));
+            Console.WriteLine(Mathf.Cos(AngleOfRotation));
+            Print(VV(AxisOfRotation));
             return Xp;
         }
         /// <summary>
@@ -495,7 +507,7 @@ namespace Calibration1.CalibrationTransformation
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    Mr[i, j] = Math.Round(M[i, j], 3);
+                    Mr[i, j] = Math.Round(M[i, j], 7);
                 }
             }
             Console.WriteLine(Mr);
