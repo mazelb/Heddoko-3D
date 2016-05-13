@@ -24,9 +24,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         public Text RightShoulderFlexionText;
         public Text LeftShoulderFlexionText;
         public Text RightShoulderAbductionText;
-        public Text LeftShoulderAbductionText;
-        public Text RightShoulderRotationText;
-        public Text LeftShoulderRotationText;
+        public Text LeftShoulderAbductionText; 
         public override string LabelName
         {
             get { return mLabelName; }
@@ -52,12 +50,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         {
             if (mLeftArmAnalysis != null && mRightArmAnalysis != null)
             {
-                RightShoulderFlexionText.text = FeedbackAngleToString(mRightArmAnalysis.AngleShoulderFlexion);
-                LeftShoulderFlexionText.text = FeedbackAngleToString(mLeftArmAnalysis.AngleShoulderFlexion);
-                RightShoulderAbductionText.text = FeedbackAngleToString(mRightArmAnalysis.AngleShoulderHorAbduction);
-                LeftShoulderAbductionText.text = FeedbackAngleToString(mLeftArmAnalysis.AngleShoulderHorAbduction);
-                RightShoulderRotationText.text = FeedbackAngleToString(mRightArmAnalysis.AngleShoulderRotation);
-                LeftShoulderRotationText.text = FeedbackAngleToString(mLeftArmAnalysis.AngleShoulderRotation);
+                RightShoulderFlexionText.text = FeedbackAngleToString(mRightArmAnalysis.SignedAngleShoulderFlexion);
+                LeftShoulderFlexionText.text = FeedbackAngleToString(mLeftArmAnalysis.SignedAngleElbowFlexion);
+                RightShoulderAbductionText.text = FeedbackAngleToString(mRightArmAnalysis.SignedAngleElbowAdduction);
+                LeftShoulderAbductionText.text = FeedbackAngleToString(mLeftArmAnalysis.SignedAngleElbowAdduction); 
             }
         }
 
@@ -70,8 +66,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
             LeftShoulderFlexionText.text = "";
             RightShoulderAbductionText.text = "";
             LeftShoulderAbductionText.text = "";
-            RightShoulderRotationText.text = "";
-            LeftShoulderRotationText.text = "";
+         
         }
     }
 }

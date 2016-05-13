@@ -7,16 +7,20 @@
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
 
+using System;
 using Assets.Scripts.UI.AbstractViews.Enums;
-using Assets.Scripts.UI.AbstractViews.Layouts; 
+using Assets.Scripts.UI.AbstractViews.Layouts;
 using System.Collections.Generic;
 using Assets.Scripts.Body_Pipeline.Analysis.Views;
 using Assets.Scripts.Communication.View.Table;
 using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
+using Assets.Scripts.UI.RecordingLoading;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 
+public delegate void RecordingPlayerViewLayoutCreated(RecordingPlayerView vView);
 namespace Assets.Scripts.UI.RecordingLoading
 {
     /// <summary>
@@ -28,11 +32,18 @@ namespace Assets.Scripts.UI.RecordingLoading
         public Layout CurrentLayout;
         private PanelNode[] mPanelNodes;
         public List<List<ControlPanelType>> ControlPanelTypeList = new List<List<ControlPanelType>>(2);
+        public PlaybackControlPanel PbControlPanel;
         private bool mIsInitialized = false;
-        private Body mCurrBody;
+        public Body CurrBody;
         public BodyFrameDataControl BodyFrameDataControl;
-        public Button LoadRecordingButton; 
+        public Button LoadRecordingButton;
         public AnaylsisTextContainer AnaylsisTextContainer;
+        public event RecordingPlayerViewLayoutCreated RecordingPlayerViewLayoutCreatedEvent;
+        public PanelNode RootNode
+        {
+            get { return mPanelNodes[0]; }
+        }
+
         void Awake()
         {
             List<ControlPanelType> vLeftSide = new List<ControlPanelType>();
@@ -41,28 +52,30 @@ namespace Assets.Scripts.UI.RecordingLoading
             vRightSide.Add(ControlPanelType.RecordingPlaybackControlPanel);
             ControlPanelTypeList.Add(vLeftSide);
             ControlPanelTypeList.Add(vRightSide);
-            CreateDefaultLayout();
+      
+
         }
 
 
 
         public override void CreateDefaultLayout()
-        {
-            BodiesManager.Instance.CreateNewBody("Root");
-            mCurrBody = BodiesManager.Instance.GetBodyFromUUID("Root");
+        { 
             CurrentLayout = new Layout(LayoutType, this);
+            BodiesManager.Instance.CreateNewBody("Root");
+            CurrBody = BodiesManager.Instance.GetBodyFromUUID("Root");
             mPanelNodes = CurrentLayout.ContainerStructure.RenderingPanelNodes;
             mPanelNodes[0].name = "Main";
-            mPanelNodes[0].PanelSettings.Init(ControlPanelTypeList[0], false, mCurrBody);
+            mPanelNodes[0].PanelSettings.Init(ControlPanelTypeList[0], true, CurrBody);
             mIsInitialized = true;
-            PlaybackControlPanel vPbCtrlPanel =
+            PbControlPanel =
                 (PlaybackControlPanel)
                     mPanelNodes[0].PanelSettings.GetPanelOfType(ControlPanelType.RecordingPlaybackControlPanel);
-            vPbCtrlPanel.BodyUpdatedEvent += SetNewBody;
-            vPbCtrlPanel.SingleRecordingLoadSubControl.SetNewButtonControl(LoadRecordingButton);
-         
-            //Call the load recording panel
-            //   vPbCtrlPanel.SingleRecordingLoadSubControl.SelectedRecording();
+            PbControlPanel.BodyUpdatedEvent += SetNewBody;
+            PbControlPanel.SingleRecordingLoadSubControl.SetNewButtonControl(LoadRecordingButton);
+            if (RecordingPlayerViewLayoutCreatedEvent != null)
+            {
+                RecordingPlayerViewLayoutCreatedEvent(this);
+            }
         }
 
         /// <summary>
@@ -86,7 +99,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             try
             {
                 BodySegment.IsUsingInterpolation = false;
-                mCurrBody.View.ResetInitialFrame();
+                CurrBody.View.ResetInitialFrame();
             }
             catch
             {
@@ -104,20 +117,20 @@ namespace Assets.Scripts.UI.RecordingLoading
                 CreateDefaultLayout();
             }
             else
-            { 
+            {
                 mPanelNodes[0].PanelSettings.RequestResources();
             }
             SetContextualInfo();
             try
             {
-                BodySegment.IsUsingInterpolation=false;
-                mCurrBody.View.ResetInitialFrame();
+                BodySegment.IsUsingInterpolation = false;
+                CurrBody.View.ResetInitialFrame();
             }
             catch
             {
-               
+
             }
-             BodySegment.IsUsingInterpolation= vIsLerp ;
+            BodySegment.IsUsingInterpolation = vIsLerp;
         }
 
         /// <summary>
@@ -126,7 +139,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <param name="vBody"></param>
         private void SetNewBody(Body vBody)
         {
-            mCurrBody = vBody;
+            CurrBody = vBody;
             SetContextualInfo();
         }
 
@@ -136,9 +149,25 @@ namespace Assets.Scripts.UI.RecordingLoading
         private void SetContextualInfo()
         {
             BodyFrameDataControl.Clear();
-            BodyFrameDataControl.SetBody(mCurrBody);
-            AnaylsisTextContainer.BodyToAnalyze = mCurrBody;
+            BodyFrameDataControl.SetBody(CurrBody);
+            AnaylsisTextContainer.BodyToAnalyze = CurrBody;
         }
 
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Home))
+            {
+                try
+                {
+                    bool vPrev = BodySegment.IsUsingInterpolation;
+                    BodySegment.IsUsingInterpolation = false;
+                    CurrBody.View.ResetInitialFrame();
+                    BodySegment.IsUsingInterpolation = vPrev;
+                }
+                catch (Exception)
+                { 
+                }
+            }
+        }
     }
 }

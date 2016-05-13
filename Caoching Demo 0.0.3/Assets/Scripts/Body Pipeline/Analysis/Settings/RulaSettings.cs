@@ -127,19 +127,15 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
 
             float vAngleToCompute = vSign < 0 ? 360 - vAngle : vAngle;
             vAnalysis.Point = GetScore(vAnalysis.CurrentPosturePos, vAngleToCompute);
-
+            vAnalysis.SignedAngle = vAngleToCompute*vSign;
             if (vAnalysis.MaskOnlyRange)
             {
                 Quaternion vInv = Quaternion.AngleAxis(vAngle, Vector3.forward);
                 vFill = (GetRangeMapValue(vAnalysis.CurrentPosturePos)) / 360f;
                 Quaternion vMaskQuat = vRot * Quaternion.Inverse(vInv);
-                vAnalysis.MaskingImage.transform.rotation = vMaskQuat;
-                //rotate mask by the total range of available motion /2 
-                float vAngRot = GetRangeMapValue(vAnalysis.CurrentPosturePos);
-                //  Quaternion vAngleRot = Quaternion.AngleAxis(vAngRot, Vector3.forward);
+                vAnalysis.MaskingImage.transform.rotation = vMaskQuat; 
+                float vAngRot = GetRangeMapValue(vAnalysis.CurrentPosturePos); 
                 vAnalysis.MaskingImage.transform.Rotate(Vector3.forward, vAngRot / 2f);
-
-
                 vChildRotation = vRot * Quaternion.Inverse(vInv);
                 vAnalysis.PieGraph.transform.rotation = vChildRotation;
                 vAnalysis.VectorAxisGo.transform.up = vAnalysis.TransformComparison.up;

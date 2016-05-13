@@ -18,8 +18,7 @@ namespace Assets.Scripts.Body_Data.View
         public event SegmentPressed SegmentPressedEvent;
         public void OnPointerDown(PointerEventData eventData)
         {
-            mPressed = true;
-            Debug.Log("press event on "+name);
+            mPressed = true; 
             if (SegmentPressedEvent != null)
             {
                 SegmentPressedEvent(transform);

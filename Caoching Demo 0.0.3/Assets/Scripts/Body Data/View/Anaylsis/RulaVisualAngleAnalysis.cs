@@ -7,8 +7,7 @@
 */
 
 using System.Collections;
-using System.Collections.Generic;
-using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.REBA_RULA;
+using System.Collections.Generic; 
 using Assets.Scripts.UI.ArcAngle;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,10 +27,10 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
         private int mPoint;
         private AnaylsisFeedBackContainer.PosturePosition mCurrentPosturePos;
         public bool MaskOnlyRange = true;
-
+        public float SignedAngle;
         public float MaskExtendAnimateDur = 0.75f;
         public float MaskExplodeAnimateDur = 2f;
-
+        public bool GraphicsEnabled = false;
         public Vector3DAxis VectorAxisGo;
         /// <summary>
         /// This image will mask the graph, such that only a portion of the pie chart will be visible
@@ -42,7 +41,9 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
         /// <summary>
         /// The second transform to compare to
         /// </summary>
+        [SerializeField]
         private Transform mTransformComparison;
+        [SerializeField]
         private Transform mCenterObject;
         public bool IsAnimating { get; set; }
 
@@ -58,7 +59,6 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
                 mCenterObject = value;
                 PieGraph.transform.position = mCenterObject.position;
             }
-
         }
 
 
@@ -87,6 +87,7 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
         //start animation process
         public void Animate()
         {
+            gameObject.SetActive(true);
             StopCoroutine(StartAnim());
             if (RulaSettings.GetActionMap(mCurrentPosturePos) != null && MaskOnlyRange)
             {
@@ -94,8 +95,6 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
                 RulaSettings.GetActionMap(mCurrentPosturePos).Invoke(this);
                 StartCoroutine(StartAnim());
             }
-
-
         }
 
         private IEnumerator StartAnim()
@@ -226,19 +225,38 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
             }
         }
 
-        public void Show()
+        public void EnableCalculation()
         {
             gameObject.SetActive(true);
+        }
+
+        public void DisableGraphics()
+        {
+            PieGraph.gameObject.SetActive(false);
+            VectorAxisGo.gameObject.SetActive(false);
+        }
+        public void Show(bool vEnableGraphics = false)
+        {
+            gameObject.SetActive(true);
+            PieGraph.gameObject.SetActive(vEnableGraphics);
+            VectorAxisGo.gameObject.SetActive(vEnableGraphics);
+        
+        }
+
+        public void StartAnimationProcess()
+        {
             PieGraph.gameObject.SetActive(true);
             VectorAxisGo.gameObject.SetActive(true);
-
             Animate();
+
         }
         /// <summary>
         /// Hide the gameobject
         /// </summary>
         public void Hide()
         {
+            StopCoroutine(StartAnim());
+            DisableGraphics();
             gameObject.SetActive(false);
         }
 

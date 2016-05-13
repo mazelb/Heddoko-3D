@@ -119,6 +119,17 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Views
             NoBodyWarningPanel.SetActive(true);
         }
 
+        public void DisableAllRenderers()
+        {
+            foreach (var vKvPair in CurrentViews)
+            {
+                if (vKvPair.Key != CurrentAnalysisTextView.None)
+                {
+                    vKvPair.Value.Hide();
+                }
+            }
+            NoBodyWarningPanel.SetActive(true);
+        }
         public enum CurrentAnalysisTextView
         {
             Trunk,

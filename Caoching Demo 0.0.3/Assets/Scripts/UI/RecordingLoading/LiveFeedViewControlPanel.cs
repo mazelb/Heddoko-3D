@@ -45,7 +45,8 @@ namespace Assets.Scripts.UI.RecordingLoading
                    {
                        Body.View.ResetInitialFrame();
                    }
-               });
+               }); 
+              
             }
         }
         public void Show()
@@ -56,6 +57,9 @@ namespace Assets.Scripts.UI.RecordingLoading
                 SuitChanger.gameObject.SetActive(true);
                 mIsInitialized = true;
             }
+
+            InputHandler.RegisterKeyboardAction(KeyCode.Home, ResetFrameHelp);
+
         }
 
         void Awake()
@@ -63,12 +67,16 @@ namespace Assets.Scripts.UI.RecordingLoading
         }
         void OnEnable()
         {
-            InputHandler.RegisterKeyboardAction(KeyCode.Home, ()=>Body.View.ResetInitialFrame());
-   
+
+        }
+
+        private void ResetFrameHelp()
+        {
+            Body.View.ResetInitialFrame();
         }
         void OnDisable()
         {
-            InputHandler.RemoveKeybinding(KeyCode.Home, () => Body.View.ResetInitialFrame());
+            InputHandler.RemoveKeybinding(KeyCode.Home, ResetFrameHelp);
         }
         public AbstractSuitConnection SuitConnection
         {

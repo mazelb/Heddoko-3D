@@ -29,11 +29,12 @@ namespace Assets.Scripts.Body_Data.view
         private Body mAssociatedBody;
         private BodyFrame mCurreBodyFrame;
         [SerializeField]
-        private bool mIsPaused;
+     private bool mIsPaused;
 
         public bool IsPaused
         {
             get { return mIsPaused; }
+            set { mIsPaused = true; }
 
         }
         [SerializeField]
@@ -94,6 +95,7 @@ namespace Assets.Scripts.Body_Data.view
         /// <param name="vBodyFrame">the body frame to reset to</param>
         public void ResetInitialFrame(BodyFrame vBodyFrame = null)
         {
+          
             if (mAssociatedBody != null)
             {
                 BodyFrame vTempBodyFrame = null;
@@ -117,8 +119,7 @@ namespace Assets.Scripts.Body_Data.view
         /// </summary>
         /// <param name="vBodyFrame">the body frame to update to</param>
         public void UpdateViewTracking(BodyFrame vBodyFrame)
-        {
-            Profiler.BeginSample("UPDATE VIEW TRACKING");
+        { 
             AssociatedBody.UpdateBody(vBodyFrame);
             Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic = Body.GetTracking(AssociatedBody);
 
@@ -129,12 +130,9 @@ namespace Assets.Scripts.Body_Data.view
             }
             
             if (BodyFrameUpdatedEvent != null && vBodyFrame!= null)
-            {
-                Profiler.BeginSample("BODY FRAME UPDATE EVENT");
-                BodyFrameUpdatedEvent(vBodyFrame);
-                Profiler.EndSample();
-            }
-            Profiler.EndSample();
+            { 
+                BodyFrameUpdatedEvent(vBodyFrame); 
+            } 
 
         }
 

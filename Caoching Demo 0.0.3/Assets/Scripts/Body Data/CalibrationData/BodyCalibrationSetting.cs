@@ -50,11 +50,11 @@
             if (vType != GlobalCalibrationSettings.FinalPose)
             {
                 CalibrationType vNextCalibrationType = vType + 1;
-                vHasPassedTime = Time >= GlobalCalibrationSettings.CalibrationTimes[vType] && Time < GlobalCalibrationSettings.CalibrationTimes[vNextCalibrationType];
+                vHasPassedTime = Time >= GlobalCalibrationSettings.CalibrationTimestamps[vType] && Time < GlobalCalibrationSettings.CalibrationTimestamps[vNextCalibrationType];
             }
             else
             {
-                vHasPassedTime = Time >= GlobalCalibrationSettings.CalibrationTimes[vType];
+                vHasPassedTime = Time >= GlobalCalibrationSettings.CalibrationTimestamps[vType];
             }
 
             return vHasPassedTime;
@@ -67,9 +67,9 @@
         /// <returns></returns>
         public float GetCalibrationTypeTimer(CalibrationType vType)
         {
-            if (GlobalCalibrationSettings.CalibrationTimes.ContainsKey(vType))
+            if (GlobalCalibrationSettings.CalibrationTimestamps.ContainsKey(vType))
             {
-                return GlobalCalibrationSettings.CalibrationTimes[vType];
+                return GlobalCalibrationSettings.CalibrationTimestamps[vType];
             }
             return -1;
         }

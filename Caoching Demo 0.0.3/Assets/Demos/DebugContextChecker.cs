@@ -111,23 +111,7 @@ namespace Assets.Demos
             {
                 Event e = Event.current;
                 if (Input.anyKeyDown && e.isKey)
-                {
-                    if (PlayerStreamManager != null)
-                    {
-                        if (e.keyCode == KeyCode.Home)
-                        {
-                            mHomeTPoseKeyCounter++;
-                            if (mHomeTPoseKeyCounter == 5)
-                            {
-                                InputHandler.RegisterKeyboardAction(HeddokoDebugKeyMappings.ResetFrame, PlayerStreamManager.ResetBody);
-                                mHomeTPoseKeyCounter = 0;
-                            }
-                        }
-                        else if (e.keyCode != KeyCode.Home)
-                        {
-                            mHomeTPoseKeyCounter = 0;
-                        }
-                    }
+                { 
 
                     if (e.keyCode == KeyCode.F12)
                     {

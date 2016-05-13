@@ -24,9 +24,8 @@ namespace Assets.Scripts.Communication.Communicators
         public bool Start()
         {
             mDone = false;
-            mClient = new UdpClient(gListeningPort);
-            IPHostEntry vIpHostEntry = Dns.Resolve("localhost");
-            IPAddress vIpAddress = vIpHostEntry.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork);
+            mClient = new UdpClient(gListeningPort); 
+            IPAddress vIpAddress = IPAddress.Parse("127.0.0.1");
             mEndPoint = new IPEndPoint(vIpAddress, 11000);
             mThread = new Thread(ThreadedJob);
             mThread.Start();
