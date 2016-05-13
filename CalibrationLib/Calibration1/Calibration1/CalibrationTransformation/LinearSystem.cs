@@ -25,47 +25,41 @@ namespace Calibration1.CalibrationTransformation
     /// The method allow to handle more then 2 set but now it's
     /// hard coded. 
     public class LinearSystem
-    {        
-        public int mNumberlineb = 0;
-        public int mNumbercolb  = 0;
-        public int mNumberlineA = 0;
-        public int mNumbercolA  = 0;
-        public int mNumberOfSystemAdd  = 0;        
+    {
+        public int mNumbercolA = 0;
+        public int mNumberOfSystemAdd = 0;
         static int mMaxNumbersOfSystem = 2;
-        const  int mMaxnumberlineA  = 9;    
-        static int mMaxnumbercolA   = mMaxNumbersOfSystem * 2;
-        const  int mMaxnumberlineb  = 9;
-        const  int mMaxnumbercolb   = 1;            
-        public Matrix<float> vA;
-        public Matrix<float> vb;
+        const int mMaxnumberlineA = 9;
+        static int mMaxnumbercolA = mMaxNumbersOfSystem * 2;
+        const int mMaxnumberlineb = 9;
+        const int mMaxnumbercolb = 1;
+        public Matrix<float> mA;
+        public Matrix<float> mB;
         /// <summary>
         /// Default constructor        
         /// </summary>
         public LinearSystem()
         {
-            this.vb = Matrix<float>.Build.Dense(LinearSystem.mMaxnumberlineb, LinearSystem.mMaxnumbercolb);
-            this.vA = Matrix<float>.Build.Dense(LinearSystem.mMaxnumberlineA, LinearSystem.mMaxnumbercolA);
+            this.mB = Matrix<float>.Build.Dense(LinearSystem.mMaxnumberlineb, LinearSystem.mMaxnumbercolb);
+            this.mA = Matrix<float>.Build.Dense(LinearSystem.mMaxnumberlineA, LinearSystem.mMaxnumbercolA);
         }
         /// <summary>
         /// constructor       
         /// </summary>
         public LinearSystem(Matrix<float> vA, Matrix<float> vb)
         {
-            this.vb = Matrix<float>.Build.Dense(LinearSystem.mMaxnumberlineb, LinearSystem.mMaxnumbercolb);
-            this.vA = Matrix<float>.Build.Dense(LinearSystem.mMaxnumberlineA, LinearSystem.mMaxnumbercolA);
+            this.mB = Matrix<float>.Build.Dense(LinearSystem.mMaxnumberlineb, LinearSystem.mMaxnumbercolb);
+            this.mA = Matrix<float>.Build.Dense(LinearSystem.mMaxnumberlineA, LinearSystem.mMaxnumbercolA);
             float Sign = -1.0F;
             for (int i = 0; i < 9; i++)
             {
-                this.vb[i, 0] = Sign*vb[i, 0];
+                this.mB[i, 0] = Sign * vb[i, 0];
                 for (int j = 0; j < 2; j++)
                 {
-                    this.vA[i, j] = Sign*vA[i, j];
+                    this.mA[i, j] = Sign * vA[i, j];
                 }
-            }                        
-            mNumberlineb = 9;
-            mNumbercolb  = 1;
-            mNumberlineA = 9;
-            mNumbercolA  = 2;
+            } 
+            mNumbercolA = 2;
             mNumberOfSystemAdd++;
         }
         /// <summary>
@@ -86,17 +80,14 @@ namespace Calibration1.CalibrationTransformation
             {
                 for (int i = 0; i < 9; i++)
                 {
-                    this.vA[i, mNumbercolA + j] = Sign * vA[i, j];
-                }                
-            }            
+                    this.mA[i, mNumbercolA + j] = Sign * vA[i, j];
+                }
+            }
             for (int j = 0; j < 9; j++)
-            {  
-                this.vb[j,0] =  this.vb[j, 0] + Sign * vb[j, 0] ;
-            }           
-            mNumberlineb =  9;
-            mNumbercolb  =  1;
-            mNumberlineA =  9;
-            mNumbercolA  = +2;
+            {
+                this.mB[j, 0] = this.mB[j, 0] + Sign * vb[j, 0];
+            }
+            mNumbercolA += 2;
             mNumberOfSystemAdd++;
         }
         /// <summary>
@@ -107,12 +98,18 @@ namespace Calibration1.CalibrationTransformation
         /// </returns>
         public Matrix<float> Solve()
         {
-            Matrix<float> b       = this.vb;
-            Matrix<float> AT      = this.vA.Transpose();
-            Matrix<float> ATA     = AT.Multiply(vA);
-            Matrix<float> invATA  = ATA.Inverse();
-            Matrix<float> B       = AT.Multiply(b);
-            Matrix<float> vBeta   = invATA.Multiply(B);
+            Matrix<float> b = this.mB;
+            Matrix<float> AT = this.mA.Transpose();
+            Matrix<float> ATA = AT.Multiply(mA);
+            Matrix<float> invATA = ATA.Inverse();
+            Matrix<float> B = AT.Multiply(b);
+            Matrix<float> vBeta = invATA.Multiply(B);
+            Console.WriteLine("A : ");
+            Console.WriteLine(mA);
+            Console.WriteLine("b : ");
+            Console.WriteLine(b);
+            Console.WriteLine("Beta : ");
+            Console.WriteLine(vBeta);
             return vBeta;
         }
     }

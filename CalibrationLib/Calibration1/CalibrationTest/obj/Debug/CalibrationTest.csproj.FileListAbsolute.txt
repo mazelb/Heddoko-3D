@@ -15,6 +15,6 @@ C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\CalibrationTest\b
 C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\CalibrationTest\bin\Debug\MathNet.Numerics.dll
 C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\CalibrationTest\bin\Debug\System.Threading.dll
 C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\CalibrationTest\bin\Debug\Calibration1.pdb
-C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\CalibrationTest\obj\Debug\CalibrationTest.csprojResolveAssemblyReference.cache
 C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\CalibrationTest\obj\Debug\CalibrationTest.exe
 C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\CalibrationTest\obj\Debug\CalibrationTest.pdb
+C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\CalibrationTest\obj\Debug\CalibrationTest.csprojResolveAssemblyReference.cache
