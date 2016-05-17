@@ -104,12 +104,12 @@ namespace Calibration1.CalibrationTransformation
             Matrix<float> invATA = ATA.Inverse();
             Matrix<float> B = AT.Multiply(b);
             Matrix<float> vBeta = invATA.Multiply(B);
-            Console.WriteLine("A : ");
+            /*Console.WriteLine("A : ");
             Console.WriteLine(mA);
             Console.WriteLine("b : ");
             Console.WriteLine(b);
             Console.WriteLine("Beta : ");
-            Console.WriteLine(vBeta);
+            Console.WriteLine(vBeta);*/
             return vBeta;
         }
     }

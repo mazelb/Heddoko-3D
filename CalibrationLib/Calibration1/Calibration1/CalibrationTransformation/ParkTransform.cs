@@ -12,8 +12,8 @@ namespace Calibration1.CalibrationTransformation
     public class ParkTransform
     {
         public static float K = 2.0F * Mathf.PI / 360;
-        static string sTpose = "T";
-        static string sZombiepose = "Z";
+        static string sTpose       = "T";
+        static string sZombiepose  = "Z";
         static string sSoldierpose = "S";
         static string pose1 = sZombiepose;
         static string pose2 = sSoldierpose;
