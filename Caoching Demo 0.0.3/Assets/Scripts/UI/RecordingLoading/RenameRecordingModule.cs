@@ -36,7 +36,9 @@ namespace Assets.Scripts.UI.RecordingLoading
             RecordingNameField.onValueChanged.AddListener(ValidateInput);
             RecordingNameField.onEndEdit.AddListener(OnEditingEnd);
             ButtonSet.onClick.AddListener(Submit);
-            
+            ScreenResolutionManager.Instance.NewResolutionSetEvent += SlideBlock.ResetPosition;
+
+
         }
 
         public void Init(BrainpackConnectionController vBpController)

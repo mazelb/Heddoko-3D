@@ -7,7 +7,7 @@
 // */
 
 using System;
-using System.Collections; 
+using System.Collections;
 using UnityEngine;
 using Object = System.Object;
 
@@ -15,7 +15,7 @@ using Object = System.Object;
 namespace Assets.Scripts.UI
 {
 
-    public delegate void NewResolutionSet( );
+    public delegate void NewResolutionSet();
 
     public delegate void AllResolutionsScanned(Resolution[] vResolutions);
     /// <summary>
@@ -82,7 +82,7 @@ namespace Assets.Scripts.UI
             return Instance.mSupportedResolutions;
         }
 
-        
+
 
         /// <summary>
         /// Initializes supported resolutions
@@ -127,12 +127,10 @@ namespace Assets.Scripts.UI
                 vResolutionSetSuccess = false;
             }
 
-            if (vCallbackAction != null)
+
+            if (vResolutionSetSuccess)
             {
-                if (vResolutionSetSuccess)
-                {
-                    Instance.StartCoroutine(Instance.InvokeOnNextFrameUpdate(vCallbackAction, vResolution));
-                }
+                Instance.StartCoroutine(Instance.InvokeOnNextFrameUpdate(vCallbackAction, vResolution));
             }
         }
 
@@ -140,18 +138,18 @@ namespace Assets.Scripts.UI
         /// Invokes a callback after the next frame update
         /// </summary>
         /// <param name="vCallbackAction">callback action to invoke</param>
-        /// <param name="resolutionSetSuccess">was the resolution set succesfully?</param>
         /// <param name="vResolution"></param>
         /// <returns></returns>
         private IEnumerator InvokeOnNextFrameUpdate(Action vCallbackAction, Resolution vResolution)
         {
             yield return new WaitForEndOfFrame();
             yield return new WaitForEndOfFrame();
-            vCallbackAction.Invoke();
-            if (NewResolutionSetEvent != null)
+
+            if (vCallbackAction != null)
             {
-                NewResolutionSetEvent( );
+                vCallbackAction.Invoke();
             }
+            TriggerNewResolutionChangeHandler();
         }
 
         /// <summary>
@@ -160,7 +158,18 @@ namespace Assets.Scripts.UI
         /// <param name="vArgs"></param>
         public static void SelectResolutionId(int vArgs)
         {
-            SetScreenResolution(Instance.mSupportedResolutions[vArgs],true,null);
+            SetScreenResolution(Instance.mSupportedResolutions[vArgs], true, null);
+        }
+
+        /// <summary>
+        /// Triggers handlers
+        /// </summary>
+        public void TriggerNewResolutionChangeHandler()
+        {
+            if (NewResolutionSetEvent != null)
+            {
+                NewResolutionSetEvent();
+             }
         }
     }
 }

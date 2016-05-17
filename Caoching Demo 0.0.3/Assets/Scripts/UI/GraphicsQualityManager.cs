@@ -36,6 +36,49 @@ namespace Assets.Scripts.UI
             }
         }
 
+        /// <summary>
+        /// Sets the vsync count
+        /// 0 :  vsync off
+        /// 1 :  sync every frame update
+        /// 2 :  sync every second frame update
+        /// </summary>
+        /// <param name="vSyncCount"></param>
+        public void SetVsync(int vSyncCount)
+        {
+            int vCount = vSyncCount;
+            if (vCount < 0)
+            {
+                vCount = 0;
+            }
+            else if (vCount > 2)
+            {
+                vCount = 2;
+            }
+            QualitySettings.vSyncCount = vCount;
+        }
+
+        /// <summary>
+        /// Get the Vsync count
+        /// 0 :  vsync off
+        /// 1 :  sync every frame update
+        /// 2 :  sync every second frame update
+        /// </summary>
+        public int GetVsyncCount
+        {
+            get { return QualitySettings.vSyncCount; }
+        }
+
+        /// <summary>
+        /// Is Vsync on?
+        /// </summary>
+        public bool VsyncOn
+        {
+            get
+            {
+                return GetVsyncCount == 0;
+            }
+        }
+
         public void Start()
         {
             Initialize();

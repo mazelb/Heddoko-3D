@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c6824e931baae7342a75c4b268bd67b1
+guid: bf079c9b5cfe1e648bea4a314386c98e
 timeCreated: 1460082229
 licenseType: Pro
 TextureImporter:
@@ -51,7 +51,7 @@ TextureImporter:
   spriteSheet:
     sprites: []
     outline: []
-  spritePackingTag: 
+  spritePackingTag: whiteSwatch
   userData: 
   assetBundleName: 
   assetBundleVariant: 

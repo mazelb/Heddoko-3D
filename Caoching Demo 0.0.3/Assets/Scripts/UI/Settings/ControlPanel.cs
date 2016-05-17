@@ -27,7 +27,8 @@ namespace Assets.Scripts.UI.Settings
         public LiveConnectionButton LiveViewButton;
         public Button BrainpackConnectionButton;
         public SlideBlock BrainpackConnectionSlider;
-        public Button SettingsButton;
+        public Button ResolutionSettingsButton;
+        public SlideBlock ResolutionSettingSlideBlock;
         public Button ExitApplicationButton;
         public Button RenameRecordingButton;
         public BrainpackConnectionController ConnectionController;
@@ -56,15 +57,36 @@ namespace Assets.Scripts.UI.Settings
                 LoadRecordingsButton.colors = SelectedColorBlock;
                 LiveViewButton.Button.colors = UnSelectedColorBlock;
                 BrainpackConnectionButton.colors = UnSelectedColorBlock;
+                if (ResolutionSettingSlideBlock.IsOpen)
+                {
+                    ResolutionSettingSlideBlock.Toggle();
+                }
             });
+            ResolutionSettingsButton.onClick.AddListener(() =>
+            {
+                if (!ResolutionSettingSlideBlock.IsOpen)
+                {
+                    if (BrainpackConnectionSlider.IsOpen)
+                    {
+                        BrainpackConnectionSlider.Toggle();
+                    }
+                }
+                ResolutionSettingSlideBlock.Toggle();
+            }
+
+            );
             LiveViewButton.Button.onClick.AddListener(() =>
-            {   
+            {
                 if (ConnectionController.ConnectionState == BrainpackConnectionState.Connected)
                 {
                     if (BrainpackConnectionSlider.IsOpen)
                     {
                         BrainpackConnectionSlider.Toggle();
                     }
+                }
+                if (ResolutionSettingSlideBlock.IsOpen)
+                {
+                    ResolutionSettingSlideBlock.Toggle();
                 }
                 if (!SuitFeedView.gameObject.activeInHierarchy)
                 {
@@ -86,6 +108,10 @@ namespace Assets.Scripts.UI.Settings
                 if (RecordingPlayerView.gameObject.activeInHierarchy)
                 {
                     RecordingPlayerView.Hide();
+                }
+                if (ResolutionSettingSlideBlock.IsOpen)
+                {
+                    ResolutionSettingSlideBlock.Toggle();
                 }
             }
              );

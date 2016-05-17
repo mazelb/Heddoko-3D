@@ -11,6 +11,7 @@ using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Interfaces;
 using Assets.Scripts.UI.Scene_3d.View;
 using Assets.Scripts.Utils.UnityUtilities;
+using UIWidgets;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,7 +30,7 @@ namespace Assets.Scripts.UI.MainMenu.View
         public Button PairButton;
         public Button UnpairButton;
         public Button BackButton;
-        
+        public SlideBlock SlideBlock;
         public FadeInFadeOutEffect FadeInFadeOutEffect;
         public GameObject BrainpackComPortInput;
         public ScrollablePanel ScrollablePanel;
@@ -55,7 +56,8 @@ namespace Assets.Scripts.UI.MainMenu.View
             BrainpackConnectionController.Instance.FailedToConnectStateEvent += FailedConnection;
             PairButton.onClick.AddListener(PairButtonEngaged);
             UnpairButton.onClick.AddListener(UnpairButtonEngaged);
-        }
+            ScreenResolutionManager.Instance.NewResolutionSetEvent += SlideBlock.ResetPosition;
+        } 
 
         /// <summary>
         /// Display the connecting views
@@ -85,6 +87,7 @@ namespace Assets.Scripts.UI.MainMenu.View
             HaloForHaloman.gameObject.SetActive(true);
             HaloForHaloman.sprite = HalomanConnected;
             FadeInFadeOutEffect.FadeEffectTime = 1.5f;
+             
         }
 
         /// <summary>

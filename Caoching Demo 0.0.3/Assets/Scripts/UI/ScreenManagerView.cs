@@ -19,6 +19,7 @@ namespace Assets.Scripts.UI
         public Dropdown ResolutionDropDown;
         public Dropdown GraphicsDropDown;
         public SlideBlock CurrSlideBlock;
+        public Toggle VSyncToggle;
  
  
         void Awake()
@@ -29,6 +30,12 @@ namespace Assets.Scripts.UI
             UpdateResolutionDropdown(ScreenResolutionManager.GetAllSupportedResolution());
             ResolutionDropDown.onValueChanged.AddListener(ScreenResolutionManager.SelectResolutionId);
             GraphicsQualityManager.AvailableGraphicsQualityScannedEvent += SetGraphicsDropdownValues;
+            VSyncToggle.isOn = GraphicsQualityManager.VsyncOn;
+            VSyncToggle.onValueChanged.AddListener((x) =>
+            {
+                int vSyncCount = x ? 1 : 0;
+                GraphicsQualityManager.SetVsync(vSyncCount);
+            });
         }
 
         /// <summary>
@@ -41,6 +48,8 @@ namespace Assets.Scripts.UI
         private void RedrawSlideBlock()
         {
             StartCoroutine(ResetResSlideBlock());
+            StartCoroutine(ResetResSlideBlock());
+
         }
 
         public IEnumerator ResetResSlideBlock()
@@ -79,5 +88,8 @@ namespace Assets.Scripts.UI
                 ResolutionDropDown.options.Add(vOptionData);
             }
         }
+
+       
+        
     }
 }

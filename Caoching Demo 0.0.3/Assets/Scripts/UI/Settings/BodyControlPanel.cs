@@ -7,7 +7,7 @@
 */
 
 using Assets.Scripts.Body_Pipeline.Analysis.Views;
-using Assets.Scripts.Communication.View.Table; 
+using Assets.Scripts.Communication.View.Table;
 using UIWidgets;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,8 +31,6 @@ namespace Assets.Scripts.UI.Settings
         public Text InformationPanel;
         public BodyFrameDataControl BodyFrameControl;
         public AnaylsisTextContainer AnalysisTextContainer;
-        public Button GraphicsSettingsButton;
-        public SlideBlock GraphicsTogglePanel;
         public bool DisablePanelShowClicks = false;
         public Body Body
         {
@@ -42,13 +40,15 @@ namespace Assets.Scripts.UI.Settings
 
         void Awake()
         {
+            ScreenResolutionManager.Instance.NewResolutionSetEvent += BodyContentSlider.ResetPosition;
+            ScreenResolutionManager.Instance.NewResolutionSetEvent += BodyFrameSlider.ResetPosition;
 
             TrunkButton.onClick.AddListener(() =>
             {
                 TogglePanel();
                 AnalysisTextContainer.ChangeAnalysisView(AnaylsisTextContainer.CurrentAnalysisTextView.Trunk);
             });
-            GraphicsSettingsButton.onClick.AddListener(()=>GraphicsTogglePanel.Toggle());
+
 
             ShoulderButton.onClick.AddListener(() =>
             {
