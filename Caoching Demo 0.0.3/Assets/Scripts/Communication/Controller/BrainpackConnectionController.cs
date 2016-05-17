@@ -102,7 +102,7 @@ namespace Assets.Scripts.Communication.Controller
                     {
                         mInstance = vGo.AddComponent<BrainpackConnectionController>();
                     }
-                    DontDestroyOnLoad(mInstance.gameObject);
+                 
                 }
                 return mInstance;
             }
