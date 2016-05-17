@@ -24,8 +24,9 @@ using Assets.Scripts.Body_Pipeline.Analysis.Torso;
 /// </summary>
 public partial class BodySegment
 {
-    public BodyFrameCalibrationContainer BodyFrameCalibrationContainer { get; internal set; }
+    
 #if !SEGMENTS_DEBUG
+public BodyFrameCalibrationContainer BodyFrameCalibrationContainer { get; internal set; }
     //Segment Type 
     public BodyStructureMap.SegmentTypes SegmentType;
 

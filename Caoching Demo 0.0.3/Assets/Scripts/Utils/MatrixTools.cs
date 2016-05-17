@@ -23,7 +23,7 @@ namespace Assets.Scripts.Utils
         /// </summary>
         /// <returns>The IMU quaternion.</returns>
         /// <param name="vRotationMatrix">the original 3*3 matrix.</param>
-        public static IMUQuaternionOrientation MatToQuat(float[,] vRotationMatrix)
+        public static IMUQuaternionOrientation MatToQuat1(float[,] vRotationMatrix)
         {
             IMUQuaternionOrientation vQuaternionResult;
             vQuaternionResult.w = (vRotationMatrix[0, 0] + vRotationMatrix[1, 1] + vRotationMatrix[2, 2] + 1.0f) / 4.0f;
@@ -74,7 +74,57 @@ namespace Assets.Scripts.Utils
             vQuaternionResult.z /= r;
             return vQuaternionResult;
         }
+        public static Quaternion MatToQuat(float[,] vRotationMatrix)
+        {
+            Quaternion vQuaternionResult;
+            vQuaternionResult.w = (vRotationMatrix[0, 0] + vRotationMatrix[1, 1] + vRotationMatrix[2, 2] + 1.0f) / 4.0f;
+            vQuaternionResult.x = (vRotationMatrix[0, 0] - vRotationMatrix[1, 1] - vRotationMatrix[2, 2] + 1.0f) / 4.0f;
+            vQuaternionResult.y = (-vRotationMatrix[0, 0] + vRotationMatrix[1, 1] - vRotationMatrix[2, 2] + 1.0f) / 4.0f;
+            vQuaternionResult.z = (-vRotationMatrix[0, 0] - vRotationMatrix[1, 1] + vRotationMatrix[2, 2] + 1.0f) / 4.0f;
+            if (vQuaternionResult.w < 0.0f) vQuaternionResult.w = 0.0f;
+            if (vQuaternionResult.x < 0.0f) vQuaternionResult.x = 0.0f;
+            if (vQuaternionResult.y < 0.0f) vQuaternionResult.y = 0.0f;
+            if (vQuaternionResult.z < 0.0f) vQuaternionResult.z = 0.0f;
+            vQuaternionResult.w = (float)Math.Sqrt(vQuaternionResult.w);
+            vQuaternionResult.x = (float)Math.Sqrt(vQuaternionResult.x);
+            vQuaternionResult.y = (float)Math.Sqrt(vQuaternionResult.y);
+            vQuaternionResult.z = (float)Math.Sqrt(vQuaternionResult.z);
+            if (vQuaternionResult.w >= vQuaternionResult.x && vQuaternionResult.w >= vQuaternionResult.y && vQuaternionResult.w >= vQuaternionResult.z)
+            {
+                vQuaternionResult.w *= +1.0f;
+                vQuaternionResult.x *= Mathf.Sign(vRotationMatrix[2, 1] - vRotationMatrix[1, 2]);
+                vQuaternionResult.y *= Mathf.Sign(vRotationMatrix[0, 2] - vRotationMatrix[2, 0]);
+                vQuaternionResult.z *= Mathf.Sign(vRotationMatrix[1, 0] - vRotationMatrix[0, 1]);
+            }
+            else if (vQuaternionResult.x >= vQuaternionResult.w && vQuaternionResult.x >= vQuaternionResult.y && vQuaternionResult.x >= vQuaternionResult.z)
+            {
+                vQuaternionResult.w *= Mathf.Sign(vRotationMatrix[2, 1] - vRotationMatrix[1, 2]);
+                vQuaternionResult.x *= +1.0f;
+                vQuaternionResult.y *= Mathf.Sign(vRotationMatrix[1, 0] + vRotationMatrix[0, 1]);
+                vQuaternionResult.z *= Mathf.Sign(vRotationMatrix[0, 2] + vRotationMatrix[2, 0]);
+            }
+            else if (vQuaternionResult.y >= vQuaternionResult.w && vQuaternionResult.y >= vQuaternionResult.x && vQuaternionResult.y >= vQuaternionResult.z)
+            {
+                vQuaternionResult.w *= Mathf.Sign(vRotationMatrix[0, 2] - vRotationMatrix[2, 0]);
+                vQuaternionResult.x *= Mathf.Sign(vRotationMatrix[1, 0] + vRotationMatrix[0, 1]);
+                vQuaternionResult.y *= +1.0f;
+                vQuaternionResult.z *= Mathf.Sign(vRotationMatrix[2, 1] + vRotationMatrix[1, 2]);
+            }
+            else if (vQuaternionResult.z >= vQuaternionResult.w && vQuaternionResult.z >= vQuaternionResult.x && vQuaternionResult.z >= vQuaternionResult.y)
+            {
+                vQuaternionResult.w *= Mathf.Sign(vRotationMatrix[1, 0] - vRotationMatrix[0, 1]);
+                vQuaternionResult.x *= Mathf.Sign(vRotationMatrix[2, 0] + vRotationMatrix[0, 2]);
+                vQuaternionResult.y *= Mathf.Sign(vRotationMatrix[2, 1] + vRotationMatrix[1, 2]);
+                vQuaternionResult.z *= +1.0f;
+            }
 
+            float r = (float)Math.Sqrt(vQuaternionResult.w * vQuaternionResult.w + vQuaternionResult.x * vQuaternionResult.x + vQuaternionResult.y * vQuaternionResult.y + vQuaternionResult.z * vQuaternionResult.z);
+            vQuaternionResult.w /= r;
+            vQuaternionResult.x /= r;
+            vQuaternionResult.y /= r;
+            vQuaternionResult.z /= r;
+            return vQuaternionResult;
+        }
         /// <summary>
         /// This Performs transformation From Global Coordinate System To local IMU coordinates
         /// </summary>

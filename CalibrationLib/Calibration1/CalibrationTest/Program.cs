@@ -31,8 +31,9 @@ namespace CalibrationTest
             RawSensDataAngles2[0] = M[0, 1];
             RawSensDataAngles2[1] = M[1, 1];
             RawSensDataAngles2[2] = M[2, 1];
+            Console.WriteLine("----------------------------Case1upperarm------------------------------------");
             Xtmp = AvatarToDataSensorsTransform.Shiufunc(RawSensDataAngles1, RawSensDataAngles2);
-            Console.WriteLine("----------------------------------------------------------------");
+            Console.WriteLine("----------------------------Case2upperarm------------------------------------");
             Console.ReadLine();
             M = Case("Case2upperarm");
             RawSensDataAngles1[0] = M[0, 0];
@@ -42,9 +43,9 @@ namespace CalibrationTest
             RawSensDataAngles2[1] = M[1, 1];
             RawSensDataAngles2[2] = M[2, 1];
             Xtmp = AvatarToDataSensorsTransform.Shiufunc(RawSensDataAngles1, RawSensDataAngles2);
-            Console.WriteLine("----------------------------------------------------------------");
+            Console.WriteLine("------------------------------Case1forerarm----------------------------------");
             Console.ReadLine();
-            M = Case("Case1upperarm");
+            M = Case("Case1forerarm");
             RawSensDataAngles1[0] = M[0, 0];
             RawSensDataAngles1[1] = M[1, 0];
             RawSensDataAngles1[2] = M[2, 0];
@@ -52,9 +53,9 @@ namespace CalibrationTest
             RawSensDataAngles2[1] = M[1, 1];
             RawSensDataAngles2[2] = M[2, 1];
             Xtmp = AvatarToDataSensorsTransform.Shiufunc(RawSensDataAngles1, RawSensDataAngles2);
-            Console.WriteLine("----------------------------------------------------------------");
+            Console.WriteLine("---------------------------Case2forerarm-------------------------------------");
             Console.ReadLine();
-            M = Case("Case2upperarm");
+            M = Case("Case2forerarm");
             RawSensDataAngles1[0] = M[0, 0];
             RawSensDataAngles1[1] = M[1, 0];
             RawSensDataAngles1[2] = M[2, 0];
@@ -62,7 +63,7 @@ namespace CalibrationTest
             RawSensDataAngles2[1] = M[1, 1];
             RawSensDataAngles2[2] = M[2, 1];
             Xtmp = AvatarToDataSensorsTransform.Shiufunc(RawSensDataAngles1, RawSensDataAngles2);
-            Console.WriteLine("----------------------------------------------------------------");
+            Console.WriteLine("--------------------------end--------------------------------------");
             Console.ReadLine();
         }
         static public Matrix<float> Case(string s)

@@ -181,6 +181,10 @@ namespace Calibration1.CalibrationTransformation
             Console.ReadLine();
 
             Console.WriteLine("------Transformations(Solution of Algo1):R1 and R2:-------------");
+            Console.WriteLine("------R1 -------------");
+            Print(R1 );
+            Console.WriteLine("------R2:-------------");
+            Print(R2);
             Console.WriteLine("------R1 - R2:-------------");
             Print(R1 - R2);
             Console.WriteLine("------ErrR1R2:-------------");
@@ -534,7 +538,7 @@ namespace Calibration1.CalibrationTransformation
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    Mr[i, j] = Math.Round(M[i, j], 1);
+                    Mr[i, j] = Math.Round(M[i, j], 3);
                 }
             }
             Console.WriteLine(Mr);
