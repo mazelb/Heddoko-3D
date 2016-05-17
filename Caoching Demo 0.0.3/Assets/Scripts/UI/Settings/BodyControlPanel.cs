@@ -31,6 +31,8 @@ namespace Assets.Scripts.UI.Settings
         public Text InformationPanel;
         public BodyFrameDataControl BodyFrameControl;
         public AnaylsisTextContainer AnalysisTextContainer;
+        public Button GraphicsSettingsButton;
+        public SlideBlock GraphicsTogglePanel;
         public bool DisablePanelShowClicks = false;
         public Body Body
         {
@@ -46,6 +48,7 @@ namespace Assets.Scripts.UI.Settings
                 TogglePanel();
                 AnalysisTextContainer.ChangeAnalysisView(AnaylsisTextContainer.CurrentAnalysisTextView.Trunk);
             });
+            GraphicsSettingsButton.onClick.AddListener(()=>GraphicsTogglePanel.Toggle());
 
             ShoulderButton.onClick.AddListener(() =>
             {

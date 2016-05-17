@@ -6,9 +6,10 @@
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
 
+using Assets.Scripts.UI.AbstractViews.camera;
 using UnityEngine;
 
-namespace Assets.Scripts.UI.AbstractViews.camera
+namespace Assets.Scripts.Move3D_Visualization.Cameras
 {
     /// <summary>
     /// A one to one relationship between a rendered body and a camera rendering it

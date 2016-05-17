@@ -5,7 +5,9 @@
 // * @date 05 2016
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
- 
+
+
+using Assets.Scripts.Utils.HMath.Structure;
 
 namespace Assets.Scripts.Utils.HMath.Service_Provider
 {
@@ -122,12 +124,12 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <param name="vNormal">Will normalized</param>
         /// <param name="vTangent">Will be orthogonal to vNormal and normalized</param>
         /// <param name="vBinormal">will normalize the binormal and will be orthogonal is vTangent and vNormal</param>
-        void OrthoNormalize(ref HVector3 vNormal, ref HVector3 vTangent, ref HVector3 vBinormal);
+        void OrthoNormalize(  HVector3 vNormal,   HVector3 vTangent,   HVector3 vBinormal);
 
         /// <summary>
         /// Makes the passed in vectors normalized and orthogonal to each other.
         /// </summary> 
-        void OrthoNormalize(ref HVector3 vNormal, ref HVector3 vTangent);
+        void OrthoNormalize(  HVector3 vNormal,   HVector3 vTangent);
         /// <summary>
         /// Speherically interpolate between two vectors.
         /// </summary>

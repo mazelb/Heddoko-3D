@@ -4,10 +4,11 @@
 * @author Mohammed Haider(mohamed@heddoko.com)
 * @date May 2016
 * Copyright Heddoko(TM) 2016, all rights reserved
-*/ 
+*/
+
 using UnityEngine;
 
-namespace Assets.Scripts.Utils.HMath
+namespace Assets.Scripts.Utils.HMath.Structure
 {
     /// <summary>
     /// A implementation of HVector3 to be used within the Unity 3D platform
@@ -18,20 +19,14 @@ namespace Assets.Scripts.Utils.HMath
 
         public U3DVector3(float x, float y, float z) : base(x, y, z)
         {
-            X = x;
-            Y = y;
-            Z = z;
-
+             
         }
         /// <summary>
         /// Copies components of the passed in vector. 
         /// </summary>
         /// <param name="vVector"></param>
         public U3DVector3(Vector3 vVector):base(vVector.x, vVector.y, vVector.z)
-        {
-            X = vVector.x;
-            Y = vVector.y;
-            Z = vVector.z;
+        { 
         }
 
         public U3DVector3(float x, float y) : base(x, y)
@@ -64,21 +59,7 @@ namespace Assets.Scripts.Utils.HMath
             set { Instance.z= value; }
         }
 
-        /// <summary>
-        /// The vector's magnitude
-        /// </summary>
-        public override float Magnitude
-        {
-            get { return Instance.magnitude; }
-        }
-
-        /// <summary>
-        /// The vector's magnitude squared. 
-        /// </summary>
-        public override float SqrMagnitude
-        {
-            get { return Instance.sqrMagnitude; }
-        }
+ 
 
         /// <summary>
         /// Normalizes the vector
@@ -96,6 +77,11 @@ namespace Assets.Scripts.Utils.HMath
         public override string ToString()
         {
             return Instance.ToString();
+        }
+
+        public override void Cross(HVector3 vVector)
+        {
+            Instance = Vector3.Cross(Instance, ((U3DVector3) vVector).Instance);
         }
 
         /// <summary>
