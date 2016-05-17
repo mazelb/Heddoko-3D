@@ -34,9 +34,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Calibration1">
-      <HintPath>..\Calibration1\bin\Debug\Calibration1.dll</HintPath>
-    </Reference>
     <Reference Include="MathNet.Numerics, Version=3.11.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\Caoching Demo 0.0.3\Assets\Plugins\math.net\MathNet.Numerics.dll</HintPath>
@@ -59,6 +56,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Calibration1\Calibration1.csproj">
+      <Project>{12a4ce5a-6692-4c71-9e9f-4a8c4e29f07d}</Project>
+      <Name>Calibration1</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
