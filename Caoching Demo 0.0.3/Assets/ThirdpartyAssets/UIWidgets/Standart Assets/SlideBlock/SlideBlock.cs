@@ -155,7 +155,7 @@ namespace UIWidgets
         IEnumerator currentAnimation;
 
         float size;
-
+        public float Size { get { return size; } }
         string GetWarning()
         {
             var keys = Curve.keys;
@@ -244,7 +244,7 @@ namespace UIWidgets
             }
         }
 
-        void ResetPosition()
+       public void ResetPosition()
         {
             if (isOpen)
             {

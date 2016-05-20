@@ -8,19 +8,20 @@
 
 using System;
 
-using System.Collections.Generic; 
+using System.Collections.Generic;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Communication.DatabaseConnectionPipe;
+using Assets.Scripts.UI;
 using Assets.Scripts.UI.AbstractViews.camera;
 using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.UI.Scene_3d.View;
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.UI.Tagging;
-using Assets.Scripts.Utils.DebugContext.logging;
-using Assets.Scripts.Utils.HMath;
+using Assets.Scripts.Utils.DebugContext.logging; 
 using Assets.Scripts.Utils.HMath.Service_Provider;
-using UnityEngine; 
+using Assets.Scripts.Utils.HMath.Structure;
+using UnityEngine;
 using Application = UnityEngine.Application;
 
 namespace Assets.Scripts.Utils.DatabaseAccess
@@ -42,8 +43,7 @@ namespace Assets.Scripts.Utils.DatabaseAccess
         public bool IsDemo = false;
         public TaggingManager TaggingManager { get { return mTaggingManager; } }
 
-        // ReSharper disable once UnusedMember.Local
-        void Awake()
+        void Init()
         {
             OutterThreadToUnityThreadIntermediary.Instance.Init();
             BodySegment.IsTrackingHeight = false;
@@ -112,18 +112,20 @@ namespace Assets.Scripts.Utils.DatabaseAccess
                     }
                 }
 
-            }
 
+            }
+        }
+        // ReSharper disable once UnusedMember.Local
+        void Awake()
+        {
+            Init();
 
         }
 
         void Start()
         {
-            if (!IsDemo)
-            {
-                UniFileBrowser.use.SetPath(ApplicationSettings.PreferedRecordingsFolder);
+            UniFileBrowser.use.SetPath(ApplicationSettings.PreferedRecordingsFolder);
 
-            }
         }
         /// <summary>
         /// Injects the single database component into interested consumers
@@ -215,6 +217,13 @@ namespace Assets.Scripts.Utils.DatabaseAccess
         {
             mDatabase = new Database(DatabaseConnectionType.Local);
             mDatabase.Init();
+        }
+
+        private void SetResolution()
+        {
+             
+           
+
         }
 
 

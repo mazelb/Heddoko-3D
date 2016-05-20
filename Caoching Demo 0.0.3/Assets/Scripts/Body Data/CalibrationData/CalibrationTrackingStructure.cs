@@ -7,8 +7,7 @@
 // */
 
 using System.Collections.Generic;
-using WebSocketSharp;
-
+ 
 namespace Assets.Scripts.Body_Data.CalibrationData
 {
     /// <summary>

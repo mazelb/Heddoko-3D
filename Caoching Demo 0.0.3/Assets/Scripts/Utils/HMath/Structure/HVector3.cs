@@ -9,7 +9,7 @@
 using System;
 using Assets.Scripts.Utils.HMath.Service_Provider;
 
-namespace Assets.Scripts.Utils.HMath
+namespace Assets.Scripts.Utils.HMath.Structure
 {
     /// <summary>
     /// A HVector3 class holding X,y,z components of type floats
@@ -67,8 +67,16 @@ namespace Assets.Scripts.Utils.HMath
 
       
  
-        public abstract float Magnitude { get; }
-        public abstract float SqrMagnitude { get; }
+        public static float Magnitude(HVector3 vVector3)
+        {
+            return Vector3MathServiceProvider.Magnitude(vVector3);
+        }
+
+
+        public static float SqrMagnitude(HVector3 vVector3)
+        {
+            return Vector3MathServiceProvider.SqrMagnitude(vVector3);
+        }
         
 
         protected HVector3(float x, float y, float z)
@@ -93,15 +101,15 @@ namespace Assets.Scripts.Utils.HMath
             return Vector3MathServiceProvider.Slerp(vFrom, vTo, vT);
         }
 
-        public static void OrthoNormalize(ref HVector3 vNormal, ref HVector3 vTangent)
+        public static void OrthoNormalize(  HVector3 vNormal,   HVector3 vTangent)
         {
-            Vector3MathServiceProvider.OrthoNormalize(ref vNormal,ref vTangent);
+            Vector3MathServiceProvider.OrthoNormalize( vNormal,  vTangent);
         }
 
 
-        public static void OrthoNormalize(ref HVector3 vNormal, ref HVector3 vTangent, ref HVector3 vBinormal)
+        public static void OrthoNormalize(  HVector3 vNormal,   HVector3 vTangent,   HVector3 vBinormal)
         {
-            Vector3MathServiceProvider.OrthoNormalize(ref vNormal, ref vTangent, ref vBinormal);
+            Vector3MathServiceProvider.OrthoNormalize(  vNormal,   vTangent,   vBinormal);
 
         }
 
@@ -150,10 +158,10 @@ namespace Assets.Scripts.Utils.HMath
             this.Z *= scale.Z;
         }
 
-        public static HVector3 Cross(HVector3 lhs, HVector3 rhs)
-        {
-            return Vector3MathServiceProvider.Cross(lhs, rhs);
-        }
+        public abstract void Cross(HVector3 rhs);//, HVector3 rhs)
+        //{
+        //    return Vector3MathServiceProvider.Cross(lhs, rhs);
+        //}
         public override int GetHashCode()
         {
             return this.X.GetHashCode() ^ this.Y.GetHashCode() << 2 ^ this.Z.GetHashCode() >> 2;

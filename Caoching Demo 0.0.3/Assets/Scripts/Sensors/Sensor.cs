@@ -8,7 +8,7 @@
 using UnityEngine;
 using System;  
 using System.Collections.Generic;
-public class Sensor //: MonoBehaviour
+public class Sensor
 {
     //Sensor type
     public BodyStructureMap.SensorTypes SensorType;
@@ -66,7 +66,7 @@ public class Sensor //: MonoBehaviour
     }
 }
 
-public class SensorTuple : MonoBehaviour
+public class SensorTuple 
 {
     public Sensor InitSensor;
     public Sensor CurrentSensor;

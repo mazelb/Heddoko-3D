@@ -7,9 +7,9 @@
 */
 
 using System.Collections.Generic;
-using System.Linq;
-using Assets.Scripts.Body_Data;
+using System.Linq; 
 using Assets.Scripts.Body_Data.View;
+using Assets.Scripts.Move3D_Visualization.Cameras;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.camera;

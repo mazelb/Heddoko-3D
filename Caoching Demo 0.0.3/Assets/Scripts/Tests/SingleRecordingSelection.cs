@@ -34,8 +34,7 @@ namespace Assets.Scripts.Tests
             {
                 if (sInstance == null)
                 {
-                    sInstance = GameObject.FindObjectOfType<SingleRecordingSelection>();
-                    DontDestroyOnLoad(sInstance.gameObject);
+                    sInstance = GameObject.FindObjectOfType<SingleRecordingSelection>(); 
                 }
                 return sInstance;
             }

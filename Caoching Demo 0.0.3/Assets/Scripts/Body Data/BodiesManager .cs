@@ -14,7 +14,7 @@ using Assets.Scripts.Utils;
 * BodiesManager class 
 * @brief manager class for Bodies (interface later)
 */
-public sealed class BodiesManager : MonoBehaviour
+public sealed class BodiesManager 
 {
     #region Singleton definition
     private static readonly BodiesManager instance = new BodiesManager();

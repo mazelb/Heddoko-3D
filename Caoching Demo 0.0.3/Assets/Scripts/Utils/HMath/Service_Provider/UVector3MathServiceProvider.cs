@@ -6,6 +6,7 @@
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
 
+using Assets.Scripts.Utils.HMath.Structure;
 using UnityEngine;
 
 namespace Assets.Scripts.Utils.HMath.Service_Provider
@@ -215,7 +216,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <param name="vNormal">Will be normalized</param>
         /// <param name="vTangent">Will be orthogonal to vNormal and normalized</param>
         /// <param name="vBinormal">will normalize the binormal and will be orthogonal is vTangent and vNormal</param>
-        public void OrthoNormalize(ref HVector3 vNormal, ref HVector3 vTangent, ref HVector3 vBinormal)
+        public void OrthoNormalize(  HVector3 vNormal,   HVector3 vTangent,   HVector3 vBinormal)
         {
             Vector3.OrthoNormalize(ref ((U3DVector3)vNormal).Instance, ref ((U3DVector3)vTangent).Instance, ref ((U3DVector3)vBinormal).Instance);
         }
@@ -227,7 +228,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// </summary>
         /// <param name="vNormal">Will be normalized</param>
         /// <param name="vTangent">Will be orthogonal to vNormal and normalized</param> 
-        public void OrthoNormalize(ref HVector3 vNormal, ref HVector3 vTangent)
+        public void OrthoNormalize(  HVector3 vNormal,   HVector3 vTangent)
         {
             Vector3.OrthoNormalize(ref ((U3DVector3)vNormal).Instance, ref ((U3DVector3)vTangent).Instance);
         }
@@ -304,6 +305,9 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         {
             return new U3DVector3(Vector3.Cross(((U3DVector3)vLhs).Instance, ((U3DVector3)vRhs).Instance));
         }
+
+
+
         /// <summary>
         /// Normalizes this vector
         /// Note that this perform a direct cast
