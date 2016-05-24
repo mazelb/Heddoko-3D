@@ -2,12 +2,11 @@
 * @file BodyFrameDataControl.cs
 * @brief Contains the BodyFrameDataControl class 
 * @date April 2016
-* Copyright Heddoko(TM) 2015, all rights reserved
+* Copyright Heddoko(TM) 2016, all rights reserved
 */
 
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Communication.Controller;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,7 +28,6 @@ namespace Assets.Scripts.Communication.View.Table
 
         public void Start()
         {
-
             PauseButton.onClick.AddListener(() => IsPaused = !IsPaused);
         }
 
@@ -43,7 +41,7 @@ namespace Assets.Scripts.Communication.View.Table
             {
                 // add a new frame to the data souce
                 DataList.DataSource.Add(vNewFrame);
-                mBodyFrameCache.Add(vNewFrame); 
+                mBodyFrameCache.Add(vNewFrame);
                 //Optimization. run this once the number of items of the data source list is greater than a predefined max items
                 if (DataList.DataSource.Count > GMaxItems)
                 {
@@ -86,12 +84,17 @@ namespace Assets.Scripts.Communication.View.Table
         /// <param name="vNewBody"></param>
         public void SetBody(Body vNewBody)
         {
-            if (mBody != null)
+            if (gameObject.activeInHierarchy)
             {
-                mBody.View.BodyFrameUpdatedEvent -= BodyFrameUpdatedEvent;
+                if (mBody != null)
+                {
+                    mBody.View.BodyFrameUpdatedEvent -= BodyFrameUpdatedEvent;
+                }
+                Clear();
+                mBody = vNewBody;
+                mBody.View.BodyFrameUpdatedEvent += BodyFrameUpdatedEvent;
             }
-            mBody = vNewBody;
-            mBody.View.BodyFrameUpdatedEvent += BodyFrameUpdatedEvent;
+          
         }
     }
 }

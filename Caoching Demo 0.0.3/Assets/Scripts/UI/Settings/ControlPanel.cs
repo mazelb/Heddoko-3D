@@ -16,12 +16,13 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.Settings
 {
+    
     /// <summary>
     /// Control Panel in a view
     /// </summary>
     public class ControlPanel : MonoBehaviour
     {
-        public ColorBlock SelectedColorBlock;
+         public ColorBlock SelectedColorBlock;
         public ColorBlock UnSelectedColorBlock;
         public Button LoadRecordingsButton;
         public LiveConnectionButton LiveViewButton;

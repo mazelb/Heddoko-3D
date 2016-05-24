@@ -33,11 +33,11 @@ namespace Assets.Scripts.UI.RecordingLoading
         private LiveFeedViewControlPanel mLiveFeedViewControlPanel;
         private bool mIsInitialized = false;
         public BodyFrameDataControl BodyFrameDataControl;
+        public BodyFrameGraphControl FrameGraphControl; 
         public AnaylsisTextContainer AnaylsisTextContainer;
         public Button RenameRecordingButton;
         public Image RenameRecordingImage;
         public Text RenameRecordingText;
-
         public PanelNode RootNode { get { return mRootNode; } }
         void Awake()
         {
@@ -116,9 +116,9 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// Set information relative to the context of this view
         /// </summary>
         private void SetContextualInfo()
-        {
-            BodyFrameDataControl.Clear();
+        {   
             BodyFrameDataControl.SetBody(BrainpackBody);
+            FrameGraphControl.SetBody(BrainpackBody);
             AnaylsisTextContainer.BodyToAnalyze = BrainpackBody;
         }
 

@@ -16,10 +16,9 @@ using Assets.Scripts.Communication.View.Table;
 using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
 using Assets.Scripts.UI.RecordingLoading;
-using JetBrains.Annotations;
-using UnityEngine;
+ using UnityEngine;
 using UnityEngine.UI;
-
+    
 public delegate void RecordingPlayerViewLayoutCreated(RecordingPlayerView vView);
 namespace Assets.Scripts.UI.RecordingLoading
 {
@@ -36,10 +35,12 @@ namespace Assets.Scripts.UI.RecordingLoading
         private bool mIsInitialized = false;
         public Body CurrBody;
         public BodyFrameDataControl BodyFrameDataControl;
+        public BodyFrameGraphControl FrameGraphControl;
+
         public Button LoadRecordingButton;
         public AnaylsisTextContainer AnaylsisTextContainer;
         public event RecordingPlayerViewLayoutCreated RecordingPlayerViewLayoutCreatedEvent;
-        public PanelNode RootNode
+         public PanelNode RootNode
         {
             get { return mPanelNodes[0]; }
         }
@@ -147,9 +148,9 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// Set contexual info for this view
         /// </summary>
         private void SetContextualInfo()
-        {
-            BodyFrameDataControl.Clear();
+        { 
             BodyFrameDataControl.SetBody(CurrBody);
+            FrameGraphControl.SetBody(CurrBody);
             AnaylsisTextContainer.BodyToAnalyze = CurrBody;
         }
 
