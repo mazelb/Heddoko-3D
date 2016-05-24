@@ -51,105 +51,105 @@ public class WMG_X_Dynamic : MonoBehaviour {
 	IEnumerator startTests() {
 		yield return new WaitForSeconds(testGroupInterval);
 
-//        // Dynamic Data Population via Reflection tests
-//        graph.graphTitleString = "Dynamic Data Population via Reflection";
-//        StartCoroutine(dynamicDataPopulationViaReflectionTests());
-//        if (!noTestDelay) yield return new WaitForSeconds(testInterval * 8);
-//        yield return new WaitForSeconds(testGroupInterval);
-//        // animation function tests
-//        graph.graphTitleString = "Animation Function Tests";
-//		StartCoroutine(animationFunctionTests());
-//		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 12);
-//		yield return new WaitForSeconds(testGroupInterval);
+        // Dynamic Data Population via Reflection tests
+        graph.graphTitleString = "Dynamic Data Population via Reflection";
+        StartCoroutine(dynamicDataPopulationViaReflectionTests());
+        if (!noTestDelay) yield return new WaitForSeconds(testInterval * 8);
+        yield return new WaitForSeconds(testGroupInterval);
+        // animation function tests
+        graph.graphTitleString = "Animation Function Tests";
+		StartCoroutine(animationFunctionTests());
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 12);
+		yield return new WaitForSeconds(testGroupInterval);
 
-//		// auto animation tests
-//		graph.graphTitleString = "Auto Animation Tests";
-//		StartCoroutine(autoAnimationTests());
-//		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 15);
-//		yield return new WaitForSeconds(testGroupInterval);
+		// auto animation tests
+		graph.graphTitleString = "Auto Animation Tests";
+		StartCoroutine(autoAnimationTests());
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 15);
+		yield return new WaitForSeconds(testGroupInterval);
 
-//		// graph type and orientation tests
-//		graph.graphTitleString = "Graph Type and Orientation Tests";
-//		StartCoroutine(graphTypeAndOrientationTests());
-//		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 13);
-//		yield return new WaitForSeconds(testGroupInterval);
+		// graph type and orientation tests
+		graph.graphTitleString = "Graph Type and Orientation Tests";
+		StartCoroutine(graphTypeAndOrientationTests());
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 13);
+		yield return new WaitForSeconds(testGroupInterval);
 
-//		// data labels tests
-//		graph.graphTitleString = "Data Labels Tests";
-//		StartCoroutine(dataLabelsTests());
-//		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 9);
-//		yield return new WaitForSeconds(testGroupInterval);
+		// data labels tests
+		graph.graphTitleString = "Data Labels Tests";
+		StartCoroutine(dataLabelsTests());
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 9);
+		yield return new WaitForSeconds(testGroupInterval);
 
-//		// series tests
-//		graph.graphTitleString = "Series Tests";
-//		StartCoroutine(seriesTests());
-//		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 24);
-//		yield return new WaitForSeconds(testGroupInterval);
+		// series tests
+		graph.graphTitleString = "Series Tests";
+		StartCoroutine(seriesTests());
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 24);
+		yield return new WaitForSeconds(testGroupInterval);
 
-//		// grouping / null tests
-//		graph.graphTitleString = "Grouping / Null Tests";
-//		StartCoroutine(groupingTests());
-//		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 6);
-//		yield return new WaitForSeconds(testGroupInterval);
+		// grouping / null tests
+		graph.graphTitleString = "Grouping / Null Tests";
+		StartCoroutine(groupingTests());
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 6);
+		yield return new WaitForSeconds(testGroupInterval);
 
-////		// Autofit tests
-////		graph.graphTitleString = "Autofit Tests";
-////		StartCoroutine(autofitTests());
-////		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 7);
-////		yield return new WaitForSeconds(testGroupInterval);
-
-//		// axes tests
-//		graph.graphTitleString = "Axes Tests";
-//		StartCoroutine(axesTests());
-//		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 13);
-//		yield return new WaitForSeconds(testGroupInterval);
-
-//		// axes tests with bar chart
-//		graph.graphTitleString = "Axes Tests - Bar";
-//		graph.axisWidth = 2;
-//		graph.graphType = WMG_Axis_Graph.graphTypes.bar_side;
-//		if (!noTestDelay) yield return new WaitForSeconds(testInterval);
-//		StartCoroutine(axesTests());
-//		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 13);
-//		yield return new WaitForSeconds(testGroupInterval);
-
-//		// axes tests with bar chart horizontal
-//		graph.graphTitleString = "Axes Tests - Bar - Horizontal";
-//		graph.orientationType = WMG_Axis_Graph.orientationTypes.horizontal;
-//		if (!noTestDelay) yield return new WaitForSeconds(testInterval);
-//		StartCoroutine(axesTests());
-//		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 13);
-//		graph.graphType = WMG_Axis_Graph.graphTypes.line;
-//		graph.orientationType = WMG_Axis_Graph.orientationTypes.vertical;
-//		graph.axisWidth = 4;
-//		yield return new WaitForSeconds(testGroupInterval);
-
-//		// add delete tests
-//		graph.graphTitleString = "Add / Delete Series Tests";
-//		StartCoroutine(addDeleteTests());
-//		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 11);
-//		yield return new WaitForSeconds(testGroupInterval);
-
-//		// add delete tests with bar chart
-//		graph.graphTitleString = "Add / Delete Series Tests - Bar";
-//		graph.graphType = WMG_Axis_Graph.graphTypes.bar_side;
-//		if (!noTestDelay) yield return new WaitForSeconds(testInterval);
-//		StartCoroutine(addDeleteTests());
-//		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 11);
-//		graph.graphType = WMG_Axis_Graph.graphTypes.line;
-//		yield return new WaitForSeconds(testGroupInterval);
-
-//		// legend tests
-//		graph.graphTitleString = "Legend Tests";
-//		StartCoroutine(legendTests());
+//		// Autofit tests
+//		graph.graphTitleString = "Autofit Tests";
+//		StartCoroutine(autofitTests());
 //		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 7);
 //		yield return new WaitForSeconds(testGroupInterval);
 
-//		// hide show tests
-//		graph.graphTitleString = "Hide / Show Tests";
-//		StartCoroutine(hideShowTests());
-//		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 12);
-//		yield return new WaitForSeconds(testGroupInterval);
+		// axes tests
+		graph.graphTitleString = "Axes Tests";
+		StartCoroutine(axesTests());
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 13);
+		yield return new WaitForSeconds(testGroupInterval);
+
+		// axes tests with bar chart
+		graph.graphTitleString = "Axes Tests - Bar";
+		graph.axisWidth = 2;
+		graph.graphType = WMG_Axis_Graph.graphTypes.bar_side;
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval);
+		StartCoroutine(axesTests());
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 13);
+		yield return new WaitForSeconds(testGroupInterval);
+
+		// axes tests with bar chart horizontal
+		graph.graphTitleString = "Axes Tests - Bar - Horizontal";
+		graph.orientationType = WMG_Axis_Graph.orientationTypes.horizontal;
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval);
+		StartCoroutine(axesTests());
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 13);
+		graph.graphType = WMG_Axis_Graph.graphTypes.line;
+		graph.orientationType = WMG_Axis_Graph.orientationTypes.vertical;
+		graph.axisWidth = 4;
+		yield return new WaitForSeconds(testGroupInterval);
+
+		// add delete tests
+		graph.graphTitleString = "Add / Delete Series Tests";
+		StartCoroutine(addDeleteTests());
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 11);
+		yield return new WaitForSeconds(testGroupInterval);
+
+		// add delete tests with bar chart
+		graph.graphTitleString = "Add / Delete Series Tests - Bar";
+		graph.graphType = WMG_Axis_Graph.graphTypes.bar_side;
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval);
+		StartCoroutine(addDeleteTests());
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 11);
+		graph.graphType = WMG_Axis_Graph.graphTypes.line;
+		yield return new WaitForSeconds(testGroupInterval);
+
+		// legend tests
+		graph.graphTitleString = "Legend Tests";
+		StartCoroutine(legendTests());
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 7);
+		yield return new WaitForSeconds(testGroupInterval);
+
+		// hide show tests
+		graph.graphTitleString = "Hide / Show Tests";
+		StartCoroutine(hideShowTests());
+		if (!noTestDelay) yield return new WaitForSeconds(testInterval * 12);
+		yield return new WaitForSeconds(testGroupInterval);
 
 		// grids ticks tests
 		graph.graphTitleString = "Grids / Ticks Tests";

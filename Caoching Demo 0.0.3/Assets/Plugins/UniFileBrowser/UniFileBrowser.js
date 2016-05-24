@@ -1254,7 +1254,7 @@ public function CloseFileWindow () {
 	fileWindowOpen = false;
 	selectedFileNumber = oldSelectedFileNumber = -1;
 	fileName = "";
-	if (sendCloseMessage) { 
+	if (sendCloseMessage) {
 		closeWindowFunction();
 	}
 	// For maximum efficiency, the OnGUI function in this script doesn't run at all when the file browser window isn't open,
