@@ -1,7 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD:Caoching Demo 0.0.3/Assets/Resources/Recordings/DemoDayTS.meta
 guid: 17c468f654929f8428b8b6af55e0fd81
 folderAsset: yes
 timeCreated: 1464090933
+=======
+guid: d6fe1bfedc3785448818da91638edea7
+folderAsset: yes
+timeCreated: 1463495390
+>>>>>>> c0ec45ee69e703ba1f1292e1b40025032bf9abea:Caoching Demo 0.0.3/Assets/Resources/Recordings/DemoDayTS.meta
 licenseType: Free
 DefaultImporter:
   userData: 

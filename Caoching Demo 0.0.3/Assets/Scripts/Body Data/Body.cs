@@ -18,8 +18,7 @@ using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Torso;
 using Assets.Scripts.Communication.Controller;
-using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
-using Assets.Scripts.Utils.DebugContext.logging;
+using Assets.Scripts.Frames_Pipeline.BodyFrameConversion; 
 
 /**
 * Body class 

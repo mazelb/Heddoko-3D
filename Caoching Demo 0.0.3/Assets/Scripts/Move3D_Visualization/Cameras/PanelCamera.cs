@@ -79,7 +79,7 @@ namespace Assets.Scripts.UI.AbstractViews.camera
                 }
                 return mCameraZoom;
             }
-            
+
         }
 
 
@@ -88,26 +88,45 @@ namespace Assets.Scripts.UI.AbstractViews.camera
         /// Sets up the panel camera with the passed in settings
         /// </summary>
         /// <param name="vSettings"></param>
-        public void SetupCamera(PanelCameraSettings vSettings)
+        public void SetupCamera(PanelCameraSettings vSettings = null)
         {
-            mSettings = vSettings;
-            PanelRenderingCamera.clearFlags = CameraClearFlags.Depth;
-            PanelRenderingCamera.cullingMask = 1 << vSettings.RenderingLayerMask.value;
-            PanelRenderingCamera.orthographic = true;
-            PanelRenderingCamera.nearClipPlane = 0.3f;
-            PanelRenderingCamera.farClipPlane = 1000f;
-            PanelRenderingCamera.orthographicSize = 1.6f;
-            PanelRenderingCamera.depth = -1;
-      PanelRenderingCamera.rect = new Rect(mSettings.BottomLeftViewPortPoint.x, mSettings.BottomLeftViewPortPoint.y, mSettings.TopRightViewPortPoint.x - mSettings.BottomLeftViewPortPoint.x, mSettings.TopRightViewPortPoint.y - mSettings.BottomLeftViewPortPoint.y);
-            
-            PanelRenderingCamera.transform.position = Vector3.back * 10;
-            CamViewPlane.CameraPositionChangedEvent -= MoveCameraToPosition;
-            CamViewPlane.CameraPositionChangedEvent += MoveCameraToPosition;
-            CameraZoom.Camera = PanelRenderingCamera;
-            PhysicsRaycaster =PanelRenderingCamera.gameObject.AddComponent<PhysicsRaycaster>();
-            PhysicsRaycaster.eventMask = 1 << mSettings.RenderingLayerMask.value;
+            if (mSettings != vSettings && vSettings != null)
+            {
+                mSettings = vSettings;
+            }
+            if (mSettings != null)
+            {
+                PanelRenderingCamera.clearFlags = CameraClearFlags.Depth;
+                PanelRenderingCamera.cullingMask = 1 << mSettings.RenderingLayerMask.value;
+                PanelRenderingCamera.orthographic = true;
+                PanelRenderingCamera.nearClipPlane = 0.3f;
+                PanelRenderingCamera.farClipPlane = 1000f;
+                PanelRenderingCamera.orthographicSize = 1.6f;
+                PanelRenderingCamera.depth = -1;
+                CalculateCamRect();
 
+                PanelRenderingCamera.transform.position = Vector3.back * 10;
+                CamViewPlane.CameraPositionChangedEvent -= MoveCameraToPosition;
+                CamViewPlane.CameraPositionChangedEvent += MoveCameraToPosition;
+                CameraZoom.Camera = PanelRenderingCamera;
+                PhysicsRaycaster = PanelRenderingCamera.gameObject.AddComponent<PhysicsRaycaster>();
+                PhysicsRaycaster.eventMask = 1 << mSettings.RenderingLayerMask.value;
+            }
+            else
+            {
+                throw new NullReferenceException("Illegal: Null setting was passed to a panel camera.");
+            }
+        }
 
+        /// <summary>
+        /// Calculates the camera rect
+        /// </summary>
+        public void CalculateCamRect()
+        {
+            PanelRenderingCamera.rect = new Rect(mSettings.BottomLeftViewPortPoint.x,
+                  mSettings.BottomLeftViewPortPoint.y,
+                  mSettings.TopRightViewPortPoint.x - mSettings.BottomLeftViewPortPoint.x,
+                  mSettings.TopRightViewPortPoint.y - mSettings.BottomLeftViewPortPoint.y);
         }
 
         public bool Equals(PanelCamera other)
@@ -149,7 +168,7 @@ namespace Assets.Scripts.UI.AbstractViews.camera
             CamViewPlane.ViewPlane = CameraViewPlane.Frontal;
         }
 
-        
+
 
         /// <summary>
         /// Moves the camera to a the specified new position

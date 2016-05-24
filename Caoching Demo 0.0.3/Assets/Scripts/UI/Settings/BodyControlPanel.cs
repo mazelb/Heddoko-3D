@@ -7,7 +7,7 @@
 */
 
 using Assets.Scripts.Body_Pipeline.Analysis.Views;
-using Assets.Scripts.Communication.View.Table; 
+using Assets.Scripts.Communication.View.Table;
 using UIWidgets;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,12 +40,15 @@ namespace Assets.Scripts.UI.Settings
 
         void Awake()
         {
+            ScreenResolutionManager.Instance.NewResolutionSetEvent += BodyContentSlider.ResetPosition;
+            ScreenResolutionManager.Instance.NewResolutionSetEvent += BodyFrameSlider.ResetPosition;
 
             TrunkButton.onClick.AddListener(() =>
             {
                 TogglePanel();
                 AnalysisTextContainer.ChangeAnalysisView(AnaylsisTextContainer.CurrentAnalysisTextView.Trunk);
             });
+
 
             ShoulderButton.onClick.AddListener(() =>
             {
