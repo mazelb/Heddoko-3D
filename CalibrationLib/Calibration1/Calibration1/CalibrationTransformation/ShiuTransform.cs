@@ -157,79 +157,26 @@ namespace Calibration1.CalibrationTransformation
             Matrix<float> R1 = RA1 * Xp1;
             Matrix<float> R2 = RA2 * Xp2;
 
-            Console.WriteLine("------Initial differences between Raw and Ideal motion:----------");
-            Console.WriteLine("------A1 - B1:-------------");
-            Print(vAMatrixPose1 - vBMatrixSensor1);
-            Console.WriteLine("------ErrA1B1:-------------");
-            float ErrA1B1 = Performance(vAMatrixPose1, vBMatrixSensor1);
-            Console.WriteLine(ErrA1B1);
-            Console.ReadLine();
-
-            Console.WriteLine("------A2 - B2:-------------");
-            Print(vAMatrixPose2 - vBMatrixSensor2);
-            Console.WriteLine("------ErrA2B2:-------------");
-            float ErrA2B2 = Performance(vAMatrixPose2, vBMatrixSensor2);
-            Console.WriteLine(ErrA2B2);
-            Console.ReadLine();
-
-            Console.WriteLine("------A1 ans B1:-------------");
+            Matrix<float> R = (R1+R2)/2;
+            Console.WriteLine("-----------R1 and R2-------------");
+            Print(R1);
+            Print(R2);
+            Console.WriteLine("-----------R-------------");
+            Print(R);
+            Console.WriteLine("------A1 and A2----------");
             Print(vAMatrixPose1);
-            Print(vBMatrixSensor1);
-            Console.WriteLine("------A2 ans B2:-------------");
             Print(vAMatrixPose2);
-            Print(vBMatrixSensor2);
+            Console.WriteLine("------B1 and B2----------");
+            Print(vBMatrixSensor1);
+            Print(vBMatrixSensor2);            
+            Console.WriteLine("------A1 and A2(R)-------");
+            Matrix<float> A1 = R * vBMatrixSensor1 * R.Transpose();
+            Matrix<float> A2 = R * vBMatrixSensor2 * R.Transpose();            
+            Print(A1);
+            Print(A2);
+            Console.WriteLine("-------------------------");
             Console.ReadLine();
-
-            Console.WriteLine("------Transformations(Solution of Algo1):R1 and R2:-------------");
-            Console.WriteLine("------R1 - R2:-------------");
-            Print(R1 - R2);
-            Console.WriteLine("------ErrR1R2:-------------");
-            float ErrR1R2 = Performance(R1, R2);
-            Console.WriteLine(ErrR1R2);
-            Console.WriteLine("-----------------------A1 and A2 (R1)---------------------------");           
-            Matrix<float> A1 = R1 * vBMatrixSensor1 * R1.Transpose();
-            Matrix<float> A2 = R1 * vBMatrixSensor2 * R1.Transpose();
-            Console.WriteLine("------A1 - Aapprox1:-------------");
-            Print(vAMatrixPose1 - A1);
-            Console.WriteLine("------A2 - Aapprox2:-------------");
-            Print(vAMatrixPose2 - A2);
-            Console.WriteLine("------ErrA1Aa1:-------------");
-            float ErrA1Aa1 = Performance(A1, vAMatrixPose1);
-            Console.WriteLine(ErrA1Aa1);
-            Console.WriteLine("------ErrA2Aa2:-------------");
-            float ErrA2Aa2 = Performance(A2, vAMatrixPose2);
-            Console.WriteLine(ErrA2Aa2);
-            Console.ReadLine();
-
-            Matrix<float> A1moy = A1;
-            Matrix<float> A2moy = A2;
-
-            Console.WriteLine("-----------------------A1 and A2 (R2)---------------------------");
-            A1 = R2 * vBMatrixSensor1 * R2.Transpose();
-            A2 = R2 * vBMatrixSensor2 * R2.Transpose();
-            Console.WriteLine("------A1 - Aapprox1:-------------");
-            Print(vAMatrixPose1 - A1);
-            Console.WriteLine("------A2 - Aapprox2:-------------");
-            Print(vAMatrixPose2 - A2);
-            Console.WriteLine("------ErrA1Aa1:-------------");
-            ErrA1Aa1 = Performance(A1, vAMatrixPose1);
-            Console.WriteLine(ErrA1Aa1);
-            Console.WriteLine("------ErrA2Aa2:-------------");
-            ErrA2Aa2 = Performance(A2, vAMatrixPose2);
-            Console.WriteLine(ErrA2Aa2);
-
-            A1moy = A1moy + A1;
-            A2moy = A2moy + A2;
-            A1moy = A1moy/2.0F;
-            A2moy = A2moy/2.0F;
-            Console.WriteLine("------ErrA1Amoy1:-------------");
-            float ErrA1A1moy = Performance(A1moy, vAMatrixPose1);
-            Console.WriteLine(ErrA1A1moy);
-            Console.WriteLine("------ErrA2Amoy2:-------------");
-            float ErrA2A2moy = Performance(A2moy, vAMatrixPose2);
-            Console.WriteLine(ErrA2A2moy);
-            Console.ReadLine();
-            return R1;
+            return R;
         }
 
         /////////////////////////--------linear System Constructions Methods----------////////////////////
@@ -370,21 +317,21 @@ namespace Calibration1.CalibrationTransformation
             Vector<float> vEulerAngles = Vector<float>.Build.Dense(3, 0);
             if (vPose == "T")
             {
-                vEulerAngles[0] = 0.0F;      //X
-                vEulerAngles[1] = 0.0F;      //Y
-                vEulerAngles[2] = 0.0F;      //Z
+                vEulerAngles[0] = 0.0F * K;//X
+                vEulerAngles[1] = 0.0F * K;//Y
+                vEulerAngles[2] = 0.0F * K;//Z
             }
             else if (vPose == "Z")
             {
-                vEulerAngles[0] = 90.0F * K; //X
-                vEulerAngles[1] = 0.0F;      //Y
-                vEulerAngles[2] = 0.0F;      //Z
+                vEulerAngles[0] =  0.0F * K;//X    90.0F*K
+                vEulerAngles[1] =  0.0F * K;//Y
+                vEulerAngles[2] = 90.0F * K;//Z
             }
             else if (vPose == "S")
             {
-                vEulerAngles[0] = 0.0F;      //X
-                vEulerAngles[1] = 90.0F * K; //Y
-                vEulerAngles[2] = 0.0F;      //Z
+                vEulerAngles[0] = 0.0F  * K;//X
+                vEulerAngles[1] = 90.0F * K;//Y
+                vEulerAngles[2] = 0.0F  * K;//Z
             }
             return vEulerAngles;
         }
@@ -407,9 +354,9 @@ namespace Calibration1.CalibrationTransformation
             }
             else if (Axis == "Y")
             {
-                R[0, 0] = 1.0F * Mathf.Cos(EuAn);  R[0, 1] = 0.0F; R[0, 2] = -1.0F * Mathf.Sin(EuAn);
+                R[0, 0] = 1.0F * Mathf.Cos(EuAn);  R[0, 1] = 0.0F; R[0, 2] =  -1.0F * Mathf.Sin(EuAn);
                 R[1, 0] = 0.0F;                    R[1, 1] = 1.0F; R[1, 2] =  0.0F;
-                R[2, 0] = 1.0F * Mathf.Sin(EuAn);  R[2, 1] = 0.0F; R[2, 2] =  1.0F * Mathf.Cos(EuAn);
+                R[2, 0] = 1.0F * Mathf.Sin(EuAn); R[2, 1] = 0.0F; R[2, 2] =  1.0F * Mathf.Cos(EuAn);
             }
             else if (Axis == "Z")
             {
@@ -534,7 +481,7 @@ namespace Calibration1.CalibrationTransformation
             {
                 for (int j = 0; j < 3; j++)
                 {
-                    Mr[i, j] = Math.Round(M[i, j], 1);
+                    Mr[i, j] = Math.Round(M[i, j], 3);
                 }
             }
             Console.WriteLine(Mr);
@@ -564,6 +511,79 @@ namespace Calibration1.CalibrationTransformation
         }
     }
 }
+
+/*Console.WriteLine("------Initial differences between Raw and Ideal motion:----------");
+            Console.WriteLine("------A1 - B1:-------------");
+            Print(vAMatrixPose1 - vBMatrixSensor1);
+            Console.WriteLine("------ErrA1B1:-------------");
+            float ErrA1B1 = Performance(vAMatrixPose1, vBMatrixSensor1);
+            Console.WriteLine(ErrA1B1);
+            Console.ReadLine();
+
+            Console.WriteLine("------A2 - B2:-------------");
+            Print(vAMatrixPose2 - vBMatrixSensor2);
+            Console.WriteLine("------ErrA2B2:-------------");
+            float ErrA2B2 = Performance(vAMatrixPose2, vBMatrixSensor2);
+            Console.WriteLine(ErrA2B2);
+            Console.ReadLine();
+
+            Console.WriteLine("------A1 ans B1:-------------");
+            Print(vAMatrixPose1);
+            Print(vBMatrixSensor1);
+            Console.WriteLine("------A2 ans B2:-------------");
+            Print(vAMatrixPose2);
+            Print(vBMatrixSensor2);
+            Console.ReadLine();
+
+            Console.WriteLine("------Transformations(Solution of Algo1):R1 and R2:-------------");
+            Console.WriteLine("------R1 - R2:-------------");
+            Print(R1 - R2);
+            Console.WriteLine("------ErrR1R2:-------------");
+            float ErrR1R2 = Performance(R1, R2);
+            Console.WriteLine(ErrR1R2);
+            Console.WriteLine("-----------------------A1 and A2 (R1)---------------------------");           
+            Matrix<float> A1 = R1 * vBMatrixSensor1 * R1.Transpose();
+            Matrix<float> A2 = R1 * vBMatrixSensor2 * R1.Transpose();
+            Console.WriteLine("------A1 - Aapprox1:-------------");
+            Print(vAMatrixPose1 - A1);
+            Console.WriteLine("------A2 - Aapprox2:-------------");
+            Print(vAMatrixPose2 - A2);
+            Console.WriteLine("------ErrA1Aa1:-------------");
+            float ErrA1Aa1 = Performance(A1, vAMatrixPose1);
+            Console.WriteLine(ErrA1Aa1);
+            Console.WriteLine("------ErrA2Aa2:-------------");
+            float ErrA2Aa2 = Performance(A2, vAMatrixPose2);
+            Console.WriteLine(ErrA2Aa2);
+            Console.ReadLine();
+
+            Matrix<float> A1moy = A1;
+            Matrix<float> A2moy = A2;
+
+            Console.WriteLine("-----------------------A1 and A2 (R2)---------------------------");
+            A1 = R2 * vBMatrixSensor1 * R2.Transpose();
+            A2 = R2 * vBMatrixSensor2 * R2.Transpose();
+            Console.WriteLine("------A1 - Aapprox1:-------------");
+            Print(vAMatrixPose1 - A1);
+            Console.WriteLine("------A2 - Aapprox2:-------------");
+            Print(vAMatrixPose2 - A2);
+            Console.WriteLine("------ErrA1Aa1:-------------");
+            ErrA1Aa1 = Performance(A1, vAMatrixPose1);
+            Console.WriteLine(ErrA1Aa1);
+            Console.WriteLine("------ErrA2Aa2:-------------");
+            ErrA2Aa2 = Performance(A2, vAMatrixPose2);
+            Console.WriteLine(ErrA2Aa2);
+
+            A1moy = A1moy + A1;
+            A2moy = A2moy + A2;
+            A1moy = A1moy/2.0F;
+            A2moy = A2moy/2.0F;
+            Console.WriteLine("------ErrA1Amoy1:-------------");
+            float ErrA1A1moy = Performance(A1moy, vAMatrixPose1);
+            Console.WriteLine(ErrA1A1moy);
+            Console.WriteLine("------ErrA2Amoy2:-------------");
+            float ErrA2A2moy = Performance(A2moy, vAMatrixPose2);
+            Console.WriteLine(ErrA2A2moy);
+            Console.ReadLine();*/
 /*Console.WriteLine("Xp1 Xp2");
 Console.WriteLine(Xp1);
 Console.WriteLine(Xp2);

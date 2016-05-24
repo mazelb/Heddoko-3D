@@ -195,12 +195,12 @@ namespace Calibration1.CalibrationTransformation
             {
                 R[0, 0] = 1.0F; R[0, 1] = 0.0F; R[0, 2] = 0.0F;
                 R[1, 0] = 0.0F; R[1, 1] = 1.0F * Mathf.Cos(EuAn); R[1, 2] = 1.0F * Mathf.Sin(EuAn);
-                R[2, 0] = 0.0F; R[2, 1] = -1.0F * Mathf.Sin(EuAn); R[2, 2] = 1.0F * Mathf.Cos(EuAn);
+                R[2, 0] = 0.0F; R[2, 1] =-1.0F * Mathf.Sin(EuAn); R[2, 2] = 1.0F * Mathf.Cos(EuAn);
             }
             else if (Axis == "Y")
             {
                 R[0, 0] = 1.0F * Mathf.Cos(EuAn); R[0, 1] = 0.0F; R[0, 2] = -1.0F * Mathf.Sin(EuAn);
-                R[1, 0] = 0.0F; R[1, 1] = 1.0F; R[1, 2] = 0.0F;
+                R[1, 0] = 0.0F ; R[1, 1] = 1.0F; R[1, 2] = 0.0F;
                 R[2, 0] = 1.0F * Mathf.Sin(EuAn); R[2, 1] = 0.0F; R[2, 2] = 1.0F * Mathf.Cos(EuAn);
             }
             else if (Axis == "Z")

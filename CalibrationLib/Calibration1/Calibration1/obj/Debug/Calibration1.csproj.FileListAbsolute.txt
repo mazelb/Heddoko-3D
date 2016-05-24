@@ -11,4 +11,12 @@ C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\bin\
 C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\bin\Debug\System.Threading.dll
 C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\obj\Debug\Calibration1.dll
 C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\obj\Debug\Calibration1.pdb
+<<<<<<< HEAD
+=======
 C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\obj\Debug\Calibration1.csprojResolveAssemblyReference.cache
+C:\Users\Fatemeh\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\bin\Debug\Calibration1.dll
+C:\Users\Fatemeh\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\bin\Debug\Calibration1.pdb
+C:\Users\Fatemeh\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\obj\Debug\Calibration1.csprojResolveAssemblyReference.cache
+C:\Users\Fatemeh\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\obj\Debug\Calibration1.dll
+C:\Users\Fatemeh\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\obj\Debug\Calibration1.pdb
+>>>>>>> c0ec45ee69e703ba1f1292e1b40025032bf9abea
