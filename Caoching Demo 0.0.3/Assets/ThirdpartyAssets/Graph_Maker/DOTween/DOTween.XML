@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <doc>
     <assembly>
         <name>DOTween</name>
@@ -80,7 +80,7 @@
             <param name="loops">Number of cycles to play (-1 for infinite - will be converted to 1 in case the tween is nested in a Sequence)</param>
             <param name="loopType">Loop behaviour type (default: LoopType.Restart)</param>
         </member>
-        <member name="M:DG.Tweening.TweenParams.SetEase(DG.Tweening.Ease,System.Nullable{System.Single},System.Noneable{System.Single})">
+        <member name="M:DG.Tweening.TweenParams.SetEase(DG.Tweening.Ease,System.Nullable{System.Single},System.Nullable{System.Single})">
             <summary>Sets the ease of the tween.
             <para>If applied to Sequences eases the whole sequence animation</para></summary>
             <param name="overshootOrAmplitude">Eventual overshoot or amplitude to use with Back or Elastic easeType (default is 1.70158)</param>
@@ -608,7 +608,7 @@
             <param name="lockRotation">The eventual rotation axis to lock. You can input multiple axis if you separate them like this:
             <para>AxisConstrain.X | AxisConstraint.Y</para></param>
         </member>
-        <member name="M:DG.Tweening.TweenSettingsExtensions.SetLookAt(DG.Tweening.Core.TweenerCore{UnityEngine.Vector3,DG.Tweening.Plugins.Core.PathCore.Path,DG.Tweening.Plugins.Options.PathOptions},UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Noneable{UnityEngine.Vector3})">
+        <member name="M:DG.Tweening.TweenSettingsExtensions.SetLookAt(DG.Tweening.Core.TweenerCore{UnityEngine.Vector3,DG.Tweening.Plugins.Core.PathCore.Path,DG.Tweening.Plugins.Options.PathOptions},UnityEngine.Vector3,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Vector3})">
             <summary>Additional LookAt options for Path tweens (created via the <code>DOPath</code> shortcut).
             Orients the target towards the given position.
             Must be chained directly to the tween creation method or to a <code>SetOptions</code></summary>
@@ -617,7 +617,7 @@
             If left to NULL defaults to the regular forward side of the transform</param>
             <param name="up">The vector that defines in which direction up is (default: Vector3.up)</param>
         </member>
-        <member name="M:DG.Tweening.TweenSettingsExtensions.SetLookAt(DG.Tweening.Core.TweenerCore{UnityEngine.Vector3,DG.Tweening.Plugins.Core.PathCore.Path,DG.Tweening.Plugins.Options.PathOptions},UnityEngine.Transform,System.Nullable{UnityEngine.Vector3},System.Noneable{UnityEngine.Vector3})">
+        <member name="M:DG.Tweening.TweenSettingsExtensions.SetLookAt(DG.Tweening.Core.TweenerCore{UnityEngine.Vector3,DG.Tweening.Plugins.Core.PathCore.Path,DG.Tweening.Plugins.Options.PathOptions},UnityEngine.Transform,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Vector3})">
             <summary>Additional LookAt options for Path tweens (created via the <code>DOPath</code> shortcut).
             Orients the target towards another transform.
             Must be chained directly to the tween creation method or to a <code>SetOptions</code></summary>
@@ -626,7 +626,7 @@
             If left to NULL defaults to the regular forward side of the transform</param>
             <param name="up">The vector that defines in which direction up is (default: Vector3.up)</param>
         </member>
-        <member name="M:DG.Tweening.TweenSettingsExtensions.SetLookAt(DG.Tweening.Core.TweenerCore{UnityEngine.Vector3,DG.Tweening.Plugins.Core.PathCore.Path,DG.Tweening.Plugins.Options.PathOptions},System.Single,System.Nullable{UnityEngine.Vector3},System.Noneable{UnityEngine.Vector3})">
+        <member name="M:DG.Tweening.TweenSettingsExtensions.SetLookAt(DG.Tweening.Core.TweenerCore{UnityEngine.Vector3,DG.Tweening.Plugins.Core.PathCore.Path,DG.Tweening.Plugins.Options.PathOptions},System.Single,System.Nullable{UnityEngine.Vector3},System.Nullable{UnityEngine.Vector3})">
             <summary>Additional LookAt options for Path tweens (created via the <code>DOPath</code> shortcut).
             Orients the target to the path, with the given lookAhead.
             Must be chained directly to the tween creation method or to a <code>SetOptions</code></summary>
@@ -1512,7 +1512,7 @@
             <summary>Default period used for eases
             <para>Default: 0</para></summary>
         </member>
-        <member name="M:DG.Tweening.DOTween.Init(System.Nullable{System.Boolean},System.Noneable{System.Boolean},System.Noneable{DG.Tweening.LogBehaviour})">
+        <member name="M:DG.Tweening.DOTween.Init(System.Nullable{System.Boolean},System.Nullable{System.Boolean},System.Nullable{DG.Tweening.LogBehaviour})">
             <summary>
             Must be called once, before the first ever DOTween call/reference,
             otherwise it will be called automatically and will use default options.
