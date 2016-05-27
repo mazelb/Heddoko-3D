@@ -84,7 +84,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <returns></returns>
         public HVector3 Lerp(HVector3 vFrom, HVector3 vTo, float vT)
         {
-            return new U3DVector3(Vector3.Lerp(((U3DVector3)vFrom).Instance, ((U3DVector3)vTo).Instance, vT));
+            return new U3DVector3(Vector3.Lerp(((U3DVector3)vFrom).mVector3, ((U3DVector3)vTo).mVector3, vT));
         }
         /// <summary>
         /// returns the dot product of two vectors. Note that this perform a direct cast
@@ -92,7 +92,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// </summary>
         public float Dot(HVector3 vLhs, HVector3 vRhs)
         {
-            return Vector3.Dot(((U3DVector3)vLhs).Instance, ((U3DVector3)vRhs).Instance);
+            return Vector3.Dot(((U3DVector3)vLhs).mVector3, ((U3DVector3)vRhs).mVector3);
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <returns></returns>
         public HVector3 Project(HVector3 vVector, HVector3 vOnNormal)
         {
-            return new U3DVector3(Vector3.Project(((U3DVector3)vVector).Instance, ((U3DVector3)vOnNormal).Instance));
+            return new U3DVector3(Vector3.Project(((U3DVector3)vVector).mVector3, ((U3DVector3)vOnNormal).mVector3));
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <returns></returns>
         public HVector3 ProjectOnPlane(HVector3 vVector3, HVector3 vPlaneNormal)
         {
-            return new U3DVector3(Vector3.ProjectOnPlane(((U3DVector3)vVector3).Instance, ((U3DVector3)vPlaneNormal).Instance));
+            return new U3DVector3(Vector3.ProjectOnPlane(((U3DVector3)vVector3).mVector3, ((U3DVector3)vPlaneNormal).mVector3));
         }
 
 
@@ -129,7 +129,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <returns></returns>
         public float Angle(HVector3 vFrom, HVector3 vTo)
         {
-            return Vector3.Angle(((U3DVector3)vFrom).Instance, ((U3DVector3)vTo).Instance);
+            return Vector3.Angle(((U3DVector3)vFrom).mVector3, ((U3DVector3)vTo).mVector3);
 
         }
 
@@ -142,7 +142,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <returns></returns>
         public float Distance(HVector3 vA, HVector3 vB)
         {
-            return Vector3.Distance(((U3DVector3)vA).Instance, ((U3DVector3)vB).Instance);
+            return Vector3.Distance(((U3DVector3)vA).mVector3, ((U3DVector3)vB).mVector3);
         }
         /// <summary>
         /// Returns a copy of the vector with its magnitude clamped to the passed in Max Length.
@@ -154,7 +154,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <returns>Vector with a clamped magnitude</returns>
         public HVector3 ClampMagnitude(HVector3 vVector, float vMaxLength)
         {
-            return new U3DVector3(Vector3.ClampMagnitude(((U3DVector3)vVector).Instance, vMaxLength));
+            return new U3DVector3(Vector3.ClampMagnitude(((U3DVector3)vVector).mVector3, vMaxLength));
         }
 
 
@@ -167,7 +167,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <returns>it's corresponding magnitude</returns>
         public float Magnitude(HVector3 vA)
         {
-            return Vector3.Magnitude(((U3DVector3)vA).Instance);
+            return Vector3.Magnitude(((U3DVector3)vA).mVector3);
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <returns>the vector's square magnitude</returns>
         public float SqrMagnitude(HVector3 vA)
         {
-            return Vector3.SqrMagnitude(((U3DVector3)vA).Instance);
+            return Vector3.SqrMagnitude(((U3DVector3)vA).mVector3);
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <returns>Vector with a clamped magnitude</returns>
         public HVector3 Min(HVector3 vLhs, HVector3 vRhs)
         {
-            return new U3DVector3(Vector3.Min(((U3DVector3)vLhs).Instance, ((U3DVector3)vRhs).Instance));
+            return new U3DVector3(Vector3.Min(((U3DVector3)vLhs).mVector3, ((U3DVector3)vRhs).mVector3));
 
         }
         /// <summary>
@@ -205,7 +205,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <returns>Vector with a clamped magnitude</returns>
         public HVector3 Max(HVector3 vLhs, HVector3 vRhs)
         {
-            return new U3DVector3(Vector3.Max(((U3DVector3)vLhs).Instance, ((U3DVector3)vRhs).Instance));
+            return new U3DVector3(Vector3.Max(((U3DVector3)vLhs).mVector3, ((U3DVector3)vRhs).mVector3));
         }
 
         /// <summary>
@@ -218,7 +218,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <param name="vBinormal">will normalize the binormal and will be orthogonal is vTangent and vNormal</param>
         public void OrthoNormalize(  HVector3 vNormal,   HVector3 vTangent,   HVector3 vBinormal)
         {
-            Vector3.OrthoNormalize(ref ((U3DVector3)vNormal).Instance, ref ((U3DVector3)vTangent).Instance, ref ((U3DVector3)vBinormal).Instance);
+            Vector3.OrthoNormalize(ref ((U3DVector3)vNormal).mVector3, ref ((U3DVector3)vTangent).mVector3, ref ((U3DVector3)vBinormal).mVector3);
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <param name="vTangent">Will be orthogonal to vNormal and normalized</param> 
         public void OrthoNormalize(  HVector3 vNormal,   HVector3 vTangent)
         {
-            Vector3.OrthoNormalize(ref ((U3DVector3)vNormal).Instance, ref ((U3DVector3)vTangent).Instance);
+            Vector3.OrthoNormalize(ref ((U3DVector3)vNormal).mVector3, ref ((U3DVector3)vTangent).mVector3);
         }
 
         /// <summary>
@@ -244,7 +244,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <returns></returns>
         public HVector3 Slerp(HVector3 vFrom, HVector3 vTo, float vT)
         {
-            return new U3DVector3(Vector3.Slerp(((U3DVector3)vFrom).Instance, ((U3DVector3)vTo).Instance, vT));
+            return new U3DVector3(Vector3.Slerp(((U3DVector3)vFrom).mVector3, ((U3DVector3)vTo).mVector3, vT));
         }
         /// <summary>
         /// Moves a point current in a straight line towards a vTarget point.
@@ -256,7 +256,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <param name="vMaxDistanceDelta">the delta distance between the two vTarget vectors</param>
         public HVector3 MoveTowards(HVector3 vCurrentVector, HVector3 vTargetVector, float vMaxDistanceDelta)
         {
-            return new U3DVector3(Vector3.MoveTowards(((U3DVector3)vCurrentVector).Instance, ((U3DVector3)vTargetVector).Instance, vMaxDistanceDelta));
+            return new U3DVector3(Vector3.MoveTowards(((U3DVector3)vCurrentVector).mVector3, ((U3DVector3)vTargetVector).mVector3, vMaxDistanceDelta));
         }
 
         /// <summary>
@@ -271,7 +271,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <param name="vMaxMagDelta"></param>
         public HVector3 RotateTowards(HVector3 vCurrentVector, HVector3 vTarget, float vMaxRads, float vMaxMagDelta)
         {
-            return new U3DVector3(Vector3.RotateTowards(((U3DVector3)vCurrentVector).Instance, ((U3DVector3)vTarget).Instance, vMaxRads, vMaxMagDelta));
+            return new U3DVector3(Vector3.RotateTowards(((U3DVector3)vCurrentVector).mVector3, ((U3DVector3)vTarget).mVector3, vMaxRads, vMaxMagDelta));
 
         }
 
@@ -289,7 +289,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         public HVector3 SmoothDamp(HVector3 vCurrent, HVector3 vTarget, float vdeltaTime, ref HVector3 vCurrVelocity, float vSmoothTime,
             float vMaxSpeed)
         {
-            return new U3DVector3(Vector3.SmoothDamp(((U3DVector3)vCurrent).Instance, ((U3DVector3)vTarget).Instance, ref ((U3DVector3)vCurrVelocity).Instance,
+            return new U3DVector3(Vector3.SmoothDamp(((U3DVector3)vCurrent).mVector3, ((U3DVector3)vTarget).mVector3, ref ((U3DVector3)vCurrVelocity).mVector3,
              vSmoothTime, vMaxSpeed, vdeltaTime));
         }
 
@@ -303,7 +303,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <returns></returns>
         public HVector3 Cross(HVector3 vLhs, HVector3 vRhs)
         {
-            return new U3DVector3(Vector3.Cross(((U3DVector3)vLhs).Instance, ((U3DVector3)vRhs).Instance));
+            return new U3DVector3(Vector3.Cross(((U3DVector3)vLhs).mVector3, ((U3DVector3)vRhs).mVector3));
         }
 
 
@@ -327,7 +327,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// </summary> 
         public HVector3 Scale(HVector3 vA, HVector3 vB)
         {
-            return new U3DVector3(Vector3.Scale(((U3DVector3)vA).Instance, ((U3DVector3)vB).Instance));
+            return new U3DVector3(Vector3.Scale(((U3DVector3)vA).mVector3, ((U3DVector3)vB).mVector3));
 
         }
 
@@ -338,7 +338,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// </summary> 
         public HVector3 Reflect(HVector3 inDirection, HVector3 inNormal)
         {
-            return new U3DVector3(Vector3.Reflect(((U3DVector3)inDirection).Instance, ((U3DVector3)inNormal).Instance));
+            return new U3DVector3(Vector3.Reflect(((U3DVector3)inDirection).mVector3, ((U3DVector3)inNormal).mVector3));
         }
 
 

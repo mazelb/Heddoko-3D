@@ -8,13 +8,14 @@
 
 using System;
 using Assets.Scripts.Utils.HMath.Service_Provider;
+// ReSharper disable VirtualMemberCallInContructor
 
 namespace Assets.Scripts.Utils.HMath.Structure
 {
     /// <summary>
-    /// A HVector3 class holding X,y,z components of type floats
+    /// A HVector3 class holding X,Y,z components of type floats
     /// </summary>
-  public abstract class HVector3
+    public abstract class HVector3
     {
         public const float KEpsilon = 1E-05f;
         public abstract float X { get; set; }
@@ -27,14 +28,14 @@ namespace Assets.Scripts.Utils.HMath.Structure
         /// Operator overload.
         /// Note: will throw an IndexOutOfRangeException if index doesn't fall between 0-2
         /// </summary>
-        /// <param name="index"> the index of the HVector3 Component. 
+        /// <param name="vIndex"> the index of the HVector3 Component. 
         /// </param>
         /// <returns></returns>
-        public float this[int index]
+        public float this[int vIndex]
         {
             get
             {
-                switch (index)
+                switch (vIndex)
                 {
                     case 0:
                         return X;
@@ -48,7 +49,7 @@ namespace Assets.Scripts.Utils.HMath.Structure
             }
             set
             {
-                switch (index)
+                switch (vIndex)
                 {
                     case 0:
                         X = value;
@@ -65,8 +66,8 @@ namespace Assets.Scripts.Utils.HMath.Structure
             }
         }
 
-      
- 
+
+
         public static float Magnitude(HVector3 vVector3)
         {
             return Vector3MathServiceProvider.Magnitude(vVector3);
@@ -77,19 +78,19 @@ namespace Assets.Scripts.Utils.HMath.Structure
         {
             return Vector3MathServiceProvider.SqrMagnitude(vVector3);
         }
-        
 
-        protected HVector3(float x, float y, float z)
+
+        public HVector3(float vX, float vY, float vZ)
         {
-             X = x;
-            Y = y;
-            Z = z;
+            X = vX;
+            Y = vY;
+            Z = vZ;
         }
-        protected HVector3(float x, float y)
+        public HVector3(float vX, float vY)
         {
-             X = x;
-            Y = y;
-             Z = 0f;
+            X = vX;
+            Y = vY;
+            Z = 0f;
         }
 
         public static HVector3 Lerp(HVector3 vFrom, HVector3 vTo, float vT)
@@ -101,48 +102,48 @@ namespace Assets.Scripts.Utils.HMath.Structure
             return Vector3MathServiceProvider.Slerp(vFrom, vTo, vT);
         }
 
-        public static void OrthoNormalize(  HVector3 vNormal,   HVector3 vTangent)
+        public static void OrthoNormalize(HVector3 vNormal, HVector3 vTangent)
         {
-            Vector3MathServiceProvider.OrthoNormalize( vNormal,  vTangent);
+            Vector3MathServiceProvider.OrthoNormalize(vNormal, vTangent);
         }
 
 
-        public static void OrthoNormalize(  HVector3 vNormal,   HVector3 vTangent,   HVector3 vBinormal)
+        public static void OrthoNormalize(HVector3 vNormal, HVector3 vTangent, HVector3 vBinormal)
         {
-            Vector3MathServiceProvider.OrthoNormalize(  vNormal,   vTangent,   vBinormal);
+            Vector3MathServiceProvider.OrthoNormalize(vNormal, vTangent, vBinormal);
 
         }
 
 
-        public static HVector3 MoveTowards(HVector3 current, HVector3 target, float maxDistanceDelta)
+        public static HVector3 MoveTowards(HVector3 vCurrent, HVector3 vTarget, float vMaxDistanceDelta)
         {
-          return   Vector3MathServiceProvider.MoveTowards(current, target, maxDistanceDelta);
+            return Vector3MathServiceProvider.MoveTowards(vCurrent, vTarget, vMaxDistanceDelta);
         }
 
-        public static HVector3 RotateTowards(HVector3 current, HVector3 target, float maxRadiansDelta,
-            float maxMagnitudeDelta)
+        public static HVector3 RotateTowards(HVector3 vCurrent, HVector3 vTarget, float vMaxRadiansDelta,
+            float vMaxMagnitudeDelta)
         {
-         return   Vector3MathServiceProvider.RotateTowards(current, target, maxRadiansDelta, maxMagnitudeDelta);
+            return Vector3MathServiceProvider.RotateTowards(vCurrent, vTarget, vMaxRadiansDelta, vMaxMagnitudeDelta);
 
         }
 
-        public static HVector3 SmoothDamp(HVector3 current, HVector3 target, ref HVector3 currentVelocity,
-            float smoothTime, float deltaTime, float maxSpeed = float.PositiveInfinity)
+        public static HVector3 SmoothDamp(HVector3 vCurrent, HVector3 vTarget, ref HVector3 vCurrentVelocity,
+            float vSmoothTime, float vDeltaTime, float vMaxSpeed = float.PositiveInfinity)
         {
-            return Vector3MathServiceProvider.SmoothDamp(current, target,deltaTime, ref currentVelocity, smoothTime, maxSpeed);
+            return Vector3MathServiceProvider.SmoothDamp(vCurrent, vTarget, vDeltaTime, ref vCurrentVelocity, vSmoothTime, vMaxSpeed);
 
         }
         /// <summary>
         /// Set the new passed in values
         /// </summary>
-        /// <param name="newX"></param>
-        /// <param name="newY"></param>
-        /// <param name="newZ"></param>
-        public void Set(float newX, float newY, float newZ)
+        /// <param name="vNewX"></param>
+        /// <param name="vNewY"></param>
+        /// <param name="vNewZ"></param>
+        public void Set(float vNewX, float vNewY, float vNewZ)
         {
-            X = newX;
-           Y = newY;
-            Z = newZ;
+            X = vNewX;
+            Y = vNewY;
+            Z = vNewZ;
         }
         /// <summary>
         /// Every component in the result is a component of vA multiplied by the same component of vB
@@ -151,34 +152,35 @@ namespace Assets.Scripts.Utils.HMath.Structure
         {
             return Vector3MathServiceProvider.Scale(vA, vB);
         }
-        public void Scale(HVector3 scale)
+        public void Scale(HVector3 vScale)
         {
-            this.X *= scale.X;
-            this.Y *= scale.Y;
-            this.Z *= scale.Z;
+            X *= vScale.X;
+            Y *= vScale.Y;
+            Z *= vScale.Z;
         }
 
-        public abstract void Cross(HVector3 rhs);//, HVector3 rhs)
-        //{
-        //    return Vector3MathServiceProvider.Cross(lhs, rhs);
-        //}
+        public abstract void Cross(HVector3 vRhs);
+
         public override int GetHashCode()
         {
-            return this.X.GetHashCode() ^ this.Y.GetHashCode() << 2 ^ this.Z.GetHashCode() >> 2;
+            return X.GetHashCode() ^ Y.GetHashCode() << 2 ^ Z.GetHashCode() >> 2;
         }
-        public override bool Equals(object other)
+
+        public override bool Equals(object vOther)
         {
-            if (!(other is HVector3))
+            if (!(vOther is HVector3))
             {
                 return false;
             }
-            HVector3 vector = (HVector3)other;
-            return this.X.Equals(vector.X) && this.Y.Equals(vector.Y) && this.Z.Equals(vector.Z);
+            HVector3 vector = (HVector3)vOther;
+            return X.Equals(vector.X) && Y.Equals(vector.Y) && Z.Equals(vector.Z);
         }
 
-        public static HVector3 Reflect(HVector3 inDirection, HVector3 inNormal)
+
+
+        public static HVector3 Reflect(HVector3 vInDirection, HVector3 vInNormal)
         {
-          return  Vector3MathServiceProvider.Reflect(inDirection, inNormal);
+            return Vector3MathServiceProvider.Reflect(vInDirection, vInNormal);
         }
         public abstract void Normalize();
 
@@ -187,99 +189,137 @@ namespace Assets.Scripts.Utils.HMath.Structure
             Vector3MathServiceProvider.Normalize(vVector);
         }
         public abstract override string ToString();
-        public abstract string ToString(string format);
-
-        public static float Dot(HVector3 lhs, HVector3 rhs)
-        {
-            return Vector3MathServiceProvider.Dot(lhs, rhs);
-        }
-
-        public static HVector3 Project(HVector3 vector, HVector3 onNormal)
-        {
-            return Vector3MathServiceProvider.Project(vector, onNormal);
-        }
+        public abstract string ToString(string vFormat);
 
 
-        public static HVector3 ProjectOnPlane(HVector3 vector, HVector3 planeNormal)
+        /// <summary>
+        /// Compute the scalar dot product between two vectors vLhs and vRhs
+        /// </summary>
+        /// <param name="vLhs"></param>
+        /// <param name="vRhs"></param>
+        /// <returns></returns>
+        public static float Dot(HVector3 vLhs, HVector3 vRhs)
         {
-            return Vector3MathServiceProvider.ProjectOnPlane(vector, planeNormal);
+            return Vector3MathServiceProvider.Dot(vLhs, vRhs);
         }
 
-        public static float Angle(HVector3 from, HVector3 to)
+        /// <summary>
+        /// Project a vector onto another
+        /// </summary>
+        /// <param name="vVector"></param>
+        /// <param name="vOnNormal"></param>
+        /// <returns></returns>
+        public static HVector3 Project(HVector3 vVector, HVector3 vOnNormal)
         {
-          return Vector3MathServiceProvider.Angle(from, to);
+            return Vector3MathServiceProvider.Project(vVector, vOnNormal);
         }
 
-        public static float Distance(HVector3 a, HVector3 b)
+        /// <summary>
+        /// Projects a vector vVector onto a plane whose normal is vPlaneNormal.
+        /// </summary>
+        /// <param name="vVector"></param>
+        /// <param name="vPlaneNormal"></param>
+        /// <returns></returns>
+        public static HVector3 ProjectOnPlane(HVector3 vVector, HVector3 vPlaneNormal)
         {
-            return Vector3MathServiceProvider.Distance(a, b);
+            return Vector3MathServiceProvider.ProjectOnPlane(vVector, vPlaneNormal);
         }
-        public static HVector3 ClampMagnitude(HVector3 vector, float maxLength)
+
+        /// <summary>
+        /// Returns the acute angle between two vectors vFrom and vTo
+        /// </summary>
+        /// <param name="vFrom"></param>
+        /// <param name="vTo"></param>
+        /// <returns></returns>
+        public static float Angle(HVector3 vFrom, HVector3 vTo)
         {
-            return Vector3MathServiceProvider.ClampMagnitude(vector, maxLength);
+            return Vector3MathServiceProvider.Angle(vFrom, vTo);
         }
-        public static HVector3 Min(HVector3 lhs, HVector3 rhs)
+
+        /// <summary>
+        /// Provides a distance between the two vectors vA and vB
+        /// </summary>
+        /// <param name="vA"></param>
+        /// <param name="vB"></param>
+        /// <returns></returns>
+        public static float Distance(HVector3 vA, HVector3 vB)
         {
-            return Vector3MathServiceProvider.Min(lhs, rhs);
+            return Vector3MathServiceProvider.Distance(vA, vB);
         }
-        public static HVector3 Max(HVector3 lhs, HVector3 rhs)
+        public static HVector3 ClampMagnitude(HVector3 vEctor, float vMaxLength)
         {
-            return Vector3MathServiceProvider.Max(lhs, rhs);
+            return Vector3MathServiceProvider.ClampMagnitude(vEctor, vMaxLength);
         }
- 
+        public static HVector3 Min(HVector3 vLhs, HVector3 vRhs)
+        {
+            return Vector3MathServiceProvider.Min(vLhs, vRhs);
+        }
+        public static HVector3 Max(HVector3 vLhs, HVector3 vRhs)
+        {
+            return Vector3MathServiceProvider.Max(vLhs, vRhs);
+        }
+
 
         /// <summary>
         /// Adds an input HVector to the current vector
         /// </summary>
-        /// <param name="b"></param>
+        /// <param name="vB"></param>
         /// <returns>two added vectors</returns>
-        protected abstract HVector3 Plus(HVector3 b);
-        public static HVector3 operator +(HVector3 a, HVector3 b)
+        protected abstract HVector3 Plus(HVector3 vB);
+        public static HVector3 operator +(HVector3 vA, HVector3 vB)
         {
-            return a.Plus(b);
+            return vA.Plus(vB);
         }
 
         /// <summary>
         /// substracts input HVector from the current vector
         /// </summary>
-        /// <param name="b"></param>
+        /// <param name="vB"></param>
         /// <returns></returns>
-        protected abstract HVector3 Minus(HVector3 b);
+        protected abstract HVector3 Minus(HVector3 vB);
 
-        public static HVector3 operator -(HVector3 a, HVector3 b)
+        public static HVector3 operator -(HVector3 vA, HVector3 vB)
         {
-            return a.Minus(b);
+            return vA.Minus(vB);
         }
 
-
-        public static HVector3 operator -(HVector3 a)
+        public static HVector3 Up
         {
-            return a.ScalarMultiply(-1);
+            get { return Vector3MathServiceProvider.Up; }
         }
 
-        protected abstract HVector3 ScalarMultiply(float d);
+        public static HVector3 Zero
+        {
+            get { return Vector3MathServiceProvider.Zero; }
+        }
+        public static HVector3 operator -(HVector3 vA)
+        {
+            return vA.ScalarMultiply(-1);
+        }
+
+        protected abstract HVector3 ScalarMultiply(float vD);
 
 
-        public static HVector3 operator *(HVector3 a, float d)
+        public static HVector3 operator *(HVector3 vA, float vD)
         {
-            return a.ScalarMultiply(d);
+            return vA.ScalarMultiply(vD);
         }
-        public static HVector3 operator *(float d, HVector3 a)
+        public static HVector3 operator *(float vD, HVector3 vA)
         {
-            return a.ScalarMultiply(d);
+            return vA.ScalarMultiply(vD);
         }
-        public static HVector3 operator /(HVector3 a, float d)
+        public static HVector3 operator /(HVector3 vA, float vD)
         {
-            return a.ScalarMultiply((1f)/d);
+            return vA.ScalarMultiply((1f) / vD);
         }
-        public static bool operator ==(HVector3 lhs, HVector3 rhs)
+        public static bool operator ==(HVector3 vLhs, HVector3 vRhs)
         {
-            return Vector3MathServiceProvider.SqrMagnitude(lhs - rhs) < 9.99999944E-11f;
+            return Vector3MathServiceProvider.SqrMagnitude(vLhs - vRhs) < 9.99999944E-11f;
         }
-         
-        public static bool operator !=(HVector3 lhs, HVector3 rhs)
+
+        public static bool operator !=(HVector3 vLhs, HVector3 vRhs)
         {
-            return Vector3MathServiceProvider.SqrMagnitude(lhs- rhs) >= 9.99999944E-11f;
+            return Vector3MathServiceProvider.SqrMagnitude(vLhs - vRhs) >= 9.99999944E-11f;
         }
 
     }

@@ -36,7 +36,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
 
 
         /// <summary>
-        /// Retunrs an HVector3 in the global up direction
+        /// Returns an HVector3 in the global up direction
         /// </summary>
         HVector3 Up { get; }
 
