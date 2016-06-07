@@ -26,5 +26,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
         public TorsoAnalysis TorsoAnalysisSegment { get; set; }
         public Transform TorsoTransform { get { return TorsoAnalysisSegment.TorsoTransform; } }
         public Transform HipGlobalTransform { get { return TorsoAnalysisSegment.HipGlobalTransform; } }
+        internal void NotifyLegAnalysisCompletion()
+        {
+            NotifyAnalysisCompletionListeners();
+        }
     }
 }

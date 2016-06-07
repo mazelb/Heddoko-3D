@@ -7,7 +7,7 @@
 */
 
 
-using System.Collections; 
+using System.Collections;
 using Assets.Scripts.Frames_Pipeline;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
@@ -16,14 +16,15 @@ using UnityEngine;
 
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
 {
+
     public delegate void BodyUpdated(Body vBody);
+
+    public delegate void RecordingUpdated(PlaybackControlPanel vControlPanel);
     /// <summary>
     /// Provides controls for recording play back
     /// </summary>
     public class PlaybackControlPanel : AbstractControlPanel
     {
-        private float mPlaybackSpeed = 1f;
-
         private RecordingPlaybackTask mPlaybackTask;
         private Body mBody;
         public RecordingProgressSubControl RecordingProgressSliderSubControl;
@@ -33,23 +34,17 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public RecordingPlayPause PlayPauseSubControls;
         public RecordingPlaySpeedModSubControl PlaybackSpeedModifierSubControl;
         public RecordingProgressSubControl PlaybackProgressSubControl;
+        public RecordingIndexValue RecordingIndexValue;
         public LoadSingleRecordingSubControl SingleRecordingLoadSubControl;
         public event BodyUpdated BodyUpdatedEvent;
-        public float MaxForwardSpeed = 5f;
-        public float MaxBackSpeed = -5f;
-        private float mCurrForwardSpeed = 1f;
-        private float mCurrBackSpeed = -1f;
-        /// <summary>
-        /// Loops through the current recording
-        /// </summary>
-        public bool IsLooping = true;
-
+        public event RecordingUpdated RecordingUpdatedEvent;
         private bool mIsNewRecording = true;
 
         [SerializeField]
         private PlaybackState mCurrentState;
-
         private PlaybackState mPrevState;
+        private PlaybackSettings mPlaybackSettings = new PlaybackSettings();
+
         public PlaybackState CurrentState
         {
             get
@@ -65,18 +60,18 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         {
             get
             {
-                return mPlaybackSpeed;
+                return 1f;
             }
             set
             {
-                if (mPlaybackSpeed == 0)
+                if (mPlaybackSettings.PlaybackSpeed.Equals(0))
                 {
                     if (mPlaybackTask != null)
                     {
                         mPlaybackTask.IsPaused = true;
                     }
                 }
-                mPlaybackSpeed = value;
+                mPlaybackSettings.PlaybackSpeed = value;
             }
         }
 
@@ -98,7 +93,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 {
                     vAbsSubCtrl.Enable();
                 }
-                mPlaybackTask.LoopPlaybackEnabled = IsLooping;
+                mPlaybackTask.LoopPlaybackEnabled = mPlaybackSettings.IsLooping;
                 PlaybackProgressSubControl.UpdateMaxTimeAndMaxValue(mPlaybackTask.RecordingCount,
  mPlaybackTask.TotalRecordingTime);
                 //reset sliders positions
@@ -107,15 +102,22 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 PlaybackTask.PlayFromIndex(0);
                 PlaybackTask.PlaybackSpeed = 1;
                 PlaybackSpeedModifierSubControl.PlaybackSpeedSlider.value = 1;
+                if (RecordingUpdatedEvent != null)
+                {
+                    RecordingUpdatedEvent(this);
+                }
                 ChangeState(PlaybackState.Play);
-
             }
-
         }
 
         public override ControlPanelType PanelType
         {
             get { return ControlPanelType.RecordingPlaybackControlPanel; }
+        }
+
+        public PlaybackSettings PlaybackSettings
+        {
+            get { return mPlaybackSettings; }
         }
 
         /// <summary>
@@ -133,7 +135,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             mSubControls.Add(PlaybackSpeedModifierSubControl);
             mSubControls.Add(PlaybackProgressSubControl);
             mSubControls.Add(SingleRecordingLoadSubControl);
-
             RecordingProgressSliderSubControl.Init(this);
             RecordingForwardSubControl.Init(this);
             RecordingRewindSubControl.Init(this);
@@ -144,6 +145,14 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             ValidatePlaybackTaskForControls();
         }
 
+        public void SkipFrameBack()
+        {
+            
+        }
+        public void SkipFrameFwd()
+        {
+            
+        }
         void OnApplicationQuit()
         {
             PlayPauseSubControls.PlayPauseButton.onClick.RemoveAllListeners();
@@ -158,6 +167,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             {
                 return;
             }
+
             int vCurrIdx = mPlaybackTask.GetCurrentPlaybackIndex;
             switch (vNewState)
             {
@@ -168,48 +178,54 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                     break;
 
                 case PlaybackState.Play:
-                    mPlaybackTask.PlaybackSpeed = mCurrForwardSpeed = 1f;
+                    mPlaybackTask.PlaybackSpeed = mPlaybackSettings.CurrForwardSpeed = 1f;
                     mPlaybackTask.IsPaused = false;
                     OnPlay();
                     break;
                 case PlaybackState.FastBackward:
-                    mCurrBackSpeed--;
-                    if (mCurrBackSpeed < MaxBackSpeed)
+                    mPlaybackSettings.CurrBackSpeed--;
+                    if (mPlaybackSettings.CurrBackSpeed < mPlaybackSettings.MaxBackSpeed)
                     {
-                        mCurrBackSpeed = -1f;
+                        mPlaybackSettings.CurrBackSpeed = -1f;
                     }
-                    mPlaybackTask.PlaybackSpeed = mCurrBackSpeed;
+                    mPlaybackTask.PlaybackSpeed = mPlaybackSettings.CurrBackSpeed;
                     RecordingPlaybackSpeedDisplay.UpdateSpeedText(mPlaybackTask.PlaybackSpeed);
                     mPlaybackTask.IsPaused = false;
                     PlaybackSpeedModifierSubControl.IsInteractable = false;
                     break;
                 case PlaybackState.FastForward:
-                    mCurrForwardSpeed++;
-                    if (mCurrForwardSpeed > MaxForwardSpeed)
+                    mPlaybackSettings.CurrForwardSpeed++;
+                    if (mPlaybackSettings.CurrForwardSpeed > mPlaybackSettings.MaxForwardSpeed)
                     {
-                        mCurrForwardSpeed = MaxForwardSpeed;
+                        mPlaybackSettings.CurrForwardSpeed = mPlaybackSettings.MaxForwardSpeed;
                     }
-                    mPlaybackTask.PlaybackSpeed = mCurrForwardSpeed;
+                    mPlaybackTask.PlaybackSpeed = mPlaybackSettings.CurrForwardSpeed;
                     mPlaybackTask.IsPaused = false;
                     RecordingPlaybackSpeedDisplay.UpdateSpeedText(mPlaybackTask.PlaybackSpeed);
                     PlaybackSpeedModifierSubControl.IsInteractable = false;
                     break;
                 case PlaybackState.StepBackward:
-                    mPlaybackTask.PlayFromIndex(--vCurrIdx);
+                    vCurrIdx -= mPlaybackSettings.FrameSkip;
+                    mPlaybackTask.PlayFromIndex(vCurrIdx);
                     mPlaybackTask.IsPaused = true;
                     vNewState = PlaybackState.Pause;
                     PlaybackSpeedModifierSubControl.IsInteractable = false;
+                    PlaybackProgressSubControl.UpdateCurrentTime(vCurrIdx);
+                    RecordingIndexValue.SetIndexValue(vCurrIdx);
                     OnPause();
                     break;
                 case PlaybackState.StepForward:
-                    mPlaybackTask.PlayFromIndex(++vCurrIdx);
+                    vCurrIdx += mPlaybackSettings.FrameSkip;
+                    PlaybackProgressSubControl.UpdateCurrentTime(vCurrIdx);
+                    RecordingIndexValue.SetIndexValue(vCurrIdx);
+                    mPlaybackTask.PlayFromIndex(vCurrIdx);
                     mPlaybackTask.IsPaused = true;
                     vNewState = PlaybackState.Pause;
                     PlaybackSpeedModifierSubControl.IsInteractable = false;
                     OnPause();
                     break;
                 case PlaybackState.SlowMotionForward:
-                    mPlaybackTask.PlaybackSpeed = mCurrForwardSpeed;
+                    mPlaybackTask.PlaybackSpeed = mPlaybackSettings.CurrForwardSpeed;
                     mPlaybackTask.IsPaused = false;
                     break;
                 case PlaybackState.Null:
@@ -380,17 +396,16 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             RecordingPlaybackSpeedDisplay.UpdateSpeedText(mPlaybackTask.PlaybackSpeed);
             PlaybackSpeedModifierSubControl.IsPaused = false;
             PlaybackSpeedModifierSubControl.IsInteractable = true;
-            PlaybackSpeedModifierSubControl.UpdateCurrentPlaybackSpeed(mPlaybackSpeed);
+            PlaybackSpeedModifierSubControl.UpdateCurrentPlaybackSpeed(1f);
         }
 
 
 
 
 
-        void Update()
+        public void Update()
         {
             //update the RecordingProgressSliderSubControl slider value
-
             if (mPlaybackTask != null)
             {
                 //check if the conversion is completed
@@ -406,6 +421,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                     if (CurrentState != PlaybackState.Pause && CurrentState != PlaybackState.Null)
                     {
                         RecordingProgressSliderSubControl.UpdateCurrentTime(mPlaybackTask.GetCurrentPlaybackIndex);
+                        RecordingIndexValue.SetIndexValue(mPlaybackTask.GetCurrentPlaybackIndex);
                     }
                 }
 
@@ -447,7 +463,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             }
             else
             {
-                mPlaybackSpeed = vNewSpeed;
+                mPlaybackSettings.PlaybackSpeed = vNewSpeed;
                 mPlaybackTask.PlaybackSpeed = vNewSpeed;
                 RecordingPlaybackSpeedDisplay.UpdateSpeedText(vNewSpeed);
             }
@@ -478,7 +494,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// <param name="vNewBodyFramesRecording"></param>
         public void NewRecordingSelected(BodyFramesRecording vNewBodyFramesRecording)
         {
-            if (mBody != null && vNewBodyFramesRecording!=null)
+            if (mBody != null && vNewBodyFramesRecording != null)
             {
                 mBody.StopThread();
                 if (mBody.InitialBodyFrame != null)
@@ -498,7 +514,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                     BodyUpdatedEvent(mBody);
                 }
             }
-            
+
             mIsNewRecording = true;
         }
 
@@ -513,46 +529,48 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 yield return null;
             }
             mPlaybackTask = mBody.MBodyFrameThread.PlaybackTask;
-             
+
 
         }
 
         /// <summary>
         /// fast forward playback 
         /// </summary>
-        public void FastForward()
+        public void FastForward(int vStepForwardMultiplier)
         {
             if (CurrentState == PlaybackState.Pause)
             {
+                mPlaybackSettings.FrameSkipMultiplier = vStepForwardMultiplier;
                 ChangeState(PlaybackState.StepForward);
-            }
-            else
-            {
-                ChangeState(PlaybackState.FastForward);
-            }
+            } 
         }
 
-        public void Rewind()
+        public void Rewind(int vStepbackMultiplier)
         {
             if (CurrentState == PlaybackState.Pause)
             {
+                mPlaybackSettings.FrameSkipMultiplier = vStepbackMultiplier;
                 ChangeState(PlaybackState.StepBackward);
             }
-            else
-            {
-                ChangeState(PlaybackState.FastBackward);
-            }
+            
+        }
+
+        void OnEnable()
+        {
+            PlayPauseSubControls.RequestResources();
+            RecordingForwardSubControl.RequestResources();
+            RecordingRewindSubControl.RequestResources();
         }
 
         /// <summary>
         /// Stops the current player, resets the body
         /// </summary>
         public override void ReleaseResources()
-        { 
+        {
             ChangeState(PlaybackState.Pause);
             if (PlaybackTask != null)
             {
-                
+
                 foreach (var vSubControl in mSubControls)
                 {
                     vSubControl.Disable();
@@ -560,6 +578,18 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             }
             RecordingProgressSliderSubControl.PlaySlider.value = 0;
             PlaybackSpeedModifierSubControl.PlaybackSpeedSlider.value = 1;
+            PlayPauseSubControls.ReleaseResources();
+            RecordingForwardSubControl.ReleaseResources();
+            RecordingRewindSubControl.ReleaseResources();
+
+        }
+
+        /// <summary>
+        /// Pauses playback
+        /// </summary>
+        public void Pause()
+        {
+            ChangeState(PlaybackState.Pause);
         }
     }
 

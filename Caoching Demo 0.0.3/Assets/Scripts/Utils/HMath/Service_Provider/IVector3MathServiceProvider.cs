@@ -189,5 +189,6 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         HVector3 Reflect(HVector3 inDirection, HVector3 inNormal);
 
 
+        HVector3 CreateNewVector(float vF, float vF1, float vF2);
     }
 }

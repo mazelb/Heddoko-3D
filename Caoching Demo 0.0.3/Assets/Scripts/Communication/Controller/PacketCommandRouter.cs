@@ -10,8 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
-using System.Text;
-using Assets.Scripts.Communication.Communicators;
+using System.Text; 
 using Assets.Scripts.Utils;
 using Assets.Scripts.Utils.DebugContext.logging;
 using HeddokoLib.networking;
@@ -28,10 +27,12 @@ namespace Assets.Scripts.Communication.Controller
     public class PacketCommandRouter
     {
         private static PacketCommandRouter sInstance;
-
-
         private SynchronousClient mSocketClient;
+        private Command mCommand = new Command();
+        private object mFrameTheadAccessLock = new object();
 
+        //On brainpack data retreival, send the data to the bodyframethread
+        private BodyFrameThread mBodyFrameThread;
         public SynchronousClient ClientSocket
         {
             get
@@ -56,11 +57,7 @@ namespace Assets.Scripts.Communication.Controller
                 return sInstance;
             }
         }
-        private Command mCommand = new Command();
-        private object mFrameTheadAccessLock = new object();
-
-        //On brainpack data retreival, send the data to the bodyframethread
-        private BodyFrameThread mBodyFrameThread;
+      
 
         internal BodyFrameThread FrameThread
         {
@@ -120,7 +117,35 @@ namespace Assets.Scripts.Communication.Controller
             mCommand.Register(HeddokoCommands.EnableSleepTimerResp, SleepTimerEnabled);
             mCommand.Register(HeddokoCommands.DisableSleepTimerResp, SleepTimerDisabled);
             mCommand.Register("TimeoutException", TimeoutExcCallback);
+            mCommand.Register(HeddokoCommands.ReturnBrainpackResults, BrainpackResultsReturned);
+            mCommand.Register(HeddokoCommands.GetBrainpackResults, SendHighPriorityMessage);
 
+        }
+
+      
+
+        /// <summary>
+        /// Brainpack results returned from service
+        /// </summary>
+        /// <param name="vSender"></param>
+        /// <param name="vArgs"></param>
+        private void BrainpackResultsReturned(object vSender, object vArgs)
+        {
+            Dictionary<string, string> vReturnedResults = new Dictionary<string, string>();
+            HeddokoPacket vHeddokoPacket = (HeddokoPacket) vArgs;
+            string vResult = HeddokoPacket.Unwrap(vHeddokoPacket.Payload);
+            var vExplodedResult = vResult.Split(new[] {"<BPLine>"},StringSplitOptions.RemoveEmptyEntries);
+            foreach (var vExploded in vExplodedResult)
+            {
+                var vSubStrings = vExploded.Split(new[] {","}, StringSplitOptions.RemoveEmptyEntries);
+                vReturnedResults.Add(vSubStrings[0], vSubStrings[1]);
+            }
+
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
+            {
+                BrainpackConnectionController.Instance.OnBrainpackListUpdate(vReturnedResults) ;
+
+            });
         }
 
         /// <summary>
@@ -130,7 +155,7 @@ namespace Assets.Scripts.Communication.Controller
         /// <param name="vargs"></param>
         private void RegisterAck(object vsender, object vargs)
         {
-            throw new NotImplementedException();
+          
         }
 
         /// <summary>
@@ -424,7 +449,6 @@ namespace Assets.Scripts.Communication.Controller
         /// </summary>
         /// <param name="vSender"></param>
         /// <param name="vArgs"></param>
-
         private void SendHighPriorityMessage(object vSender, object vArgs)
         {
             HeddokoPacket vHeddokoPacket = (HeddokoPacket)vArgs;

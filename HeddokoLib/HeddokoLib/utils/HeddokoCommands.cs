@@ -62,6 +62,8 @@ namespace HeddokoLib.utils
         public static string EnableSleepTimerResp = "0x42";
         public static string RegisterListener = "0x43";
         public static string RegisterListenerAck = "0x44";
+        public static string GetBrainpackResults = "0x45";
+        public static string ReturnBrainpackResults = "0x46";
         public static string ClientError = "9x00";
      
 

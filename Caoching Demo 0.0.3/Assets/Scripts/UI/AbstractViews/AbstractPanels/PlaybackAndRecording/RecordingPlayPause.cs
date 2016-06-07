@@ -9,6 +9,7 @@
 
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
+using Assets.Scripts.Utils.DebugContext;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -104,6 +105,24 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                     ChangePlayPauseGraphics();
                 }
             }
+        }
+
+        /// <summary>
+        /// Request resouces to be set up for the subcontrol
+        /// </summary>
+        public void RequestResources()
+        {
+            InputHandler.RegisterKeyboardAction(KeyCode.Space, ParentPanel.SetPlayState);
+        }
+
+    
+
+        /// <summary>
+        /// Releases previously held resources
+        /// </summary>
+        public void ReleaseResources()
+        {
+            InputHandler.RemoveKeybinding(KeyCode.RightArrow, ParentPanel.SetPlayState);
         }
     }
 }

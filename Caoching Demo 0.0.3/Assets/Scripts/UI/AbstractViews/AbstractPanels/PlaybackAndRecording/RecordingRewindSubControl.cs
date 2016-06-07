@@ -7,6 +7,7 @@
 
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
+using Assets.Scripts.Utils.DebugContext;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,14 +28,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             get { return mIsPaused; }
             set
             {
-                if (value)
-                {
-                    RewindButton.image.sprite = StepRewind;
-                }
-                else
-                {
-                    RewindButton.image.sprite = FastRewind;
-                }
                 mIsPaused = value;
             }
         }
@@ -67,10 +60,39 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public void Init(PlaybackControlPanel vParentPanel)
         {
             ParentPanel = vParentPanel;
-            RewindButton.onClick.AddListener(() =>
+           
+        }
+
+        /// <summary>
+        /// Request resouces to be set up for the subcontrol
+        /// </summary>
+        public void RequestResources()
+        {
+            InputHandler.RegisterKeyboardAction(KeyCode.LeftArrow, StepbackAction);
+        }
+
+        /// <summary>
+        /// Step forward
+        /// </summary>
+        private void StepbackAction()
+        {
+            ParentPanel.Pause();
+            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
             {
-                ParentPanel.Rewind();
-            });
+                ParentPanel.Rewind(3);
+            }
+            else
+            {
+                ParentPanel.Rewind(1);
+            }
+        }
+
+        /// <summary>
+        /// Releases previously held resources
+        /// </summary>
+        public void ReleaseResources()
+        {
+            InputHandler.RemoveKeybinding(KeyCode.LeftArrow, StepbackAction);
         }
     }
 }

@@ -341,6 +341,10 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
             return new U3DVector3(Vector3.Reflect(((U3DVector3)inDirection).mVector3, ((U3DVector3)inNormal).mVector3));
         }
 
+        public HVector3 CreateNewVector(float vF, float vF1, float vF2)
+        {
+            return new U3DVector3(vF,vF1,vF2);
 
+        }
     }
 }

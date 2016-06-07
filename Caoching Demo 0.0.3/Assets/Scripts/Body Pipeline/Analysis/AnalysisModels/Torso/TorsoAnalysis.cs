@@ -14,28 +14,45 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
     [Serializable]
     public class TorsoAnalysis: SegmentAnalysis
     {
+        //Angles extracted 
+        [Analysis(IgnoreAttribute = false, AttributeName = "Angle Torso Flexion")]
+        public float AngleTorsoFlexion;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Angle Torso Lateral")]
+        public float AngleTorsoLateral;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Angle Torso Rotation")]
+        public float AngleTorsoRotation;
         //current torso orientation
+        [Analysis(IgnoreAttribute = true)]
         public Transform TorsoTransform;
+        [Analysis(IgnoreAttribute = true)]
         public Transform HipGlobalTransform;
+        [Analysis(IgnoreAttribute = true)]
         public Transform HipTransform;
+        [Analysis(IgnoreAttribute = true)]
         public Transform KneeTransform;
 
-        //Angles extracted
-        public float AngleTorsoFlexion;
-        public float AngleTorsoLateral;
-        public float AngleTorsoRotation;
+
+        [Analysis(IgnoreAttribute = false, AttributeName = "Signed Torso Flexion")]
         public float SignedTorsoFlexion;
-         
+
         //Accelerations and velocities
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationTorsoFlexion;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityTorsoFlexion;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationTorsoLateral;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityTorsoLateral;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationTorsoRotation;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityTorsoRotation;
 
         //Flips and turns detections
+        [Analysis(IgnoreAttribute = true)]
         public float AngleIntegrationTurns;
+        [Analysis(IgnoreAttribute = true)]
         public float AngleIntegrationFlips;
         public int NumberOfTurns;
         public int NumberOfFlips;
@@ -48,7 +65,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
             float vTimeDifference = Time.time - mLastTimeCalled;
             if(  vTimeDifference == 0)
             {
-                return;
+             //   return;
             }
             mLastTimeCalled = Time.time;
 
@@ -71,7 +88,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
             AngularAccelerationTorsoFlexion = (vAngularVelocityTorsoFlexionNew - AngularVelocityTorsoFlexion) / vTimeDifference;
             AngularVelocityTorsoFlexion = vAngularVelocityTorsoFlexionNew;
             AngleTorsoFlexion = vAngleTorsoFlexionNew;
-  
+            Debug.DrawLine(HipGlobalTransform.position,HipGlobalTransform.position+HipGlobalTransform.forward*3,Color.red,0.25f);
+            Debug.DrawLine(HipGlobalTransform.position, HipGlobalTransform.position + HipGlobalTransform.up * 3, Color.green, 0.25f);
+            Debug.DrawLine(TorsoTransform.position, TorsoTransform.position + TorsoTransform.up * 3, Color.red, 0.25f);
             Vector3 vCross = Vector3.Cross(vHipAxisUp, Vector3.ProjectOnPlane(vTorsoAxisUp, HipGlobalTransform.right));
             float vSign = Mathf.Sign(Vector3.Dot(vHipAxisRight, vCross));
             SignedTorsoFlexion = vSign*AngleTorsoFlexion;   
@@ -143,6 +162,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
                 NumberOfFlips++;
                 AngleIntegrationFlips = 0; 
             }//*/ 
+            NotifyAnalysisCompletionListeners();
         }
 
         /*Transform EstimateHipsOrientation()

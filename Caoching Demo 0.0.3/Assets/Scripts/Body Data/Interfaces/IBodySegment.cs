@@ -16,7 +16,7 @@ namespace Assets.Scripts.Body_Data.Interfaces
     /// </summary>
     public interface IBodySegment
     {
-        IDictionary<BodyStructureMap.SubSegmentTypes, IBodySubsegment> SubSegmentCollection { get; }
+        IDictionary<BodyStructureMap.SubSegmentTypes, IBodySubSegment> SubSegmentCollection { get; }
 
     }
 }

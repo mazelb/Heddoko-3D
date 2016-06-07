@@ -36,7 +36,7 @@ namespace Assets.Scripts.Utils.HMath.Structure
         /// <summary>
         /// X component
         /// </summary>
-        public override float X
+        public override float x
         {
             get { return mVector3.x; }
             set { mVector3.x = value; }
@@ -44,7 +44,7 @@ namespace Assets.Scripts.Utils.HMath.Structure
         /// <summary>
         /// Y Component
         /// </summary>
-        public override float Y
+        public override float y
         {
             get { return mVector3.y; }
             set { mVector3.y = value; }
@@ -54,7 +54,7 @@ namespace Assets.Scripts.Utils.HMath.Structure
         /// <summary>
         /// Get and set the Z component 
         /// </summary>
-        public override float Z
+        public override float z
         {
             get { return mVector3.z; }
             set { mVector3.z = value; }
@@ -100,12 +100,12 @@ namespace Assets.Scripts.Utils.HMath.Structure
         /// <returns>this + b</returns>
         protected override HVector3 Plus(HVector3 b)
         {
-            return new U3DVector3(mVector3 + new Vector3(b.X, b.Y, b.Z));
+            return new U3DVector3(mVector3 + new Vector3(b.x, b.y, b.z));
         }
 
         protected override HVector3 Minus(HVector3 b)
         {
-            return new U3DVector3(mVector3 - new Vector3(b.X, b.Y, b.Z));
+            return new U3DVector3(mVector3 - new Vector3(b.x, b.y, b.z));
         }
 
         protected override HVector3 ScalarMultiply(float d)

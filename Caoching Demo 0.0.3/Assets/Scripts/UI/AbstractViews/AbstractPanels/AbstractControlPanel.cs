@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Frames_Pipeline;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Layouts;
@@ -26,7 +27,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels
         
         private RectTransform mParent;
         private RectTransform mCurrentRectTransform;
-        public PanelNode ParentNode { get; set; }
+          public PanelNode ParentNode { get; set; }
         public abstract  ControlPanelType PanelType { get; }
 
         /// <summary>
