@@ -1,10 +1,10 @@
-﻿// /**
-// * @file TechStarTrunkFlexionInfo.cs
-// * @brief Contains the TechStarTrunkFlexionInfo class
-// * @author Mohammed Haider( Mohammed@heddoko.com)
-// * @date May 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file TechStarTrunkFlexionInfo.cs
+* @brief Contains the TechStarTrunkFlexionInfo class
+* @author Mohammed Haider( Mohammed@heddoko.com)
+* @date May 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using UnityEngine;
 using UnityEngine.UI;

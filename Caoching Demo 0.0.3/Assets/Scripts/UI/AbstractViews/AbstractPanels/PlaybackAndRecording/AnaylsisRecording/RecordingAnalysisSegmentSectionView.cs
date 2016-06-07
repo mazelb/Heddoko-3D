@@ -1,10 +1,10 @@
-﻿// /**
-// * @file RecordingAnalysisSegmentSectionView.cs
-// * @brief Contains the RecordingAnalysisSegmentSectionView
-// * @author Mohammed Haider( mohammed@heddoko.com)
-// * @date June 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file RecordingAnalysisSegmentSectionView.cs
+* @brief Contains the RecordingAnalysisSegmentSectionView
+* @author Mohammed Haider( mohammed@heddoko.com)
+* @date June 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using System;
 using System.Collections;

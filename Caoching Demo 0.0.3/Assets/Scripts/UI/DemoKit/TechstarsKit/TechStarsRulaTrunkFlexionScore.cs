@@ -1,10 +1,10 @@
-﻿// /**
-// * @file TechStarsRulaTrunkFlexionScore.cs
-// * @brief Contains the 
-// * @author Mohammed Haider( Mohammed@heddoko.com)
-// * @date may 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file TechStarsRulaTrunkFlexionScore.cs
+* @brief Contains the 
+* @author Mohammed Haider( Mohammed@heddoko.com)
+* @date may 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using UnityEngine;
 using UnityEngine.UI;

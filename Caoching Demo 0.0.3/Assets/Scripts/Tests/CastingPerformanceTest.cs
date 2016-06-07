@@ -1,10 +1,10 @@
-﻿// /**
-// * @file CastingPerformanceTest.cs
-// * @brief Contains the 
-// * @author Mohammed Haider( mohammed@heddoko.com)
-// * @date April 2016  
-// * Copyright Heddoko(TM) 2016, all rights reserved
-// */
+﻿/**
+* @file CastingPerformanceTest.cs
+* @brief Contains the 
+* @author Mohammed Haider( mohammed@heddoko.com)
+* @date April 2016  
+* Copyright Heddoko(TM) 2016, all rights reserved
+*/
 
 using System.Diagnostics;
 using Assets.Scripts.Body_Data.Interfaces;

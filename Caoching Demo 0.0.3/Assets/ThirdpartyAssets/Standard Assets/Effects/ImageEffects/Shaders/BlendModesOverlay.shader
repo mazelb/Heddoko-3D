@@ -54,7 +54,7 @@ Shader "Hidden/BlendModesOverlay" {
 	}
 
 	half4 fragOverlay (v2f i) : SV_Target {
-		half4 m = (tex2D(_Overlay, i.uv[0]));// * 255.0;
+		half4 m = (tex2D(_Overlay, i.uv[0]));* 255.0;
 		half4 color = (tex2D(_MainTex, i.uv[1]));//* 255.0;
 
 		// overlay blend mode

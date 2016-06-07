@@ -1,4 +1,12 @@
-﻿using System;
+﻿
+/** 
+* @file SegmentAnalysis.cs
+* @brief SegmentAnalysis class
+* @author Mohammed Haider(mohamed@heddoko.com)
+* @date June 2016
+* Copyright Heddoko(TM) 2015, all rights reserved
+*/
+using System;
 using UnityEngine;
 
 namespace Assets.Scripts.Body_Pipeline.Analysis

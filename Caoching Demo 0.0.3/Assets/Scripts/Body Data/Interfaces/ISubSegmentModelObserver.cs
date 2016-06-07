@@ -1,10 +1,10 @@
-﻿// /**
-// * @file ISubSegmentModelObserver.cs
-// * @brief Contains the ISubSegmentModelObserver interface
-// * @author Mohammed Haider( mohammed@heddoko.com)
-// * @date April 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿ /**
+ * @file ISubSegmentModelObserver.cs
+ * @brief Contains the ISubSegmentModelObserver interface
+ * @author Mohammed Haider( mohammed@heddoko.com)
+ * @date April 2016
+ * Copyright Heddoko(TM) 2016,  all rights reserved
+ */
 namespace Assets.Scripts.Body_Data.Interfaces
 {
     /// <summary>

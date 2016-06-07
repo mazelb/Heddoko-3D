@@ -1,8 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
+﻿
+/** 
+* @file RecordingPlayerView.cs
+* @brief Contains the RecordingPlayerView class
+* @author Mohammed Haider(mohamed@heddoko.com)
+* @date April 2016
+* Copyright Heddoko(TM) 2016, all rights reserved
+*/
 using UnityEngine;
 using UnityEngine.UI;
 

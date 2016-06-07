@@ -1,10 +1,10 @@
-// /**
-// * @file RecordingAnalysisSectionModel.cs
-// * @brief Contains the RecordingAnalysisSectionModel
-// * @author Mohammed Haider( mohammed@heddoko.com)
-// * @date June 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+/**
+ * @file RecordingAnalysisSectionModel.cs
+ * @brief Contains the RecordingAnalysisSectionModel
+ * @author Mohammed Haider( mohammed@heddoko.com)
+ * @date June 2016
+ * Copyright Heddoko(TM) 2016,  all rights reserved
+ */
 using System;
 using Assets.Scripts.Body_Pipeline.Analysis;
 

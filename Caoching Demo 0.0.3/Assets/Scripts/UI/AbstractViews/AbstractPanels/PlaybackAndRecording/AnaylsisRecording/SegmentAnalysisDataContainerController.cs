@@ -1,10 +1,10 @@
-﻿// /**
-// * @file SegmentAnalysisDataContainerController.cs
-// * @brief Contains the 
-// * @author Mohammed Haider( mohammed@heddoko.com)
-// * @date June 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿ /**
+ * @file SegmentAnalysisDataContainerController.cs
+ * @brief Contains the SegmentAnalysisDataContainerController
+ * @author Mohammed Haider( mohammed@heddoko.com)
+ * @date June 2016
+ * Copyright Heddoko(TM) 2016,  all rights reserved
+ */
 
 using System;
 using System.Collections;
@@ -82,6 +82,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
                         mPlaceholderBody.View.ResetInitialFrame(ConvertedFrames[i]);
                         vStart = false;
                         BodySegment.IsUsingInterpolation = true;
+                        continue;
                     }
                     Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic = Body.GetTracking(mPlaceholderBody);
                     Body.ApplyTracking(mPlaceholderBody, vDic);

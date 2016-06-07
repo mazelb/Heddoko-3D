@@ -1,10 +1,10 @@
-﻿// /**
-// * @file AnalysisAttribute.cs
-// * @brief Contains the AnalysisAttribute
-// * @author Mohammed Haider( mohammed@heddoko.com)
-// * @date June 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿ /**
+ * @file AnalysisAttribute.cs
+ * @brief Contains the AnalysisAttribute
+ * @author Mohammed Haider( mohammed@heddoko.com)
+ * @date June 2016
+ * Copyright Heddoko(TM) 2016,  all rights reserved
+ */
 namespace Assets.Scripts.Body_Pipeline.Analysis
 {
     /// <summary>

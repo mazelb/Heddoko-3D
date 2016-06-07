@@ -1,10 +1,10 @@
-﻿// /**
-// * @file TechStarsDemoRecordingsContainer.cs
-// * @brief Contains the TechStarsDemoRecordingsContainer class
-// * @author Mohammed Haider( mohammed@heddoko.com)
-// * @date May 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file TechStarsDemoRecordingsContainer.cs
+* @brief Contains the TechStarsDemoRecordingsContainer class
+* @author Mohammed Haider( mohammed@heddoko.com)
+* @date May 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using System;
 using System.Collections.Generic;

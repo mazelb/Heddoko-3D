@@ -1,10 +1,10 @@
-﻿// /**
-// * @file AnalysisDataStructure.cs
-// * @brief Contains the 
-// * @author Mohammed Haider( mohammed@heddoko.com)
-// * @date June 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿ /**
+ * @file AnalysisDataStructure.cs
+ * @brief Contains the 
+ * @author Mohammed Haider( mohammed@heddoko.com)
+ * @date June 2016
+ * Copyright Heddoko(TM) 2016,  all rights reserved
+ */
 
 using System.Collections.Generic;
 using System.Reflection;

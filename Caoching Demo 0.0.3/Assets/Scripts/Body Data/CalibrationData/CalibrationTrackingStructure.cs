@@ -1,10 +1,10 @@
-﻿// /**
-// * @file CalibrationTrackingStructure.cs
-// * @brief Contains the CalibrationTrackingStructure class
-// * @author Mohammed Haider(mohammed@heddoko.com)
-// * @date May 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿ /**
+ * @file CalibrationTrackingStructure.cs
+ * @brief Contains the CalibrationTrackingStructure class
+ * @author Mohammed Haider(mohammed@heddoko.com)
+ * @date May 2016
+ * Copyright Heddoko(TM) 2016,  all rights reserved
+ */
 
 using System.Collections.Generic;
  

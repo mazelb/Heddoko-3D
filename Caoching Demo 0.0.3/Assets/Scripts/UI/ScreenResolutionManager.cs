@@ -1,10 +1,10 @@
-﻿// /**
-// * @file ScreenResolutionManager.cs
-// * @brief Contains the ScreenResolutionManager
-// * @author Mohammed Haider( mohammed@heddoko.com)
-// * @date May 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file ScreenResolutionManager.cs
+* @brief Contains the ScreenResolutionManager
+* @author Mohammed Haider( mohammed@heddoko.com)
+* @date May 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using System;
 using System.Collections;

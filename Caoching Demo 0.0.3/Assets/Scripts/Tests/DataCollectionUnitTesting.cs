@@ -1,10 +1,10 @@
-﻿// /**
-// * @file DataCollectionUnitTesting.cs
-// * @brief Contains the 
-// * @author Mohammed Haider( 
-// * @date 06 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file DataCollectionUnitTesting.cs
+* @brief Contains the 
+* @author Mohammed Haider( 
+* @date 06 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using System.Collections;
 using System.Collections.Generic;

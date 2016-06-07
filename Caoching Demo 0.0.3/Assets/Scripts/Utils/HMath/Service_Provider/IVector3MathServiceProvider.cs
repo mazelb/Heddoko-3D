@@ -1,10 +1,10 @@
-﻿// /**
-// * @file IVector3MathServiceProvider.cs
-// * @brief Contains the 
-// * @author Mohammed Haider( 
-// * @date 05 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file IVector3MathServiceProvider.cs
+* @brief Contains the 
+* @author Mohammed Haider( 
+* @date 05 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 
 using Assets.Scripts.Utils.HMath.Structure;

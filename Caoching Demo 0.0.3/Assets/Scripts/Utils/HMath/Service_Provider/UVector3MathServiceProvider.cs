@@ -1,10 +1,10 @@
-﻿// /**
-// * @file UVector3MathServiceProvider.cs
-// * @brief Contains the UVector3MathServiceProvider
-// * @author Mohammed Haider( mohammed @heddoko.com)
-// * @date May 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file UVector3MathServiceProvider.cs
+* @brief Contains the UVector3MathServiceProvider
+* @author Mohammed Haider( mohammed @heddoko.com)
+* @date May 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using Assets.Scripts.Utils.HMath.Structure;
 using UnityEngine;

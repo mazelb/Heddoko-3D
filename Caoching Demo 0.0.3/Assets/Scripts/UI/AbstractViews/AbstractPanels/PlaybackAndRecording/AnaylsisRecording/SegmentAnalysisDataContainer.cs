@@ -1,10 +1,10 @@
-﻿// /**
-// * @file SegmentAnalysisDataContainer.cs
-// * @brief Contains the 
-// * @author Mohammed Haider( mohammed@heddoko.com)
-// * @date June 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿ /**
+ * @file SegmentAnalysisDataContainer.cs
+ * @brief Contains the 
+ * @author Mohammed Haider( mohammed@heddoko.com)
+ * @date June 2016
+ * Copyright Heddoko(TM) 2016,  all rights reserved
+ */
 
 using System.Collections.Generic;
 using Assets.Scripts.Body_Pipeline.Analysis;

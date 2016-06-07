@@ -48,7 +48,7 @@ public partial class BodySegment
     static public bool IsTrackingGait = false;
     static public bool IsTrackingHips = false;
     static public bool IsAdjustingSegmentAxis = false;
-    static public bool IsAdjustingArms=true;
+    static public bool IsAdjustingArms;
     static public bool IsFusingSubSegments = false;
     static public bool IsProjectingXZ = false;
     static public bool IsProjectingXY = false;
@@ -57,7 +57,7 @@ public partial class BodySegment
     static public bool IsHipsEstimateUp = false;
     static public bool IsUsingInterpolation = true;
     static public float InterpolationSpeed = 0.3f;
-    static public bool IsCalibrating = false;
+    static public bool IsCalibrating = true;
     //Extract the delta time of the frames
     public float LastFrameTime = 0.0f;
     public float CurrentFrameTime = 0.0f;
@@ -84,7 +84,7 @@ public partial class BodySegment
     private Vector3 mLLCurInitRotation = Vector3.zero;
     private Vector3 mUTCurInitRotation = Vector3.zero;
 
-    // *** Definitions for calibration methods
+    *** Definitions for calibration methods
     // Filename to write to.
     private string mRecordingFileName = "";
 
@@ -704,24 +704,24 @@ public partial class BodySegment
         vUpArmQuatZ = Quaternion.Inverse(vUpArmQuatZ);
 
 
-        //if (vIsRight)
-        //{
-        //    // Make sure we have a directory to write to.
-        //    string vDataPath = "../../RecordedData";
-        //    if (!Directory.Exists(vDataPath))
-        //    {
-        //        Directory.CreateDirectory(vDataPath);
-        //    }
+        if (vIsRight)
+        {
+            // Make sure we have a directory to write to.
+            string vDataPath = "../../RecordedData";
+            if (!Directory.Exists(vDataPath))
+            {
+                Directory.CreateDirectory(vDataPath);
+            }
 
-        //    // Set the file name to write to and start the file stream.
-        //    int vFileNameIncrement = 2;
-        //    mRecordingFileName = string.Format("{0}/{1}_{2}.csv", vDataPath, mRecordingTitle, vFileNameIncrement);
+            // Set the file name to write to and start the file stream.
+            int vFileNameIncrement = 2;
+            mRecordingFileName = string.Format("{0}/{1}_{2}.csv", vDataPath, mRecordingTitle, vFileNameIncrement);
 
-        //    Debug.Log("Recording data to file: " + mRecordingFileName);
-        //    mRecordingFileStream = new StreamWriter(mRecordingFileName, true);
-        //    mRecordingFileStream.WriteLine(vUACurEuler.x + "," + vUACurEuler.y + "," + vUACurEuler.z);
-        //    mRecordingFileStream.Close();
-        //}
+            Debug.Log("Recording data to file: " + mRecordingFileName);
+            mRecordingFileStream = new StreamWriter(mRecordingFileName, true);
+            mRecordingFileStream.WriteLine(vUACurEuler.x + "," + vUACurEuler.y + "," + vUACurEuler.z);
+            mRecordingFileStream.Close();
+        }
         //Lower arm
 
         Quaternion vLoArmInitQuatY = Quaternion.Euler(0, vLAInitEuler.z, 0);
@@ -742,32 +742,30 @@ public partial class BodySegment
         Quaternion vUpArmQuat = vUpArmQuatY * vUpArmQuatX * vUpArmQuatZ;
         Quaternion vLoArmQuat = vLoArmQuatY * vLoArmQuatX * vLoArmQuatZ;
 
-        if (IsAdjustingArms)
+        if (vIsRight)
         {
-            if (vIsRight)
-            {
-                //Test
-                Quaternion vUpArmTestInit = Quaternion.Euler(-vUAInitEuler.x, -vUAInitEuler.z, -vUAInitEuler.y);
-                Quaternion vUpArmTest = Quaternion.Euler(vUACurEuler.x, -vUACurEuler.z, -vUACurEuler.y);
-                Quaternion vUpArmQuatTest = Quaternion.Inverse(vUpArmTestInit) * vUpArmTest;
-                vUpArmQuat = vUpArmQuatTest;
+            //Test
+            Quaternion vUpArmTestInit = Quaternion.Euler(vUAInitEuler.x, -vUAInitEuler.z, -vUAInitEuler.y);
+            Quaternion vUpArmTest = Quaternion.Euler(vUACurEuler.x, -vUACurEuler.z, -vUACurEuler.y);
+            Quaternion vUpArmQuatTest = Quaternion.Inverse(vUpArmTestInit) * vUpArmTest;
+            vUpArmQuat = vUpArmQuatTest;
 
-                Quaternion vLoArmTestInit = Quaternion.Euler(-vLAInitEuler.x, -vLAInitEuler.z, -vLAInitEuler.y);
-                Quaternion vLoArmTest = Quaternion.Euler(vLACurEuler.x, -vLACurEuler.z, -vLACurEuler.y);
-                Quaternion vLoArmQuatTest = Quaternion.Inverse(vLoArmTestInit) * vLoArmTest;
-                vLoArmQuat = vLoArmQuatTest;
+            Quaternion vLoArmTestInit = Quaternion.Euler(vLAInitEuler.x, -vLAInitEuler.z, -vLAInitEuler.y);
+            Quaternion vLoArmTest = Quaternion.Euler(vLACurEuler.x, -vLACurEuler.z, -vLACurEuler.y);
+            Quaternion vLoArmQuatTest = Quaternion.Inverse(vLoArmTestInit) * vLoArmTest;
+            vLoArmQuat = vLoArmQuatTest;
 
-                //Convert to orientation
+            //Convert to orientation
 
-                Vector3 pos = new Vector3(0f, 0f, 0f);
-                Vector3 s = new Vector3(1f, 1f, 1f);
-                Matrix4x4 vUpArmMat = Matrix4x4.TRS(pos, vUpArmQuat, s);
+            Vector3 pos = new Vector3(0f, 0f, 0f);
+            Vector3 s = new Vector3(1f, 1f, 1f);
+            Matrix4x4 vUpArmMat = Matrix4x4.TRS(pos, vUpArmQuat, s);
 
-                Matrix4x4 vLoArmMat = Matrix4x4.TRS(pos, vLoArmQuat, s);
+            Matrix4x4 vLoArmMat=Matrix4x4.TRS(pos, vLoArmQuat,s);
 
-                //Debug.Log("vLoArmMat=" + vLoArmMat + "vUpArmQuat :" + vUpArmQuat + "-" + "vUpArmQuatTest:" + vUpArmQuatTest);
-            }
+            Debug.Log("vLoArmMat="+ vLoArmMat+"vUpArmQuat :" + vUpArmQuat + "-" + "vUpArmQuatTest:" + vUpArmQuatTest);
         }
+
         vCurrentAngle += 0.01f;
 
         //Get necessary Axis info
@@ -789,7 +787,7 @@ public partial class BodySegment
         vLAAxisRight = vLoArmQuat * Vector3.right;
         vLAAxisForward = vLoArmQuat * Vector3.forward;
 
-        // **** Calibration process for arms Shiu algorithm -Right Arm*****
+        **** Calibration process for arms Shiu algorithm -Right Arm*****
         if (vIsRight)
         {
             counterR++;
@@ -799,109 +797,94 @@ public partial class BodySegment
             counterL++;
         }
 
-
+        if (IsCalibrating)
+        {
             if (vIsRight)
             {
                 if (IsCalibrating)
                 {
 
-                //// ------ UA R1- Simon movement------------ 
-                //float[,] R1 = new float[3, 3];
+                    // ------ UA R1------------ 
+                    float[,] R1 = new float[3, 3];
 
-                //R1[0, 0] = 0.964f;
-                //R1[0, 1] = -0.249f;
-                //R1[0, 2] = 0.091f;
+                    R1[0, 0] = 0.964f;
+                    R1[0, 1] = -0.249f;
+                    R1[0, 2] = 0.091f;
 
-                //R1[2, 0] = -0.102f;
-                //R1[2, 1] = -0.032f;
-                //R1[2, 2] = 0.994f;
+                    R1[2, 0] = -0.102f;
+                    R1[2, 1] = -0.032f;
+                    R1[2, 2] = 0.994f;
 
-                //R1[1, 0] = 0.245f;
-                //R1[1, 1] = 0.968f;
-                //R1[1, 2] = 0.056f;
+                    R1[1, 0] = 0.245f;
+                    R1[1, 1] = 0.968f;
+                    R1[1, 2] = 0.056f;
 
-                //Quaternion UAR1Quat = MatrixTools.MatToQuat(R1);
+                    Quaternion UAR1Quat = MatrixTools.MatToQuat(R1);
 
-                ////------UA R2: -----------
-                //float[,] R2 = new float[3, 3];
+                    //------UA R2: -----------
+                    float[,] R2 = new float[3, 3];
 
-                ////R2[0, 0] = -0.16f;
-                ////R2[0, 1] = -0.273f;
-                ////R2[0, 2] = 0.949f;
+                    //R2[0, 0] = -0.16f;
+                    //R2[0, 1] = -0.273f;
+                    //R2[0, 2] = 0.949f;
 
-                ////R2[1, 0] = 0.211f;
-                ////R2[1, 1] = 0.929f;
-                ////R2[1, 2] = 0.303f;
+                    //R2[1, 0] = 0.211f;
+                    //R2[1, 1] = 0.929f;
+                    //R2[1, 2] = 0.303f;
 
-                ////R2[2, 0] = -0.964f;
-                ////R2[2, 1] = 0.249f;
-                //R2[2, 2] = -0.091f;
+                    //R2[2, 0] = -0.964f;
+                    //R2[2, 1] = 0.249f;
+                    R2[2, 2] = -0.091f;
 
-                //Quaternion UAR2Quat = MatrixTools.MatToQuat(R2);
+                    Quaternion UAR2Quat = MatrixTools.MatToQuat(R2);
 
-                //// ------LA R1------------ 
-                // R1 = new float[3, 3];
+                    // ------LA R1------------ 
+                     R1 = new float[3, 3];
 
-                //R1[0, 0] = 0.971f;
-                //R1[0, 1] = -0.232f;
-                //R1[0, 2] = 0.058f;
+                    R1[0, 0] = 0.971f;
+                    R1[0, 1] = -0.232f;
+                    R1[0, 2] = 0.058f;
 
-                //R1[1, 0] = 0.232f;
-                //R1[1, 1] = 0.973f;
-                //R1[1, 2] = 0.01f;
+                    R1[1, 0] = 0.232f;
+                    R1[1, 1] = 0.973f;
+                    R1[1, 2] = 0.01f;
 
-                //R1[2, 0] = -0.058f;
-                //R1[2, 1] = 0.004f;
-                //R1[2, 2] = 0.998f;
+                    R1[2, 0] = -0.058f;
+                    R1[2, 1] = 0.004f;
+                    R1[2, 2] = 0.998f;
 
-                //Quaternion LAR1Quat = MatrixTools.MatToQuat(R1);
+                    Quaternion LAR1Quat = MatrixTools.MatToQuat(R1);
 
-                ////------LA R2: -----------
-                //R2 = new float[3, 3];
+                    //------LA R2: -----------
+                    R2 = new float[3, 3];
 
-                ////R2[0, 0] = -0.16f;
-                ////R2[0, 1] = -0.273f;
-                ////R2[0, 2] = 0.949f;
+                    //R2[0, 0] = -0.16f;
+                    //R2[0, 1] = -0.273f;
+                    //R2[0, 2] = 0.949f;
 
-                ////R2[1, 0] = 0.211f;
-                ////R2[1, 1] = 0.929f;
-                ////R2[1, 2] = 0.303f;
+                    //R2[1, 0] = 0.211f;
+                    //R2[1, 1] = 0.929f;
+                    //R2[1, 2] = 0.303f;
 
-                ////R2[2, 0] = -0.964f;
-                ////R2[2, 1] = 0.249f;
-                ////R2[2, 2] = -0.091f;
+                    //R2[2, 0] = -0.964f;
+                    //R2[2, 1] = 0.249f;
+                    //R2[2, 2] = -0.091f;
 
-                //Quaternion LAR2Quat = MatrixTools.MatToQuat(R2);
+                    Quaternion LAR2Quat = MatrixTools.MatToQuat(R2);
 
-                // ------ UA R1- ideal arm movement------------ 
-                float[,] R1 = new float[3, 3];
 
-                R1[0, 0] = 0.99f;
-                R1[0, 1] = -0.044f;
-                R1[0, 2] = -0.012f;
-
-                R1[1, 0] = 0.044f;
-                R1[1, 1] = 0.999f;
-                R1[1, 2] = 0.005f;
-
-                R1[2, 0] = 0.012f;
-                R1[2, 1] = -0.006f;
-                R1[2, 2] = 1f;
-     
-                Quaternion UAR1Quat = MatrixTools.MatToQuat(R1);
-
-                // if (counterR > 1000) // apply calibration from now on// how??
-                {
-                        //vLoArmQuat = Quaternion.Inverse(LAR1Quat) * vLoArmQuat * LAR1Quat ; // *vRLAQuatUpsZombie Quaternion.Inverse(vRLAQuatUpsZombie) 
+                    // if (counterR > 1000) // apply calibration from now on// how??
+                    {
+                        vLoArmQuat = Quaternion.Inverse(LAR1Quat) * vLoArmQuat * LAR1Quat ; *vRLAQuatUpsZombie Quaternion.Inverse(vRLAQuatUpsZombie) 
                         vUpArmQuat = Quaternion.Inverse(UAR1Quat) * vUpArmQuat * UAR1Quat;//vRUAQuatUpsZombie); //Quaternion.Inverse *vRUAQuatUpsZombie       *(vRUAQuatUpsZombie)             
-                       // Debug.Log("Quaternion.Inverse(UAR1Quat)=" + Quaternion.Inverse(UAR2Quat) + "R2Quat=" + UAR2Quat);
+                        Debug.Log("Quaternion.Inverse(UAR1Quat)=" + Quaternion.Inverse(UAR2Quat) + "R2Quat=" + UAR2Quat);
                     }
                 }
 
-            
+            }
 
         }
-        //// ******************** lisa recording- simon****************
+        //******************** lisa recording- simon****************
         //if (vIsRight)
         //{
         //    counterR++;
@@ -947,11 +930,11 @@ public partial class BodySegment
         //    vRLAQuatRightsZombie = Quaternion.FromToRotation(vRLAAxisRightZombie, Vector3.forward);
         //    float vForwrdsaAgle = Vector3.Angle(vRLAAxisRightZombie, Vector3.forward);
 
-        //    ///// ******** 2-correct up axis with Vector3.up **********
+        //    ///******** 2-correct up axis with Vector3.up **********
         //    float vUpsAngleRLA = Vector3.Angle(vRLAAxisUpZombie, Vector3.up);
 
 
-        //    ///// ******** 2-a correct up axis with t-pose **********
+        //    ///******** 2-a correct up axis with t-pose **********
         //    float vUpsAngleRLA1 = Vector3.Angle(vRLAAxisUpZombie, vRLAAxisUpTPose);
         //    //vRLAQuatUpsZombie = Quaternion.FromToRotation(vRLAAxisUpZombie, vRLAAxisUpTPose);
 
@@ -975,7 +958,7 @@ public partial class BodySegment
         //    {
         //        if (counterR > 500) // apply calibration from now on// how??
         //        {
-        //            //vLoArmQuat = vLoArmQuat * (vRLAQuatUpsZombie); // *vRLAQuatUpsZombie Quaternion.Inverse(vRLAQuatUpsZombie) 
+        //            //vLoArmQuat = vLoArmQuat * (vRLAQuatUpsZombie); *vRLAQuatUpsZombie Quaternion.Inverse(vRLAQuatUpsZombie) 
         //            //vUpArmQuat = vUpArmQuat * Quaternion.Inverse(vRUAQuatUpsZombie); //Quaternion.Inverse *vRUAQuatUpsZombie       *(vRUAQuatUpsZombie)             
         //        }
 
@@ -1021,7 +1004,7 @@ public partial class BodySegment
         //        Debug.Log("Soldier-before-R" + counterR + ";" + vLoArmQuat * Vector3.up + ";" + vLoArmQuat * Vector3.right + ";" + vUpArmQuat * Vector3.up + ";" + vUpArmQuat * Vector3.right);
         //        if (counterR > 1000) // apply Soldier calibration from now on//
         //        {
-        //            //vLoArmQuat = vLoArmQuat * (vRLAQuatforwardsSoldier);// * (vRLAQuatforwardsSoldier); // *vRLAQuatUpsZombie Quaternion.Inverse
+        //            //vLoArmQuat = vLoArmQuat * (vRLAQuatforwardsSoldier);* (vRLAQuatforwardsSoldier); *vRLAQuatUpsZombie Quaternion.Inverse
         //            vUpArmQuat = vUpArmQuat * Quaternion.Inverse(vRUAQuatforwardsSoldier); //Quaternion.Inverse *vRUAQuatUpsZombie                    
         //        }
         //        Debug.Log("Soldier-After-R" + counterR + ";" + vLoArmQuat * Vector3.up + ";" + vLoArmQuat * Vector3.right + ";" + vUpArmQuat * Vector3.up + ";" + vUpArmQuat * Vector3.right);
@@ -1062,7 +1045,7 @@ public partial class BodySegment
         //    }
         //}
 
-            ///// ************* calibation for specific movements  *****
+            ///************* calibation for specific movements  *****
             //if (vIsRight)
             //{
             //    counterR++;

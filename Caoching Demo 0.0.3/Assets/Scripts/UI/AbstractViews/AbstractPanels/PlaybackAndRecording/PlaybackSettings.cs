@@ -1,10 +1,10 @@
-﻿// /**
-// * @file PlaybackSettings.cs
-// * @brief Contains the PlaybackKeyboardSettingsClass
-// * @author Mohammed Haider( mohammed@heddoko.com)
-// * @date June 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file PlaybackSettings.cs
+* @brief Contains the PlaybackKeyboardSettingsClass
+* @author Mohammed Haider( mohammed@heddoko.com)
+* @date June 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using UnityEngine;
  
