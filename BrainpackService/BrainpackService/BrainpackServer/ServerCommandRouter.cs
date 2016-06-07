@@ -13,6 +13,7 @@ using System.Threading;
 using BrainpackService.brainpack_serial_connect;
 using BrainpackService.BrainpackServer.client;
 using BrainpackService.Tools_and_Utilities.Debugging;
+using HeddokoLauncher.BluetoothSearch;
 using HeddokoLib.networking;
 using HeddokoLib.utils; 
 
@@ -66,7 +67,30 @@ namespace BrainpackService.BrainpackServer
             mHeddokoCommand.Register(HeddokoCommands.DisableSleepTimerReq, DisableBrainpackSleepTimer);
             mHeddokoCommand.Register(HeddokoCommands.RequestServerConnection, RequestConnectionToServer);
             mHeddokoCommand.Register(HeddokoCommands.RegisterListener, RegisterListener);
+             mHeddokoCommand.Register(HeddokoCommands.GetBrainpackResults, GetBrainpacks);
         }
+
+        private void GetBrainpacks(object vSender, object vArgs)
+        {
+            BrainpackSearchResults.SearchCompletionEventHandler = null;
+            BrainpackSearchResults.StartSearch();
+            BrainpackSearchResults.SearchCompletionEventHandler = (x) =>
+            {
+                DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "Returning brainpack results");
+                string vResponses = "";
+                foreach (var vKv in x)
+                {
+                    vResponses += vKv.Key + "," + vKv.Value + "<BPLine>";
+                }
+                HeddokoPacket vResultPacket = new HeddokoPacket(HeddokoCommands.ReturnBrainpackResults, vResponses);
+                string vWrapped = HeddokoPacket.Wrap(vResultPacket);
+                BrainpackServer.Send((Socket) vSender, vWrapped);
+            };
+
+        }
+
+        
+
         private void RegisterListener(object vSender, object vargs)
         {
             Socket vListener = (Socket) vSender;

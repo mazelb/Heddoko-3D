@@ -89,3 +89,5 @@ E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.c
 E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.exe
 E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.pdb
 E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.csprojResolveAssemblyReference.cache
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\InTheHand.Net.Personal.dll
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\InTheHand.Net.Personal.xml
