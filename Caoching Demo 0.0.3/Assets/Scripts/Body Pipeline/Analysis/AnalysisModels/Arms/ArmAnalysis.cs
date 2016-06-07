@@ -21,5 +21,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
         public Vector3 ReferenceVector { get; set; }
         public TorsoAnalysis TorsoAnalysisSegment { get; set; }
         public Transform TorsoTransform { get { return TorsoAnalysisSegment.TorsoTransform; } }
+
+        internal  void NotifyArmAnalysisCompletion()
+        {
+            NotifyAnalysisCompletionListeners();
+        }
     }
 }

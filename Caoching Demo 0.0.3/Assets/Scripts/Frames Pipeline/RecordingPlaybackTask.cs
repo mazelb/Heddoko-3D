@@ -8,8 +8,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
+using Assets.Scripts.UI.Loading;
+using Assets.Scripts.Utils;
 
 namespace Assets.Scripts.Frames_Pipeline
 {
@@ -168,6 +171,11 @@ namespace Assets.Scripts.Frames_Pipeline
             get { return mCurrentRecording; }
         }
 
+        public BodyFrame[] ConvertedFrames
+        {
+            get { return mConvertedFrames; }
+        }
+
 
         public RecordingPlaybackTask(BodyFramesRecording vRecording, BodyFrameBuffer vBuffer)
         {
@@ -181,10 +189,6 @@ namespace Assets.Scripts.Frames_Pipeline
         /// </summary>
         public void Play()
         {
-
-
-            // long vStartTime = DateTime.Now.Ticks;
-
             ConvertFrames();
             int vTotalCount = mConvertedFrames.Length;
             if (vTotalCount == 0)
@@ -196,7 +200,8 @@ namespace Assets.Scripts.Frames_Pipeline
             BodyFrame vLastFrame = mConvertedFrames[vTotalCount - 1];
             float vPrevTimeStamp = vFirstFrame.Timestamp;
             float vRecDeltatime = 0;
-
+            float vStartTime = 0;
+            
             //the position of the first and last frame
             mCurrentIdx = 0;
             mFirstPos = 0;
@@ -220,11 +225,14 @@ namespace Assets.Scripts.Frames_Pipeline
 
                     if (mCurrentIdx == mFinalFramePos)
                     {
+                        //reset the start time
+                        vStartTime = 0;
                         //check if looping is enabled, set vCurrPos to first postion
                         if (LoopPlaybackEnabled)
                         {
                             mCurrentIdx = mFirstPos;
                             vPrevTimeStamp = IsRewinding ? vLastFrame.Timestamp : vFirstFrame.Timestamp;
+                           
                         }
                         else
                         {
@@ -273,19 +281,47 @@ namespace Assets.Scripts.Frames_Pipeline
 
         private void ConvertFrames()
         {
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
+            {
+                var vProgressBar = DisablingProgressBar.Instance;
+                if (vProgressBar != null)
+                {
+                    vProgressBar.StartProgressBar("CONVERTING");
+                }
+            });
 
             ConversionCompleted = false;
             //first convert all the frames
             mConvertedFrames = new BodyFrame[mRawFrames.Count];
+            
             for (int i = 0; i < mRawFrames.Count; i++)
             {
-                mConvertedFrames[i] = RawFrameConverter.ConvertRawFrame(mRawFrames[i]);
+                try
+                {
+                    mConvertedFrames[i] = RawFrameConverter.ConvertRawFrame(mRawFrames[i]);
+
+                }
+                catch (Exception vE)
+                {
+                    if (i != 0)
+                    {
+                        mConvertedFrames[i] = mConvertedFrames[i - 1];
+                    } 
+                }
 
             }
             BodyFrame vFirst = mConvertedFrames[0];
             BodyFrame vLast = mConvertedFrames[mRawFrames.Count - 1];
             TotalRecordingTime = vLast.Timestamp - vFirst.Timestamp;
             ConversionCompleted = true;
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
+            {
+                var vProgressBar = DisablingProgressBar.Instance;
+                if (vProgressBar != null)
+                {
+                    vProgressBar.StopAnimation();
+                }
+            });
         }
         /// <summary>
         /// Sets the playback to be played from the passed in index
@@ -293,10 +329,15 @@ namespace Assets.Scripts.Frames_Pipeline
         /// <param name="vConvertedRecIdx"></param>
         public void PlayFromIndex(int vConvertedRecIdx)
         {
-            if (vConvertedRecIdx < 0 || vConvertedRecIdx >= mConvertedFrames.Length)
+            if (vConvertedRecIdx < 0)
             {
-                return;
+                vConvertedRecIdx = 0;
             }
+            else if ( vConvertedRecIdx >= mConvertedFrames.Length)
+            {
+                vConvertedRecIdx = mConvertedFrames.Length - 1;
+            }
+            
             mFrameBuffer.Clear();
             mCurrentIdx = vConvertedRecIdx;
             mFrameBuffer.Enqueue(mConvertedFrames[mCurrentIdx]);

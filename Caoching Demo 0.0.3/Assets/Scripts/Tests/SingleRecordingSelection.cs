@@ -14,6 +14,9 @@ using UnityEngine;
 
 namespace Assets.Scripts.Tests
 {
+    public delegate void StartLoading();
+
+    public delegate void FinishLoading();
     /// <summary>
     /// singleton that loads a single recording
     /// </summary>
@@ -22,6 +25,8 @@ namespace Assets.Scripts.Tests
         public Rect mRect;
         private static SingleRecordingSelection sInstance;
         private Action<BodyFramesRecording> mRecordingLoadedCallback;
+        public StartLoading StartLoadingEvent;
+        public FinishLoading FinishLoadingEvent;
 
         //Panel that will cover other ui elements, thereby dissallowing their controls
         public GameObject DisablerPanel;
@@ -34,7 +39,7 @@ namespace Assets.Scripts.Tests
             {
                 if (sInstance == null)
                 {
-                    sInstance = GameObject.FindObjectOfType<SingleRecordingSelection>(); 
+                    sInstance = GameObject.FindObjectOfType<SingleRecordingSelection>();
                 }
                 return sInstance;
             }
@@ -43,7 +48,6 @@ namespace Assets.Scripts.Tests
         private void Start()
         {
             UniFileBrowser.use.SendWindowCloseMessage(HideDisablerPanel);
-
         }
 
         /// <summary>
@@ -53,7 +57,6 @@ namespace Assets.Scripts.Tests
         {
             SetTransform();
             DisablerPanel.SetActive(true);
-            // SetTransform();
             mRecordingLoadedCallback = vCallback;
             //initialize the browser settings
             UniFileBrowser.use.SetFileExtensions(new[] { "csv", "dat" });
@@ -68,6 +71,10 @@ namespace Assets.Scripts.Tests
         /// <param name="vRecordingSelected"></param>
         private void SelectRecordingFile(string vRecordingSelected)
         {
+            if (StartLoadingEvent != null)
+            {
+                StartLoadingEvent();
+            }
             FileInfo vInfo = new FileInfo(vRecordingSelected);
             ApplicationSettings.PreferedRecordingsFolder = vInfo.DirectoryName;
             BodyRecordingsMgr.Instance.ScanRecordings(UniFileBrowser.use.filePath);
@@ -80,16 +87,25 @@ namespace Assets.Scripts.Tests
         /// <param name="vRecording"></param>
         private void BodyFramesRecordingCallback(BodyFramesRecording vRecording)
         {
-
             if (mRecordingLoadedCallback != null)
             {
-
                 if (!OutterThreadToUnityThreadIntermediary.InUnityThread())
                 {
-                    OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => mRecordingLoadedCallback.Invoke(vRecording));
+                    OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
+                    {
+                        if (FinishLoadingEvent != null)
+                        {
+                            FinishLoadingEvent();
+                        }
+                        mRecordingLoadedCallback.Invoke(vRecording);
+                    });
                 }
                 else
                 {
+                    if (FinishLoadingEvent != null)
+                    {
+                        FinishLoadingEvent();
+                    }
                     mRecordingLoadedCallback.Invoke(vRecording);
                 }
             }

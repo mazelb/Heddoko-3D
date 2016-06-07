@@ -598,18 +598,18 @@ namespace UIWidgets
             Color vHideButtonColor = vNotify.hideButton.image.color;
             Color vTextColor = vNotify.text.color;
 
-            float vStartBackgroundAlpha = vBackgroundColor.a;
-            float vStartHideButtonAlpha = vHideButtonColor.a;
-            float vStartTextAlpha = vTextColor.a;
+            //float vStartBackgroundAlpha = vBackgroundColor.a;
+            //float vStartHideButtonAlpha = vHideButtonColor.a;
+            //float vStartTextAlpha = vTextColor.a;
 
             var vTime = 1f;
             var vFinishTime = Time.time + vTime;
 
             while (Time.time <= vFinishTime)
             {
-                var vNewBgrdA = Mathf.Lerp(vStartBackgroundAlpha, 0, 1 - (vFinishTime - Time.time) / vTime);
-                var vNewHideButtonA = Mathf.Lerp(vStartHideButtonAlpha, 0, 1 - (vFinishTime - Time.time) / vTime);
-                var vNewStartTextA = Mathf.Lerp(vStartTextAlpha, 0, 1 - (vFinishTime - Time.time) / vTime);
+                var vNewBgrdA = Mathf.Lerp(1, 0, 1 - (vFinishTime - Time.time) / vTime);
+                var vNewHideButtonA = Mathf.Lerp(1, 0, 1 - (vFinishTime - Time.time) / vTime);
+                var vNewStartTextA = Mathf.Lerp(1, 0, 1 - (vFinishTime - Time.time) / vTime);
 
                 vBackgroundColor.a = vNewBgrdA;
                 vHideButtonColor.a = vNewHideButtonA;

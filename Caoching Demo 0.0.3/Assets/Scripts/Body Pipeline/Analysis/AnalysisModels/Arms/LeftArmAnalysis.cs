@@ -18,31 +18,55 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
     public class LeftArmAnalysis : ArmAnalysis
     {
         //Elbow Angles
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Elbow Flexion")]
         public float AngleElbowFlexion = 0;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Signed Elbow Flexion")]
         public float SignedAngleElbowFlexion = 0;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Elbow Pronation")]
         public float AngleElbowPronation = 0;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Elbow Adduction")]
         public float SignedAngleElbowAdduction = 0;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Signed Left Shoulder Flexion")]
         public float SignedAngleShoulderFlexion = 0;
 
         //Upper Arm Angles
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Shoulder Flexion")]
         public float AngleShoulderFlexion = 0;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Shoulder Vertical Abduction")]
         public float AngleShoulderVertAbduction = 0;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Shoulder Horizontal Abduction")]
         public float AngleShoulderHorAbduction = 0;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Shoulder Rotation")]
         public float AngleShoulderRotation = 0;
 
         //Velocities and Accelerations
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityElbowFlexion = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float PeakAngularVelocityElbowFlexion = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationElbowFlexion = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityPronation = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationElbowPronation = 0;
+        [Analysis(IgnoreAttribute = true)]
+
         public float AngularVelocityShoulderFlexion = 0;
+        [Analysis(IgnoreAttribute = true)]
+
         public float AngularAccelerationShoulderFlexion = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityShoulderVertAbduction = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationShoulderVertAbduction = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityShoulderHorAbduction = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationShoulderHorAbduction = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityShoulderRotation = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationShoulderRotation = 0;
 
         /// <summary>
@@ -63,7 +87,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             // Time.time - mLastTimeCalled;
             if (DeltaTime == 0)
             {
-                return;
+                 return;
             }
             //mLastTimeCalled = Time.time;
 
@@ -157,6 +181,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             AngularAccelerationShoulderRotation = (vAngularVelocityShoulderRotationNew - AngularVelocityShoulderRotation) / DeltaTime;
             AngularVelocityShoulderRotation = vAngularVelocityShoulderRotationNew;
             AngleShoulderRotation = vAngleShoulderRotationNew;
+            NotifyArmAnalysisCompletion();
         }
     }
 }

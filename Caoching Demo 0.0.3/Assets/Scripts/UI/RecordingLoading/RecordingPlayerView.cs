@@ -13,12 +13,15 @@ using Assets.Scripts.UI.AbstractViews.Layouts;
 using System.Collections.Generic;
 using Assets.Scripts.Body_Pipeline.Analysis.Views;
 using Assets.Scripts.Communication.View.Table;
+using Assets.Scripts.Tests;
 using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
+using Assets.Scripts.UI.Loading;
 using Assets.Scripts.UI.RecordingLoading;
- using UnityEngine;
+using Assets.Scripts.Utils;
+using UnityEngine;
 using UnityEngine.UI;
-    
+
 public delegate void RecordingPlayerViewLayoutCreated(RecordingPlayerView vView);
 namespace Assets.Scripts.UI.RecordingLoading
 {
@@ -36,11 +39,10 @@ namespace Assets.Scripts.UI.RecordingLoading
         public Body CurrBody;
         public BodyFrameDataControl BodyFrameDataControl;
         public BodyFrameGraphControl FrameGraphControl;
-
         public Button LoadRecordingButton;
         public AnaylsisTextContainer AnaylsisTextContainer;
         public event RecordingPlayerViewLayoutCreated RecordingPlayerViewLayoutCreatedEvent;
-         public PanelNode RootNode
+        public PanelNode RootNode
         {
             get { return mPanelNodes[0]; }
         }
@@ -53,14 +55,41 @@ namespace Assets.Scripts.UI.RecordingLoading
             vRightSide.Add(ControlPanelType.RecordingPlaybackControlPanel);
             ControlPanelTypeList.Add(vLeftSide);
             ControlPanelTypeList.Add(vRightSide);
-      
+
+            SingleRecordingSelection.Instance.StartLoadingEvent += StartLoadHookFunc;
+            SingleRecordingSelection.Instance.FinishLoadingEvent += StopLoadHookFunc;
+            Hide();
+
+        }
+
+        /// <summary>
+        /// A hooking function to enable the progress bar when a recording is beginning to load
+        /// </summary>
+        private void StartLoadHookFunc()
+        {
+            var vProgressBar = DisablingProgressBar.Instance;
+            if (vProgressBar != null)
+            {
+                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => vProgressBar.StartProgressBar("LOADING RECORDING"));
+            }
+        }
+
+        /// <summary>
+        /// A hooking function to disable the progress bar when a recording has finished loading
+        /// </summary>
+        private void StopLoadHookFunc()
+        {
+            var vProgressBar = DisablingProgressBar.Instance;
+            if (vProgressBar != null)
+            {
+                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => vProgressBar.StopAnimation());
+            }
 
         }
 
 
-
         public override void CreateDefaultLayout()
-        { 
+        {
             CurrentLayout = new Layout(LayoutType, this);
             BodiesManager.Instance.CreateNewBody("Root");
             CurrBody = BodiesManager.Instance.GetBodyFromUUID("Root");
@@ -148,7 +177,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// Set contexual info for this view
         /// </summary>
         private void SetContextualInfo()
-        { 
+        {
             BodyFrameDataControl.SetBody(CurrBody);
             FrameGraphControl.SetBody(CurrBody);
             AnaylsisTextContainer.BodyToAnalyze = CurrBody;
@@ -166,7 +195,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                     BodySegment.IsUsingInterpolation = vPrev;
                 }
                 catch (Exception)
-                { 
+                {
                 }
             }
         }

@@ -26,8 +26,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         private TorsoAnalysis mTorsoAnalysis;
 
 
-
-
         public override string LabelName
         {
             get { return mLabelName; }

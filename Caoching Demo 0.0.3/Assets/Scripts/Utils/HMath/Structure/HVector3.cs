@@ -18,9 +18,9 @@ namespace Assets.Scripts.Utils.HMath.Structure
     public abstract class HVector3
     {
         public const float KEpsilon = 1E-05f;
-        public abstract float X { get; set; }
-        public abstract float Y { get; set; }
-        public abstract float Z { get; set; }
+        public abstract float x { get; set; }
+        public abstract float y { get; set; }
+        public abstract float z { get; set; }
 
         internal static IVector3MathServiceProvider Vector3MathServiceProvider { get; set; }
 
@@ -38,11 +38,11 @@ namespace Assets.Scripts.Utils.HMath.Structure
                 switch (vIndex)
                 {
                     case 0:
-                        return X;
+                        return x;
                     case 1:
-                        return Y;
+                        return y;
                     case 2:
-                        return Z;
+                        return z;
                     default:
                         throw new IndexOutOfRangeException("Invalid HVector3 index!");
                 }
@@ -52,13 +52,13 @@ namespace Assets.Scripts.Utils.HMath.Structure
                 switch (vIndex)
                 {
                     case 0:
-                        X = value;
+                        x = value;
                         break;
                     case 1:
-                        Y = value;
+                        y = value;
                         break;
                     case 2:
-                        Z = value;
+                        z = value;
                         break;
                     default:
                         throw new IndexOutOfRangeException("Invalid HVector3 index!");
@@ -82,15 +82,15 @@ namespace Assets.Scripts.Utils.HMath.Structure
 
         public HVector3(float vX, float vY, float vZ)
         {
-            X = vX;
-            Y = vY;
-            Z = vZ;
+            x = vX;
+            y = vY;
+            z = vZ;
         }
         public HVector3(float vX, float vY)
         {
-            X = vX;
-            Y = vY;
-            Z = 0f;
+            x = vX;
+            y = vY;
+            z = 0f;
         }
 
         public static HVector3 Lerp(HVector3 vFrom, HVector3 vTo, float vT)
@@ -141,9 +141,9 @@ namespace Assets.Scripts.Utils.HMath.Structure
         /// <param name="vNewZ"></param>
         public void Set(float vNewX, float vNewY, float vNewZ)
         {
-            X = vNewX;
-            Y = vNewY;
-            Z = vNewZ;
+            x = vNewX;
+            y = vNewY;
+            z = vNewZ;
         }
         /// <summary>
         /// Every component in the result is a component of vA multiplied by the same component of vB
@@ -154,16 +154,16 @@ namespace Assets.Scripts.Utils.HMath.Structure
         }
         public void Scale(HVector3 vScale)
         {
-            X *= vScale.X;
-            Y *= vScale.Y;
-            Z *= vScale.Z;
+            x *= vScale.x;
+            y *= vScale.y;
+            z *= vScale.z;
         }
 
         public abstract void Cross(HVector3 vRhs);
 
         public override int GetHashCode()
         {
-            return X.GetHashCode() ^ Y.GetHashCode() << 2 ^ Z.GetHashCode() >> 2;
+            return x.GetHashCode() ^ y.GetHashCode() << 2 ^ z.GetHashCode() >> 2;
         }
 
         public override bool Equals(object vOther)
@@ -173,7 +173,7 @@ namespace Assets.Scripts.Utils.HMath.Structure
                 return false;
             }
             HVector3 vector = (HVector3)vOther;
-            return X.Equals(vector.X) && Y.Equals(vector.Y) && Z.Equals(vector.Z);
+            return x.Equals(vector.x) && y.Equals(vector.y) && z.Equals(vector.z);
         }
 
 
@@ -321,6 +321,6 @@ namespace Assets.Scripts.Utils.HMath.Structure
         {
             return Vector3MathServiceProvider.SqrMagnitude(vLhs - vRhs) >= 9.99999944E-11f;
         }
-
+    
     }
 }

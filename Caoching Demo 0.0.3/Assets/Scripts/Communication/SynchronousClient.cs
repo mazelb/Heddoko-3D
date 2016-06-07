@@ -33,7 +33,7 @@ namespace Assets.Scripts.Communication
     public class SynchronousClient
     {
         private Thread mWorkerThread;
-        private const int sTimeout = 30000;
+        private const int sTimeout = 65000;
         private Semaphore mSemaphore = new Semaphore(1, 1);
 
         public SynchronousClient()

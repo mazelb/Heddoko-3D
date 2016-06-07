@@ -1,43 +1,35 @@
-﻿// /**
-// * @file IBodySubsegment.cs
-// * @brief Contains the IBodySegment interface
-// * @author Mohammed Haider(mohammed@heddoko.com)
-// * @date April 2016
-// * Copyright Heddoko(TM) 2016, all rights reserved
-// */
+/** 
+* @file IBodySubSegment.cs
+* @brief Contains the IBodySubSegment  interface
+* @author Mohammed Haider(mohamed@heddoko.com)
+* @date May 2016
+* Copyright Heddoko(TM) 2016, all rights reserved
+*/
 namespace Assets.Scripts.Body_Data.Interfaces
 {
-    /// <summary>
-    /// A component for Body SubSegments
-    /// </summary>
-    public interface IBodySubsegment
+    public interface IBodySubSegment
     {
-        BodyStructureMap.SubSegmentTypes SubSegmentType { get; }
-        BodyStructureMap.SubSegmentOrientationType SubsegmentOrientationType { get; }
 
+        object AssociatedView { get; }
         /// <summary>
-        /// The current subsegment transforms values
-        /// </summary> 
-        IBodySubsegmentTransformValues SubsegmentTransformValues { get; }
-
-        /// <summary>
-        /// Reset's the Subsegment's transform values 
+        /// Resets the orientations of the associated view
         /// </summary>
-        void Reset();
+        void ResetViewTransforms();
+  
+        void UpdateSubsegmentOrientation(object vNewOrientation, int vApplyLocal = 0, bool vResetRotation = false);
+        object GetSubSegmentTransform();
+        void UpdateSubsegmentPosition(object vNewDisplacement);
+
+        void InitializeBodySubsegment(BodyStructureMap.SubSegmentTypes vSubsegmentType);
 
         /// <summary>
-        ///  Updates the Subsegment's orientation with respect to its quaternion values
+        /// updates the current transform to the passed in parameter
         /// </summary>
-        /// <param name="vX">X component of the quaternion</param>
-        /// <param name="vY">Y component of the quaternion</param>
-        /// <param name="vZ">Z component of the quaternion</param>
-        /// <param name="vW">W component of the quaternion</param>
-        /// <param name="vApplyLocal">apply the rotation on a local level or global level?</param>
-        /// <param name="vResetRotation">reset the rotation?</param>
-        void UpdateSubsegmentOrientation(float vX, float vY, float vZ, float vW, int vApplyLocal = 0,
-            bool vResetRotation = false);
-
-        
- 
+        /// <param name="vSubSegmentTransform"></param>
+        void UpdateSubSegmentTransform(object vSubSegmentTransform);
+        /// <summary>
+        /// Releases resources used by the sub segment
+        /// </summary>
+        void ReleaseResources();
     }
 }

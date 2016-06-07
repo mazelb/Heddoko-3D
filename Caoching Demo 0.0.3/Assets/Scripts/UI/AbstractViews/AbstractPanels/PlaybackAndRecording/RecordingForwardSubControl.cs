@@ -9,6 +9,7 @@
 
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
+using Assets.Scripts.Utils.DebugContext;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +18,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     /// <summary>
     /// controls a recording to fast forward, step forward
     /// </summary>
-    public class RecordingForwardSubControl: AbstractSubControl
+    public class RecordingForwardSubControl : AbstractSubControl
     {
         public Button ForwardButton;
         public Sprite FastForward;
@@ -31,14 +32,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             get { return mIsPaused; }
             set
             {
-                if (value)
-                {
-                    ForwardButton.image.sprite  = StepForward;
-                }
-                else
-                {
-                    ForwardButton.image.sprite = FastForward;
-                }
                 mIsPaused = value;
             }
         }
@@ -46,8 +39,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public void Init(PlaybackControlPanel mParentPanel)
         {
             ParentPanel = mParentPanel;
-            ForwardButton.onClick.AddListener(ParentPanel.FastForward);
-        }
+         }
         public override SubControlType SubControlType
         {
             get { return mType; }
@@ -70,6 +62,39 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         {
             get { return ForwardButton.interactable; }
             set { ForwardButton.interactable = value; }
+        }
+
+        /// <summary>
+        /// Request resouces to be set up for the subcontrol
+        /// </summary>
+        public void RequestResources()
+        {
+            InputHandler.RegisterKeyboardAction(KeyCode.RightArrow, StepForwardAction);
+        }
+
+
+        /// <summary>
+        /// Step forward
+        /// </summary>
+        private void StepForwardAction()
+        {
+            ParentPanel.Pause();
+            if (Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift))
+            {
+                 ParentPanel.FastForward(3);
+            }
+            else
+            {
+                ParentPanel.FastForward(1);
+            }
+        }
+
+        /// <summary>
+        /// Releases previously held resources
+        /// </summary>
+        public void ReleaseResources()
+        {
+            InputHandler.RemoveKeybinding(KeyCode.RightArrow, StepForwardAction);
         }
     }
 }
