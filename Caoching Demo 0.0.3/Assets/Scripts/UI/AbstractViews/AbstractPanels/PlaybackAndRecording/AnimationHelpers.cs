@@ -4,7 +4,14 @@ using UnityEngine.UI;
 
 static internal class AnimationHelpers
 {
-    public static IEnumerator FadeTextBoxWithMessage(string vMsg, Text vText)
+    /// <summary>
+    /// Fades a text box with a message
+    /// </summary>
+    /// <param name="vMsg">The message</param>
+    /// <param name="vText">The text box</param>
+    /// <param name="vFadingTime">(optional)Fading time. Default to 4 seconds.</param>
+    /// <returns></returns>
+    public static IEnumerator FadeTextBoxWithMessage(string vMsg, Text vText, float vFadingTime = 4f)
     {
         vText.text = vMsg;
         if (!vText.enabled)

@@ -8,7 +8,6 @@
 */
 
 using System;
-using UnityEditor;
 using UnityEngine;
 
 namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
@@ -77,16 +76,16 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
         {
             mStartCountingSquats = vFlag;
         }
-         
+
         /// <summary>
         /// Extract angles from orientations for the right leg
         /// </summary>
         public override void AngleExtraction()
         {
             float vDeltaTime = Time.time - mLastTimeCalled;
-            if ( vDeltaTime == 0)
+            if (vDeltaTime == 0)
             {
-                 return;
+                return;
             }
             mLastTimeCalled = Time.time;
 
@@ -115,13 +114,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             AngularVelocityKneeFlexion = vAngularVelocityKneeFlexionNew;
             //Signed angle adduction calculation
 
-         
-     
+
+
 
             //Squatts counting
-            if ( mStartCountingSquats)
+            if (mStartCountingSquats)
             {
-                if (Math.Abs(vAngleKneeFlexionNew) > 15) 
+                if (Math.Abs(vAngleKneeFlexionNew) > 15)
                 {
                     AngleSum += Math.Abs(vAngleKneeFlexionNew - AngleKneeFlexion);
                 }
@@ -181,7 +180,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             AngleHipAbduction = vAngleHipAbductionNew;
 
             //calculate the Hip Rotation angle (angles between axis projection in XZ plane) 
-            float vAngleHipRotationNew = 180 - Mathf.Abs(180 - ThighTransform.rotation.eulerAngles.y); 
+            float vAngleHipRotationNew = 180 - Mathf.Abs(180 - ThighTransform.rotation.eulerAngles.y);
             float vAngularVelocityRHipRotationNew = Mathf.Abs(vAngleHipRotationNew - Mathf.Abs(AngleHipRotation)) / vDeltaTime;
             AngularAccelerationHipRotation = Mathf.Abs(vAngularVelocityRHipRotationNew - AngularVelocityHipRotation) / vDeltaTime;
             AngularVelocityHipRotation = vAngularVelocityRHipRotationNew;
@@ -194,7 +193,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             LegHeight = vThighHeight + vTibiaHeight;
 
             float vThighStride = Mathf.Sqrt((mInitThighHeight * mInitThighHeight) - (vThighHeight * vThighHeight));
-            float vTibiaStride = Mathf.Sqrt((mInitTibiaHeight * mInitTibiaHeight) - (vTibiaHeight * vTibiaHeight)); 
+            float vTibiaStride = Mathf.Sqrt((mInitTibiaHeight * mInitTibiaHeight) - (vTibiaHeight * vTibiaHeight));
             //Debug.Log(vTibiaStride);
 
             Vector3 vThighDirection = -vThighAxisUp.normalized;
