@@ -333,8 +333,8 @@ Camera:
   m_GameObject: {fileID: 85464278}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0.019607844}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.20392157, g: 0.23529412, b: 0.26666668, a: 1}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -1225,7 +1225,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -1245,7 +1245,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 
 --- !u!222 &643714754
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3142,7 +3142,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 
 --- !u!222 &1613191949
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3353,6 +3353,8 @@ GameObject:
   m_Component:
   - 224: {fileID: 1780462326}
   - 114: {fileID: 1780462327}
+  - 222: {fileID: 1780462329}
+  - 114: {fileID: 1780462328}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -3399,6 +3401,39 @@ MonoBehaviour:
   ComboButton: {fileID: 1873146029}
   LicenseTypeDropDown: {fileID: 1192141297}
   UserTypeDropDown: {fileID: 1326090066}
+--- !u!114 &1780462328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1780462325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.20392157, g: 0.23529412, b: 0.26666668, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+--- !u!222 &1780462329
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1780462325}
 --- !u!1 &1787448232
 GameObject:
   m_ObjectHideFlags: 0
@@ -3509,7 +3544,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22498192, guid: 572e3bfcaa87b17488d1fff5f9d6bc6b, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 22498192, guid: 572e3bfcaa87b17488d1fff5f9d6bc6b, type: 2}
       propertyPath: m_AnchoredPosition.x
