@@ -8,8 +8,11 @@
 
 
 using System.Collections.Generic;
+using Assets.Scripts.Body_Pipeline.Analysis;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
+using Assets.Scripts.UI.AbstractViews.Permissions;
+using HeddokoSDK.Models;
 
 namespace Assets.Scripts.UI.AbstractViews.Enums
 {
@@ -125,58 +128,107 @@ namespace Assets.Scripts.UI.AbstractViews.Enums
 
     public enum ControlPanelType
     {
+        [UserRolePermission(UserRoleType.Admin)]
         DebugControlPanel,
+        [UserRolePermission()]
         CameraControlPanel,
+        [UserRolePermission()]
         FeedbackControlPanel,
+        [UserRolePermission()]
         RecordingPlaybackControlPanel,
+        [UserRolePermission()]
         TagControlPanel,
+        [UserRolePermission()]
         RenderedBodyControlPanel,
+        [UserRolePermission()]
         SuitCommunicationControlPanel,
+        [UserRolePermission()]
         CommentControlPanel,
+        [UserRolePermission()]
         AnalysisControlPanel,
+        [UserRolePermission()]
         MiscClientControlPanel,
+        [UserRolePermission()]
         SettingControlPanel,
+        [UserRolePermission()]
         DebugRecordingPanel,
+        [UserRolePermission()]
         LoadingPanel,
+        [UserRolePermission()]
         DemoKit,
+        [UserRolePermission()]
         BrainpackControlPanel,
+        [UserRolePermission()]
         LiveBPFeedView
     }
 
     public enum SubControlType
     {
+        [UserRolePermission(new[] { UserRoleType.Admin })]
         PlaybackSubControl,
+        [UserRolePermission()]
         RecordingPlayPause,
+        [UserRolePermission()]
         RecordingForwardSubControl,
+        [UserRolePermission()]
         RecordingRewindSubControl,
+        [UserRolePermission()]
         RecordingProgressSubControl,
+        [UserRolePermission()]
         RecordingPlaySpeedModSubControl,
+        [UserRolePermission()]
         RecordingLoadSingleSubControl,
+        [UserRolePermission()]
         PlayerLoopback,
+        [UserRolePermission()]
         TagWidgetSubControl,
+        [UserRolePermission()]
         TagModificationSubControl,
+        [UserRolePermission()]
         TagTextBoxSubControl,
+        [UserRolePermission()]
         CommentTextboxSubControl,
+        [UserRolePermission()]
         CommentWidgetSubControl,
+        [UserRolePermission()]
         RecordingSpeedModifierSubcontrol,
+        [UserRolePermission()]
         PlaybackSliderSubcontrol,
+        [UserRolePermission()]
         RecordingSelectionSubControl,
+        [UserRolePermission()]
         SuitsCommunicationSubControl,
+        [UserRolePermission()]
         SuitsSelectionSubControl,
+        [UserRolePermission()]
         SuitConnectionSubControl,
+        [UserRolePermission()]
         SuitModificationSubControl,
+        [UserRolePermission()]
         SuitStateModifierSubControl,
+        [UserRolePermission()]
         SuitsCalibrationSubControl,
+        [UserRolePermission()]
         RenderedBodyModifierSubControl,
+        [UserRolePermission()]
         RenderedBodySelectionSubControl,
+        [UserRolePermission()]
         ResetAvatarSubControl,
+        [UserRolePermission()]
         AddTagSubControl,
+        [UserRolePermission()]
         AddCommentSubControl,
+        [UserRolePermission()]
         ModifyCommentSubControl,
+        [UserRolePermission()]
         CameraOrbitSubControl,
+        [UserRolePermission()]
         RecordingPlaybackSpeedDisplay,
+        [UserRolePermission()]
         RightClickSubControl,
+        [UserRolePermission()]
         LoginControl,
+        [UserRolePermission()]
         CameraZoomSubControl
     }
 }

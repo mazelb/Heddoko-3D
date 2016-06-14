@@ -13,7 +13,9 @@ using System.Linq;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.AbstractSuitSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
+using Assets.Scripts.UI.AbstractViews.Permissions;
 using Assets.Scripts.UI.Loading;
+using HeddokoSDK.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -200,6 +202,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
         {
             gameObject.SetActive(true);
         }
+ 
 
         public override void OnStatusUpdate(SuitState vSuitState)
         {

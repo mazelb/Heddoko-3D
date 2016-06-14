@@ -7,6 +7,7 @@
 */
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
+using Assets.Scripts.UI.AbstractViews.Permissions;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,6 +16,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     /// <summary>
     /// Controls the progress of a recording playback
     /// </summary>
+    [UserRolePermission()]
+
     public class RecordingProgressSubControl : AbstractSubControl
     {
         public Text CurrentPlayTimeText;

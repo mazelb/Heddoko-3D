@@ -8,10 +8,13 @@
 
 
 using System.Collections;
+using System.Collections.Generic;
 using Assets.Scripts.Frames_Pipeline;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Layouts;
+using Assets.Scripts.UI.AbstractViews.Permissions;
+using HeddokoSDK.Models;
 using UnityEngine;
 
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
@@ -23,7 +26,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     /// <summary>
     /// Provides controls for recording play back
     /// </summary>
-    public class PlaybackControlPanel : AbstractControlPanel
+    [UserRolePermission()]
+    public class PlaybackControlPanel : AbstractControlPanel, IPermissionLevelContractor
     {
         private RecordingPlaybackTask mPlaybackTask;
         private Body mBody;
@@ -39,12 +43,12 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public event BodyUpdated BodyUpdatedEvent;
         public event RecordingUpdated RecordingUpdatedEvent;
         private bool mIsNewRecording = true;
-
+        private List<AbstractSubControl> mAbstractSubControls = new List<AbstractSubControl>();
         [SerializeField]
         private PlaybackState mCurrentState;
         private PlaybackState mPrevState;
         private PlaybackSettings mPlaybackSettings = new PlaybackSettings();
-
+        private bool mCanUse = true;
         public PlaybackState CurrentState
         {
             get
@@ -80,6 +84,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         {
             get { return mPlaybackTask; }
         }
+
+
 
         /// <summary>
         /// Updates recording for the current playback panel
@@ -143,15 +149,23 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlaybackProgressSubControl.Init(this);
             SingleRecordingLoadSubControl.Init(this);
             ValidatePlaybackTaskForControls();
+            mAbstractSubControls.Add(RecordingProgressSliderSubControl);
+            mAbstractSubControls.Add(RecordingForwardSubControl);
+            mAbstractSubControls.Add(RecordingRewindSubControl);
+            mAbstractSubControls.Add(RecordingPlaybackSpeedDisplay);
+            mAbstractSubControls.Add(PlayPauseSubControls);
+            mAbstractSubControls.Add(PlaybackSpeedModifierSubControl);
+            mAbstractSubControls.Add(PlaybackProgressSubControl);
+            mAbstractSubControls.Add(SingleRecordingLoadSubControl);
         }
 
         public void SkipFrameBack()
         {
-            
+
         }
         public void SkipFrameFwd()
         {
-            
+
         }
         void OnApplicationQuit()
         {
@@ -542,7 +556,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             {
                 mPlaybackSettings.FrameSkipMultiplier = vStepForwardMultiplier;
                 ChangeState(PlaybackState.StepForward);
-            } 
+            }
         }
 
         public void Rewind(int vStepbackMultiplier)
@@ -552,11 +566,18 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 mPlaybackSettings.FrameSkipMultiplier = vStepbackMultiplier;
                 ChangeState(PlaybackState.StepBackward);
             }
-            
+
         }
 
         void OnEnable()
         {
+            Debug.Log("PlaybackControlPanel: being enabled. Can use? " + mCanUse);
+            if (!mCanUse)
+            {
+                gameObject.SetActive(false);
+                return;
+            }
+
             PlayPauseSubControls.RequestResources();
             RecordingForwardSubControl.RequestResources();
             RecordingRewindSubControl.RequestResources();
@@ -590,6 +611,15 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public void Pause()
         {
             ChangeState(PlaybackState.Pause);
+        }
+
+        public void SetInteractionLevel(UserRoleType vRoleType)
+        {
+            mCanUse = UserRolePermission.HasPermission(this.GetType(), vRoleType);
+            foreach (var vAbstractSubControl in mAbstractSubControls)
+            {
+                vAbstractSubControl.SetInteractionLevel(vRoleType);
+            }
         }
     }
 

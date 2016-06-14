@@ -28,6 +28,8 @@ TagManager:
   - CameraGroup
   - RenderedBodyGroup
   - layout
+  - LoadingPanel
+  - ApplicationManagement
   layers:
   - Default
   - TransparentFX

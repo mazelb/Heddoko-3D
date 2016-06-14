@@ -9,7 +9,9 @@
 
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
+using Assets.Scripts.UI.AbstractViews.Permissions;
 using Assets.Scripts.Utils.DebugContext;
+using HeddokoSDK.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,6 +21,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     /// <summary>
     /// A abstract sub control that changes a recording's play/pause state
     /// </summary>
+    [UserRolePermission]
     public class RecordingPlayPause : AbstractSubControl
     {
         public Button PlayPauseButton;
@@ -83,6 +86,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         {
             Interactable = true;
         }
+
+      
 
 
         /// <summary>

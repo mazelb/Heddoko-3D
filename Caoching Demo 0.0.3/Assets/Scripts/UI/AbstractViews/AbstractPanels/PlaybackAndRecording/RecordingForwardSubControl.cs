@@ -9,6 +9,7 @@
 
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
+using Assets.Scripts.UI.AbstractViews.Permissions;
 using Assets.Scripts.Utils.DebugContext;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     /// <summary>
     /// controls a recording to fast forward, step forward
     /// </summary>
+    [UserRolePermission()]
+
     public class RecordingForwardSubControl : AbstractSubControl
     {
         public Button ForwardButton;

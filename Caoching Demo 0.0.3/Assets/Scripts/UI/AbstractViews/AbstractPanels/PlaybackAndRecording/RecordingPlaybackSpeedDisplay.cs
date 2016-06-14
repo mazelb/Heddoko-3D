@@ -7,6 +7,7 @@
 */
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
+using Assets.Scripts.UI.AbstractViews.Permissions;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
@@ -14,6 +15,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     /// <summary>
     /// Displays the current playback speed
     /// </summary>
+    [UserRolePermission()]
+
     public class RecordingPlaybackSpeedDisplay : AbstractSubControl
     {
         private SubControlType mType = SubControlType.RecordingPlaybackSpeedDisplay;

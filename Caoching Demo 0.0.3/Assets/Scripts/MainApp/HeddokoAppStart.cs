@@ -6,26 +6,21 @@
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
 
-using System;
-
-using System.Collections.Generic;
 using Assets.Scripts.Body_Data.View;
-using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Communication.DatabaseConnectionPipe;
 using Assets.Scripts.UI.AbstractViews.camera;
 using Assets.Scripts.UI.ModalWindow;
-using Assets.Scripts.UI.Scene_3d.View;
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.UI.Tagging;
+using Assets.Scripts.Utils;
+using Assets.Scripts.Utils.DatabaseAccess;
 using Assets.Scripts.Utils.DebugContext.logging;
 using Assets.Scripts.Utils.HMath.Service_Provider;
 using Assets.Scripts.Utils.HMath.Structure;
-using HeddokoLib.networking;
-using HeddokoLib.utils;
 using UnityEngine;
 using Application = UnityEngine.Application;
 
-namespace Assets.Scripts.Utils.DatabaseAccess
+namespace Assets.Scripts.MainApp
 {
     /// <summary>
     /// HeddokoAppStart:  This class is the starting point of the application, 
@@ -174,8 +169,7 @@ namespace Assets.Scripts.Utils.DatabaseAccess
         }
 
         void OnApplicationQuit()
-        {
-            // mDatabase.CleanUp();
+        { 
             DebugLogger.Instance.Stop();
             mDbAccess.SaveApplicationSettings();
         }

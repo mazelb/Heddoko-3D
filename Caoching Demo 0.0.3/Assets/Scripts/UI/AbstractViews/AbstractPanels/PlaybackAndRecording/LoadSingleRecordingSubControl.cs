@@ -9,7 +9,8 @@
 using System;
 using Assets.Scripts.Tests;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
-using Assets.Scripts.UI.AbstractViews.Enums; 
+using Assets.Scripts.UI.AbstractViews.Enums;
+using Assets.Scripts.UI.AbstractViews.Permissions;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
@@ -18,6 +19,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     /// <summary>
     /// A subcontrol that brings up a panel to load recordings
     /// </summary>
+    [UserRolePermission()]
+
     public class LoadSingleRecordingSubControl : AbstractSubControl
     {
         public Button LoadButton;

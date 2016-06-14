@@ -8,6 +8,7 @@
 
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
+using Assets.Scripts.UI.AbstractViews.Permissions;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
@@ -15,6 +16,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     /// <summary>
     /// Controls the playback speed of a recording
     /// </summary>
+    [UserRolePermission()]
+
     public class RecordingPlaySpeedModSubControl : AbstractSubControl
     {
         public Slider PlaybackSpeedSlider;

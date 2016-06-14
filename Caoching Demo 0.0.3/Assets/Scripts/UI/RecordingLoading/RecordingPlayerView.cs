@@ -13,12 +13,15 @@ using Assets.Scripts.UI.AbstractViews.Layouts;
 using System.Collections.Generic;
 using Assets.Scripts.Body_Pipeline.Analysis.Views;
 using Assets.Scripts.Communication.View.Table;
+using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.Tests;
 using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
+using Assets.Scripts.UI.AbstractViews.Permissions;
 using Assets.Scripts.UI.Loading;
 using Assets.Scripts.UI.RecordingLoading;
 using Assets.Scripts.Utils;
+using HeddokoSDK.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,6 +31,7 @@ namespace Assets.Scripts.UI.RecordingLoading
     /// <summary>
     /// Single Player view
     /// </summary>
+    [UserRolePermission(new []{UserRoleType.Analyst})]
     public class RecordingPlayerView : AbstractView
     {
         private LayoutType LayoutType = LayoutType.Single;
@@ -55,7 +59,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             vRightSide.Add(ControlPanelType.RecordingPlaybackControlPanel);
             ControlPanelTypeList.Add(vLeftSide);
             ControlPanelTypeList.Add(vRightSide);
-
+            
             SingleRecordingSelection.Instance.StartLoadingEvent += StartLoadHookFunc;
             SingleRecordingSelection.Instance.FinishLoadingEvent += StopLoadHookFunc;
             Hide();
@@ -198,6 +202,14 @@ namespace Assets.Scripts.UI.RecordingLoading
                 {
                 }
             }
+        }
+
+        public void SetPermissions(UserProfileModel vProfileModel)
+        {
+            var vUserRole = vProfileModel.User.RoleType;
+            PbControlPanel.SetInteractionLevel(vUserRole);
+            //get the role and apply it to the child control panels.. 
+            //maybe apply it on every subcontrol panel
         }
     }
 }

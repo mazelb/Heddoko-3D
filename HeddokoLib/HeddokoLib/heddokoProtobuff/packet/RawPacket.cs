@@ -15,87 +15,87 @@ namespace HeddokoLib.heddokoProtobuff.packet
         const byte StartByte = 0xDE;
         const byte EscapeByte = 0xDF;
         const byte EscapedByteOffset = 0x10;
-        const UInt32 maxPacketSize = 2000;
-        byte[] payload;
-        UInt16 payloadSize;
-        bool packetComplete;
-        bool escapeFlag;
-        UInt16 bytesReceived;
-        byte[] rawPacketBytes;
+        const UInt32 MaxPacketSize = 2000;
+        byte[] mPayload;
+        UInt16 mPayloadSize;
+        bool mPacketComplete;
+        bool mEscapeFlag;
+        UInt16 mBytesReceived;
+        byte[] mRawPacketBytes;
         UInt16 mRawPacketBytesIndex;
         UInt16 rawPacketBytesIndex;
         public RawPacket()
         {
-            payload = new byte[maxPacketSize];
-            payloadSize = 0;
-            packetComplete = false;
-            escapeFlag = false;
-            bytesReceived = 0;
-            rawPacketBytes = new byte[maxPacketSize];
+            mPayload = new byte[MaxPacketSize];
+            mPayloadSize = 0;
+            mPacketComplete = false;
+            mEscapeFlag = false;
+            mBytesReceived = 0;
+            mRawPacketBytes = new byte[MaxPacketSize];
         }
-        public RawPacket(byte[] payloadBytes, UInt16 payloadBytesSize)
+        public RawPacket(byte[] vPayloadBytes, UInt16 vPayloadBytesSize)
         {
-            payload = payloadBytes;
-            payloadSize = payloadBytesSize;
-            packetComplete = false;
-            bytesReceived = 0;
-            rawPacketBytes = new byte[maxPacketSize];
+            mPayload = vPayloadBytes;
+            mPayloadSize = vPayloadBytesSize;
+            mPacketComplete = false;
+            mBytesReceived = 0;
+            mRawPacketBytes = new byte[MaxPacketSize];
             rawPacketBytesIndex = 0;
         }
-        public RawPacket(RawPacket packet)
+        public RawPacket(RawPacket vPacket)
         {
-            payload = new byte[maxPacketSize];
-            Buffer.BlockCopy(packet.payload, 0, this.payload, 0, packet.payloadSize);
-            payloadSize = packet.payloadSize;
-            packetComplete = false;
-            bytesReceived = 0;
-            rawPacketBytes = new byte[maxPacketSize];
+            mPayload = new byte[MaxPacketSize];
+            Buffer.BlockCopy(vPacket.mPayload, 0, this.mPayload, 0, vPacket.mPayloadSize);
+            mPayloadSize = vPacket.mPayloadSize;
+            mPacketComplete = false;
+            mBytesReceived = 0;
+            mRawPacketBytes = new byte[MaxPacketSize];
             rawPacketBytesIndex = 0;
         }
 
-        public void resetPacket()
+        public void ResetPacket()
         {
-            payloadSize = 0;
-            packetComplete = false;
-            escapeFlag = false;
-            bytesReceived = 0;
+            mPayloadSize = 0;
+            mPacketComplete = false;
+            mEscapeFlag = false;
+            mBytesReceived = 0;
         }
         public RawPacket DeepCopy()
         {
-            RawPacket other = (RawPacket)this.MemberwiseClone();
-            other.payload = this.payload;
-            Buffer.BlockCopy(other.payload, 0, this.payload, 0, this.payloadSize);
-            other.payloadSize = this.payloadSize;
-            return other;
+            RawPacket vOther = (RawPacket)this.MemberwiseClone();
+            vOther.mPayload = this.mPayload;
+            Buffer.BlockCopy(vOther.mPayload, 0, this.mPayload, 0, this.mPayloadSize);
+            vOther.mPayloadSize = this.mPayloadSize;
+            return vOther;
         }
 
-        void addByteToRawPacket(byte rawByte)
+        void AddByteToRawPacket(byte vRawByte)
         {
-            if (rawByte == EscapeByte || rawByte == StartByte)
+            if (vRawByte == EscapeByte || vRawByte == StartByte)
             {
-                rawPacketBytes[rawPacketBytesIndex++] = EscapeByte;
-                rawPacketBytes[rawPacketBytesIndex++] = (byte)((int)rawByte + (int)EscapedByteOffset);
+                mRawPacketBytes[rawPacketBytesIndex++] = EscapeByte;
+                mRawPacketBytes[rawPacketBytesIndex++] = (byte)((int)vRawByte + (int)EscapedByteOffset);
             }
             else
             {
-                rawPacketBytes[rawPacketBytesIndex++] = rawByte;
+                mRawPacketBytes[rawPacketBytesIndex++] = vRawByte;
             }
         }
 
-        public byte[] createRawPacket(ref UInt16 rawSize)
+        public byte[] CreateRawPacket(ref UInt16 vRawSize)
         {
-            rawSize = 0;
-            rawPacketBytes[rawPacketBytesIndex++] = StartByte;
-            addByteToRawPacket((byte)(payloadSize & 0x00ff));
-            addByteToRawPacket((byte)((payloadSize >> 8) & 0x00ff));
+            vRawSize = 0;
+            mRawPacketBytes[rawPacketBytesIndex++] = StartByte;
+            AddByteToRawPacket((byte)(mPayloadSize & 0x00ff));
+            AddByteToRawPacket((byte)((mPayloadSize >> 8) & 0x00ff));
 
-            for (int i = 0; i < payloadSize; i++)
+            for (int vI = 0; vI < mPayloadSize; vI++)
             {
-                addByteToRawPacket(payload[i]);
+                AddByteToRawPacket(mPayload[vI]);
             }
             //return the size of the raw bytes. 
-            rawSize = rawPacketBytesIndex;
-            return rawPacketBytes;
+            vRawSize = rawPacketBytesIndex;
+            return mRawPacketBytes;
 
         }
     }

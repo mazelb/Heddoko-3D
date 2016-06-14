@@ -44,7 +44,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             List<ControlPanelType> vLeftSide = new List<ControlPanelType>();
             vLeftSide.Add(ControlPanelType.LiveBPFeedView);
             ControlPanelTypeList.Add(vLeftSide);
-      
+            Hide();
         }
 
 

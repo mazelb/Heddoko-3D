@@ -10,44 +10,50 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using Assets.Scripts.Licensing.Model;
- using HeddokoSDK;
+using Assets.Scripts.Utils;
+using HeddokoSDK;
 using HeddokoSDK.Models;
 using UIWidgets;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Licensing.Authentication
 {
     public delegate void OnLoginSuccess(UserProfileModel vModel);
 
-     /// <summary>
+    /// <summary>
     /// A login control to be used with unity
     /// </summary>
     public class UnityLoginControl : MonoBehaviour
     {
         public LoginModel LoginModel = new LoginModel();
-        public LoginView LoginView; 
+        public LoginView LoginView;
         public Notify NotificationTemplate;
         private LoginController mLoginController;
         private HeddokoClient mClient = new HeddokoClient();
         internal OnLoginSuccess mLoginSuccessEvent;
+        private Thread mConnectionThread;
+        public Image LoadingIcon;
+        public LoginController LoginController
+        {
+            get { return mLoginController; }
+        }
 
-         public LoginController LoginController
-         {
-             get { return mLoginController; }
-         }
-
-         void Awake()
+        void Awake()
         {
             mLoginController = new LoginController();
             mLoginController.Init(LoginModel, LoginView);
             mLoginController.AddErrorHandler(LoginErrorType.CannotAuthenticate, DisplayErrorNotification);
-            mLoginController.AddErrorHandler(LoginErrorType.CannotAuthenticate, (x)=>EnableControls());
+            mLoginController.AddErrorHandler(LoginErrorType.CannotAuthenticate, (x) => EnableControls());
             mLoginController.AddErrorHandler(LoginErrorType.NullLicense, DisplayErrorNotification);
             mLoginController.AddErrorHandler(LoginErrorType.NullLicense, (x) => EnableControls());
             mLoginController.AddErrorHandler(LoginErrorType.ZeroLengthPassword, LoginView.DisplayProblemWithPassword);
             mLoginController.AddErrorHandler(LoginErrorType.ZeroLengthUserName, LoginView.DisplayProblemWithUsername);
             mLoginController.AddLoginSubmissionHandler(SubmitLogin);
+            OutterThreadToUnityThreadIntermediary.Instance.Init();
+            
         }
 
 
@@ -56,7 +62,7 @@ namespace Assets.Scripts.Licensing.Authentication
         /// enable login controls
         /// </summary>
         /// <param name="vVmsg"></param>
-        private void EnableControls( )
+        private void EnableControls()
         {
             LoginView.EnableButtonControls();
         }
@@ -77,7 +83,7 @@ namespace Assets.Scripts.Licensing.Authentication
         {
             mLoginSuccessEvent -= vHandler;
         }
-       
+
 
         /// <summary>
         /// Displays an error notification
@@ -86,7 +92,9 @@ namespace Assets.Scripts.Licensing.Authentication
         void DisplayErrorNotification(string vMsg)
         {
             Notify.Template("FadingFadoutNotifyTemplate")
-                .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First); 
+                .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First);
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoadingIcon.gameObject.SetActive(false));
+
         }
 
         void SubmitLogin(LoginModel vModel)
@@ -94,6 +102,8 @@ namespace Assets.Scripts.Licensing.Authentication
             //verify internet connection first
             LoginView.DisableButtonControls();
             StartCoroutine(VerifyInternetConnection(vModel));
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoadingIcon.gameObject.SetActive(true));
+
 
         }
 
@@ -114,11 +124,16 @@ namespace Assets.Scripts.Licensing.Authentication
             }
             else
             {
-                //No error: continue
-                SubmitLoginInfo(vModel);
+                //No error: continue 
+                mConnectionThread = new Thread(() => SubmitLoginInfo(vModel));
+                mConnectionThread.Start();
             }
         }
-        
+
+        /// <summary>
+        /// Submits login information
+        /// </summary>
+        /// <param name="vModel">The login model to submit</param>
         private void SubmitLoginInfo(LoginModel vModel)
         {
             try
@@ -129,7 +144,7 @@ namespace Assets.Scripts.Licensing.Authentication
                 mClient.SetToken(vUser.Token);
                 ResultBool check = mClient.Check();
                 User profile = mClient.Profile();
-                if (check.Result )
+                if (check.Result)
                 {
                     UserProfileModel vProfileModel = new UserProfileModel()
                     {
@@ -138,10 +153,11 @@ namespace Assets.Scripts.Licensing.Authentication
                     };
                     if (mLoginSuccessEvent != null)
                     {
-                        mLoginSuccessEvent(vProfileModel);
+                        OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => mLoginSuccessEvent(vProfileModel));
+                        OutterThreadToUnityThreadIntermediary.QueueActionInUnity(()=> LoadingIcon.gameObject.SetActive(false));
                     }
                 }
-                 
+
             }
             catch (WebException vWebException)
             {
@@ -156,13 +172,21 @@ namespace Assets.Scripts.Licensing.Authentication
                                 switch (vWebResponse.StatusCode)
                                 {
                                     case HttpStatusCode.NotFound:
-                                        mLoginController.RaiseErrorEvent(LoginErrorType.HttpStatus404, "Please contact support and inform them of error 404");
+                                        OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
+                                        mLoginController.RaiseErrorEvent(LoginErrorType.HttpStatus404,
+                                        "Please contact support and inform them of error 404"));
                                         break;
                                     case HttpStatusCode.Unauthorized:
-                                        mLoginController.RaiseErrorEvent(LoginErrorType.CannotAuthenticate, "Invalid user name and/or password.");
+                                        OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
+                                            () =>
+                                                mLoginController.RaiseErrorEvent(LoginErrorType.CannotAuthenticate,
+                                                    "Invalid user name and/or password."));
                                         break;
                                     default:
-                                        mLoginController.RaiseErrorEvent(LoginErrorType.Other, "There was a problem trying to reach the server. Please report to support with error code " + vWebResponse.StatusCode);
+                                        OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
+                                           () =>
+                                               mLoginController.RaiseErrorEvent(LoginErrorType.Other,
+                                               "There was a problem trying to reach the server. Please report to support with error code " + vWebResponse.StatusCode));
                                         break;
                                 }
                             }
@@ -171,5 +195,8 @@ namespace Assets.Scripts.Licensing.Authentication
                 }
             }
         }
+
+
+
     }
 }

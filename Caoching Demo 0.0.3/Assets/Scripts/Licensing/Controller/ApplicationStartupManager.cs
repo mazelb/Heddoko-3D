@@ -1,6 +1,6 @@
 ﻿/**
 * @file ApplicationStartupManager.cs
-* @brief Contains the 
+* @brief Contains the ApplicationStartupManager
 * @author Mohammed Haider(mohammed@heddoko.com)
 * @date June 2016
 * Copyright Heddoko(TM) 2016,  all rights reserved
@@ -8,23 +8,33 @@
 
 using Assets.Scripts.Licensing.Authentication;
 using Assets.Scripts.Licensing.Model;
+using Assets.Scripts.UI;
 using HeddokoSDK.Models;
 using UIWidgets;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-
+ 
 namespace Assets.Scripts.Licensing.Controller
 {
+
     /// <summary>
     /// The startup manager of the application 
     /// </summary>
-    public class ApplicationStartupManager : MonoBehaviour
+    public class ApplicationStartupManager : MonoBehaviour, IApplicationStartupManager
     {
         public UnityLoginControl LoginControl;
         public ApplicationBouncer Bouncer = new ApplicationBouncer();
 
-
+        /// <summary>
+        /// Initializes parameters
+        /// </summary>
         void Awake()
+        {
+            Init();
+        }
+
+        public IViewFactory ViewFactory { get; private set; }
+
+        public void Init()
         {
             Bouncer.RegisterLicenseAccessActionEvent(LicenseStatusType.Active, ActiveLicenseHandler);
             Bouncer.RegisterLicenseAccessActionEvent(LicenseStatusType.Deleted, DeletedLicenseHandler);
@@ -34,15 +44,15 @@ namespace Assets.Scripts.Licensing.Controller
             Bouncer.RegisterUserAccessActionEvent(UserStatusType.Banned, BannedUserHandler);
             Bouncer.RegisterUserAccessActionEvent(UserStatusType.NotActive, InactiveUserHandler);
             LoginControl.RegisterOnLoginEvent(Bouncer.ValidateUser);
+            ViewFactory = gameObject.AddComponent<UnityViewFactory>();
         }
 
         /// <summary>
         /// Handler for active user event
         /// </summary> 
-        void ActiveUserHandler(UserProfileModel vProfileModel)
+        public void ActiveUserHandler(UserProfileModel vProfileModel)
         {
-            Debug.Log("Active user");
-             //Ask the bouncer if the license if valid
+              //Ask the bouncer if the license if valid
             if (vProfileModel.LicenseInfo != null)
             {
                 Bouncer.ValidateLicense(vProfileModel);
@@ -55,9 +65,8 @@ namespace Assets.Scripts.Licensing.Controller
         /// <summary>
         /// Handler for banned user
         /// </summary> 
-        void BannedUserHandler(UserProfileModel vProfileModel)
+        public void BannedUserHandler(UserProfileModel vProfileModel)
         {
-
             string vMsg =
                  "This account has been banned. ";
             Notify.Template("FadingFadoutNotifyTemplate")
@@ -66,7 +75,7 @@ namespace Assets.Scripts.Licensing.Controller
         /// <summary>
         /// Handler for inactive user event
         /// </summary> 
-        void InactiveUserHandler(UserProfileModel vProfileModel)
+        public void InactiveUserHandler(UserProfileModel vProfileModel)
         {
             string vMsg =
                 "This account is not active. Please contact your license administrator for further support.";
@@ -77,14 +86,14 @@ namespace Assets.Scripts.Licensing.Controller
         /// <summary>
         /// Handler for active license event
         /// </summary> 
-        void ActiveLicenseHandler(UserProfileModel vProfileModel)
+        public void ActiveLicenseHandler(UserProfileModel vProfileModel)
         {
-            Debug.Log("Active license, proceed to scene loading");
-
-        }/// <summary>
+            ViewFactory.Construct(vProfileModel, PlatformType.Windows);
+        }
+        /// <summary>
          ///Handler for inactive license event
          /// </summary> 
-        void InActiveLicenseHandler(UserProfileModel vProfileModel)
+        public void InActiveLicenseHandler(UserProfileModel vProfileModel)
         {
             string vMsg =
                 "The provided license is inactive. Please contact your license administator for further support.";
@@ -98,7 +107,7 @@ namespace Assets.Scripts.Licensing.Controller
         /// <summary>
         /// Handler for expired license event
         /// </summary> 
-        void ExpiredLicenseHandler(UserProfileModel vProfileModel)
+        public void ExpiredLicenseHandler(UserProfileModel vProfileModel)
         {
             string vMsg =
                   "The provided license has expired. Please contact your license administator for further support.";
@@ -110,7 +119,7 @@ namespace Assets.Scripts.Licensing.Controller
          /// Handler for deleted license event
          /// </summary>
          /// <param name="vProfileModel"></param>
-        void DeletedLicenseHandler(UserProfileModel vProfileModel)
+        public void DeletedLicenseHandler(UserProfileModel vProfileModel)
         {
             string vMsg =
                  "We could not find a license associated with your account. Please contact your license administator for further support.";
