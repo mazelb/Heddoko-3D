@@ -1,10 +1,10 @@
-﻿// /**
-// * @file TechStarsCameraControllerClosedLoop.cs
-// * @brief Contains the 
-// * @author Mohammed Haider( 
-// * @date 05 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file TechStarsCameraControllerClosedLoop.cs
+* @brief Contains the 
+* @author Mohammed Haider( 
+* @date 05 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using UnityEngine;
 

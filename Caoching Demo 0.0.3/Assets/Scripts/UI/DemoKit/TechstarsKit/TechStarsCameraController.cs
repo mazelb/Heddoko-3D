@@ -1,10 +1,10 @@
-﻿// /**
-// * @file TechStarsCameraController.cs
-// * @brief Contains the 
-// * @author Mohammed Haider( 
-// * @date May 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file TechStarsCameraController.cs
+* @brief Contains the 
+* @author Mohammed Haider( 
+* @date May 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using UnityEngine;
 

@@ -195,7 +195,7 @@ Shader "Hidden/ScreenSpaceAmbientObscurance"
 		float4 fragment = fixed4(1,1,1,1);
 
 		// Pixel being shaded 
-		float2 ssC = i.uv2.xy;// * _MainTex_TexelSize.zw;
+		float2 ssC = i.uv2.xy;* _MainTex_TexelSize.zw;
 
 		// View space point being shaded
 		float3 C = GetPosition(ssC);

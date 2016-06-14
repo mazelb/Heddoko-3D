@@ -7,7 +7,7 @@
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
 
-using System; 
+using System;
 using UnityEngine;
 
 namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
@@ -17,39 +17,57 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
     /// </summary>
     [Serializable]
     public class RightLegAnalysis : LegAnalysis
-    {
-        //Knee Angles
+    { //Knee Angles
+        [Analysis(IgnoreAttribute = false, AttributeName = "Right Knee Flexion")]
         public float AngleKneeFlexion;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Right Knee Rotation")]
         public float AngleKneeRotation;
 
         //Hip Angles
         public bool UseGlobalReference = false;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Right Hip Flexion")]
         public float AngleHipFlexion;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Right Hip Abduction")]
         public float AngleHipAbduction;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Rights Hip Rotation")]
         public float AngleHipRotation;
 
         //Accelerations and velocities
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityKneeFlexion = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationKneeFlexion = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityKneeRotation = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationKneeRotation = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityHipFlexion = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationHipFlexion = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityHipAbduction = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationHipAbduction = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityHipRotation = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationHipRotation = 0;
 
         //Squats Analytics
+        [Analysis(IgnoreAttribute = true)]
         public float NumberofSquats;
+        [Analysis(IgnoreAttribute = true)]
         public float AngleSum;
         private bool mStartCountingSquats = true;
 
         //Detection of vertical Hip position
+        [Analysis(IgnoreAttribute = true)]
         public float LegHeight;
+        [Analysis(IgnoreAttribute = true)]
         private float mInitThighHeight = 0.475f;
+        [Analysis(IgnoreAttribute = true)]
         private float mInitTibiaHeight = 0.475f;
-
         /// <summary>
         /// Listens to events where squats need to be counted
         /// </summary>
@@ -58,14 +76,14 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
         {
             mStartCountingSquats = vFlag;
         }
-         
+
         /// <summary>
         /// Extract angles from orientations for the right leg
         /// </summary>
         public override void AngleExtraction()
         {
             float vDeltaTime = Time.time - mLastTimeCalled;
-            if ( vDeltaTime == 0)
+            if (vDeltaTime == 0)
             {
                 return;
             }
@@ -96,13 +114,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             AngularVelocityKneeFlexion = vAngularVelocityKneeFlexionNew;
             //Signed angle adduction calculation
 
-         
-     
+
+
 
             //Squatts counting
-            if ( mStartCountingSquats)
+            if (mStartCountingSquats)
             {
-                if (Math.Abs(vAngleKneeFlexionNew) > 15) 
+                if (Math.Abs(vAngleKneeFlexionNew) > 15)
                 {
                     AngleSum += Math.Abs(vAngleKneeFlexionNew - AngleKneeFlexion);
                 }
@@ -162,7 +180,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             AngleHipAbduction = vAngleHipAbductionNew;
 
             //calculate the Hip Rotation angle (angles between axis projection in XZ plane) 
-            float vAngleHipRotationNew = 180 - Mathf.Abs(180 - ThighTransform.rotation.eulerAngles.y); 
+            float vAngleHipRotationNew = 180 - Mathf.Abs(180 - ThighTransform.rotation.eulerAngles.y);
             float vAngularVelocityRHipRotationNew = Mathf.Abs(vAngleHipRotationNew - Mathf.Abs(AngleHipRotation)) / vDeltaTime;
             AngularAccelerationHipRotation = Mathf.Abs(vAngularVelocityRHipRotationNew - AngularVelocityHipRotation) / vDeltaTime;
             AngularVelocityHipRotation = vAngularVelocityRHipRotationNew;
@@ -175,7 +193,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             LegHeight = vThighHeight + vTibiaHeight;
 
             float vThighStride = Mathf.Sqrt((mInitThighHeight * mInitThighHeight) - (vThighHeight * vThighHeight));
-            float vTibiaStride = Mathf.Sqrt((mInitTibiaHeight * mInitTibiaHeight) - (vTibiaHeight * vTibiaHeight)); 
+            float vTibiaStride = Mathf.Sqrt((mInitTibiaHeight * mInitTibiaHeight) - (vTibiaHeight * vTibiaHeight));
             //Debug.Log(vTibiaStride);
 
             Vector3 vThighDirection = -vThighAxisUp.normalized;
@@ -193,6 +211,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             //{
             //    RightLegStride = Vector3.ProjectOnPlane((vThighStride * vThighDirection), Vector3.up) + Vector3.ProjectOnPlane((vTibiaStride * vTibiaDirection), Vector3.up);
             //}
+            NotifyLegAnalysisCompletion();
         }
     }
 }

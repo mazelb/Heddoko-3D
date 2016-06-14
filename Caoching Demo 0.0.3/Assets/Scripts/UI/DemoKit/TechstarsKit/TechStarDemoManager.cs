@@ -1,10 +1,10 @@
-﻿// /**
-// * @file TechStarDemoManager.cs
-// * @brief Contains the 
-// * @author Mohammed Haider( 
-// * @date May 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file TechStarDemoManager.cs
+* @brief Contains the 
+* @author Mohammed Haider( 
+* @date May 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using Assets.Scripts.Body_Data.View.Anaylsis;
 using Assets.Scripts.UI.AbstractViews.camera;

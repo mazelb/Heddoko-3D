@@ -9,8 +9,7 @@
 using System.Text;
 using UIWidgets;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
+ using UnityEngine.UI;
 
 namespace Assets.Scripts.Communication.View.Table
 {

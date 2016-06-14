@@ -31,7 +31,7 @@ SubShader {
 		
 		o.pos = v.vertex; 
 				
-		o.uv2.xy = v.texcoord.xy;// * 2.0; <- needed when using Triangles.js and not Quads.js
+		o.uv2.xy = v.texcoord.xy;* 2.0; <- needed when using Triangles.js and not Quads.js
 		
 		#if UNITY_UV_STARTS_AT_TOP
 			float4 bokeh = tex2Dlod (_Source, half4 (v.texcoord1.xy * half2(1,-1) + half2(0,1), 0, 0));

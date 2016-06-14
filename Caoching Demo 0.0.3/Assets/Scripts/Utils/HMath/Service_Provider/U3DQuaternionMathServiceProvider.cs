@@ -1,14 +1,12 @@
-﻿// /**
-// * @file U3DQuaternionMathServiceProvider.cs
-// * @brief Contains the 
-// * @author Mohammed Haider( 
-// * @date 05 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
-
-using System;
-using Assets.Scripts.Utils.HMath.Structure;
-using HeddokoLib.genericPatterns;
+﻿/**
+* @file U3DQuaternionMathServiceProvider.cs
+* @brief Contains the 
+* @author Mohammed Haider( 
+* @date 05 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
+ 
+using Assets.Scripts.Utils.HMath.Structure; 
 using UnityEngine;
 
 namespace Assets.Scripts.Utils.HMath.Service_Provider
@@ -178,7 +176,7 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         /// <returns></returns>
         public HQuaternion Euler(HVector3 vEuler)
         {
-            return Euler(vEuler.X, vEuler.Y, vEuler.Z);
+            return Euler(vEuler.x, vEuler.y, vEuler.z);
         }
 
         /// <summary>

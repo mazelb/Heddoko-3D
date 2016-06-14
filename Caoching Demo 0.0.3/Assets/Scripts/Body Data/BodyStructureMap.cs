@@ -1,4 +1,11 @@
 ﻿
+/** 
+* @file BodyStructureMap.cs
+* @brief Contains the BodyStructureMap class
+* @author Mohammed Haider(mohamed@heddoko.com)
+* @date June 2016
+* Copyright Heddoko(TM) 2016, all rights reserved
+*/
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Assets.Scripts.Utils;

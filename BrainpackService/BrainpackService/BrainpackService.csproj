@@ -53,17 +53,18 @@
   <PropertyGroup />
   <PropertyGroup />
   <ItemGroup>
-    <Reference Include="HeddokoLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\HeddokoLib\HeddokoLib\bin\Debug\HeddokoLib.dll</HintPath>
+    <Reference Include="HeddokoLib">
+      <HintPath>bin\Release\HeddokoLib.dll</HintPath>
     </Reference>
-    <Reference Include="InTheHand.Net.Personal">
-      <HintPath>bin\Debug\InTheHand.Net.Personal.dll</HintPath>
+    <Reference Include="InTheHand.Net.Personal, Version=3.5.605.0, Culture=neutral, PublicKeyToken=ea38caa273134499, processorArchitecture=MSIL">
+      <HintPath>..\packages\32feet.NET.3.5.0.0\lib\net\InTheHand.Net.Personal.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
@@ -102,6 +103,8 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tools and Utilities\BluetoothSearch\BrainpackSearchResults.cs" />
+    <Compile Include="Tools and Utilities\BluetoothSearch\BTSearch.cs" />
     <Compile Include="Tools and Utilities\BrainpackEventLogManager.cs" />
     <Compile Include="Tools and Utilities\Debugging\DebugLogger.cs" />
     <Compile Include="Tools and Utilities\Debugging\DebugLogSettings.cs" />
@@ -110,6 +113,7 @@
     <Compile Include="Tools and Utilities\NetworkingReferences.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Tools and Utilities\App.config" />
   </ItemGroup>
   <ItemGroup>

@@ -1,10 +1,10 @@
-﻿// /**
-// * @file IVector3MathServiceProvider.cs
-// * @brief Contains the 
-// * @author Mohammed Haider( 
-// * @date 05 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file IVector3MathServiceProvider.cs
+* @brief Contains the 
+* @author Mohammed Haider( 
+* @date 05 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 
 using Assets.Scripts.Utils.HMath.Structure;
@@ -189,5 +189,6 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
         HVector3 Reflect(HVector3 inDirection, HVector3 inNormal);
 
 
+        HVector3 CreateNewVector(float vF, float vF1, float vF2);
     }
 }

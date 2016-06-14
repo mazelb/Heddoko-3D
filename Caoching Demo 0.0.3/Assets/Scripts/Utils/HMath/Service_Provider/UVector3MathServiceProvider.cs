@@ -1,10 +1,10 @@
-﻿// /**
-// * @file UVector3MathServiceProvider.cs
-// * @brief Contains the UVector3MathServiceProvider
-// * @author Mohammed Haider( mohammed @heddoko.com)
-// * @date May 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file UVector3MathServiceProvider.cs
+* @brief Contains the UVector3MathServiceProvider
+* @author Mohammed Haider( mohammed @heddoko.com)
+* @date May 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using Assets.Scripts.Utils.HMath.Structure;
 using UnityEngine;
@@ -341,6 +341,10 @@ namespace Assets.Scripts.Utils.HMath.Service_Provider
             return new U3DVector3(Vector3.Reflect(((U3DVector3)inDirection).mVector3, ((U3DVector3)inNormal).mVector3));
         }
 
+        public HVector3 CreateNewVector(float vF, float vF1, float vF2)
+        {
+            return new U3DVector3(vF,vF1,vF2);
 
+        }
     }
 }

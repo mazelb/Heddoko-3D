@@ -84,7 +84,7 @@ public partial class BodySegment
     private Vector3 mLLCurInitRotation = Vector3.zero;
     private Vector3 mUTCurInitRotation = Vector3.zero;
 
-    // *** Definitions for calibration methods
+    *** Definitions for calibration methods
     // Filename to write to.
     private string mRecordingFileName = "";
 
@@ -787,7 +787,7 @@ public partial class BodySegment
         vLAAxisRight = vLoArmQuat * Vector3.right;
         vLAAxisForward = vLoArmQuat * Vector3.forward;
 
-        // **** Calibration process for arms Shiu algorithm -Right Arm*****
+        **** Calibration process for arms Shiu algorithm -Right Arm*****
         if (vIsRight)
         {
             counterR++;
@@ -875,7 +875,7 @@ public partial class BodySegment
 
                     // if (counterR > 1000) // apply calibration from now on// how??
                     {
-                        vLoArmQuat = Quaternion.Inverse(LAR1Quat) * vLoArmQuat * LAR1Quat ; // *vRLAQuatUpsZombie Quaternion.Inverse(vRLAQuatUpsZombie) 
+                        vLoArmQuat = Quaternion.Inverse(LAR1Quat) * vLoArmQuat * LAR1Quat ; *vRLAQuatUpsZombie Quaternion.Inverse(vRLAQuatUpsZombie) 
                         vUpArmQuat = Quaternion.Inverse(UAR1Quat) * vUpArmQuat * UAR1Quat;//vRUAQuatUpsZombie); //Quaternion.Inverse *vRUAQuatUpsZombie       *(vRUAQuatUpsZombie)             
                         Debug.Log("Quaternion.Inverse(UAR1Quat)=" + Quaternion.Inverse(UAR2Quat) + "R2Quat=" + UAR2Quat);
                     }
@@ -884,7 +884,7 @@ public partial class BodySegment
             }
 
         }
-        //// ******************** lisa recording- simon****************
+        //******************** lisa recording- simon****************
         //if (vIsRight)
         //{
         //    counterR++;
@@ -930,11 +930,11 @@ public partial class BodySegment
         //    vRLAQuatRightsZombie = Quaternion.FromToRotation(vRLAAxisRightZombie, Vector3.forward);
         //    float vForwrdsaAgle = Vector3.Angle(vRLAAxisRightZombie, Vector3.forward);
 
-        //    ///// ******** 2-correct up axis with Vector3.up **********
+        //    ///******** 2-correct up axis with Vector3.up **********
         //    float vUpsAngleRLA = Vector3.Angle(vRLAAxisUpZombie, Vector3.up);
 
 
-        //    ///// ******** 2-a correct up axis with t-pose **********
+        //    ///******** 2-a correct up axis with t-pose **********
         //    float vUpsAngleRLA1 = Vector3.Angle(vRLAAxisUpZombie, vRLAAxisUpTPose);
         //    //vRLAQuatUpsZombie = Quaternion.FromToRotation(vRLAAxisUpZombie, vRLAAxisUpTPose);
 
@@ -958,7 +958,7 @@ public partial class BodySegment
         //    {
         //        if (counterR > 500) // apply calibration from now on// how??
         //        {
-        //            //vLoArmQuat = vLoArmQuat * (vRLAQuatUpsZombie); // *vRLAQuatUpsZombie Quaternion.Inverse(vRLAQuatUpsZombie) 
+        //            //vLoArmQuat = vLoArmQuat * (vRLAQuatUpsZombie); *vRLAQuatUpsZombie Quaternion.Inverse(vRLAQuatUpsZombie) 
         //            //vUpArmQuat = vUpArmQuat * Quaternion.Inverse(vRUAQuatUpsZombie); //Quaternion.Inverse *vRUAQuatUpsZombie       *(vRUAQuatUpsZombie)             
         //        }
 
@@ -1004,7 +1004,7 @@ public partial class BodySegment
         //        Debug.Log("Soldier-before-R" + counterR + ";" + vLoArmQuat * Vector3.up + ";" + vLoArmQuat * Vector3.right + ";" + vUpArmQuat * Vector3.up + ";" + vUpArmQuat * Vector3.right);
         //        if (counterR > 1000) // apply Soldier calibration from now on//
         //        {
-        //            //vLoArmQuat = vLoArmQuat * (vRLAQuatforwardsSoldier);// * (vRLAQuatforwardsSoldier); // *vRLAQuatUpsZombie Quaternion.Inverse
+        //            //vLoArmQuat = vLoArmQuat * (vRLAQuatforwardsSoldier);* (vRLAQuatforwardsSoldier); *vRLAQuatUpsZombie Quaternion.Inverse
         //            vUpArmQuat = vUpArmQuat * Quaternion.Inverse(vRUAQuatforwardsSoldier); //Quaternion.Inverse *vRUAQuatUpsZombie                    
         //        }
         //        Debug.Log("Soldier-After-R" + counterR + ";" + vLoArmQuat * Vector3.up + ";" + vLoArmQuat * Vector3.right + ";" + vUpArmQuat * Vector3.up + ";" + vUpArmQuat * Vector3.right);
@@ -1045,7 +1045,7 @@ public partial class BodySegment
         //    }
         //}
 
-            ///// ************* calibation for specific movements  *****
+            ///************* calibation for specific movements  *****
             //if (vIsRight)
             //{
             //    counterR++;

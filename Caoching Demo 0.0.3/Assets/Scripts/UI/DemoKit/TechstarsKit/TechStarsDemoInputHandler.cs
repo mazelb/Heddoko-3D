@@ -1,10 +1,10 @@
-﻿// /**
-// * @file TechStarsDemoInputHandler.cs
-// * @brief Contains the 
-// * @author Mohammed Haider( 
-// * @date 05 2016
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file TechStarsDemoInputHandler.cs
+* @brief Contains the 
+* @author Mohammed Haider( 
+* @date 05 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using System.Collections.Generic;
 using Assets.Scripts.Body_Data.View.Anaylsis;

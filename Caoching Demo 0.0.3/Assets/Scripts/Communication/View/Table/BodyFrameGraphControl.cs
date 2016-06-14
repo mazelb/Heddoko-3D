@@ -1,10 +1,10 @@
-﻿// /**
-// * @file BodyFrameGraphControl.cs
-// * @brief Contains the BodyFrameGraphControl
-// * @author Mohammed Haider( mohammed @heddoko.com)
-// * @date May 2016 
-// * Copyright Heddoko(TM) 2016,  all rights reserved
-// */
+﻿/**
+* @file BodyFrameGraphControl.cs
+* @brief Contains the BodyFrameGraphControl
+* @author Mohammed Haider( mohammed @heddoko.com)
+* @date May 2016 
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using Assets.Scripts.UI.Metrics;
 using UnityEngine;

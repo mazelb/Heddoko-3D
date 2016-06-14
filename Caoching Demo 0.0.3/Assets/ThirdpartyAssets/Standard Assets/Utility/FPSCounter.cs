@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UnityStandardAssets.Utility
 {
@@ -12,7 +13,7 @@ namespace UnityStandardAssets.Utility
         private int m_CurrentFps;
         const string display = "{0} FPS";
         private GUIText m_GuiText;
-
+        public Text Text;
 
         private void Start()
         {
@@ -30,7 +31,12 @@ namespace UnityStandardAssets.Utility
                 m_CurrentFps = (int) (m_FpsAccumulator/fpsMeasurePeriod);
                 m_FpsAccumulator = 0;
                 m_FpsNextPeriod += fpsMeasurePeriod;
-                m_GuiText.text = string.Format(display, m_CurrentFps);
+                var vString = string.Format(display, m_CurrentFps);
+                m_GuiText.text = vString;
+                if (Text != null)
+                {
+                    Text.text = vString;
+                }
             }
         }
     }

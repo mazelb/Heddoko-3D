@@ -18,35 +18,55 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
     public class LeftLegAnalysis : LegAnalysis
     {
         //Knee Angles
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Knee Flexion")]
         public float AngleKneeFlexion;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Knee Rotation")]
         public float AngleKneeRotation;
 
         //Hip Angles
         public bool UseGlobalReference = false;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Hip Flexion")]
         public float AngleHipFlexion;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Hip Abduction")]
         public float AngleHipAbduction;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Hip Rotation")]
         public float AngleHipRotation;
 
         //Accelerations and velocities
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityKneeFlexion = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationKneeFlexion = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityKneeRotation = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationKneeRotation = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityHipFlexion = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationHipFlexion = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityHipAbduction = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationHipAbduction = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityHipRotation = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationHipRotation = 0;
 
         //Squats Analytics
+        [Analysis(IgnoreAttribute = true)]
         public float NumberofSquats;
+        [Analysis(IgnoreAttribute = true)]
         public float AngleSum;
         private bool mStartCountingSquats = true;
 
         //Detection of vertical Hip position
+        [Analysis(IgnoreAttribute = true)]
         public float LegHeight;
+        [Analysis(IgnoreAttribute = true)]
         private float mInitThighHeight = 0.475f;
+        [Analysis(IgnoreAttribute = true)]
         private float mInitTibiaHeight = 0.475f;
 
         /// <summary>
@@ -66,7 +86,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             float vDeltaTime = Time.time - mLastTimeCalled;
             if (vDeltaTime == 0)
             {
-                return;
+              //  return;
             }
             mLastTimeCalled = Time.time;
 
@@ -176,7 +196,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             Vector3 vTibiaDirection = -vKneeAxisUp.normalized;
 
             LeftLegStride = Vector3.ProjectOnPlane((vThighStride * vThighDirection), Vector3.up) + Vector3.ProjectOnPlane((vTibiaStride * vTibiaDirection), Vector3.up);
-
+            NotifyLegAnalysisCompletion();
             //float vDotProd = Vector3.Dot(vThighDirection, vTibiaDirection);
 
             //if(vDotProd <= 0)

@@ -12,15 +12,16 @@ using System.Collections.Generic;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Communication.DatabaseConnectionPipe;
-using Assets.Scripts.UI;
 using Assets.Scripts.UI.AbstractViews.camera;
 using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.UI.Scene_3d.View;
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.UI.Tagging;
-using Assets.Scripts.Utils.DebugContext.logging; 
+using Assets.Scripts.Utils.DebugContext.logging;
 using Assets.Scripts.Utils.HMath.Service_Provider;
 using Assets.Scripts.Utils.HMath.Structure;
+using HeddokoLib.networking;
+using HeddokoLib.utils;
 using UnityEngine;
 using Application = UnityEngine.Application;
 
@@ -39,7 +40,6 @@ namespace Assets.Scripts.Utils.DatabaseAccess
         public GameObject[] GOtoReEnable;
         public GameObject[] DatabaseConsumers;
         public GameObject[] TaggingManagerConsumers;
-        public ScrollablePanel ContentPanel;
         public bool IsDemo = false;
         public TaggingManager TaggingManager { get { return mTaggingManager; } }
 
@@ -58,6 +58,7 @@ namespace Assets.Scripts.Utils.DatabaseAccess
             EnableObjects(false);
             HVector3.Vector3MathServiceProvider = new UVector3MathServiceProvider();
             BodySegment.IsTrackingHeight = false;
+ 
             if (!IsDemo)
             {
 
@@ -65,45 +66,14 @@ namespace Assets.Scripts.Utils.DatabaseAccess
 
                 bool vApplicationSettingsFound = mDbAccess.SetApplicationSettings();
 
-
+ 
                 if (vApplicationSettingsFound)
                 {
                     vAppSafelyLaunched = ApplicationSettings.AppLaunchedSafely;
                     if (vAppSafelyLaunched)
                     {
                         string vGet = ApplicationSettings.PreferedConnName;
-                        LauncherBrainpackSearchResults.MapResults();
-                        if (LauncherBrainpackSearchResults.BrainpackToComPortMappings.ContainsKey(vGet))
-                        {
-                            vGet = LauncherBrainpackSearchResults.BrainpackToComPortMappings[vGet];
-                        }
-                        else
-                        {
-                            vGet = string.Empty;
-                        }
-
-                        BrainpackConnectionController.Instance.BrainpackComPort = vGet;
-
-                        List<ScrollableContent> vContentList = new List<ScrollableContent>();
-
-                        foreach (KeyValuePair<string, string> vKV in LauncherBrainpackSearchResults.BrainpackToComPortMappings)
-                        {
-                            ScrollableContent vContent = new ScrollableContent();
-                            vContent.ContentValue = vKV.Value;
-                            if (vContent.ContentValue.Contains("COM") || vContent.ContentValue.Contains("com"))
-                            {
-                                vContent.Key = vKV.Key;
-                                vContent.CallbackAction = new Action(() =>
-                                {
-                                    BrainpackConnectionController.Instance.BrainpackComPort = vContent.ContentValue;
-                                });
-                                vContentList.Add(vContent);
-                                ContentPanel.CurrentlySelectedContent = vContent;
-                            }
-
-                        }
-                        ContentPanel.Contents = vContentList;
-                        ContentPanel.LoadContent();
+                      
                         EnableObjects(true);
                     }
                     else
@@ -221,8 +191,8 @@ namespace Assets.Scripts.Utils.DatabaseAccess
 
         private void SetResolution()
         {
-             
-           
+
+
 
         }
 
