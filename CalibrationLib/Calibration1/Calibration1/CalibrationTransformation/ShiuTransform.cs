@@ -49,8 +49,90 @@ namespace Calibration1.CalibrationTransformation
             /// <param name="test">describing if ours intention is to test the class(test=true) or not(test=false)</param>
             this.Test = test;
         }
-       
+
         /////////////////////////--------Principal Method---------------//////////////////////////////////
+        public Matrix<float> Shiufunc(Matrix<float> B1, string pose1, Matrix<float> B2, string pose2)
+        {
+            Vector<float> vEulerA1Pose = PoseToEulerAngles(pose1);
+            Vector<float> vEulerA2Pose = PoseToEulerAngles(pose2);
+            Matrix<float> SX1 = EulerAngleToRotationMatrix(vEulerA1Pose[0], "X");
+            Matrix<float> SY1 = EulerAngleToRotationMatrix(vEulerA1Pose[1], "Y");
+            Matrix<float> SZ1 = EulerAngleToRotationMatrix(vEulerA1Pose[2], "Z");
+
+            Matrix<float> SX2 = EulerAngleToRotationMatrix(vEulerA2Pose[0], "X");
+            Matrix<float> SY2 = EulerAngleToRotationMatrix(vEulerA2Pose[1], "Y");
+            Matrix<float> SZ2 = EulerAngleToRotationMatrix(vEulerA2Pose[2], "Z");         
+              
+            Matrix<float> vAMatrixPose1 = SY1.Multiply(SX1.Multiply(SZ1));
+            Matrix<float> vAMatrixPose2 = SY2.Multiply(SX2.Multiply(SZ2));
+           /* Console.WriteLine("----------Ideal rotations Matrix of Pose1 et Pose2--------------");
+            Print(vAMatrixPose1);
+            Print(vAMatrixPose2);
+            Console.WriteLine("----------------------------------------------------------------"); */           
+            Matrix<float> vBMatrixSensor1 = Matrix<float>.Build.Dense(3, 3, 0);
+            Matrix<float> vBMatrixSensor2 = Matrix<float>.Build.Dense(3, 3, 0);
+            vBMatrixSensor1 = B1;
+            vBMatrixSensor2 = B2;
+
+            Matrix<float> vX = Matrix<float>.Build.Dense(3, 3, 0);
+            Matrix<float> Xp1 = Matrix<float>.Build.DenseIdentity(3, 3);
+            Matrix<float> Xp2 = Matrix<float>.Build.DenseIdentity(3, 3);
+            Matrix<float> Ra = Matrix<float>.Build.Dense(3, 3, 0);
+            Matrix<float> Beta = Matrix<float>.Build.Dense(4, 1);
+                
+            Vector<float> vRotationAxisA1 = RotationAxis(vAMatrixPose1);
+            Vector<float> vRotationAxisA2 = RotationAxis(vAMatrixPose2);
+            Vector<float> vRotationAxisB1 = RotationAxis(vBMatrixSensor1);
+            Vector<float> vRotationAxisB2 = RotationAxis(vBMatrixSensor2);
+            Vector<float> ka1 = vRotationAxisA1.Normalize(2);
+            Vector<float> ka2 = vRotationAxisA2.Normalize(2);
+
+            Vector<float> vVectorPerpenToa1b1Plan = CrossProduct(vRotationAxisB1, vRotationAxisA1);
+            Vector<float> vVectorPerpenToa2b2Plan = CrossProduct(vRotationAxisB2, vRotationAxisA2);
+            Vector<float> k1 = vVectorPerpenToa1b1Plan.Normalize(2);
+            Vector<float> k2 = vVectorPerpenToa2b2Plan.Normalize(2);
+            float ww1 = Mathf.Sqrt(vVectorPerpenToa1b1Plan.DotProduct(vVectorPerpenToa1b1Plan));
+            float ww2 = Mathf.Sqrt(vVectorPerpenToa2b2Plan.DotProduct(vVectorPerpenToa2b2Plan));
+            float W1 = Mathf.Atan2(ww1, vRotationAxisA1.DotProduct(vRotationAxisB1));
+            float W2 = Mathf.Atan2(ww2, vRotationAxisA2.DotProduct(vRotationAxisB2));
+            Xp1 = Xpreliminairy(W1, k1);
+            Xp2 = Xpreliminairy(W2, k2);
+            LinearSystem Axb = new LinearSystem();
+            ///Formation of ShiuMatrix and update of the Matrices sA and sb
+            ///by using the informations of the first pose
+            ShiuMatrix(ka1, Xp1);
+            Axb.AddEquation(sA, sb);        
+            ShiuMatrix(ka2, Xp2);
+            Axb.AddEquation(sA, sb);     
+            Beta = Axb.Solve();
+            float theta1 = Mathf.Atan2(Beta[1, 0], Beta[0, 0]);
+            float theta2 = Mathf.Atan2(Beta[3, 0], Beta[2, 0]);
+            Matrix<float> RA1 = Xpreliminairy(theta1, ka1);
+            Matrix<float> RA2 = Xpreliminairy(theta2, ka2);
+            Matrix<float> R1 = RA1 * Xp1;
+            Matrix<float> R2 = RA2 * Xp2;
+            Matrix<float> R = (R1 + R2) / 2.0F;
+            /*Console.WriteLine("-----------R1 and R2-------------");
+            Print(R1);
+            Print(R2);
+            Console.WriteLine("-----------R-------------");
+            Print(R);
+            Console.WriteLine("------A1 and A2----------");
+            Print(vAMatrixPose1);
+            Print(vAMatrixPose2);
+            Console.WriteLine("------B1 and B2----------");
+            Print(vBMatrixSensor1);
+            Print(vBMatrixSensor2);
+            Console.WriteLine("------A1 and A2(R)-------");*/
+            //Matrix<float> A1 = R * vBMatrixSensor1 * R.Transpose();
+            //Matrix<float> A2 = R * vBMatrixSensor2 * R.Transpose();
+            //Print(A1);
+            //Print(A2);
+            //Console.WriteLine("-------------------------");
+            //Console.ReadLine();
+            return R2;
+        }
+
         public Matrix<float> Shiufunc(Vector<float> RawSensorsEulerAngle1, Vector<float> RawSensorsEulerAngle2)
         {
             /// <summary>
@@ -73,12 +155,12 @@ namespace Calibration1.CalibrationTransformation
             Matrix<float> SY2 = EulerAngleToRotationMatrix(vEulerA2Pose[1], "Y");
             Matrix<float> SZ2 = EulerAngleToRotationMatrix(vEulerA2Pose[2], "Z");
             ///Resulting Rotation matrix for the poses
-            Matrix<float> vAMatrixPose1 = SZ1.Multiply(SY1.Multiply(SX1));   //resulting rotation matrix = R(Z)xR(Y)xR(X)
-            Matrix<float> vAMatrixPose2 = SZ2.Multiply(SY2.Multiply(SX2));
-            Console.WriteLine("----------Ideal rotations Matrix of Pose1 et Pose2--------------");
+            Matrix<float> vAMatrixPose1 = SY1.Multiply(SX1.Multiply(SZ1));   //resulting rotation matrix = R(Z)xR(Y)xR(X)
+            Matrix<float> vAMatrixPose2 = SY2.Multiply(SX2.Multiply(SZ2));
+            /*Console.WriteLine("----------Ideal rotations Matrix of Pose1 et Pose2--------------");
             Print(vAMatrixPose1);
             Print(vAMatrixPose2);
-            Console.WriteLine("----------------------------------------------------------------");
+            Console.WriteLine("----------------------------------------------------------------");*/
             ///transformation from Euler angle to rotation matrix (for data set sensor 1 and 2)
             Matrix<float> vBMatrixSensor1 = Matrix<float>.Build.Dense(3, 3, 0);
             Matrix<float> vBMatrixSensor2 = Matrix<float>.Build.Dense(3, 3, 0);
@@ -99,8 +181,9 @@ namespace Calibration1.CalibrationTransformation
                 Matrix<float> Ry2 = EulerAngleToRotationMatrix(RawSensorsEulerAngle2[1], "Y");
                 Matrix<float> Rz2 = EulerAngleToRotationMatrix(RawSensorsEulerAngle2[2], "Z");
                 ///Resulting Rotation matrix 
-                vBMatrixSensor1 = Rz1.Multiply(Ry1.Multiply(Rx1));
-                vBMatrixSensor2 = Rz2.Multiply(Ry2.Multiply(Rx2));
+                ///
+                vBMatrixSensor1 = Ry1.Multiply(Rx1.Multiply(Rz1));
+                vBMatrixSensor2 = Ry2.Multiply(Rx2.Multiply(Rz2));
             }
             ///Declaration and initialization of Final Transformation (vX), the 
             ///first (Xp1 and Xp2) and second part of the solution and finally 
@@ -156,9 +239,8 @@ namespace Calibration1.CalibrationTransformation
             Matrix<float> RA2 = Xpreliminairy(theta2, ka2);
             Matrix<float> R1 = RA1 * Xp1;
             Matrix<float> R2 = RA2 * Xp2;
-
             Matrix<float> R = (R1+R2)/2;
-            Console.WriteLine("-----------R1 and R2-------------");
+            /*Console.WriteLine("-----------R1 and R2-------------");
             Print(R1);
             Print(R2);
             Console.WriteLine("-----------R-------------");
@@ -175,7 +257,7 @@ namespace Calibration1.CalibrationTransformation
             Print(A1);
             Print(A2);
             Console.WriteLine("-------------------------");
-            Console.ReadLine();
+            Console.ReadLine();*/
             return R;
         }
 
@@ -324,18 +406,23 @@ namespace Calibration1.CalibrationTransformation
             else if (vPose == "Z")
             {
                 vEulerAngles[0] =  0.0F * K;//X    90.0F*K
-                vEulerAngles[1] =  0.0F * K;//Y
-                vEulerAngles[2] = 90.0F * K;//Z
+                vEulerAngles[1] =-90.0F * K;//Y
+                vEulerAngles[2] =  0.0F * K;//Z
             }
             else if (vPose == "S")
             {
-                vEulerAngles[0] = 0.0F  * K;//X
-                vEulerAngles[1] = 90.0F * K;//Y
-                vEulerAngles[2] = 0.0F  * K;//Z
+                vEulerAngles[0] =   0.0F  * K;//X
+                vEulerAngles[1] =   0.0F  * K;//Y
+                vEulerAngles[2] = -90.0F  * K;//Z
+            }
+            else if (vPose == "W")
+            {
+                vEulerAngles[0] =   0.0F * K; //X
+                vEulerAngles[1] = -45.0F * K; //Y
+                vEulerAngles[2] =   0.0F * K; //Z
             }
             return vEulerAngles;
         }
-
         public static Matrix<float> EulerAngleToRotationMatrix(float EuAn, string Axis)
         {
             /// <summary>
@@ -348,21 +435,21 @@ namespace Calibration1.CalibrationTransformation
             Matrix<float> R = Matrix<float>.Build.DenseIdentity(3);
             if (Axis == "X")
             {
-                R[0, 0] = 1.0F; R[0, 1] =  0.0F;                    R[0, 2] = 0.0F;
-                R[1, 0] = 0.0F; R[1, 1] =  1.0F * Mathf.Cos(EuAn) ; R[1, 2] = 1.0F * Mathf.Sin(EuAn);
-                R[2, 0] = 0.0F; R[2, 1] = -1.0F * Mathf.Sin(EuAn) ; R[2, 2] = 1.0F * Mathf.Cos(EuAn);
+                R[0, 0] = 1.0F; R[0, 1] =  0.0F;                    R[0, 2] =  0.0F;
+                R[1, 0] = 0.0F; R[1, 1] =  1.0F * Mathf.Cos(EuAn) ; R[1, 2] = -1.0F * Mathf.Sin(EuAn);
+                R[2, 0] = 0.0F; R[2, 1] =  1.0F * Mathf.Sin(EuAn) ; R[2, 2] =  1.0F * Mathf.Cos(EuAn);
             }
             else if (Axis == "Y")
             {
-                R[0, 0] = 1.0F * Mathf.Cos(EuAn);  R[0, 1] = 0.0F; R[0, 2] =  -1.0F * Mathf.Sin(EuAn);
-                R[1, 0] = 0.0F;                    R[1, 1] = 1.0F; R[1, 2] =  0.0F;
-                R[2, 0] = 1.0F * Mathf.Sin(EuAn); R[2, 1] = 0.0F; R[2, 2] =  1.0F * Mathf.Cos(EuAn);
+                R[0, 0] = 1.0F * Mathf.Cos(EuAn);   R[0, 1] = 0.0F; R[0, 2] =  1.0F * Mathf.Sin(EuAn);
+                R[1, 0] = 0.0F;                     R[1, 1] = 1.0F; R[1, 2] =  0.0F;
+                R[2, 0] =-1.0F * Mathf.Sin(EuAn);   R[2, 1] = 0.0F; R[2, 2] =  1.0F * Mathf.Cos(EuAn);
             }
             else if (Axis == "Z")
             {
-                R[0, 0] = 1.0F * Mathf.Cos(EuAn); R[0, 1] = 1.0F * Mathf.Sin(EuAn); R[0, 2] = 0.0F;
-                R[1, 0] =-1.0F * Mathf.Sin(EuAn); R[1, 1] = 1.0F * Mathf.Cos(EuAn); R[1, 2] = 0.0F;
-                R[2, 0] = 0.0F;                   R[2, 1] = 0.0F;                   R[2, 2] = 1.0F;
+                R[0, 0] =  1.0F * Mathf.Cos(EuAn); R[0, 1] = -1.0F * Mathf.Sin(EuAn); R[0, 2] = 0.0F;
+                R[1, 0] =  1.0F * Mathf.Sin(EuAn); R[1, 1] =  1.0F * Mathf.Cos(EuAn); R[1, 2] = 0.0F;
+                R[2, 0] =  0.0F;                   R[2, 1] =  0.0F;                   R[2, 2] = 1.0F;
             }
             return R;
         }
@@ -380,8 +467,8 @@ namespace Calibration1.CalibrationTransformation
             Matrix<float> Rz2 = EulerAngleToRotationMatrix(vEulerA2Pose[2], "Z");
 
             ///Resulting Rotation matrix for the poses
-            Matrix<float> vAMatrixPose1 = Rz1.Multiply(Ry1.Multiply(Rx1));
-            Matrix<float> vAMatrixPose2 = Rz2.Multiply(Ry2.Multiply(Rx2));
+            Matrix<float> vAMatrixPose1 = Ry1.Multiply(Rx1.Multiply(Rz1));
+            Matrix<float> vAMatrixPose2 = Ry2.Multiply(Rx2.Multiply(Rz2));
 
             Matrix<float> FakeOrientationSensorSys = Matrix<float>.Build.DenseIdentity(3, 3);
             Matrix<float> invFakeOrientationSensorSys = Matrix<float>.Build.DenseIdentity(3, 3);
@@ -391,7 +478,7 @@ namespace Calibration1.CalibrationTransformation
                 Matrix<float> RotX = EulerAngleToRotationMatrix(Xf, "X");
                 Matrix<float> RotY = EulerAngleToRotationMatrix(Yf, "Y");
                 Matrix<float> RotZ = EulerAngleToRotationMatrix(Zf, "Z");
-                FakeOrientationSensorSys = RotZ.Multiply(RotY.Multiply(RotX));
+                FakeOrientationSensorSys = RotY.Multiply(RotX.Multiply(RotZ));
             }
             else if (mode == "NoisyRotation")
             {
@@ -492,9 +579,9 @@ namespace Calibration1.CalibrationTransformation
             sk[0, 1] = -k[2];
             sk[0, 2] =  k[1];
             sk[1, 0] =  k[2];
-            sk[1, 2] = -k[0];
+            sk[1, 2] = -k[0];  
             sk[2, 0] = -k[1];
-            sk[2, 1] =  k[0];
+            sk[2, 1] =  k[0]; 
             return sk;
         }
         public Matrix<float> VV(Vector<float> k)
@@ -511,155 +598,3 @@ namespace Calibration1.CalibrationTransformation
         }
     }
 }
-
-/*Console.WriteLine("------Initial differences between Raw and Ideal motion:----------");
-            Console.WriteLine("------A1 - B1:-------------");
-            Print(vAMatrixPose1 - vBMatrixSensor1);
-            Console.WriteLine("------ErrA1B1:-------------");
-            float ErrA1B1 = Performance(vAMatrixPose1, vBMatrixSensor1);
-            Console.WriteLine(ErrA1B1);
-            Console.ReadLine();
-
-            Console.WriteLine("------A2 - B2:-------------");
-            Print(vAMatrixPose2 - vBMatrixSensor2);
-            Console.WriteLine("------ErrA2B2:-------------");
-            float ErrA2B2 = Performance(vAMatrixPose2, vBMatrixSensor2);
-            Console.WriteLine(ErrA2B2);
-            Console.ReadLine();
-
-            Console.WriteLine("------A1 ans B1:-------------");
-            Print(vAMatrixPose1);
-            Print(vBMatrixSensor1);
-            Console.WriteLine("------A2 ans B2:-------------");
-            Print(vAMatrixPose2);
-            Print(vBMatrixSensor2);
-            Console.ReadLine();
-
-            Console.WriteLine("------Transformations(Solution of Algo1):R1 and R2:-------------");
-            Console.WriteLine("------R1 - R2:-------------");
-            Print(R1 - R2);
-            Console.WriteLine("------ErrR1R2:-------------");
-            float ErrR1R2 = Performance(R1, R2);
-            Console.WriteLine(ErrR1R2);
-            Console.WriteLine("-----------------------A1 and A2 (R1)---------------------------");           
-            Matrix<float> A1 = R1 * vBMatrixSensor1 * R1.Transpose();
-            Matrix<float> A2 = R1 * vBMatrixSensor2 * R1.Transpose();
-            Console.WriteLine("------A1 - Aapprox1:-------------");
-            Print(vAMatrixPose1 - A1);
-            Console.WriteLine("------A2 - Aapprox2:-------------");
-            Print(vAMatrixPose2 - A2);
-            Console.WriteLine("------ErrA1Aa1:-------------");
-            float ErrA1Aa1 = Performance(A1, vAMatrixPose1);
-            Console.WriteLine(ErrA1Aa1);
-            Console.WriteLine("------ErrA2Aa2:-------------");
-            float ErrA2Aa2 = Performance(A2, vAMatrixPose2);
-            Console.WriteLine(ErrA2Aa2);
-            Console.ReadLine();
-
-            Matrix<float> A1moy = A1;
-            Matrix<float> A2moy = A2;
-
-            Console.WriteLine("-----------------------A1 and A2 (R2)---------------------------");
-            A1 = R2 * vBMatrixSensor1 * R2.Transpose();
-            A2 = R2 * vBMatrixSensor2 * R2.Transpose();
-            Console.WriteLine("------A1 - Aapprox1:-------------");
-            Print(vAMatrixPose1 - A1);
-            Console.WriteLine("------A2 - Aapprox2:-------------");
-            Print(vAMatrixPose2 - A2);
-            Console.WriteLine("------ErrA1Aa1:-------------");
-            ErrA1Aa1 = Performance(A1, vAMatrixPose1);
-            Console.WriteLine(ErrA1Aa1);
-            Console.WriteLine("------ErrA2Aa2:-------------");
-            ErrA2Aa2 = Performance(A2, vAMatrixPose2);
-            Console.WriteLine(ErrA2Aa2);
-
-            A1moy = A1moy + A1;
-            A2moy = A2moy + A2;
-            A1moy = A1moy/2.0F;
-            A2moy = A2moy/2.0F;
-            Console.WriteLine("------ErrA1Amoy1:-------------");
-            float ErrA1A1moy = Performance(A1moy, vAMatrixPose1);
-            Console.WriteLine(ErrA1A1moy);
-            Console.WriteLine("------ErrA2Amoy2:-------------");
-            float ErrA2A2moy = Performance(A2moy, vAMatrixPose2);
-            Console.WriteLine(ErrA2A2moy);
-            Console.ReadLine();*/
-/*Console.WriteLine("Xp1 Xp2");
-Console.WriteLine(Xp1);
-Console.WriteLine(Xp2);
-Console.Read();*/
-/*Console.WriteLine("------Transformations(Solution of Algo1):RA1 and RA2:-------------");
-            Print(RA1);
-            Print(RA2);
-            Console.WriteLine("------Transformations(Solution of Algo1):Xp1 and Xp2:-------------");
-            Print(Xp1);
-            Print(Xp2);*/
-///Matrix example from the paper : Calibration of Wriste-Mounted Robotic Sensors by 
-///Solving Homogeneous Transform Equations of the Form AX = XB (Y.C. Shiu, IEEE Trans. on Robotics And Automation, Feb. 1989)
-/*vAMatrixPose1[0, 0] = -0.989992F; vAMatrixPose1[0, 1] = -0.141120F; vAMatrixPose1[0, 2] = 0.0F; vAMatrixPose1[0, 3] = 0.0F;
-vAMatrixPose1[1, 0] = 0.141120F; vAMatrixPose1[1, 1] = -0.989992F; vAMatrixPose1[1, 2] = 0.0F; vAMatrixPose1[1, 3] = 0.0F;
-vAMatrixPose1[2, 0] = 0.0F; vAMatrixPose1[2, 1] = 0.0F; vAMatrixPose1[2, 2] = 1.0F; vAMatrixPose1[2, 3] = 0.0F;
-vAMatrixPose1[3, 0] = 0.0F; vAMatrixPose1[3, 1] = 0.0F; vAMatrixPose1[3, 2] = 0.0F; vAMatrixPose1[3, 3] = 1.0F;
-
-vBMatrixSensor1[0, 0] = -0.989992F; vBMatrixSensor1[0, 1] = -0.138307F; vBMatrixSensor1[0, 2] = 0.028036F; vBMatrixSensor1[0, 3] = 0.0F;
-vBMatrixSensor1[1, 0] = 0.138307F; vBMatrixSensor1[1, 1] = -0.911449F; vBMatrixSensor1[1, 2] = 0.387470F; vBMatrixSensor1[1, 3] = 0.0F;
-vBMatrixSensor1[2, 0] = -0.028036F; vBMatrixSensor1[2, 1] = 0.387470F; vBMatrixSensor1[2, 2] = 0.921456F; vBMatrixSensor1[2, 3] = 0.0F;
-vBMatrixSensor1[3, 0] = 0.0F; vBMatrixSensor1[3, 1] = 0.0F; vBMatrixSensor1[3, 2] = 0.0F; vBMatrixSensor1[3, 3] = 1.0F;
-
-vAMatrixPose2[0, 0] = 0.070737F; vAMatrixPose2[0, 1] = 0.0F; vAMatrixPose2[0, 2] = 0.997495F; vAMatrixPose2[0, 3] = 0.0F;
-vAMatrixPose2[1, 0] = 0.0F; vAMatrixPose2[1, 1] = 1.0F; vAMatrixPose2[1, 2] = 0.0F; vAMatrixPose2[1, 3] = 0.0F;
-vAMatrixPose2[2, 0] = -0.997495F; vAMatrixPose2[2, 1] = 0.0F; vAMatrixPose2[2, 2] = 0.070737F; vAMatrixPose2[2, 3] = 0.0F;
-vAMatrixPose2[3, 0] = 0.0F; vAMatrixPose2[3, 1] = 0.0F; vAMatrixPose2[3, 2] = 0.0F; vAMatrixPose2[3, 3] = 1.0F;
-
-vBMatrixSensor2[0, 0] = 0.070737F; vBMatrixSensor2[0, 1] = 0.198172F; vBMatrixSensor2[0, 2] = 0.977612F; vBMatrixSensor2[0, 3] = 0.0F;
-vBMatrixSensor2[1, 0] = -0.198172F; vBMatrixSensor2[1, 1] = 0.963323F; vBMatrixSensor2[1, 2] = -0.180936F; vBMatrixSensor2[1, 3] = 0.0F;
-vBMatrixSensor2[2, 0] = -0.977612F; vBMatrixSensor2[2, 1] = -0.180936F; vBMatrixSensor2[2, 2] = 0.107415F; vBMatrixSensor2[2, 3] = 0.0F;
-vBMatrixSensor2[3, 0] = 0.0F; vBMatrixSensor2[3, 1] = 0.0F; vBMatrixSensor2[3, 2] = 0.0F; vBMatrixSensor2[3, 3] = 1.0F; */
-//float A = 0.0F;
-//for (int i = 0; i < 3; i++)
-//{
-//    for (int j = 0; j < 3; j++)
-//    {
-//        A = 0.0F;
-//        //just for Diagonal elements
-//        if (i == j)
-//        {
-//            A = 1.0F;
-//        }
-//        Xp[i, j] = Xp[i, j] +
-//                  (A * Mathf.Cos(AngleOfRotation)) +
-//                  ((1.0F - Mathf.Cos(AngleOfRotation)) * AxisOfRotation[i] * AxisOfRotation[j]);
-//                  ///AxisOfRotation[i]*AxisOfRotation[j] is a matrix.
-//    }
-//}
-
-
-
-
-//Skew part
-/*Xp[1, 0] =  AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
-Xp[0, 1] = -AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
-Xp[2, 0] = -AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
-Xp[0, 2] =  AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
-Xp[2, 1] =  AxisOfRotation[0] * Mathf.Sin(AngleOfRotation);
-Xp[1, 2] = -AxisOfRotation[0] * Mathf.Sin(AngleOfRotation);*/
-/*
-          Xp[1, 0] = AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
-          Xp[0, 1] = AxisOfRotation[2] * Mathf.Sin(AngleOfRotation);
-          Xp[2, 0] = AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
-          Xp[0, 2] = AxisOfRotation[1] * Mathf.Sin(AngleOfRotation);
-          Xp[2, 1] = AxisOfRotation[0] * Mathf.Sin(AngleOfRotation);
-          Xp[1, 2] = AxisOfRotation[0] * Mathf.Sin(AngleOfRotation);
-          float Tr    = 0F;
-          float theta = 0F;
-          Tr    = vRotationMatrix.Trace();
-          theta = Mathf.Acos((Tr - 1.0F)/2.0F);
-          Console.WriteLine("Matrix, TRACE and Angle");
-          Print(vRotationMatrix);
-          Console.WriteLine(Tr);
-          Console.WriteLine(theta);
-          /*vRotationAxis[0] = (vRotationMatrix[2, 1] - vRotationMatrix[1, 2]) / (2.0F * Mathf.Sin(theta));
-          vRotationAxis[1] = (vRotationMatrix[0, 2] - vRotationMatrix[2, 0]) / (2.0F * Mathf.Sin(theta));
-          vRotationAxis[2] = (vRotationMatrix[1, 0] - vRotationMatrix[0, 1]) / (2.0F * Mathf.Sin(theta));
-          */
-

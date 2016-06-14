@@ -10,9 +10,11 @@ namespace CalibrationTest
 {
     class Program
     {
+        public static float K;        
         static void Main(string[] args)
         {
-            Test1_ShiuTransform(); //from raw data;
+            Test_ShiuTransform_And_Park();
+            //Test1_ShiuTransform();
             //Test_ShiuTransform_From_RawData();
         }
         static public void Test1_ShiuTransform()
@@ -70,6 +72,100 @@ namespace CalibrationTest
                 Console.WriteLine("------Rmoy-------");
                 ShiuTransform.Print(R/(i+1.0F));
             }            
+            Console.ReadLine();
+        }
+        static public void Test_ShiuTransform_And_Park()
+        {
+            ShiuTransform s = new ShiuTransform();
+            ParkTransform p = new ParkTransform();
+
+            Matrix<float> B1 = Matrix<float>.Build.Dense(3, 3, 0);
+            Matrix<float> B2 = Matrix<float>.Build.Dense(3, 3, 0);
+            Matrix<float> B3 = Matrix<float>.Build.Dense(3, 3, 0);
+
+            B1[0, 0] = -0.04951F;  B1[0, 1] = 0.06666F; B1[0, 2] = -0.99655F;
+            B1[1, 0] =  0.06404F;  B1[1, 1] = 0.99593F; B1[1, 2] =  0.06343F;
+            B1[2, 0] =  0.99672F;  B1[2, 1] =-0.06067F; B1[2, 2] = -0.05358F;
+
+            B2[0, 0] =-0.09062F; B2[0, 1] = 0.70163F; B2[0, 2] =-0.70676F;
+            B2[1, 0] =-0.90508F; B2[1, 1] = 0.23806F; B2[1, 2] = 0.35237F;
+            B2[2, 0] = 0.41548F; B2[2, 1] = 0.67160F; B2[2, 2] = 0.61345F;
+
+            /*B1[0, 0] = -0.00526F; B1[0, 1] =  0.07006F; B1[0, 2] = - 0.99753F;
+            B1[1, 0] =  0.13790F; B1[1, 1] =  0.98806F; B1[1, 2] =   0.06867F;
+            B1[2, 0] =  0.99043F; B1[2, 1] = -0.13720F; B1[2, 2] = - 0.01486F;  
+
+            B2[0, 0] = 0.26827F; B2[0, 1] = 0.84552F;   B2[0, 2] =-0.46166F;
+            B2[1, 0] =-0.94790F; B2[1, 1] = 0.31715F;   B2[1, 2] = 0.03002F;
+            B2[2, 0] = 0.17180F; B2[2, 1] = 0.42955F;   B2[2, 2] = 0.88655F;*/
+
+
+            /*B1[0, 0] = -0.04951F; B1[0, 1] =  0.06666F; B1[0, 2] = -0.99655F;
+            B1[1, 0] =  0.06404F; B1[1, 1] =  0.99593F; B1[1, 2] =  0.06343F;
+            B1[2, 0] =  0.99672F; B1[2, 1] = -0.06067F; B1[2, 2] = -0.05358F;
+
+            B2[0, 0] = -0.09062F; B2[0, 1] = 0.70163F; B2[0, 2] = -0.70676F;
+            B2[1, 0] = -0.90508F; B2[1, 1] = 0.23806F; B2[1, 2] =  0.35237F;
+            B2[2, 0] =  0.41548F; B2[2, 1] = 0.67160F; B2[2, 2] =  0.61345F; */
+
+            K = 2.0F * Mathf.PI / 360.0F;
+           
+            Vector<float> vEulerA1Pose = p.PoseToEulerAngles("Z");
+            Vector<float> vEulerA2Pose = p.PoseToEulerAngles("S");
+            Vector<float> vEulerA3Pose = p.PoseToEulerAngles("W");
+            //Console.WriteLine(vEulerA1Pose);
+            //Console.WriteLine(vEulerA2Pose);
+            //Console.WriteLine(vEulerA3Pose);
+            Matrix<float> Rx1 = ParkTransform.EulerAngleToRotationMatrix(vEulerA1Pose[0], "X");
+            Matrix<float> Ry1 = ParkTransform.EulerAngleToRotationMatrix(vEulerA1Pose[1], "Y");
+            Matrix<float> Rz1 = ParkTransform.EulerAngleToRotationMatrix(vEulerA1Pose[2], "Z");
+
+            Matrix<float> Rx2 = ParkTransform.EulerAngleToRotationMatrix(vEulerA2Pose[0], "X");
+            Matrix<float> Ry2 = ParkTransform.EulerAngleToRotationMatrix(vEulerA2Pose[1], "Y");
+            Matrix<float> Rz2 = ParkTransform.EulerAngleToRotationMatrix(vEulerA2Pose[2], "Z");
+
+            Matrix<float> Rx3 = ParkTransform.EulerAngleToRotationMatrix(vEulerA3Pose[0], "X");
+            Matrix<float> Ry3 = ParkTransform.EulerAngleToRotationMatrix(vEulerA3Pose[1], "Y");
+            Matrix<float> Rz3 = ParkTransform.EulerAngleToRotationMatrix(vEulerA3Pose[2], "Z");
+
+            Matrix <float> A1 = Ry1.Multiply(Rx1.Multiply(Rz1));
+            Matrix<float>  A2 = Ry2.Multiply(Rx2.Multiply(Rz2));
+            Matrix<float>  A3 = Ry3.Multiply(Rx3.Multiply(Rz3));
+            Console.WriteLine("-------------Id.Poses--------------------");
+            ParkTransform.Print(A1, 3);
+            ParkTransform.Print(A2, 3);
+            ParkTransform.Print(A3, 3);
+            Console.WriteLine("-----------------------------------------");
+            Matrix<float> X = s.Shiufunc(B1, "Z", B2, "S");
+            B3 =  X.Inverse().Multiply(A3.Multiply(X));
+            Console.WriteLine("-------------B1,B2,B3--------------------");
+            ParkTransform.Print(B1, 3);
+            ParkTransform.Print(B2, 3);
+            ParkTransform.Print(B3, 3);
+            Console.WriteLine("-----------------------------------------");            
+            Matrix<float> M = p.Parkfunc(B1,"Z");
+            M = p.Parkfunc(B2, "S");
+            M = p.Parkfunc(B3, "W");
+            Matrix<float> C = Matrix<float>.Build.Dense(3, 3, 0);
+            M = p.Parkfunc(C, "Eig");
+            Console.WriteLine("-------------X and M---------------------");
+            ParkTransform.Print(X, 3);
+            ParkTransform.Print(M, 3);
+            Console.WriteLine("--------------A1 A2 and A3 (Rx)----------");
+            Matrix<float> A1rx = X.Multiply(B1.Multiply(X.Inverse())); 
+            Matrix<float> A2rx = X.Multiply(B2.Multiply(X.Inverse()));
+            Matrix<float> A3rx = X.Multiply(B3.Multiply(X.Inverse()));
+            ParkTransform.Print(A1rx, 3);
+            ParkTransform.Print(A2rx, 3);
+            ParkTransform.Print(A3rx, 3);
+            Console.WriteLine("--------------A1 A2 and A3 (Rm)----------");
+            Matrix<float> A1rm = M.Multiply(B1.Multiply(M.Inverse()));
+            Matrix<float> A2rm = M.Multiply(B2.Multiply(M.Inverse()));
+            Matrix<float> A3rm = M.Multiply(B3.Multiply(M.Inverse()));
+            ParkTransform.Print(A1rm, 3);
+            ParkTransform.Print(A2rm, 3);
+            ParkTransform.Print(A3rm, 3);
+            Console.WriteLine("-----------------------------------------");
             Console.ReadLine();
         }
         static public Matrix<float> Read_RawData(string NameFilePoseZ, string NameFilePoseS)
@@ -142,87 +238,3 @@ namespace CalibrationTest
         }
     }
 }
-
-/*
-RawSensDataAngles1 = AvatarToDataSensorsTransform.PoseToEulerAngles(ShiuTransform.pose1);
-            RawSensDataAngles2 = AvatarToDataSensorsTransform.PoseToEulerAngles(ShiuTransform.pose2);
-            Console.WriteLine(RawSensDataAngles1);
-            Console.WriteLine(RawSensDataAngles2);
-            float p = 7.0F;
-float rand = (float)Normal.Sample(0.0, p);
-Console.WriteLine(rand);
-            RawSensDataAngles1[0] = RawSensDataAngles1[0] + rand* ShiuTransform.K;
-rand = (float)Normal.Sample(0.0, p);
-            Console.WriteLine(rand);
-            RawSensDataAngles1[1] = RawSensDataAngles1[1] + rand* ShiuTransform.K;
-rand = (float)Normal.Sample(0.0, p);
-            Console.WriteLine(rand);
-            RawSensDataAngles1[2] = RawSensDataAngles1[2] + rand* ShiuTransform.K;
-
-rand = (float)Normal.Sample(0.0, p);
-            Console.WriteLine(rand);
-            RawSensDataAngles2[0] = RawSensDataAngles2[0] + rand* ShiuTransform.K;
-rand = (float)Normal.Sample(0.0, p);
-            Console.WriteLine(rand);
-            RawSensDataAngles2[1] = RawSensDataAngles2[1] + rand* ShiuTransform.K;
-rand = (float)Normal.Sample(0.0, p);
-            Console.WriteLine(rand);
-            RawSensDataAngles2[2] = RawSensDataAngles2[2] + rand* ShiuTransform.K;*/
-/*float K = 2.0F * Mathf.PI / 360;
-            float x = 45.0F;
-            float y = 55.0F;
-            float z = 15.0F;
-            AvatarToDataSensorsTransform.TestFunction("CleanRotation", x * K, y * K, z * K);  
-            Console.WriteLine("-------------------Fake sensor data (B1 and B2):----------------");
-            ShiuTransform.Print(B1);
-            ShiuTransform.Print(B2);   
-            Console.WriteLine("--------------Recoved initial values A1 and A2:-----------------");
-            ShiuTransform.Print(A1);
-            ShiuTransform.Print(A2);
-            invXtmp = Xtmp.Inverse();
-            Matrix<float> A1 = (Xtmp.Multiply(B1)).Multiply(invXtmp);
-            Matrix<float> A2 = (Xtmp.Multiply(B2)).Multiply(invXtmp);       
-            Matrix<float> B1 = AvatarToDataSensorsTransform.TestB1;
-            Matrix<float> B2 = AvatarToDataSensorsTransform.TestB2;    
-     */
-/*
-            Matrix<float> X    = Matrix<float>.Build.Dense(3, 3, 0);
-            Matrix<float> invX = Matrix<float>.Build.Dense(3, 3, 0);
-            Matrix<float> FakeDataSensors    = Matrix<float>.Build.Dense(6, 1);
-            Vector<float> RawSensDataAngles1 = Vector<float>.Build.Dense(3, 0);
-            Vector<float> RawSensDataAngles2 = Vector<float>.Build.Dense(3, 0);
-            //-----------------------------------------------------------------
-            //Testing case Angles         
-            ParkTransform AvatarToDataSensorsTransform = new ParkTransform();
-            AvatarToDataSensorsTransform.TestTransfXAngle = 10.0F;
-            AvatarToDataSensorsTransform.TestTransfYAngle = 70.0F;
-            AvatarToDataSensorsTransform.TestTransfZAngle = 90.0F;
-
-            //-----------------------------------------------------------------
-            //Transformation computation
-            X = AvatarToDataSensorsTransform.TestFunction();
-            Console.WriteLine("Resulting estimation X transform");
-            Console.WriteLine(X);
-            Console.WriteLine("--------------------------");
-            Console.ReadLine();   */
-// X = AvatarToDataSensorsTransform.Parkfunc(RawSensDataAngles1, RawSensDataAngles2);
-/*ShiuTransform AvatarToDataSensorsTransform = new ShiuTransform(Test);
-float K  = 2.0F * Mathf.PI / 360;
-float x  = 1.0F;
-float y  = 1.0F;
-float z  = 1.0F;
-AvatarToDataSensorsTransform.TestFunction("CleanRotation", x*K, y*K, z*K);
-Xtmp = AvatarToDataSensorsTransform.Shiufunc(RawSensDataAngles1, RawSensDataAngles2);
-invXtmp = Xtmp.Inverse();
-Matrix<float> B1 = AvatarToDataSensorsTransform.TestB1;
-Matrix<float> B2 = AvatarToDataSensorsTransform.TestB2;
-Matrix<float> A1 = (invXtmp.Multiply(B1)).Multiply(Xtmp);
-Matrix<float> A2 = (invXtmp.Multiply(B2)).Multiply(Xtmp);
-Console.WriteLine("-------------------Fake sensor data (B1 and B2):----------------");
-ShiuTransform.Print(B1);
-ShiuTransform.Print(B2);
-Console.WriteLine("--------------Recoved initial values A1 and A2:-----------------");            
-ShiuTransform.Print(A1);
-ShiuTransform.Print(A2);
-Console.WriteLine("----------------------------------------------------------------");
-Console.ReadLine();*/
