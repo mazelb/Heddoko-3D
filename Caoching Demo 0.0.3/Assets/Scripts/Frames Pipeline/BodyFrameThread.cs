@@ -38,7 +38,7 @@ public class BodyFrameThread : ThreadedJob
     private CircularQueue<HeddokoPacket> mInboundSuitBuffer = new CircularQueue<HeddokoPacket>(64, true);
     
     private object mWorkerThreadLockHandle = new object();
-    private Vector3[] vPreviouslyValidValues = new Vector3[9];
+    private BodyFrame.Vect4[] mPreviouslyValidValues = new BodyFrame.Vect4[9];
 
     private bool mPausedWorker;
 
@@ -334,14 +334,16 @@ public class BodyFrameThread : ThreadedJob
                         float vRoll = ConversionTools.ConvertHexStringToFloat((v3data[0]));
                         float vPitch = ConversionTools.ConvertHexStringToFloat((v3data[1]));
                         float vYaw = ConversionTools.ConvertHexStringToFloat((v3data[2]));
-                        vPreviouslyValidValues[vSetterIndex] = new Vector3(vPitch, vRoll, vYaw);
+                        //mPreviouslyValidValues[vSetterIndex] = new Vector3(vPitch, vRoll, vYaw);
+                        mPreviouslyValidValues[vSetterIndex] = new BodyFrame.Vect4(vPitch, vRoll, vYaw);
+
                     }
                     if (!ContinueWorking)
                     {
                         break;
                     }
                 }
-                BodyFrame vBodyFrame = RawFrameConverter.CreateBodyFrame(vPreviouslyValidValues); 
+                BodyFrame vBodyFrame = RawFrameConverter.CreateBodyFrame(mPreviouslyValidValues); 
                 vBodyFrame.Timestamp = (float)(vTimeStamp - vStartTime) / 1000f; 
                 BodyFrameBuffer.Enqueue(vBodyFrame);
                 if (!ContinueWorking)

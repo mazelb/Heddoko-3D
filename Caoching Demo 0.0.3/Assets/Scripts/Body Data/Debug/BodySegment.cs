@@ -34,6 +34,7 @@ public partial class BodySegment
     public BodyFrameCalibrationContainer BodyFrameCalibrationContainer { get; internal set; }
     //Segment Type 
     public BodyStructureMap.SegmentTypes SegmentType;
+    public static bool GBodyFrameUsingQuaternion = false;
 
     //Body SubSegments 
     public Dictionary<int, BodySubSegment> BodySubSegmentsDictionary = new Dictionary<int, BodySubSegment>();

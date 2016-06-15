@@ -448,8 +448,8 @@ public class Body
         {
             BodyStructureMap.SensorPositions vKey = vKeyList[i];
 
-            Vector3 vInitialRawEuler = vBody.InitialBodyFrame.FrameData[vKey];
-            Vector3 vCurrentRawEuler = vBody.CurrentBodyFrame.FrameData[vKey];
+            BodyFrame.Vect4 vInitialRawEuler = vBody.InitialBodyFrame.FrameData[vKey];
+            BodyFrame.Vect4 vCurrentRawEuler = vBody.CurrentBodyFrame.FrameData[vKey];
             //Vector3 vPreviousRawEuler = vBody.PreviousBodyFrame.FrameData[vKey];
 
             BodyStructureMap.TrackingStructure vStruct = new BodyStructureMap.TrackingStructure();

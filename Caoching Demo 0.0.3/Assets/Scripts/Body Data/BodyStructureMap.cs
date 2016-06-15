@@ -52,18 +52,18 @@ public class BodyStructureMap
 
     public struct TrackingStructure
     {
-        public Vector3 InitRawEuler;
-        public Vector3 CurrRawEuler;
+        public BodyFrame.Vect4 InitRawEuler;
+        public BodyFrame.Vect4 CurrRawEuler;
         public CalibrationStructure CalibrationData;
     };
 
     public struct CalibrationStructure
     {
         public int HistoryCount;
-        public Vector3 MinRawEuler;
-        public Vector3 MaxRawEuler;
-        public Vector3 AvgRawEulerDiff;
-        public List<Vector3> PrevRawEulers;
+        public BodyFrame.Vect4 MinRawEuler;
+        public BodyFrame.Vect4 MaxRawEuler;
+        public BodyFrame.Vect4 AvgRawEulerDiff;
+        public List<BodyFrame.Vect4> PrevRawEulers;
     };
 
     //Body Types

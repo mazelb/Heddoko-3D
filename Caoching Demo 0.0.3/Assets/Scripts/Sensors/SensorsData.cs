@@ -11,7 +11,7 @@ public class SensorsData
     //List of sensor raw data
     public List<Int16> Data = new List<Int16>();
 
-    public Vector3 PositionalData { get; set; }
+    public BodyFrame.Vect4 PositionalData { get; set; }
 
     public float[, ] OrientationMatrix;
 }

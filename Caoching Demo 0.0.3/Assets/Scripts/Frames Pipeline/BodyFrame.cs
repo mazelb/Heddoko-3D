@@ -7,7 +7,7 @@
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
 
-using UnityEngine; 
+using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Runtime.Serialization;
@@ -18,25 +18,25 @@ using Newtonsoft.Json;
 /// The frame of data that is populated to sensors, and contains the list of sensors to access sensors data
 /// </summary>
 [DataContract]
-public class BodyFrame 
+public class BodyFrame
 {
 
     //The frame of data populated to sensors 
     [JsonProperty]
-    private Dictionary<BodyStructureMap.SensorPositions, Vector3> mFrameData;
-     
+    private Dictionary<BodyStructureMap.SensorPositions, Vect4> mFrameData;
+
     //The timestamp of a bodybody frame 
     [JsonProperty]
     private float mTimeStamp;
 
     [JsonIgnore]
-    internal Dictionary<BodyStructureMap.SensorPositions, Vector3> FrameData
+    internal Dictionary<BodyStructureMap.SensorPositions, Vect4> FrameData
     {
         get
         {
             if (mFrameData == null)
             {
-                mFrameData = new Dictionary<BodyStructureMap.SensorPositions, Vector3>(18);
+                mFrameData = new Dictionary<BodyStructureMap.SensorPositions, Vect4>(18);
             }
             return mFrameData;
         }
@@ -49,9 +49,9 @@ public class BodyFrame
     internal float Timestamp
     {
         get { return mTimeStamp; }
-        set { mTimeStamp = value; } 
+        set { mTimeStamp = value; }
     }
- 
+
 
     /**
     * ToString()
@@ -61,37 +61,37 @@ public class BodyFrame
     */
     public override string ToString()
     {
-        return ToString(new []{' ' }, true,true); 
+        return ToString(new[] { ' ' }, true, true);
     }
 
     /// <summary>
     /// Returns a string, with a character delimiter between sensor position and data. 
     /// </summary>
     /// <returns>Frame data as a string</returns>
-    public string ToString(char[] vDelimiter, bool vIncludePos = false,bool vLineSeperated = false)
+    public string ToString(char[] vDelimiter, bool vIncludePos = false, bool vLineSeperated = false)
     {
         string vOutput = "";
-        foreach (KeyValuePair<BodyStructureMap.SensorPositions, Vector3> vPair in FrameData)
+        foreach (KeyValuePair<BodyStructureMap.SensorPositions, Vect4> vPair in FrameData)
         {
-            vOutput += "" + (vIncludePos? vPair.Key+"":"") + new string(vDelimiter) + vPair.Value + (vLineSeperated? "\n":" ");
+            vOutput += "" + (vIncludePos ? vPair.Key + "" : "") + new string(vDelimiter) + vPair.Value + (vLineSeperated ? "\n" : " ");
         }
         return vOutput;
     }
 
     public string ToCSVString()
     {
-        string vOutput =""+(long)Timestamp+",";
-        foreach (KeyValuePair<BodyStructureMap.SensorPositions, Vector3> vPair in FrameData)
+        string vOutput = "" + (long)Timestamp + ",";
+        foreach (KeyValuePair<BodyStructureMap.SensorPositions, Vect4> vPair in FrameData)
         {
-            vOutput += (int) vPair.Key + "," + vPair.Value.x + ";"+vPair.Value.y + ";"+vPair.Value.z + ",";
+            vOutput += (int)vPair.Key + "," + vPair.Value.x + ";" + vPair.Value.y + ";" + vPair.Value.z + ",";
         }
         return vOutput;
     }
     public BodyFrame()
     {
-        
+
     }
- 
+
     /**
     * ConvertRawFrame(BodyRawFrame rawData)
     * @brief Pass in a BodyRawFrame and convert it to a body frame
@@ -103,27 +103,27 @@ public class BodyFrame
     {
         float vTimestamp = 0;
         float.TryParse(rawData.RawFrameData[0], out vTimestamp);
-        
+
         //from startIndex to endIndex, we check the subframes and extrapolate the IMU data. 
-        int vStartIndex= 1;
+        int vStartIndex = 1;
         int vEndIndex = 20;
 
         //The check index is made such that when we iterate through the list, it is possible that the 19th index isn't of an IMU type, then it must be that it is a stretch sensor
         //at this index we check if we actually hold data for the lower spine. If we do, then we continue, otherwise, we clear and the stretch data is gathered. 
-        int vCheckIndex = 19; 
+        int vCheckIndex = 19;
         bool vFinishLoop = false;
         BodyFrame vBodyFrame = new BodyFrame();
         vBodyFrame.Timestamp = vTimestamp;
-        
+
         //placeholder data to be used in the dictionary until it gets populated by the following loop
-        Vector3 vPlaceholderV3 = Vector3.zero; 
-      
+        Vect4 vPlaceholderV3 = new Vect4();
+
         int key = 0;
         BodyStructureMap.SensorPositions vSensorPosAsKey = BodyStructureMap.SensorPositions.SP_RightElbow; //initializing sensor positions to some default value
         for (int i = vStartIndex; i < vEndIndex; i++)
         {
             //first check if the current index falls on a position that can be interpreted as an int
-            if (i%2 == 1)
+            if (i % 2 == 1)
             {
                 if (i == vCheckIndex)
                 {
@@ -136,14 +136,14 @@ public class BodyFrame
                         if (key != 10)
                         {
                             vFinishLoop = true;
-                        } 
+                        }
                     }
                     if (vFinishLoop)
                     {
                         //set the start index for the next iteration
                         vStartIndex = i;
                         break;
-                    } 
+                    }
                 }
                 int.TryParse(rawData.RawFrameData[i], out key);
                 key--;
@@ -159,23 +159,23 @@ public class BodyFrame
                 {
                     float.TryParse(v3data[j], out value[j]);
                 }
-                vBodyFrame.FrameData[vSensorPosAsKey] = new Vector3(value[0], value[1], value[2]);
-            } 
+                vBodyFrame.FrameData[vSensorPosAsKey] = new Vect4(value[0], value[1], value[2]);// new Vector3(value[0], value[1], value[2]);
+            }
 
         }
 
         //check if lower spine exists
-        if(!vBodyFrame.FrameData.ContainsKey(BodyStructureMap.SensorPositions.SP_LowerSpine))
+        if (!vBodyFrame.FrameData.ContainsKey(BodyStructureMap.SensorPositions.SP_LowerSpine))
         {
-            vBodyFrame.FrameData.Add(BodyStructureMap.SensorPositions.SP_LowerSpine, Vector3.zero);
+            vBodyFrame.FrameData.Add(BodyStructureMap.SensorPositions.SP_LowerSpine, new Vect4()); //Vector3.zero));
         }
-        
+
         //todo stretch sense data extrapolation starting from the updated startingIndex
 
         return vBodyFrame;
 
     }
- 
+
     /// <summary>
     /// Converts a string received by the Brainpack server service into a bodyframe
     /// </summary>
@@ -183,29 +183,29 @@ public class BodyFrame
     /// <returns></returns>
     public static BodyFrame ConvertFromHexaString(string vHexPacket)
     {
-        string[] VRawData = vHexPacket.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
-    
+        string[] VRawData = vHexPacket.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
         //from startIndex to endIndex, we check the subframes and extrapolate the IMU data. 
         int vStartIndex = 1;
         int vEndIndex = 20;
         //The check index is made such that when we iterate through the list, it is possible that the 19th index isn't of an IMU type, then it must be that it is a stretch sensor
         //at this index we check if we actually hold data for the lower spine. If we do, then we continue, otherwise, we clear and the stretch data is gathered. 
-        int vCheckIndex = 19; 
+        int vCheckIndex = 19;
         bool vFinishLoop = false;
         BodyFrame vBodyFrame = new BodyFrame();
 
         //placeholder data to be used in the dictionary until it gets populated by the following loop
-        Vector3 vPlaceholderV3 = Vector3.zero; 
-         
+        Vect4 vPlaceholderV3 = new Vect4();//Vector3.zero); 
+
         int key = 0;
 
         //initializing sensor positions to some default value
-        BodyStructureMap.SensorPositions vSensorPosAsKey = BodyStructureMap.SensorPositions.SP_RightElbow; 
+        BodyStructureMap.SensorPositions vSensorPosAsKey = BodyStructureMap.SensorPositions.SP_RightElbow;
 
         for (int i = vStartIndex; i < vEndIndex; i++)
         {
             //first check if the current index falls on a position that can be interpreted as an int
-            if (i%2 == 1)
+            if (i % 2 == 1)
             {
                 if (i == vCheckIndex)
                 {
@@ -224,27 +224,27 @@ public class BodyFrame
                     {
                         //set the start index for the next iteration
                         //todo:Start index in the hexa string method is to be used when grabbing stretch sense data
-                        vStartIndex = i; 
+                        vStartIndex = i;
                         break;
                     }
                 }
                 int.TryParse(VRawData[i], out key);
                 key--;
                 vSensorPosAsKey = ImuSensorFromPos(key);
-                vBodyFrame.FrameData.Add(vSensorPosAsKey, vPlaceholderV3); 
+                vBodyFrame.FrameData.Add(vSensorPosAsKey, vPlaceholderV3);
             }
             else
             {
                 //split the string into three floats
-                string[] v3data = VRawData[i].Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
+                string[] v3data = VRawData[i].Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 float[] value = new float[3];
                 for (int j = 0; j < 3; j++)
                 {
-                    value[j] = ConversionTools.ConvertHexStringToFloat((v3data[j])); 
+                    value[j] = ConversionTools.ConvertHexStringToFloat((v3data[j]));
                 }
-                vBodyFrame.FrameData[vSensorPosAsKey] = new Vector3(value[0], value[1], value[2]);
+                vBodyFrame.FrameData[vSensorPosAsKey] = new Vect4(value[0], value[1], value[2]);// new Vector3 (value[0], value[1], value[2]);
             }
-        } 
+        }
         return vBodyFrame;
     }
 
@@ -253,10 +253,10 @@ public class BodyFrame
     /// </summary>
     /// <param name="vBodyFrameData"></param>
     /// <returns></returns>
-    public static BodyFrame CreateBodyFrame(Vector3[] vBodyFrameData)
+    public static BodyFrame CreateBodyFrame(Vect4[] vBodyFrameData)
     {
         BodyFrame vBodyFrame = new BodyFrame();
-        vBodyFrame.FrameData.Add(BodyStructureMap.SensorPositions.SP_LowerSpine, Vector3.zero);
+        vBodyFrame.FrameData.Add(BodyStructureMap.SensorPositions.SP_LowerSpine, new Vect4());//(Vector3.zero));
         for (int i = 0; i < vBodyFrameData.Length; i++)
         {
             BodyStructureMap.SensorPositions vSenPos = ImuSensorFromPos(i);
@@ -314,6 +314,8 @@ public class BodyFrame
         }
     }
 
+
+
     /// <summary>
     /// Returns a sensor position of a stretch sensor from the given int pos
     /// </summary>
@@ -323,19 +325,87 @@ public class BodyFrame
     {
         if (pos == 0)
         {
-            return BodyStructureMap.SensorPositions.SP_RightElbow; 
+            return BodyStructureMap.SensorPositions.SP_RightElbow;
         }
         if (pos == 1)
         {
-            return BodyStructureMap.SensorPositions.SP_LeftElbow; 
+            return BodyStructureMap.SensorPositions.SP_LeftElbow;
         }
         if (pos == 2)
         {
-            return BodyStructureMap.SensorPositions.SP_RightKnee; 
+            return BodyStructureMap.SensorPositions.SP_RightKnee;
         }
         else
         {
-            return BodyStructureMap.SensorPositions.SP_LeftKnee; 
+            return BodyStructureMap.SensorPositions.SP_LeftKnee;
         }
-    } 
+    }
+
+    /// <summary>
+    /// Vector4 with nullable component w
+    /// </summary>
+    public struct Vect4
+    {
+        public float x;
+        public float y;
+        public float z;
+        public float w;
+
+        public Vect4(float x = 0, float y = 0, float z = 0, float w = 0)
+        {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+            this.w = w;
+        }
+
+        public float this[int vIndex]
+        {
+            get
+            {
+                switch (vIndex)
+                {
+                    case 0:
+                        return x;
+                        break;
+                    case 1:
+                        return y;
+                        break;
+                    case 2:
+                        return z;
+                        break;
+                    case 3:
+                        return w;
+                        break;
+                    default:
+                        throw new IndexOutOfRangeException("Invalid Vect4 index!");
+                        break;
+                }
+            }
+            set
+            {
+                switch (vIndex)
+                {
+                    case 0:
+                        x = value;
+                        break;
+                    case 1:
+                        y = value;
+                        break;
+                    case 2:
+                        z = value;
+                        break;
+                    case 3:
+                        w = value;
+                        break;
+                    default:
+                        throw new IndexOutOfRangeException("Invalid Vect4 index!");
+                        break;
+                }
+            }
+
+        }
+
+
+    }
 }

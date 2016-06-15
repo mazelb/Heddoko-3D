@@ -1,7 +1,6 @@
 ﻿using System; 
 using HeddokoLib.utils;
-using UnityEngine;
-
+ 
 namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
 {
     /// <summary>
@@ -12,8 +11,8 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
         /// <summary>
         /// holds a reference to previously valid values
         /// </summary>
-        public static Vector3[] PreviouslyValidOrientations = new Vector3[9];
-
+     //   public static Vector3[] PreviouslyValidOrientations = new Vector3[9];
+        public static BodyFrame.Vect4[] PreviouslyValidOrientations = new BodyFrame.Vect4[9];
         private static float sStartTime = 0;
 
         /// <summary>
@@ -72,11 +71,19 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                 if ((vBitmask & (1 << vBitmaskCheck)) == (1 << vBitmaskCheck))
                 {
                     string[] v3data = rawData[i].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    float vRoll = ConversionTools.ConvertHexStringToFloat((v3data[0]));
-                    float vPitch = ConversionTools.ConvertHexStringToFloat((v3data[1]));
-                    float vYaw = ConversionTools.ConvertHexStringToFloat((v3data[2]));
+                    int vLength = v3data.Length;
+                     var vFinalVals = new BodyFrame.Vect4();
+                    for (int j = 0; j < vLength; j++)
+                    {
+                        vFinalVals[j] = ConversionTools.ConvertHexStringToFloat(v3data[j]); 
+                    }
+                   
+              //      float vRoll = ConversionTools.ConvertHexStringToFloat((v3data[0]));
+               //     float vPitch = ConversionTools.ConvertHexStringToFloat((v3data[1]));
+//float vYaw = ConversionTools.ConvertHexStringToFloat((v3data[2]));
 
-                    PreviouslyValidOrientations[vSetterIndex] = new Vector3(vPitch, vRoll, vYaw);
+                    PreviouslyValidOrientations[vSetterIndex] = vFinalVals;
+                        // new BodyFrame.Vect4(vPitch, vRoll, vYaw);// new Vector3(vPitch, vRoll, vYaw);
                 }
             }
             BodyFrame vBodyFrame = CreateBodyFrame(PreviouslyValidOrientations);
@@ -101,7 +108,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
             vBodyFrame.Timestamp = vTimestamp;
 
             //placeholder data to be used in the dictionary until it gets populated by the following loop
-            Vector3 vPlaceholderV3 = Vector3.zero;
+            BodyFrame.Vect4 vPlaceholderV3 = new BodyFrame.Vect4();//Vector3.zero;
 
             int vKey = 0;
             //initializing sensor positions to some default value
@@ -142,13 +149,18 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                 {
                     //split the string into three floats
                     string[] v3data = rawData.RawFrameData[i].Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    float[] value = new float[3];
-                    for (int j = 0; j < 3; j++)
+                    int vLength = v3data.Length;
+                    float[] vParsedValues = new float[vLength];
+                    var vFinalVals = new BodyFrame.Vect4();
+                    for (int j = 0; j < vLength; j++)
                     {
-                        float.TryParse(v3data[j], out value[j]);
-                    } 
-                   vBodyFrame.FrameData[vSensorPosAsKey] = new Vector3(value[0], value[1], value[2]); 
-                  
+                        float.TryParse(v3data[j], out vParsedValues[j]);
+                        vFinalVals[j] = vParsedValues[j];
+                    }
+
+                    vBodyFrame.FrameData[vSensorPosAsKey] = vFinalVals;
+                        //new BodyFrame.Vect4(vParsedValues[0], vParsedValues[1], vParsedValues[2], vParsedValues[4]);//new Vector3(value[0], value[1], value[2])); 
+
                 }
 
             }
@@ -156,7 +168,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
             //check if lower spine exists
             if (!vBodyFrame.FrameData.ContainsKey(BodyStructureMap.SensorPositions.SP_LowerSpine))
             {
-                vBodyFrame.FrameData.Add(BodyStructureMap.SensorPositions.SP_LowerSpine, Vector3.zero);
+                vBodyFrame.FrameData.Add(BodyStructureMap.SensorPositions.SP_LowerSpine, new BodyFrame.Vect4());// Vector3.zero);
             }
 
             //todo stretch sense data extrapolation starting from the updated startingIndex
@@ -170,10 +182,10 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
         /// </summary>
         /// <param name="vBodyFrameData"></param>
         /// <returns></returns>
-        public static BodyFrame CreateBodyFrame(Vector3[] vBodyFrameData)
+        public static BodyFrame CreateBodyFrame(BodyFrame.Vect4[] vBodyFrameData)
         {
             BodyFrame vBodyFrame = new BodyFrame();
-            vBodyFrame.FrameData.Add(BodyStructureMap.SensorPositions.SP_LowerSpine, Vector3.zero);
+            vBodyFrame.FrameData.Add(BodyStructureMap.SensorPositions.SP_LowerSpine, new BodyFrame.Vect4());// Vector3.zero);
             for (int i = 0; i < vBodyFrameData.Length; i++)
             {
                 BodyStructureMap.SensorPositions vSenPos = ImuSensorFromPos(i);
@@ -250,7 +262,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
             BodyFrame vBodyFrame = new BodyFrame();
 
             //placeholder data to be used in the dictionary until it gets populated by the following loop
-            Vector3 vPlaceholderV3 = Vector3.zero;
+            BodyFrame.Vect4 vPlaceholderV3 = new BodyFrame.Vect4();// Vector3.zero;
 
             int key = 0;
 
@@ -297,7 +309,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                     {
                         value[j] = ConversionTools.ConvertHexStringToFloat((v3data[j]));
                     }
-                    vBodyFrame.FrameData[vSensorPosAsKey] = new Vector3(value[0], value[1], value[2]);
+                    vBodyFrame.FrameData[vSensorPosAsKey] =new BodyFrame.Vect4(value[0], value[1], value[2]); //new Vector3(value[0], value[1], value[2]);
                 }
             }
             return vBodyFrame;
