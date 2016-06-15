@@ -356,7 +356,6 @@ GameObject:
   m_Component:
   - 224: {fileID: 19889029}
   - 114: {fileID: 19889030}
-  - 114: {fileID: 19889031}
   m_Layer: 5
   m_Name: Toggle
   m_TagString: Untagged
@@ -428,18 +427,6 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 0
---- !u!114 &19889031
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 19889028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86069e8d87fb7674ca2d220207c0f798, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Toggle: {fileID: 19889030}
 --- !u!1 &24742749
 GameObject:
   m_ObjectHideFlags: 0
@@ -12890,11 +12877,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22464832, guid: 572e3bfcaa87b17488d1fff5f9d6bc6b, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: -3.4898682
+      value: 0.015014648
       objectReference: {fileID: 0}
     - target: {fileID: 22464832, guid: 572e3bfcaa87b17488d1fff5f9d6bc6b, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -5.8936768
+      value: -0.9840088
       objectReference: {fileID: 0}
     - target: {fileID: 22464832, guid: 572e3bfcaa87b17488d1fff5f9d6bc6b, type: 2}
       propertyPath: m_AnchorMin.x
@@ -15540,7 +15527,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &921074537
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21958,8 +21945,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 890272456}
   m_HandleRect: {fileID: 890272455}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -25381,6 +25368,8 @@ MonoBehaviour:
     TabObject: {fileID: 1201989076}
   - Name: PLAYER
     TabObject: {fileID: 265527002}
+  - Name: ACCOUNT
+    TabObject: {fileID: 921074536}
   DefaultTabName: 
   KeepTabsActive: 0
   OnTabSelect:
@@ -33610,7 +33599,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 708447077}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999998
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
