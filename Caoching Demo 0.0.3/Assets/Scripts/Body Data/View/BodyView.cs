@@ -29,7 +29,7 @@ namespace Assets.Scripts.Body_Data.view
         private Body mAssociatedBody;
         private BodyFrame mCurreBodyFrame;
         [SerializeField]
-     private bool mIsPaused;
+        private bool mIsPaused;
 
         public bool IsPaused
         {
@@ -40,7 +40,7 @@ namespace Assets.Scripts.Body_Data.view
         [SerializeField]
         private bool mStartUpdating;
 
-         
+
         /// <summary>
         /// Internally set the Body associated to this view. Class property that returns the Body associated with this view.
         /// </summary>
@@ -95,7 +95,7 @@ namespace Assets.Scripts.Body_Data.view
         /// <param name="vBodyFrame">the body frame to reset to</param>
         public void ResetInitialFrame(BodyFrame vBodyFrame = null)
         {
-          
+
             if (mAssociatedBody != null)
             {
                 BodyFrame vTempBodyFrame = null;
@@ -119,20 +119,20 @@ namespace Assets.Scripts.Body_Data.view
         /// </summary>
         /// <param name="vBodyFrame">the body frame to update to</param>
         public void UpdateViewTracking(BodyFrame vBodyFrame)
-        { 
+        {
             AssociatedBody.UpdateBody(vBodyFrame);
             Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic = Body.GetTracking(AssociatedBody);
 
             if (vDic != null)
             {
-                AssociatedBody.mBodyFrameCalibrationContainer.UpdateCalibrationContainer(vDic,vBodyFrame.Timestamp);
-                Body.ApplyTracking(AssociatedBody, vDic); 
+                AssociatedBody.mBodyFrameCalibrationContainer.UpdateCalibrationContainer(vDic, vBodyFrame.Timestamp);
+                Body.ApplyTracking(AssociatedBody, vDic);
             }
-            
-            if (BodyFrameUpdatedEvent != null && vBodyFrame!= null)
-            { 
-                BodyFrameUpdatedEvent(vBodyFrame); 
-            } 
+
+            if (BodyFrameUpdatedEvent != null && vBodyFrame != null)
+            {
+                BodyFrameUpdatedEvent(vBodyFrame);
+            }
 
         }
 
@@ -165,7 +165,7 @@ namespace Assets.Scripts.Body_Data.view
         /// </summary>
         private void Update()
         {
-          
+
             if (StartUpdating)
             {
                 if (mIsPaused)
@@ -176,17 +176,19 @@ namespace Assets.Scripts.Body_Data.view
                 if (mBuffer != null && mBuffer.Count > 0 && AssociatedBody.RenderedBody != null)
                 {
                     BodyFrame vBodyFrame = mBuffer.Dequeue();
-                    DebugLogger.Instance.LogMessage(LogType.FrameRenderingStart, "Start timestamp: " + vBodyFrame.Timestamp);
-                    if (AssociatedBody.InitialBodyFrame == null)
+                    if (vBodyFrame != null)
                     {
-                        ResetInitialFrame(vBodyFrame);
+                        if (AssociatedBody.InitialBodyFrame == null)
+                        {
+                            ResetInitialFrame(vBodyFrame);
+                        }
+                        UpdateViewTracking(vBodyFrame);
+
                     }
-                    UpdateViewTracking(vBodyFrame);
-                    DebugLogger.Instance.LogMessage(LogType.FrameRenderingFinish, "Finish timestamp: " + vBodyFrame.Timestamp);
 
                 }
             }
-         }
+        }
 
         /// <summary>
         /// Handles inputs related to the body view
