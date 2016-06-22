@@ -45,7 +45,7 @@ namespace HeddokoLib.heddokoProtobuff.packet
         public RawPacket(RawPacket vPacket)
         {
             mPayload = new byte[MaxPacketSize];
-            Buffer.BlockCopy(vPacket.mPayload, 0, this.mPayload, 0, vPacket.mPayloadSize);
+            Buffer.BlockCopy(vPacket.mPayload, 0, mPayload, 0, vPacket.mPayloadSize);
             mPayloadSize = vPacket.mPayloadSize;
             mPacketComplete = false;
             mBytesReceived = 0;

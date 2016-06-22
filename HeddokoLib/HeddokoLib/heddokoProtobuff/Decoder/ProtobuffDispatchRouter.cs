@@ -6,8 +6,7 @@
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
 
-using System;
-using HeddokoLib.adt;
+using System; 
 
 namespace HeddokoLib.heddokoProtobuff.Decoder
 {
@@ -25,19 +24,19 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
         public void Init()
         {
             var vPacketKeys = Enum.GetValues(typeof(PacketType));
-            var vBrainpackCommandId = Enum.GetValues(typeof (BrainpackCommandId));
+        //    var vBrainpackCommandId = Enum.GetValues(typeof (BrainpackCommandId));
             foreach (var vPacketKey in vPacketKeys)
             {
                 PacketType vKey = (PacketType)vPacketKey;
                 //add a placeholder lamda
                 mDispatcher.AddProtobuffCommand(vKey, (vX, vY) => { });
             }
-            foreach (var vCommandKey in vBrainpackCommandId)
-            {
-                BrainpackCommandId vKey = (BrainpackCommandId)vCommandKey;
-                //add a placeholder lamda
-                mDispatcher.AddBrainpackCommand(vKey, (vX, vY) => { });
-            }
+            //foreach (var vCommandKey in vBrainpackCommandId)
+            //{
+            //    BrainpackCommandId vKey = (BrainpackCommandId)vCommandKey;
+            //    //add a placeholder lamda
+            //    mDispatcher.AddBrainpackCommand(vKey, (vX, vY) => { });
+            //}
         }
 
         public ProtoFrameDelegate GetEventHandler(PacketType vPacketType)
@@ -49,11 +48,11 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
             mDispatcher.AddProtobuffCommand(vPacketType, vDel);
 
         }
-        public void Add(BrainpackCommandId vBrainpackCommandId, ProtoFrameDelegate vDel)
-        {
-            mDispatcher.AddBrainpackCommand(vBrainpackCommandId, vDel);
+        //public void Add(BrainpackCommandId vBrainpackCommandId, ProtoFrameDelegate vDel)
+        //{
+        //    mDispatcher.AddBrainpackCommand(vBrainpackCommandId, vDel);
 
-        }
+        //}
 
         public void RemovePacketTypeEvent(PacketType vPacketType, ProtoFrameDelegate vDel)
         {
@@ -66,10 +65,10 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
             return mDispatcher.Process(vType, vSender, vArgs);
         }
 
-        public bool Process(BrainpackCommandId vType, object vSender, object vArgs)
-        {
-            return mDispatcher.Process(vType, vSender, vArgs);
-        }
+        //public bool Process(BrainpackCommandId vType, object vSender, object vArgs)
+        //{
+        //    return mDispatcher.Process(vType, vSender, vArgs);
+        //}
         /// <summary>
         /// Removes an event handler from the dispatcher with respect to the BrainpackCommandId passed in
         /// </summary>

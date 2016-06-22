@@ -156,7 +156,7 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
                 if (vNeedRenderedBody)
                 {
                     RenderedBody vRendered = RenderedBodyPool.RequestResource(vBody.BodyType);
-                    vBody.UpdateRenderedBody(vRendered);
+                    vBody.UpdateRenderedBody(vRendered); //set body view
                 }
                 PanelNode.UpdateBody(vBody);
             }
