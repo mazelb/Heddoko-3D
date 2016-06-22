@@ -19,8 +19,7 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
     public class ProtoFrameDispatcher
     {
         internal Dispatch<PacketType> mProtoPacketDispatcher = new Dispatch<PacketType>();
-        internal Dispatch<BrainpackCommandId> mBrainpackCommandDispatcher = new Dispatch<BrainpackCommandId>();
-
+ 
     /// <summary>
         /// Registers a protobuf packet command
         /// </summary>
@@ -31,27 +30,27 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
              mProtoPacketDispatcher.Add(vPacketType, vDelegate);
         }
         /// <summary>
-        /// Registers a Brainpack command Id
-        /// </summary>
-        /// <param name="vCommandId"></param>
-        /// <param name="vDelegate"></param>
-        public void AddBrainpackCommand(BrainpackCommandId vCommandId, ProtoFrameDelegate vDelegate)
-        {
-            mBrainpackCommandDispatcher.Add(vCommandId, vDelegate);
+        ///// Registers a Brainpack command Id
+        ///// </summary>
+        ///// <param name="vCommandId"></param>
+        ///// <param name="vDelegate"></param>
+        //public void AddBrainpackCommand(BrainpackCommandId vCommandId, ProtoFrameDelegate vDelegate)
+        //{
+        //    mBrainpackCommandDispatcher.Add(vCommandId, vDelegate);
 
-        }
+        //}
 
-        /// <summary>
-        /// Processes a command Id
-        /// </summary>
-        /// <param name="vCommandId"></param>
-        /// <param name="vSender"></param>
-        /// <param name="vArgs"></param>
-        /// <returns>was the command processed sucessfully?</returns>
-        public bool Process(BrainpackCommandId vCommandId, object vSender, object vArgs)
-        {
-            return mBrainpackCommandDispatcher.Process(vCommandId, vSender, vArgs);
-        }
+        ///// <summary>
+        ///// Processes a command Id
+        ///// </summary>
+        ///// <param name="vCommandId"></param>
+        ///// <param name="vSender"></param>
+        ///// <param name="vArgs"></param>
+        ///// <returns>was the command processed sucessfully?</returns>
+        //public bool Process(BrainpackCommandId vCommandId, object vSender, object vArgs)
+        //{
+        //    return mBrainpackCommandDispatcher.Process(vCommandId, vSender, vArgs);
+        //}
 
         /// <summary>
         /// Process a packet type
