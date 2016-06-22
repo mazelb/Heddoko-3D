@@ -20,7 +20,7 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
     public class ProtoStreamDecoder
     {
         private Stream mStream;
-        private bool mIsWorking = false;
+        private volatile bool mIsWorking = false;
         private int mBufferSize = 1024;
         // private WriterReaderQueue<RawPacket> mQueue = new WriterReaderQueue<RawPacket>(50);
         private CircularQueue<RawPacket> mQueue = new CircularQueue<RawPacket>(1024, false);

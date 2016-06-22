@@ -39,6 +39,7 @@ namespace Assets.Scripts.UI.MainMenu.View
         public GameObject BrainpackComPortInput;
         public Dropdown DropDownList;
         private Dictionary<string, string> mDropdownItems;
+        public SerialPortConnectionController ConnectionController;
         //   public ScrollablePanel ScrollablePanel;
         /// <summary>
         /// RectTransform associated with this view
@@ -56,11 +57,16 @@ namespace Assets.Scripts.UI.MainMenu.View
         /// </summary> 
         void Start()
         {
-            BrainpackConnectionController.Instance.BpListUpdateHandle += UpdateDropDown;
-            BrainpackConnectionController.Instance.ConnectingStateEvent += OnConnection;
-            BrainpackConnectionController.Instance.ConnectedStateEvent += OnConnect;
-            BrainpackConnectionController.Instance.DisconnectedStateEvent += OnDisconnect;
-            BrainpackConnectionController.Instance.FailedToConnectStateEvent += FailedConnection;
+            //BrainpackConnectionController.Instance.BpListUpdateHandle += UpdateDropDown;
+            //BrainpackConnectionController.Instance.ConnectingStateEvent += OnConnection;
+            //BrainpackConnectionController.Instance.ConnectedStateEvent += OnConnect;
+            //BrainpackConnectionController.Instance.DisconnectedStateEvent += OnDisconnect;
+            //BrainpackConnectionController.Instance.FailedToConnectStateEvent += FailedConnection;
+            ConnectionController.BpListUpdateHandle += UpdateDropDown;
+            ConnectionController.ConnectingStateEvent += OnConnection;
+            ConnectionController.ConnectedStateEvent += OnConnect;
+            ConnectionController.DisconnectedStateEvent += OnDisconnect;
+            ConnectionController.FailedToConnectStateEvent += FailedConnection;
             PairButton.onClick.AddListener(PairButtonEngaged);
             UnpairButton.onClick.AddListener(UnpairButtonEngaged);
             ScreenResolutionManager.Instance.NewResolutionSetEvent += SlideBlock.ResetPosition;
@@ -77,7 +83,7 @@ namespace Assets.Scripts.UI.MainMenu.View
             if (vKeys.Count > 0)
             {
                 var vKey = vKeys[vArg0];
-                BrainpackConnectionController.Instance.BrainpackComPort = mDropdownItems[vKey];
+                ConnectionController.BrainpackComPort = mDropdownItems[vKey];
             }
 
         }
@@ -104,7 +110,7 @@ namespace Assets.Scripts.UI.MainMenu.View
                 DropDownList.options = vList;
                 //Set the first item as the default
                 var vKey = DropDownList.options[0].text;
-                BrainpackConnectionController.Instance.BrainpackComPort = mDropdownItems[vKey];
+                ConnectionController.BrainpackComPort = mDropdownItems[vKey];
                 var message =
                     "Found " + vObj.Count + " Battery packs";
                 Notify.Template("FadingNotifyTemplate").Show(
@@ -192,7 +198,7 @@ namespace Assets.Scripts.UI.MainMenu.View
             HaloForHaloman.gameObject.SetActive(true);
             HaloForHaloman.sprite = HalomanFailure;
             FadeInFadeOutEffect.FadeEffectTime = 0.5f;
-            BrainpackConnectionController.Instance.ResetTries();
+            ConnectionController.ResetTries();
             PairButton.gameObject.SetActive(true);
         }
 
@@ -205,12 +211,12 @@ namespace Assets.Scripts.UI.MainMenu.View
             PairButton.gameObject.SetActive(false);
             UnpairButton.gameObject.SetActive(true);
             UnpairButton.interactable = false;
-            BrainpackConnectionController.Instance.ConnectToBrainpack();
+            ConnectionController.ConnectToBrainpack();
         }
 
         public void UnpairButtonEngaged()
         {
-            BrainpackConnectionController.Instance.DisconnectBrainpack();
+            ConnectionController.DisconnectBrainpack();
             PairButton.gameObject.SetActive(true);
         }
 

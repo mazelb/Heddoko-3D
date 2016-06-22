@@ -31,22 +31,20 @@ namespace Assets.Scripts.Communication.Controller
     /// <summary>
     /// BrainpackConnectionController class that controls the connection to the heddoko body suit
     /// </summary>
-    public class BrainpackConnectionController : AbstractSuitConnection
+    public class BrainpackConnectionController : SerialPortConnectionController
     {
 
-        public System.Action<Dictionary<string, string>> BpListUpdateHandle;
         public OutterThreadToUnityTrigger BrainpackConnectedTrigger = new OutterThreadToUnityTrigger();
         public OutterThreadToUnityTrigger SocketClientErrorTrigger = new OutterThreadToUnityTrigger();
         public string Output = "";
-        private static BrainpackConnectionController mInstance;
+        internal static BrainpackConnectionController mInstance;
 
-        [SerializeField] private BrainpackConnectionState mCurrentConnectionState =
+        [SerializeField]
+        internal BrainpackConnectionState mCurrentConnectionState =
             BrainpackConnectionState.Disconnected;
 
-        public string BrainpackComPort = "";
         private UdpListener mUdpListener = new UdpListener();
 
-        [SerializeField] private int vTotalTries;
 
         public float Timeout = 4;
         public int MaxConnectionAttempts = 4;
@@ -58,9 +56,9 @@ namespace Assets.Scripts.Communication.Controller
         /// <summary>
         /// returns the current state of the controller
         /// </summary>
-        public BrainpackConnectionState ConnectionState
+        public override BrainpackConnectionState ConnectionState
         {
-            get { return mCurrentConnectionState; }
+            get { return mCurrentConnectionState; } 
         }
 
         /// <summary>
@@ -138,7 +136,7 @@ namespace Assets.Scripts.Communication.Controller
         /// </summary>
         /// <param name="vComport"></param>
         /// <returns></returns>
-        private bool Validate(string vComport)
+        internal bool Validate(string vComport)
         {
             if (string.IsNullOrEmpty(vComport))
             {
@@ -253,6 +251,7 @@ namespace Assets.Scripts.Communication.Controller
                     }
                     break;
                 }
+
                 case BrainpackConnectionState.Connecting:
                 {
                     if (vNewState == BrainpackConnectionState.Failure)
@@ -406,14 +405,6 @@ namespace Assets.Scripts.Communication.Controller
         }
 
         /// <summary>
-        /// reset the number of reconnect tries
-        /// </summary>
-        public void ResetTries()
-        {
-            vTotalTries = 0;
-        }
-
-        /// <summary>
         /// Requests brainpack responses
         /// </summary>
         public void RequestBrainpackResponses()
@@ -424,7 +415,7 @@ namespace Assets.Scripts.Communication.Controller
         /// <summary>
         /// The update function monitors the connected flag and starts to pull data
         /// </summary>
-        void Update()
+         internal void Update()
         {
             if (BrainpackConnectedTrigger.Triggered)
             {

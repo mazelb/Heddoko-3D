@@ -122,6 +122,7 @@ public class BodyFrameThread : ThreadedJob
     internal CircularQueue<HeddokoPacket> InboundSuitBuffer
     {
         get { return mInboundSuitBuffer; }
+        set { mInboundSuitBuffer = value; }
     }
 
     /** 

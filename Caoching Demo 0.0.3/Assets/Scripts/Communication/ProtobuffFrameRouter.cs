@@ -7,10 +7,12 @@
 */
 
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using HeddokoLib.adt;
 using HeddokoLib.heddokoProtobuff;
 using HeddokoLib.heddokoProtobuff.Decoder;
+using ProtoBuf;
 
 namespace Assets.Scripts.Communication
 {
@@ -22,16 +24,17 @@ namespace Assets.Scripts.Communication
 
         private volatile bool mIsWorking;
         private Thread mThread;
-        private CircularQueue<Packet> mInboundPacketBuffer;
-        private CircularQueue<BodyFrame> mOutBoundBuffer;
+        private CircularQueue<RawPacket> mInboundPacketBuffer;
+        private BodyFrameBuffer mOutBoundBuffer;
         private ProtobuffDispatchRouter mProtDispatchRouter;
         private static Dictionary<int, BodyStructureMap.SensorPositions> sSensorPositionList;
+        private MemoryStream mMemoryStream = new MemoryStream();
         /// <summary>
         /// Constructor needing an inbound and outbound buffer. Call Start to start the process. 
         /// </summary>
         /// <param name="vInboundBuffer"></param>
         /// <param name="vOutterBuffer"></param>
-        public ProtobuffFrameRouter(CircularQueue<Packet> vInboundBuffer, CircularQueue<BodyFrame> vOutterBuffer)
+        public ProtobuffFrameRouter(CircularQueue<RawPacket> vInboundBuffer, BodyFrameBuffer vOutterBuffer)
         {
             mInboundPacketBuffer = vInboundBuffer;
             mOutBoundBuffer = vOutterBuffer;
@@ -62,7 +65,7 @@ namespace Assets.Scripts.Communication
         private void EnqueueDataFrame(object vSender, object vArgs)
         {
             Packet vPacket = (Packet)vArgs;
-         
+
             if (OutBoundBuffer.AllowOverflow || (!OutBoundBuffer.AllowOverflow && !OutBoundBuffer.IsFull()))
             {
                 var vBodyFrame = ConvertPacketToBodyFrame(vPacket);
@@ -114,8 +117,9 @@ namespace Assets.Scripts.Communication
         public void Start()
         {
             StopIfWorking();
+            mIsWorking = true;
             mThread = new Thread(WorkerFunc);
-
+            mThread.Start();
         }
 
         /// <summary>
@@ -130,8 +134,14 @@ namespace Assets.Scripts.Communication
                     continue;
                 }
                 //dequeue the inbound buffer
-                var vPacket = mInboundPacketBuffer.Dequeue();
-                mProtDispatchRouter.Process(vPacket.type, this, vPacket);
+                var vRawPacket = mInboundPacketBuffer.Dequeue();
+                if (vRawPacket.Payload[0] == 0x04)
+                {
+                    mMemoryStream.Flush();
+                    mMemoryStream.Write(vRawPacket.Payload, 1, vRawPacket.PayloadSize);
+                    var vPacket = Serializer.Deserialize<Packet>(mMemoryStream);
+                    mProtDispatchRouter.Process(vPacket.type, this, vPacket);
+                }
             }
         }
 
@@ -149,7 +159,7 @@ namespace Assets.Scripts.Communication
         /// <summary>
         /// The outbound buffer
         /// </summary>
-        public CircularQueue<BodyFrame> OutBoundBuffer
+        public BodyFrameBuffer OutBoundBuffer
         {
             get { return mOutBoundBuffer; }
             private set { mOutBoundBuffer = value; }

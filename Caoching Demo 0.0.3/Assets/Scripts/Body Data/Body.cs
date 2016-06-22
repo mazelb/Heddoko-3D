@@ -541,4 +541,14 @@ public class Body
             BodySegments[i].ReleaseResources();
         }
     }
+    /// <summary>
+    /// Sets the buffer to stream Body frames    from
+    /// </summary>
+    /// <param name="vBodyFrames"></param>
+    public void SetBuffer(BodyFrameBuffer vBodyFrames)
+    {
+        StopThread();
+        View.Init(this, vBodyFrames);
+        View.StartUpdating = true;
+    }
 }
