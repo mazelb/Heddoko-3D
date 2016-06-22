@@ -77,8 +77,6 @@ namespace Assets.Scripts.Body_Data
             SubsegmentType = vSubsegmentType;
         }
 
-
-
         /// <summary>
         /// updates the current transform to the passed in parameter
         /// </summary>

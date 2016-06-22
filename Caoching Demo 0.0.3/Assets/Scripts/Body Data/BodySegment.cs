@@ -929,7 +929,7 @@ public partial class BodySegment
     {
         foreach (var vsubSegment in BodySubSegmentsDictionary)
         {
-            Transform vSubSegmentTransform = vRendered.GetSubSegment((BodyStructureMap.SubSegmentTypes) vsubSegment.Key);
+            Transform vSubSegmentTransform = vRendered.GetSubSegmentTransform((BodyStructureMap.SubSegmentTypes) vsubSegment.Key);
             vsubSegment.Value.UpdateSubSegmentTransform(vSubSegmentTransform);
         }
     }

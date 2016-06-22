@@ -177,7 +177,7 @@ namespace Assets.Scripts.UI.AbstractViews.camera
         private void MoveCameraToPosition(Vector3 vNewPos)
         {
             PanelRenderingCamera.transform.position = vNewPos;
-            PanelRenderingCamera.transform.LookAt(CamViewPlane.TargetBody.GetSubSegment(CamViewPlane.ReferenceSubSegment));
+            PanelRenderingCamera.transform.LookAt(CamViewPlane.TargetBody.GetSubSegmentTransform(CamViewPlane.ReferenceSubSegment));
         }
     }
 

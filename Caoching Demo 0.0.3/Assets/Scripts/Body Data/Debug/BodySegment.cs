@@ -17,8 +17,7 @@ using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Body_Pipeline.Analysis;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
-using Assets.Scripts.Body_Pipeline.Analysis.Torso;
-using Assets.Scripts.Utils;
+using Assets.Scripts.Body_Pipeline.Analysis.Torso; 
 //using System.Diagnostics;
 using System.IO;
 
@@ -977,7 +976,7 @@ public partial class BodySegment
     {
         foreach (var vsubSegment in BodySubSegmentsDictionary)
         {
-            Transform vSubSegmentTransform = vRendered.GetSubSegment((BodyStructureMap.SubSegmentTypes)vsubSegment.Key);
+            Transform vSubSegmentTransform = vRendered.GetSubSegmentTransform((BodyStructureMap.SubSegmentTypes)vsubSegment.Key);
             vsubSegment.Value.UpdateSubSegmentTransform(vSubSegmentTransform);
         }
     }
@@ -2404,7 +2403,7 @@ public partial class BodySegment
     {
         foreach (var vsubSegment in BodySubSegmentsDictionary)
         {
-            Transform vSubSegmentTransform = vRendered.GetSubSegment((BodyStructureMap.SubSegmentTypes)vsubSegment.Key);
+            Transform vSubSegmentTransform = vRendered.GetSubSegmentTransform((BodyStructureMap.SubSegmentTypes)vsubSegment.Key);
             vsubSegment.Value.UpdateSubSegmentTransform(vSubSegmentTransform);
         }
     }

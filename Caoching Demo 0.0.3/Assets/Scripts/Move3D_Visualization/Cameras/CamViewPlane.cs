@@ -82,7 +82,7 @@ namespace Assets.Scripts.UI.AbstractViews.camera
         /// </summary>
         public void InitCamPositions()
         {
-            Transform vTransform = mRefBody.GetSubSegment(ReferenceSubSegment);
+            Transform vTransform = mRefBody.GetSubSegmentTransform(ReferenceSubSegment);
             Vector3 vNormal = mPositionMaps[ViewPlane];
 
             Vector3 vNewPos = vTransform.position + vNormal * mDistanceFromRefTarget;
