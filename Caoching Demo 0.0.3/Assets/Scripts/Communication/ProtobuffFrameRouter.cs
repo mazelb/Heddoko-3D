@@ -1,8 +1,8 @@
 ﻿/**
 * @file ProtobuffFrameRouter.cs
-* @brief Contains the 
+* @brief Contains the ProtobuffFrameRouter
 * @author Mohammed Haider( mohammed @heddoko.com)
-* @date 06 2016
+* @date June 2016
 * Copyright Heddoko(TM) 2016,  all rights reserved
 */
 
