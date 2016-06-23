@@ -11,11 +11,7 @@ using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Layouts;
 using Assets.Scripts.UI.RecordingLoading;
 using UnityEngine;
-using System.Collections.Generic;
-using Assets.Scripts.Body_Pipeline.Analysis.Views;
-using Assets.Scripts.Communication.View.Table;
-using UnityEngine.UI;
-
+using System.Collections.Generic; 
 namespace Assets.Demos
 {
     public class ProtoDemoLiveViewConnection : LiveSuitFeedView
