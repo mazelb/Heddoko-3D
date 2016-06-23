@@ -23,14 +23,13 @@ namespace Assets.Demos
         private Body mPlaceholder;
         public ProtoDemoConnectionController DemoConnectionController;
         private ProtoStreamDecoder mProtoStreamDecoder;
-        private ProtobuffFrameRouter mFrameRouter;
-        public Body mPlaceholderBody;
-        public LiveSuitFeedView LiveSuitFeedView;
+        public ProtobuffFrameRouter FrameRouter;
+
 
         void Start()
         {
             DemoConnectionController.ConnectedStateEvent += BridgeStreams;
-            mPlaceholderBody = LiveSuitFeedView.BrainpackBody;
+
         }
 
         void BridgeStreams()
@@ -39,18 +38,18 @@ namespace Assets.Demos
             {
                 mProtoStreamDecoder.Dispose();
             }
+
+
+            if (FrameRouter != null)
+            {
+                FrameRouter.StopIfWorking();
+            }
             var vStream = DemoConnectionController.Port.BaseStream;
             mProtoStreamDecoder = new ProtoStreamDecoder(vStream, 4096);
             mProtoStreamDecoder.StartPacketizeStream(OnStreamComplete, ProtoStreamDecoderExceptionHandler);
             CircularQueue<RawPacket> mRawPacketBuffer = mProtoStreamDecoder.OutputBuffer;
             BodyFrameBuffer vbodyframebuffer = new BodyFrameBuffer(4096);
-            mFrameRouter = new ProtobuffFrameRouter(mRawPacketBuffer, vbodyframebuffer);
-            mFrameRouter.Start();
-            if (mPlaceholderBody != null)
-            {
-                mPlaceholderBody.ConnectBuffer(mFrameRouter.OutBoundBuffer);
-            }
-
+            FrameRouter = new ProtobuffFrameRouter(mRawPacketBuffer, vbodyframebuffer);
         }
 
         public void OnStreamComplete()
@@ -73,7 +72,7 @@ namespace Assets.Demos
                 if (mProtoStreamDecoder != null)
                 {
                     mProtoStreamDecoder.Dispose();
-                    mFrameRouter.StopIfWorking();
+                    FrameRouter.StopIfWorking();
                 }
             }
             else
@@ -90,13 +89,13 @@ namespace Assets.Demos
             {
                 mProtoStreamDecoder.Dispose();
             }
-            if (mFrameRouter != null)
+            if (FrameRouter != null)
             {
-                mFrameRouter.StopIfWorking();
+                FrameRouter.StopIfWorking();
             }
-            
+
         }
 
 
-}
+    }
 }

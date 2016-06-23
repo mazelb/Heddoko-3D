@@ -110,6 +110,7 @@ namespace Assets.Demos
             }
         }
 
+        public bool IsOpen;
         new void Update()
         {
             if (!ProtoDemoController.UseProtoBuff)
@@ -118,7 +119,10 @@ namespace Assets.Demos
             }
             else
             {
-
+                if (mSerialPort != null)
+                {
+                    IsOpen = mSerialPort.IsOpen;
+                }
             }
         }
     }

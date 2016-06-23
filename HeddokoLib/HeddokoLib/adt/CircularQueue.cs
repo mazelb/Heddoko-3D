@@ -66,7 +66,10 @@ namespace HeddokoLib.adt
         {
             get
             {
-                return mCount;
+                lock (mCountLock)
+                {
+                    return mCount;
+                }
             }
             private set
             {
@@ -280,6 +283,7 @@ namespace HeddokoLib.adt
         public bool IsFull()
         {
             return Count == mCapacity;
+              
         }
 
         /**

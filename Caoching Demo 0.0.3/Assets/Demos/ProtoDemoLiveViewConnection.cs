@@ -12,25 +12,15 @@ using Assets.Scripts.UI.AbstractViews.Layouts;
 using Assets.Scripts.UI.RecordingLoading;
 using UnityEngine;
 using System.Collections.Generic;
+using Assets.Scripts.Body_Pipeline.Analysis.Views;
+using Assets.Scripts.Communication.View.Table;
+using UnityEngine.UI;
+
 namespace Assets.Demos
 {
     public class ProtoDemoLiveViewConnection : LiveSuitFeedView
-    {
-        private LayoutType LayoutType = LayoutType.Single;
-        public Layout CurrentLayout;
-        private PanelNode[] mPanelNodes;
-        private PanelNode mRootNode;
-        public List<List<ControlPanelType>> ControlPanelTypeList = new List<List<ControlPanelType>>(2);
-        public Body BrainpackBody;
-        public BrainpackConnectionController BpController;
-        private LiveFeedViewControlPanel mLiveFeedViewControlPanel;
-        private bool mIsInitialized = false;
-        public BodyFrameDataControl BodyFrameDataControl;
-        public BodyFrameGraphControl FrameGraphControl;
-        public AnaylsisTextContainer AnaylsisTextContainer;
-        public Button RenameRecordingButton;
-        public Image RenameRecordingImage;
-        public Text RenameRecordingText;
+    { 
+        public ProtoDemoController DemoController;
         public PanelNode RootNode { get { return mRootNode; } }
         void Awake()
         {
@@ -60,7 +50,17 @@ namespace Assets.Demos
             mLiveFeedViewControlPanel.gameObject.SetActive(true);
             mLiveFeedViewControlPanel.Show();
             mIsInitialized = true;
-            BpController.ConnectedStateEvent += () => BrainpackBody.StreamFromBrainpack();
+            BpController.ConnectedStateEvent += () =>
+            {
+                if (ProtoDemoController.UseProtoBuff)
+                {
+                    BrainpackBody.PlayFromDataStream(DemoController.FrameRouter);
+                }
+                else
+                {
+                    BrainpackBody.StreamFromBrainpack();
+                }
+            };
         }
 
 
@@ -79,7 +79,15 @@ namespace Assets.Demos
             {
                 mPanelNodes[0].PanelSettings.RequestResources();
             }
-            BrainpackBody.StreamFromBrainpack();
+            if (ProtoDemoController.UseProtoBuff)
+            {
+                BrainpackBody.PlayFromDataStream(DemoController.FrameRouter);
+            }
+            else
+            {
+                BrainpackBody.StreamFromBrainpack();
+            }
+           
             try
             {
                 BodySegment.IsUsingInterpolation = false;

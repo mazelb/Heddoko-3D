@@ -11,6 +11,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Runtime.Serialization;
+using HeddokoLib.heddokoProtobuff;
 using HeddokoLib.utils;
 using Newtonsoft.Json;
 
@@ -91,7 +92,44 @@ public class BodyFrame
     {
 
     }
+    /// <summary>
+    /// Create a Bodyframe from a protobuf packet
+    /// </summary>
+    /// <param name="vPacket">The packet</param>
+    public BodyFrame(Packet vPacket)
+    {
+        Timestamp = vPacket.fullDataFrame.timeStamp;
+        var vImuDataFrame = vPacket.fullDataFrame.imuDataFrame[0];
+        //The packet passed in is a data frame. need to check if the data passed in is in quaternion form or euler
+        if (vImuDataFrame.Rot_xSpecified)
+        {
 
+            foreach (var vDataFrame in vPacket.fullDataFrame.imuDataFrame)
+            {
+                var vSensorId = ImuSensorFromPos((int)vDataFrame.imuId);
+                Vect4 vVect = new Vect4();
+                vVect.x = vDataFrame.Rot_x;
+                vVect.y = vDataFrame.Rot_y;
+                vVect.z = vDataFrame.Rot_z;
+                vVect.w = 0;
+                FrameData.Add(vSensorId,vVect);
+            }
+            
+        }
+        else if (vImuDataFrame.quat_wSpecified)
+        {
+            foreach (var vDataFrame in vPacket.fullDataFrame.imuDataFrame)
+            {
+                var vSensorId = ImuSensorFromPos((int)vDataFrame.imuId);
+                Vect4 vVect = new Vect4();
+                vVect.x = vDataFrame.quat_x_yaw;
+                vVect.y = vDataFrame.quat_y_pitch;
+                vVect.z = vDataFrame.quat_z_roll;
+                vVect.w = vDataFrame.quat_w;
+                FrameData.Add(vSensorId, vVect);
+            }
+        }
+    }
     /**
     * ConvertRawFrame(BodyRawFrame rawData)
     * @brief Pass in a BodyRawFrame and convert it to a body frame

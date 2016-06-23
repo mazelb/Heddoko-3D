@@ -17,6 +17,7 @@ using Assets.Scripts.Body_Pipeline.Analysis;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Torso;
+using Assets.Scripts.Communication;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Frames_Pipeline.BodyFrameConversion; 
 
@@ -371,6 +372,14 @@ public class Body
         View.StartUpdating = true;
     }
 
+    public void PlayFromDataStream(ProtobuffFrameRouter vRouter)
+    {
+        mBodyFrameThread.StopThread();
+        mBodyFrameThread.Init(vRouter);
+        mBodyFrameThread.Start();
+        View.Init(this, vRouter.OutBoundBuffer);
+        View.StartUpdating = true;
+    }
     /// <summary>
     /// Listener whos responsibility is to plug the bodyframe thread into controller.
     /// </summary>
