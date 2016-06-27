@@ -23,13 +23,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
     public class AnalysisDataStoreSerialization
     {
         private AnalysisDataStore mDataStore;
-        private string mPath = "";
-        public string GetSerializationStorePath
+        private static string sPath = "";
+        public static string GetSerializationStorePath
         {
             get
             {
                 string vPath="";
-                if (string.IsNullOrEmpty(mPath))
+                if (string.IsNullOrEmpty(sPath))
                 {
                     string vTodaysDate = DateTime.Now.ToString("hh-mm-ss-ff");
                      vPath = Application.persistentDataPath;
@@ -53,9 +53,19 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <summary>
         /// Writes the data store to a csv file
         /// </summary>
-         public void WriteFile(AnalysisDataStore vAnalysisDataStore)
+         public static void WriteFile(AnalysisDataStore vAnalysisDataStore)
         {
-            using (StreamWriter vFileOut = new StreamWriter(GetSerializationStorePath))
+            WriteFile(vAnalysisDataStore, GetSerializationStorePath);
+        }
+
+        /// <summary>
+        /// Writes the data store to a csv file specified by vPath
+        /// </summary>
+        /// <param name="vAnalysisDataStore">the data store to serialize</param>
+        /// <param name="vPath">the path to save to </param>
+        public static void WriteFile (AnalysisDataStore vAnalysisDataStore,string vPath)
+        {
+            using (StreamWriter vFileOut = new StreamWriter(vPath))
             {
                 //write the header
                 vFileOut.Write("Timestamp,");
@@ -72,10 +82,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                 }
                 vFileOut.Write("\r\n");
                 //write the body
-                for (int i = 0; i < vAnalysisDataStore.mSerializedList.Count; i++)
+                for (int i = 0; i<vAnalysisDataStore.SerializedList.Count; i++)
                 {
                     vFileOut.Write(vAnalysisDataStore.TimeStamps[i] + ",");
-                    foreach (var vSerializableIterable in vAnalysisDataStore.mSerializedList[i])
+                    foreach (var vSerializableIterable in vAnalysisDataStore.SerializedList[i])
                     {
                         vFileOut.Write(vSerializableIterable.Value+ ",");
                     }
@@ -83,55 +93,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                 }
                 
             }
-             
         }
 
-        public string GetString(AnalysisDataStore vAnalysisDataStore)
-        {
-            //set header 
-            List<StringBuilder> vBuilders = new List<StringBuilder>();
-            StringBuilder vHeaderBuilder = new StringBuilder();
-             vHeaderBuilder.Append("Timestamp, ");
-            
-            foreach (var vKey in vAnalysisDataStore.Storage.Values)
-            { 
-                foreach (var vFieldInfo in vKey)
-                {
-                    var vCustomAttribute = vFieldInfo.Key.GetCustomAttributes(typeof(AnalysisAttribute), true);
-                    foreach (var vAttri in vCustomAttribute)
-                    {
-                        vHeaderBuilder.Append(((AnalysisAttribute)vAttri).AttributeName + ", ");
-                        //vBuilder.Append(AnalysisDataStoreSerialization.CamelCaseToSpaces(vFieldInfo.Key.Name) + ", ");
-                    }
-                   
-                }
-            }
-          
+  
 
-            for (int i = 0; i < vAnalysisDataStore.TimeStamps.Count; i++)
-            {
-                var vNewBuilder = new StringBuilder();
-                vNewBuilder.Append(vAnalysisDataStore.TimeStamps[i]+",");
-                vBuilders.Add(vNewBuilder);
-            }
-            int vIndex = 0;
-
-            foreach (var vList in vAnalysisDataStore.mSerializedList)
-            {
-                var vSb = vBuilders[vIndex];
-                foreach (var vItem in vList)
-                {
-                    vSb.Append(vItem.Value + ", ");
-                }
-                
-                vIndex++;
-            }
-            var vReturn = vHeaderBuilder.ToString()+"\r\n";
-            foreach (var vStringBuilder in vBuilders)
-            {
-                vReturn += vStringBuilder + "\r\n"  ;
-            }
-            return vReturn;
-        }
+       
     }
 }
