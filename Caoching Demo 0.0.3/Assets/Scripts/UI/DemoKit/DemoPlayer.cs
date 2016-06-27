@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.UI.AbstractViews.AbstractPanels;
+﻿using Assets.Scripts.Frames_Recorder.FramesRecording;
+using Assets.Scripts.UI.AbstractViews.AbstractPanels;
 using Assets.Scripts.UI.AbstractViews.Enums;
 
 namespace Assets.Scripts.UI.DemoKit
@@ -32,12 +33,16 @@ namespace Assets.Scripts.UI.DemoKit
         /// <param name="vLines"></param>
         public void InitBodyPlayback(string[] vLines)
         {
-            BodyFramesRecording vTempRecording = new BodyFramesRecording();
+            CsvBodyFramesRecording vTempRecording = new CsvBodyFramesRecording();
             vTempRecording.ExtractRecordingUUIDs(vLines);
             vTempRecording.ExtractRawFramesData(vLines);
-            BodyRecordingsMgr.Instance.AddNewRecording(vLines);
-            
-            DemoBody.PlayRecording(vTempRecording.BodyRecordingGuid);
+            BodyRecordingsMgr.Instance.AddNewRecording(vLines,"Demo recording",false, PlayRecordingCallback);
+
+        }
+
+        private void PlayRecordingCallback(CsvBodyFramesRecording vRecording)
+        {
+            DemoBody.PlayRecording(vRecording.BodyRecordingGuid);
             DemoBody.MBodyFrameThread.PlaybackTask.LoopPlaybackEnabled = false;
         }
 

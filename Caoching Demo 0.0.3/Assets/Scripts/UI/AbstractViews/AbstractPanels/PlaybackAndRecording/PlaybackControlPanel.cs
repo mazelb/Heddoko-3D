@@ -10,6 +10,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Frames_Pipeline;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Layouts;
@@ -505,17 +506,17 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// <summary>
         /// A new recording has been selected
         /// </summary>
-        /// <param name="vNewBodyFramesRecording"></param>
-        public void NewRecordingSelected(BodyFramesRecording vNewBodyFramesRecording)
+        /// <param name="vNewCsvBodyFramesRecording"></param>
+        public void NewRecordingSelected(BodyFramesRecordingBase vNewCsvBodyFramesRecording)
         {
-            if (mBody != null && vNewBodyFramesRecording != null)
+            if (mBody != null && vNewCsvBodyFramesRecording != null)
             {
                 mBody.StopThread();
                 if (mBody.InitialBodyFrame != null)
                 {
                     mBody.View.ResetInitialFrame();
                 }
-                string vRecGuid = vNewBodyFramesRecording.BodyRecordingGuid;
+                string vRecGuid = vNewCsvBodyFramesRecording.BodyRecordingGuid;
                 mBody.PlayRecording(vRecGuid);
                 //update the recording playback task by polling the body
                 StopCoroutine(CaptureRecordingPlaybackTask());

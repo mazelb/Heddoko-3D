@@ -11,6 +11,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Runtime.Serialization;
+using Assets.Scripts.Frames_Pipeline;
 using HeddokoLib.heddokoProtobuff;
 using HeddokoLib.utils;
 using Newtonsoft.Json;
@@ -92,53 +93,62 @@ public class BodyFrame
     {
 
     }
+
+    private static Dictionary<int, int> sErrorCount;
+
+    private void CountError(int vId)
+    {
+        if (sErrorCount == null)
+        {
+            sErrorCount = new Dictionary<int, int>();
+            for (int i = 0; i < 10; i++)
+            {
+                sErrorCount.Add(i,0);
+            }
+        }
+        sErrorCount[vId]++;
+    }
+
+    public static void PrintErrorCount()
+    {
+        string vMsg = "";
+        foreach (var vI in sErrorCount)
+        {
+            vMsg += " index " + vI.Key + " count " + vI.Value+" ,";
+        }
+        UnityEngine.Debug.Log(vMsg);
+    }
+
+    
     /// <summary>
     /// Create a Bodyframe from a protobuf packet
     /// </summary>
     /// <param name="vPacket">The packet</param>
     public BodyFrame(Packet vPacket)
     {
-        Timestamp = vPacket.fullDataFrame.timeStamp;
-       // var vImuDataFrame = vPacket.fullDataFrame.imuDataFrame[0];
-        foreach (var vDataFrame in vPacket.fullDataFrame.imuDataFrame)
+        Timestamp = vPacket.fullDataFrame.timeStamp/1000f;
+         var vDataList = vPacket.fullDataFrame.imuDataFrame;
+        for (int i = 0; i < vDataList.Count; i++)
         {
-            var vSensorId = ImuSensorFromPos((int)vDataFrame.imuId);
+            var vDataFrame = vDataList[i];
+            var vSensorId = ImuSensorFromPos(i);
             Vect4 vVect = new Vect4();
             vVect.x = vDataFrame.quat_x_yaw;
             vVect.y = vDataFrame.quat_y_pitch;
             vVect.z = vDataFrame.quat_z_roll;
             vVect.w = vDataFrame.quat_w;
             FrameData.Add(vSensorId, vVect);
+
+            //if (FrameData.ContainsKey(vSensorId))
+            //{
+            //    CountError(i);
+            //}
+            //else
+            //{
+            //    FrameData.Add(vSensorId, vVect);
+            //}
         }
-        //The packet passed in is a data frame. need to check if the data passed in is in quaternion form or euler
-        //if (vImuDataFrame.Rot_xSpecified)
-        //{
-
-        //    foreach (var vDataFrame in vPacket.fullDataFrame.imuDataFrame)
-        //    {
-        //        var vSensorId = ImuSensorFromPos((int)vDataFrame.imuId);
-        //        Vect4 vVect = new Vect4();
-        //        vVect.x = vDataFrame.Rot_x;
-        //        vVect.y = vDataFrame.Rot_y;
-        //        vVect.z = vDataFrame.Rot_z;
-        //        vVect.w = 0;
-        //        FrameData.Add(vSensorId,vVect);
-        //    }
-
-        //}
-        //else if (vImuDataFrame.quat_wSpecified)
-        //{
-        //    foreach (var vDataFrame in vPacket.fullDataFrame.imuDataFrame)
-        //    {
-        //        var vSensorId = ImuSensorFromPos((int)vDataFrame.imuId);
-        //        Vect4 vVect = new Vect4();
-        //        vVect.x = vDataFrame.quat_x_yaw;
-        //        vVect.y = vDataFrame.quat_y_pitch;
-        //        vVect.z = vDataFrame.quat_z_roll;
-        //        vVect.w = vDataFrame.quat_w;
-        //        FrameData.Add(vSensorId, vVect);
-        //    }
-        //}
+        
     }
     /**
     * ConvertRawFrame(BodyRawFrame rawData)

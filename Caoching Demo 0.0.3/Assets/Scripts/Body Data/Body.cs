@@ -19,7 +19,10 @@ using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Torso;
 using Assets.Scripts.Communication;
 using Assets.Scripts.Communication.Controller;
-using Assets.Scripts.Frames_Pipeline.BodyFrameConversion; 
+using Assets.Scripts.Frames_Pipeline;
+using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
+using HeddokoLib.adt;
 
 /**
 * Body class 
@@ -300,23 +303,23 @@ public class Body
         //first try to get the recording from the recording manager. 
         BodyRecordingsMgr.Instance.TryGetRecordingByUuid(vRecUuid, PlayRecordingCallback);
     }
-
+ 
     /// <summary>
     /// Callback action after a body frames recording has been retrieved
     /// </summary>
-    /// <param name="vBodyFramesRec"></param>
-    private void PlayRecordingCallback(BodyFramesRecording vBodyFramesRec)
+    /// <param name="vBodyFrameRecording"></param>
+    private void PlayRecordingCallback(BodyFramesRecordingBase vBodyFrameRecording)
     {
-        if (vBodyFramesRec != null && vBodyFramesRec.RecordingRawFrames.Count > 0)
+        if (vBodyFrameRecording != null && vBodyFrameRecording.RecordingRawFramesCount > 0)
         {
-            //Setting the first frame as the initial frame
-            BodyFrame vBodyFrame = RawFrameConverter.ConvertRawFrame(vBodyFramesRec.RecordingRawFrames[0]);
+             //Setting the first frame as the initial frame
+            BodyFrame vBodyFrame = RawFrameConverter.ConvertRawFrame(vBodyFrameRecording.GetBodyRawFrameAt(0));
 
             SetInitialFrame(vBodyFrame);
             BodyFrameBuffer vBuffer1 = new BodyFrameBuffer();
 
             // mBodyFrameThread = new BodyFrameThread(bodyFramesRec.RecordingRawFrames, vBuffer1);
-            mBodyFrameThread = new BodyFrameThread(vBodyFramesRec, vBuffer1);
+            mBodyFrameThread = new BodyFrameThread(vBodyFrameRecording, vBuffer1);
             View.Init(this, vBuffer1);
             View.StartUpdating = true;
             mBodyFrameThread.Start();

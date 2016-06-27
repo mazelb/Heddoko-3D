@@ -8,6 +8,7 @@
 
 using System;
 using System.IO;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.Utils;
 using UnityEngine;
@@ -24,10 +25,10 @@ namespace Assets.Scripts.Tests
     {
         public Rect mRect;
         private static SingleRecordingSelection sInstance;
-        private Action<BodyFramesRecording> mRecordingLoadedCallback;
+        private Action<BodyFramesRecordingBase> mRecordingLoadedCallback;
         public StartLoading StartLoadingEvent;
         public FinishLoading FinishLoadingEvent;
-
+        public static Action<BodyFrame[]> ReadProtoFileAction;  
         //Panel that will cover other ui elements, thereby dissallowing their controls
         public GameObject DisablerPanel;
 
@@ -53,13 +54,13 @@ namespace Assets.Scripts.Tests
         /// <summary>
         /// opens a File browser dialog to select a recording with an optional callback after file is completed loading
         /// </summary>
-        public void OpenFileBrowseDialog(Action<BodyFramesRecording> vCallback = null)
+        public void OpenFileBrowseDialog(Action<BodyFramesRecordingBase> vCallback = null)
         {
             SetTransform();
             DisablerPanel.SetActive(true);
             mRecordingLoadedCallback = vCallback;
             //initialize the browser settings
-            UniFileBrowser.use.SetFileExtensions(new[] { "csv", "dat" });
+            UniFileBrowser.use.SetFileExtensions(new[] { "csv", "dat" , "hsm"});
             UniFileBrowser.use.allowMultiSelect = false;
             UniFileBrowser.use.showVolumes = true;
             UniFileBrowser.use.OpenFileWindow(SelectRecordingFile);
@@ -85,7 +86,7 @@ namespace Assets.Scripts.Tests
         /// once loading is completed, this callback is reached. Note: invokes the member callback.
         /// </summary>
         /// <param name="vRecording"></param>
-        private void BodyFramesRecordingCallback(BodyFramesRecording vRecording)
+        private void BodyFramesRecordingCallback(BodyFramesRecordingBase vRecording)
         {
             if (mRecordingLoadedCallback != null)
             {

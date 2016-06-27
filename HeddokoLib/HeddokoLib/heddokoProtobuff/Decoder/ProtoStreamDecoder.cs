@@ -7,6 +7,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using HeddokoLib.adt;
@@ -102,8 +103,47 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
             ThreadPool.QueueUserWorkItem(WorkerFunc, vStreamCompletionAction);
         }
 
-       
 
+        /// <summary>
+        /// Returns a list of raw packets from a file stream
+        /// </summary>
+        /// <param name="vStream"></param>
+        /// <param name="vBufferSize"></param>
+        /// <returns></returns>
+        public static List<RawPacket> StartPacketizingFromFileStream(FileStream vStream, int vBufferSize)
+        {
+            List<RawPacket> vPacketList = new List<RawPacket>();
+            byte[] vByteArrayBuffer = new byte[vBufferSize];
+            RawPacket vPacket = new RawPacket();
+            while (vStream.CanRead)
+            {
+                 
+                int vNumberOfByteRead = vStream.Read(vByteArrayBuffer, 0, vBufferSize);
+                if (vNumberOfByteRead == 0)
+                {
+                    break;
+                }
+                for (int vI = 0; vI < vNumberOfByteRead; vI++)
+                {
+                    byte vByte = vByteArrayBuffer[vI];
+                    //the byte is 0, this means that the current array buffer has received an incomplete amount of bytes
+                    PacketStatus vPacketStatus = vPacket.ProcessByte(vByte);
+                    if (vPacketStatus == PacketStatus.PacketComplete)
+                    {
+                        RawPacket vPacketCopy = new RawPacket(vPacket);
+                        vPacketList.Add(vPacketCopy);
+                        vPacket.ResetPacket();
+                    }
+                    else if (vPacketStatus == PacketStatus.PacketError)
+                    {
+                        vPacket.ResetPacket();
+                    }
+                }
+
+            }
+            vStream.Close();
+            return vPacketList;
+        }
         /// <summary>
         /// The working function whose duty is to decode a binary stream into a protobuf packet. 
         /// </summary> 

@@ -10,7 +10,8 @@ using System;
 using System.Collections.Generic;
 using Assets.Scripts.Communication;
 using Assets.Scripts.Frames_Pipeline;
-using Assets.Scripts.Frames_Pipeline.BodyFrameConversion; 
+using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 using HeddokoLib.adt;
 using HeddokoLib.networking;
 using HeddokoLib.utils;
@@ -137,13 +138,19 @@ public class BodyFrameThread : ThreadedJob
         this.mBuffer = vBuffer;
         mDataSourceType = SourceDataType.Recording;
     }
-    public BodyFrameThread(BodyFramesRecording vFrameRecording, BodyFrameBuffer vBuffer)
+    public BodyFrameThread(BodyFramesRecordingBase vFrameRecording, BodyFrameBuffer vBuffer)
     {
         this.mBuffer = vBuffer;
         mDataSourceType = SourceDataType.Recording;
         mPlaybackTask = new RecordingPlaybackTask(vFrameRecording, BodyFrameBuffer);
     }
 
+    public BodyFrameThread(List<BodyFrame> vFrames, BodyFrameBuffer vBuffer)
+    {
+        this.mBuffer = vBuffer;
+        mDataSourceType = SourceDataType.Recording;
+        //mPlaybackTask = new RecordingPlaybackTask(vFrames, BodyFrameBuffer);
+    }
     /**
     * @brief Default constructor
     */
@@ -290,6 +297,8 @@ public class BodyFrameThread : ThreadedJob
     {
         mPlaybackTask.Play();
     }
+
+
 
     /**
     * BrainFrameTask()

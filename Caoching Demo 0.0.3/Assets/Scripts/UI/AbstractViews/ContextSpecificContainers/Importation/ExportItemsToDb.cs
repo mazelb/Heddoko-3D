@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO; 
 using System.Threading;
 using Assets.Scripts.Communication.DatabaseConnectionPipe;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.AbstractViews.SelectableGridList;
 using Assets.Scripts.UI.AbstractViews.SelectableGridList.Descriptors;
@@ -214,7 +215,7 @@ namespace Assets.Scripts.UI.AbstractViews.ContextSpecificContainers.Importation
         /// callback performed after a recording file has been read
         /// </summary>
         /// <param name="vRecording">A recording and it's information</param>
-        private void RecordingAddCallback(BodyFramesRecording vRecording)
+        private void RecordingAddCallback(BodyFramesRecordingBase vRecording)
         {
             //remove the first item from the stack
             RecordingItemDescriptor vCurrItemDescriptor = mItemStack.Pop();
@@ -322,7 +323,7 @@ namespace Assets.Scripts.UI.AbstractViews.ContextSpecificContainers.Importation
 
         public struct ImportTaskStructure
         {
-            public BodyFramesRecording Recording;
+            public BodyFramesRecordingBase Recording;
             public RecordingItemDescriptor ItemDescriptor;
             public int CurrentProgressIndex;
 
@@ -330,7 +331,7 @@ namespace Assets.Scripts.UI.AbstractViews.ContextSpecificContainers.Importation
             {
                 get
                 {
-                    return Recording.RecordingRawFrames.Count;
+                    return Recording.RecordingRawFramesCount;
                 }
             }
         }

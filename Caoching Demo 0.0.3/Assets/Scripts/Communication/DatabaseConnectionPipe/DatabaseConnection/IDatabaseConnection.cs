@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.AbstractViews.SelectableGridList.Descriptors;
 using Assets.Scripts.UI.Tagging;
 
@@ -52,7 +53,7 @@ namespace Assets.Scripts.Communication.DatabaseConnectionPipe.DatabaseConnection
         /// </summary>
         /// <param name="vRecording"></param>
         /// <returns></returns>
-        bool CreateRecording(BodyFramesRecording vRecording);
+        bool CreateRecording(BodyFramesRecordingBase vRecording);
 
         /// <summary>
         /// Creates a recording entry on the database from the given parameters. Invokes a callback with regards to progress
@@ -61,7 +62,7 @@ namespace Assets.Scripts.Communication.DatabaseConnectionPipe.DatabaseConnection
         /// <param name="vDescriptor">the recording's description</param>
         /// <param name="vTotalImportProgress">callback to update progress</param>
         /// <returns></returns>
-        bool CreateRecording(BodyFramesRecording vRecording, RecordingItemDescriptor vDescriptor,
+        bool CreateRecording(BodyFramesRecordingBase vRecording, RecordingItemDescriptor vDescriptor,
             Action<int> vTotalImportProgress);
 
         /// <summary>
@@ -69,7 +70,7 @@ namespace Assets.Scripts.Communication.DatabaseConnectionPipe.DatabaseConnection
         /// </summary>
         /// <param name="vRecordingId">the recording id</param>
         /// <returns></returns>
-        BodyFramesRecording GetRawRecording(string vRecordingId);
+        BodyFramesRecordingBase GetRawRecording(string vRecordingId);
 
         Tag GetTagById(string vUid);
         void AddNewTag(Tag vTag);
@@ -87,7 +88,7 @@ namespace Assets.Scripts.Communication.DatabaseConnectionPipe.DatabaseConnection
         /// </summary>
         /// <param name="vRec">the recording to add a tag to</param>
         /// <param name="vTag">the tag to attach</param>
-        void AddTagToRecording(BodyFramesRecording vRec, Tag vTag);
+        void AddTagToRecording(BodyFramesRecordingBase vRec, Tag vTag);
 
         /// <summary>
         /// Loads all tags from the database. 

@@ -12,6 +12,7 @@ using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.Communication.Controller;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.Loading;
 using Assets.Scripts.UI.Metrics; 
 using UnityEngine;
@@ -56,7 +57,7 @@ namespace Assets.Scripts.UI.MainMenu
         public Button[] TPoseButtons;
 
         public List<IResettableMetricView> ResettableViews = new List<IResettableMetricView>(4);
-        private Dictionary<string, BodyFramesRecording> mRecordings = new Dictionary<string, BodyFramesRecording>(10);
+        private Dictionary<string, BodyFramesRecordingBase> mRecordings = new Dictionary<string, BodyFramesRecordingBase>(10);
 
         public BodyPlaybackState CurrentState { get { return mCurrentState; } }
         /// <summary>
@@ -426,7 +427,7 @@ namespace Assets.Scripts.UI.MainMenu
                 else
                 {
                     LoadingBoard.StopLoadingAnimation();
-                    BodyFramesRecording vRecording = mRecordings[mSelectedRecordingPath];
+                    BodyFramesRecordingBase vRecording = mRecordings[mSelectedRecordingPath];
                     CurrentBodyInPlay = BodiesManager.Instance.GetBodyFromRecordingUUID(vRecording.BodyRecordingGuid);
                     mBodyRecordingUUID = vRecording.BodyRecordingGuid;
                     ChangeState(BodyPlaybackState.PlayingRecording);
@@ -457,7 +458,7 @@ namespace Assets.Scripts.UI.MainMenu
         /// After a request has been initiated, the callback function is called on completion
         /// </summary>
 
-        private void RequestRecordingCallback(BodyFramesRecording vRecording)
+        private void RequestRecordingCallback(BodyFramesRecordingBase vRecording)
         {
             if (vRecording != null)
             {

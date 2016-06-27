@@ -8,6 +8,7 @@
 using UnityEngine; 
 using System.Collections.Generic;
 using System.Threading;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.Utils;
 
 /**
@@ -107,7 +108,7 @@ public sealed class BodiesManager
     public Body GetBodyFromRecordingUUID(string vRecUUID)
     {
         //Find the recording first
-        BodyFramesRecording vTempRecording = BodyRecordingsMgr.Instance.GetRecordingByUuid(vRecUUID);
+        BodyFramesRecordingBase vTempRecording = BodyRecordingsMgr.Instance.GetRecordingByUuid(vRecUUID) ;
         if(vTempRecording != null)
         {
             //Find the related body

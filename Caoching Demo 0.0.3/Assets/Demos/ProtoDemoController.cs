@@ -7,6 +7,7 @@
 // */
 
 using System;
+using System.IO;
 using Assets.Scripts.Communication;
 using Assets.Scripts.UI.RecordingLoading;
 using HeddokoLib.adt;
@@ -45,6 +46,26 @@ namespace Assets.Demos
                 FrameRouter.StopIfWorking();
             }
             var vStream = DemoConnectionController.Port.BaseStream;
+            mProtoStreamDecoder = new ProtoStreamDecoder(vStream, 4096);
+            mProtoStreamDecoder.StartPacketizeStream(OnStreamComplete, ProtoStreamDecoderExceptionHandler);
+            CircularQueue<RawPacket> mRawPacketBuffer = mProtoStreamDecoder.OutputBuffer;
+            BodyFrameBuffer vbodyframebuffer = new BodyFrameBuffer(4096);
+            FrameRouter = new ProtobuffFrameRouter(mRawPacketBuffer, vbodyframebuffer);
+        }
+
+        void BridgeStreams(Stream vStream)
+        {
+            if (mProtoStreamDecoder != null)
+            {
+                mProtoStreamDecoder.Dispose();
+            }
+
+
+            if (FrameRouter != null)
+            {
+                FrameRouter.StopIfWorking();
+            }
+          
             mProtoStreamDecoder = new ProtoStreamDecoder(vStream, 4096);
             mProtoStreamDecoder.StartPacketizeStream(OnStreamComplete, ProtoStreamDecoderExceptionHandler);
             CircularQueue<RawPacket> mRawPacketBuffer = mProtoStreamDecoder.OutputBuffer;
