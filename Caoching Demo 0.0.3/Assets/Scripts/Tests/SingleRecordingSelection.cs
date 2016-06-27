@@ -28,7 +28,7 @@ namespace Assets.Scripts.Tests
         private Action<BodyFramesRecordingBase> mRecordingLoadedCallback;
         public StartLoading StartLoadingEvent;
         public FinishLoading FinishLoadingEvent;
-        public static Action<BodyFrame[]> ReadProtoFileAction;  
+        public static Action<BodyFrame[]> ReadProtoFileAction;
         //Panel that will cover other ui elements, thereby dissallowing their controls
         public GameObject DisablerPanel;
 
@@ -59,8 +59,12 @@ namespace Assets.Scripts.Tests
             SetTransform();
             DisablerPanel.SetActive(true);
             mRecordingLoadedCallback = vCallback;
+            var vPaths = new[] { "dat", "hsm" };
             //initialize the browser settings
-            UniFileBrowser.use.SetFileExtensions(new[] { "csv", "dat" , "hsm"});
+#if DEBUG  
+            vPaths = new[] { "csv", "dat", "hsm" };
+#endif
+            UniFileBrowser.use.SetFileExtensions(vPaths);
             UniFileBrowser.use.allowMultiSelect = false;
             UniFileBrowser.use.showVolumes = true;
             UniFileBrowser.use.OpenFileWindow(SelectRecordingFile);
