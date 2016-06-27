@@ -97,8 +97,7 @@ namespace Assets.Scripts.Licensing.Controller
         {
             string vMsg =
                 "The provided license is inactive. Please contact your license administator for further support.";
-            Debug.Log("Inactive license");
-            Notify.Template("FadingFadoutNotifyTemplate")
+             Notify.Template("FadingFadoutNotifyTemplate")
                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
         }
 
@@ -113,8 +112,7 @@ namespace Assets.Scripts.Licensing.Controller
                   "The provided license has expired. Please contact your license administator for further support.";
             Notify.Template("FadingFadoutNotifyTemplate")
                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
-            Debug.Log("expired license");
-
+ 
         }/// <summary>
          /// Handler for deleted license event
          /// </summary>
@@ -125,7 +123,6 @@ namespace Assets.Scripts.Licensing.Controller
                  "We could not find a license associated with your account. Please contact your license administator for further support.";
             Notify.Template("FadingFadoutNotifyTemplate")
                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
-            Debug.Log("deleted license");
-        }
+         }
     }
 }
