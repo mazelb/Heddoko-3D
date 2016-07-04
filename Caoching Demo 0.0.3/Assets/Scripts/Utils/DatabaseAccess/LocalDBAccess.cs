@@ -44,16 +44,35 @@ namespace Assets.Scripts.Utils.DatabaseAccess
                 }
                 else
                 {
-                    ModalPanel.SingleChoice("Could not locate the settings database. Please restart the application" +
-                                            " through the launcher.", Application.Quit);
-                    LoadingBoard.StopLoadingAnimation();
-                    return false;
+                    //create the file
+                    SqliteConnection.CreateFile(vFilePath);
+                    mDbConnection = new SqliteConnection("URI=file:" + vFilePath);
+                    mDbConnection.Open();
+                   CreateTables();
+                    return true;
                 }
             }
             return false;
 
         }
 
+        /// <summary>
+        /// Create necessary tables 
+        /// </summary>
+        private void CreateTables()
+        {
+            string vStringCommand =  "CREATE TABLE Settings (resWidth int,resHeight int,recordingsPath varchar(255),preferedConnName varchar(255),launchStrt int)";
+            SqliteCommand vCommand = new SqliteCommand(vStringCommand,mDbConnection);
+            vCommand.ExecuteNonQuery();
+            int vResWidth = Screen.width;
+            int vResHeight = Screen.height;
+            string vPreferedFolder = ApplicationSettings.PreferedRecordingsFolder;
+            string vInsertIntoDbCommand =
+                "INSERT INTO Settings(resWidth,resHeight,recordingsPath,preferedConnName,launchStrt) " +
+                "VALUES ("+vResWidth+","+vResHeight+",'"+vPreferedFolder+"',NULL,NULL);";
+            SqliteCommand vInsertionCommand = new SqliteCommand(vInsertIntoDbCommand,mDbConnection);
+            vInsertionCommand.ExecuteNonQuery();
+        }
 
         /// <summary>
         /// Get Brainpack results found in the launcher
@@ -157,8 +176,7 @@ namespace Assets.Scripts.Utils.DatabaseAccess
                     object vResWidthCheck = vDataReader.GetInt32(0);
                     object vResHeightCheck = vDataReader.GetInt32(1);
                     object vRecStrCheck = vDataReader.GetString(2);
-                    object vPrfConnCheck = vDataReader.GetString(3);
-                    object vLaunchStart = vDataReader.GetBoolean(4);
+                  
 
                     if (vResWidthCheck is int)
                     {
@@ -175,29 +193,23 @@ namespace Assets.Scripts.Utils.DatabaseAccess
                         ApplicationSettings.PreferedRecordingsFolder = (string)vRecStrCheck;
                     }
 
-                    if (vPrfConnCheck != null && vPrfConnCheck is string)
-                    {
-                        string vSettings = (string)vPrfConnCheck;
-                        if (vSettings.Length == 0)
-                        {
-                            ApplicationSettings.PreferedConnName = Application.dataPath + "\\DemoRecordings";
-                        }
-                        ApplicationSettings.PreferedConnName = vSettings;
-                    }
-
-                    if (vPrfConnCheck != null && vLaunchStart is bool)
-                    {
-                        ApplicationSettings.AppLaunchedSafely = (bool)vLaunchStart;
-                    }
-
-                    //break after the first read
+                 //break after first read
                     break;
                 }
                 mDbConnection.Close();
-                return true;
+           
             }
-            return false;
+            return true;
         }
 
+        /// <summary>
+        /// Disposes the database connection
+        /// </summary>
+        public void Dispose()
+        {
+            Debug.Log("disposing");
+            mDbConnection.Close();
+           mDbConnection.Dispose();
+        }
     }
 }
