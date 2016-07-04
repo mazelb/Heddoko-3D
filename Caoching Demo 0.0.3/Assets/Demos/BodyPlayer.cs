@@ -246,7 +246,8 @@ namespace Assets.Demos
             {
                 Destroy(vFadeInFadeOutEffectToDestroy);
             }
-            PlayButton.image.sprite = mPlayButtonOriginalIcon; //reset the play button back to its original sprite
+            PlayButton.image.sprite = mPlayButtonOriginalIcon;
+            //reset the play button back to its original sprite
             PlayButton.GetComponentInChildren<Text>().text = "Play";
             PlayButton.interactable = true;
             ChangeState(BodyPlaybackState.Waiting);

@@ -34,7 +34,7 @@ namespace Assets.Scripts.Utils
         public static OutterThreadToUnityThreadIntermediary Instance
         {
             get
-            {
+            { 
                 if (sInstance == null)
                 {
                     sInstance = FindObjectOfType<OutterThreadToUnityThreadIntermediary>();
@@ -44,6 +44,8 @@ namespace Assets.Scripts.Utils
                         vGo.name = "Non unity thread to unity thread helper";
                         sInstance = vGo.AddComponent<OutterThreadToUnityThreadIntermediary>();
                     }
+                    DontDestroyOnLoad(sInstance.gameObject);
+                    
                     sInstance.Init();
                 }
                 return sInstance;
@@ -58,7 +60,7 @@ namespace Assets.Scripts.Utils
 
         void Awake()
         {
-            Init();
+            Instance.Init();
         }
 
         /// <summary>

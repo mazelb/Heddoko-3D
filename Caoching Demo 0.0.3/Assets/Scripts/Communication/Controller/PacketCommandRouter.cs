@@ -117,12 +117,28 @@ namespace Assets.Scripts.Communication.Controller
             mCommand.Register(HeddokoCommands.EnableSleepTimerResp, SleepTimerEnabled);
             mCommand.Register(HeddokoCommands.DisableSleepTimerResp, SleepTimerDisabled);
             mCommand.Register("TimeoutException", TimeoutExcCallback);
+            mCommand.Register("NetworkErrorException", NetworkExceptionCallback);
             mCommand.Register(HeddokoCommands.ReturnBrainpackResults, BrainpackResultsReturned);
             mCommand.Register(HeddokoCommands.GetBrainpackResults, SendHighPriorityMessage);
-
+            mCommand.Register(HeddokoCommands.SendCommand, SendMediumPriorityMessage);
         }
 
-      
+        private void NetworkExceptionCallback(object vVsender, object vVargs)
+        {
+            HeddokoPacket vHeddokoPacket = (HeddokoPacket)vVargs;
+
+            string vResult = HeddokoPacket.Unwrap(vHeddokoPacket.Payload);
+            //clear out the buffer
+            if (FrameThread != null && FrameThread.InboundSuitBuffer != null)
+            {
+                FrameThread.InboundSuitBuffer.Clear();
+            }
+            OutterThreadToUnityThreadIntermediary.EnqueueOverwrittableActionInUnity("NetworkExceptionHandler", () =>
+            {
+                BrainpackConnectionController.Instance.NetworkExceptionHandler(vResult);
+            });
+        }
+
 
         /// <summary>
         /// Brainpack results returned from service
@@ -247,11 +263,11 @@ namespace Assets.Scripts.Communication.Controller
         /// <param name="vArgs"></param>
         private void ConnectionAcknowledged(object vSender, object vArgs)
         {
-            //todo: send message to interested parties that need to know if the brainpack connection is finished
+            //todo: send message to interested parties that need to know if the batterypack connection is finished
         }
         /**
        * BrainpackListRxRequest(object vSender, object vArgs) 
-       * @brief Server request responded with a list of currently available brainpack device
+       * @brief Server request responded with a list of currently available batterypack device
        * @param  object vSender: the sender. object vArgs: the requested list of devices
        * @ note: please note if no devices are found, then a string of length zero is sent
        * Also note that this is a todo in case we ever need to monitor multiple suits in any given one instance
@@ -308,7 +324,7 @@ namespace Assets.Scripts.Communication.Controller
             {
                 FrameThread.InboundSuitBuffer.Enqueue(vHeddokoPacket);
             }
-            DebugLogger.Instance.LogMessage(LogType.BrainpackFrame, "Brainpack frame rx:"+ vPayload);
+            DebugLogger.Instance.LogMessage(LogType.BrainpackFrame, "Batterypack frame rx:"+ vPayload);
            
         }
 
@@ -384,32 +400,17 @@ namespace Assets.Scripts.Communication.Controller
                 }
             };
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vAction);
-            /*
-                        Action vAction = () =>
-                        {
-                            if (BrainpackConnectionController.BrainpackStatusResponse != null)
-                            {
-                                BrainpackConnectionController.BrainpackStatusResponse.Invoke(vPayload);
-                            }
-                        };
-                        OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vAction);*/
+           
         }
 
         /// <summary>
-        /// response from the brainpack
+        /// response from the Batterypack
         /// </summary>
         /// <param name="vVsender"></param>
         /// <param name="vArgs"></param>
         private void SetBrainpackTimeResp(object vVsender, object vArgs)
         {
-            /*  Action vAction = () =>
-              {
-                  if (BrainpackConnectionController.BrainpackTimeSetResp != null)
-                  {
-                      BrainpackConnectionController.BrainpackTimeSetResp.Invoke();
-                  }
-              };
-              OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vAction);*/
+             //todo
         }
 
         /// <summary>
@@ -419,14 +420,7 @@ namespace Assets.Scripts.Communication.Controller
         /// <param name="vArgs"></param>
         private void ResetBrainpackResp(object vVsender, object vArgs)
         {
-            /*  Action vAction = () =>
-              {
-                  if (BrainpackConnectionController.ResetBrainpackResp != null)
-                  {
-                      BrainpackConnectionController.ResetBrainpackResp.Invoke();
-                  }
-              };
-              OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vAction);*/
+            //todo 
         }
 
         /// <summary>
@@ -436,11 +430,7 @@ namespace Assets.Scripts.Communication.Controller
         /// <param name="vVargs"></param>
         private void ShutdownBrainpackResp(object vVsender, object vVargs)
         {
-            /* Action vAction = () =>
-             {
-                 BrainpackConnectionController.BrainpackShutdown.Invoke();
-             };
-             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vAction);*/
+            //todo
         }
 
 

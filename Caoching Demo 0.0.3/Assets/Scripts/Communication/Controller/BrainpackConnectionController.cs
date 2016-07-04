@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using Assets.Scripts.Communication.Communicators;
 using Assets.Scripts.Communication.View;
 using Assets.Scripts.Interfaces;
+using Assets.Scripts.UI.Loading;
 using Assets.Scripts.UI.MainMenu.View;
 using HeddokoLib.networking;
 using HeddokoLib.utils;
@@ -53,6 +54,8 @@ namespace Assets.Scripts.Communication.Controller
         private IBrainpackConnectionView mView;
         public float StateReqTimer { get; set; }
 
+
+        
         /// <summary>
         /// returns the current state of the controller
         /// </summary>
@@ -169,6 +172,11 @@ namespace Assets.Scripts.Communication.Controller
 
         }
 
+        public override void SendCommand(string vArgs)
+        {
+            HeddokoPacket vHeddokoPacket = new HeddokoPacket(HeddokoCommands.SendCommand, vArgs); 
+            PacketCommandRouter.Instance.Process(this, vHeddokoPacket);
+        }
         public override void DisconnectBrainpack()
         {
             HeddokoPacket vHeddokoPacket = new HeddokoPacket(HeddokoCommands.DisconnectBrainpack, "");
@@ -362,11 +370,15 @@ namespace Assets.Scripts.Communication.Controller
         /// </summary>
         public void Awake()
         {
+            Instance.Initialize();
+        }
+
+        public void Initialize()
+        {
             BrainpackShutdown += () =>
             {
                 ChangeCurrentState(BrainpackConnectionState.Disconnected);
             };
-
         }
 
         void OnEnable()
@@ -564,6 +576,7 @@ namespace Assets.Scripts.Communication.Controller
         /// </summary>
         public override void TimeoutHandler()
         {
+            DisablingProgressBar.Instance.StopAnimation();
             var message =
                 "Connection to the brainpack service timedout.You can try to connect again or restart the brainpack service";
             Notify.Template("FadingNotifyTemplate")
@@ -657,5 +670,14 @@ namespace Assets.Scripts.Communication.Controller
         }
 
 
+        public void NetworkExceptionHandler(string vResult)
+        {
+            DisablingProgressBar.Instance.StopAnimation();
+            var vMessage =vResult;
+            Notify.Template("FadingNotifyTemplate")
+                .Show(vMessage, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
+            Reset();
+            ChangeCurrentState(BrainpackConnectionState.Disconnected);
+        }
     }
 }

@@ -25,4 +25,3 @@ E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\bin\Debug\protobuf-net.pdb
 E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\bin\Debug\protobuf-net.xml
 E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.dll
 E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.pdb
-E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.csprojResolveAssemblyReference.cache

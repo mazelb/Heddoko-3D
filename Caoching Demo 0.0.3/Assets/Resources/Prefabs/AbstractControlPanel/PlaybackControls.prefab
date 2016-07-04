@@ -2818,6 +2818,244 @@ MonoBehaviour:
   AddSegmentButton: {fileID: 11498316}
   ClearAllSegmentButton: {fileID: 11459402}
   ConvertAll: {fileID: 11407252}
+  mPlaceholderBody:
+    BodyGuid: 
+    SuitGuid: 
+    BodyType: 0
+    LeftArmAnalysis:
+      DeltaTime: 0
+      SegmentType: 0
+      mLastTimeCalled: 0
+      <UpArTransform>k__BackingField: {fileID: 0}
+      <LoArTransform>k__BackingField: {fileID: 0}
+      <ReferenceVector>k__BackingField: {x: 0, y: 0, z: 0}
+      <TorsoAnalysisSegment>k__BackingField:
+        DeltaTime: 0
+        SegmentType: 0
+        mLastTimeCalled: 0
+        AngleTorsoFlexion: 0
+        AngleTorsoLateral: 0
+        AngleTorsoRotation: 0
+        TorsoTransform: {fileID: 0}
+        HipGlobalTransform: {fileID: 0}
+        HipTransform: {fileID: 0}
+        KneeTransform: {fileID: 0}
+        SignedTorsoFlexion: 0
+        AngularAccelerationTorsoFlexion: 0
+        AngularVelocityTorsoFlexion: 0
+        AngularAccelerationTorsoLateral: 0
+        AngularVelocityTorsoLateral: 0
+        AngularAccelerationTorsoRotation: 0
+        AngularVelocityTorsoRotation: 0
+        AngleIntegrationTurns: 0
+        AngleIntegrationFlips: 0
+        NumberOfTurns: 0
+        NumberOfFlips: 0
+      AngleElbowFlexion: 0
+      SignedAngleElbowFlexion: 0
+      AngleElbowPronation: 0
+      SignedAngleElbowAdduction: 0
+      SignedAngleShoulderFlexion: 0
+      AngleShoulderFlexion: 0
+      AngleShoulderVertAbduction: 0
+      AngleShoulderHorAbduction: 0
+      AngleShoulderRotation: 0
+      AngularVelocityElbowFlexion: 0
+      PeakAngularVelocityElbowFlexion: 0
+      AngularAccelerationElbowFlexion: 0
+      AngularVelocityPronation: 0
+      AngularAccelerationElbowPronation: 0
+      AngularVelocityShoulderFlexion: 0
+      AngularAccelerationShoulderFlexion: 0
+      AngularVelocityShoulderVertAbduction: 0
+      AngularAccelerationShoulderVertAbduction: 0
+      AngularVelocityShoulderHorAbduction: 0
+      AngularAccelerationShoulderHorAbduction: 0
+      AngularVelocityShoulderRotation: 0
+      AngularAccelerationShoulderRotation: 0
+    RightArmAnalysis:
+      DeltaTime: 0
+      SegmentType: 0
+      mLastTimeCalled: 0
+      <UpArTransform>k__BackingField: {fileID: 0}
+      <LoArTransform>k__BackingField: {fileID: 0}
+      <ReferenceVector>k__BackingField: {x: 0, y: 0, z: 0}
+      <TorsoAnalysisSegment>k__BackingField:
+        DeltaTime: 0
+        SegmentType: 0
+        mLastTimeCalled: 0
+        AngleTorsoFlexion: 0
+        AngleTorsoLateral: 0
+        AngleTorsoRotation: 0
+        TorsoTransform: {fileID: 0}
+        HipGlobalTransform: {fileID: 0}
+        HipTransform: {fileID: 0}
+        KneeTransform: {fileID: 0}
+        SignedTorsoFlexion: 0
+        AngularAccelerationTorsoFlexion: 0
+        AngularVelocityTorsoFlexion: 0
+        AngularAccelerationTorsoLateral: 0
+        AngularVelocityTorsoLateral: 0
+        AngularAccelerationTorsoRotation: 0
+        AngularVelocityTorsoRotation: 0
+        AngleIntegrationTurns: 0
+        AngleIntegrationFlips: 0
+        NumberOfTurns: 0
+        NumberOfFlips: 0
+      AngleElbowFlexion: 0
+      SignedAngleElbowFlexion: 0
+      SignedAngleElbowAdduction: 0
+      AngleElbowPronation: 0
+      SignedAngleShoulderFlexion: 0
+      AngleShoulderFlexion: 0
+      AngleShoulderVertAbduction: 0
+      AngleShoulderHorAbduction: 0
+      AngleShoulderRotation: 0
+      AngleShoulderReference: 0
+      AngleShoulderReferenceXY: 0
+      AngleShoulderReferenceXZ: 0
+      AngleShoulderReferenceYZ: 0
+      AngularVelocityElbowFlexion: 0
+      PeakAngularVelocityElbowFlexion: 0
+      AngularAccelerationElbowFlexion: 0
+      AngularVelocityPronation: 0
+      AngularAccelerationElbowPronation: 0
+      AngularVelocityShoulderFlexion: 0
+      AngularAccelerationShoulderFlexion: 0
+      AngularVelocityShoulderVertAbduction: 0
+      AngularAccelerationShoulderVertAbduction: 0
+      AngularVelocityShoulderHorAbduction: 0
+      AngularAccelerationShoulderHorAbduction: 0
+      AngularVelocityShoulderRotation: 0
+      AngularAccelerationShoulderRotation: 0
+    LeftLegAnalysis:
+      DeltaTime: 0
+      SegmentType: 0
+      mLastTimeCalled: 0
+      RightLegStride: {x: 0, y: 0, z: 0}
+      LeftLegStride: {x: 0, y: 0, z: 0}
+      <ThighTransform>k__BackingField: {fileID: 0}
+      <KneeTransform>k__BackingField: {fileID: 0}
+      <TorsoAnalysisSegment>k__BackingField:
+        DeltaTime: 0
+        SegmentType: 0
+        mLastTimeCalled: 0
+        AngleTorsoFlexion: 0
+        AngleTorsoLateral: 0
+        AngleTorsoRotation: 0
+        TorsoTransform: {fileID: 0}
+        HipGlobalTransform: {fileID: 0}
+        HipTransform: {fileID: 0}
+        KneeTransform: {fileID: 0}
+        SignedTorsoFlexion: 0
+        AngularAccelerationTorsoFlexion: 0
+        AngularVelocityTorsoFlexion: 0
+        AngularAccelerationTorsoLateral: 0
+        AngularVelocityTorsoLateral: 0
+        AngularAccelerationTorsoRotation: 0
+        AngularVelocityTorsoRotation: 0
+        AngleIntegrationTurns: 0
+        AngleIntegrationFlips: 0
+        NumberOfTurns: 0
+        NumberOfFlips: 0
+      AngleKneeFlexion: 0
+      AngleKneeRotation: 0
+      UseGlobalReference: 0
+      AngleHipFlexion: 0
+      AngleHipAbduction: 0
+      AngleHipRotation: 0
+      AngularVelocityKneeFlexion: 0
+      AngularAccelerationKneeFlexion: 0
+      AngularVelocityKneeRotation: 0
+      AngularAccelerationKneeRotation: 0
+      AngularVelocityHipFlexion: 0
+      AngularAccelerationHipFlexion: 0
+      AngularVelocityHipAbduction: 0
+      AngularAccelerationHipAbduction: 0
+      AngularVelocityHipRotation: 0
+      AngularAccelerationHipRotation: 0
+      NumberofSquats: 0
+      AngleSum: 0
+      mStartCountingSquats: 1
+      LegHeight: 0
+      mInitThighHeight: 0.475
+      mInitTibiaHeight: 0.475
+    RightLegAnalysis:
+      DeltaTime: 0
+      SegmentType: 0
+      mLastTimeCalled: 0
+      RightLegStride: {x: 0, y: 0, z: 0}
+      LeftLegStride: {x: 0, y: 0, z: 0}
+      <ThighTransform>k__BackingField: {fileID: 0}
+      <KneeTransform>k__BackingField: {fileID: 0}
+      <TorsoAnalysisSegment>k__BackingField:
+        DeltaTime: 0
+        SegmentType: 0
+        mLastTimeCalled: 0
+        AngleTorsoFlexion: 0
+        AngleTorsoLateral: 0
+        AngleTorsoRotation: 0
+        TorsoTransform: {fileID: 0}
+        HipGlobalTransform: {fileID: 0}
+        HipTransform: {fileID: 0}
+        KneeTransform: {fileID: 0}
+        SignedTorsoFlexion: 0
+        AngularAccelerationTorsoFlexion: 0
+        AngularVelocityTorsoFlexion: 0
+        AngularAccelerationTorsoLateral: 0
+        AngularVelocityTorsoLateral: 0
+        AngularAccelerationTorsoRotation: 0
+        AngularVelocityTorsoRotation: 0
+        AngleIntegrationTurns: 0
+        AngleIntegrationFlips: 0
+        NumberOfTurns: 0
+        NumberOfFlips: 0
+      AngleKneeFlexion: 0
+      AngleKneeRotation: 0
+      UseGlobalReference: 0
+      AngleHipFlexion: 0
+      AngleHipAbduction: 0
+      AngleHipRotation: 0
+      AngularVelocityKneeFlexion: 0
+      AngularAccelerationKneeFlexion: 0
+      AngularVelocityKneeRotation: 0
+      AngularAccelerationKneeRotation: 0
+      AngularVelocityHipFlexion: 0
+      AngularAccelerationHipFlexion: 0
+      AngularVelocityHipAbduction: 0
+      AngularAccelerationHipAbduction: 0
+      AngularVelocityHipRotation: 0
+      AngularAccelerationHipRotation: 0
+      NumberofSquats: 0
+      AngleSum: 0
+      mStartCountingSquats: 1
+      LegHeight: 0
+      mInitThighHeight: 0.475
+      mInitTibiaHeight: 0.475
+    TorsoAnalysis:
+      DeltaTime: 0
+      SegmentType: 0
+      mLastTimeCalled: 0
+      AngleTorsoFlexion: 0
+      AngleTorsoLateral: 0
+      AngleTorsoRotation: 0
+      TorsoTransform: {fileID: 0}
+      HipGlobalTransform: {fileID: 0}
+      HipTransform: {fileID: 0}
+      KneeTransform: {fileID: 0}
+      SignedTorsoFlexion: 0
+      AngularAccelerationTorsoFlexion: 0
+      AngularVelocityTorsoFlexion: 0
+      AngularAccelerationTorsoLateral: 0
+      AngularVelocityTorsoLateral: 0
+      AngularAccelerationTorsoRotation: 0
+      AngularVelocityTorsoRotation: 0
+      AngleIntegrationTurns: 0
+      AngleIntegrationFlips: 0
+      NumberOfTurns: 0
+      NumberOfFlips: 0
+    mView: {fileID: 0}
+    mRenderedBody: {fileID: 0}
 --- !u!114 &11470750
 MonoBehaviour:
   m_ObjectHideFlags: 1

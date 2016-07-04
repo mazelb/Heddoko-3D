@@ -19,6 +19,8 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
         //Unique GUID of the Body it belongs to
         public string BodyGuid;
 
+        public DateTime CreationTime = DateTime.Now;
+        public string BrainpackFirmwareVersion;
         [SerializeField]
         //Unique GUID of the suit it belongs to
         public string SuitGuid;

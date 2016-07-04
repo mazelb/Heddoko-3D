@@ -68,6 +68,20 @@ namespace BrainpackService.BrainpackServer
             mHeddokoCommand.Register(HeddokoCommands.RequestServerConnection, RequestConnectionToServer);
             mHeddokoCommand.Register(HeddokoCommands.RegisterListener, RegisterListener);
              mHeddokoCommand.Register(HeddokoCommands.GetBrainpackResults, GetBrainpacks);
+            mHeddokoCommand.Register(HeddokoCommands.SendCommand, SendCommandToBrainpack);
+        }
+
+        private void SendCommandToBrainpack(object vVsender, object vVargs)
+        {
+            HeddokoPacket vPacket = (HeddokoPacket) vVargs;
+            string vUnwrappedPayload = HeddokoPacket.Unwrap(vPacket.Payload);
+            BrainpackSerialConnector.Instance.SendCommandToBrainpack(vUnwrappedPayload);
+            DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, vUnwrappedPayload);
+            string vResponses = "";
+            HeddokoPacket vResultPacket = new HeddokoPacket(HeddokoCommands.ResetBrainpackResp, vResponses);
+            string vWrapped = HeddokoPacket.Wrap(vResultPacket);
+            BrainpackServer.Send((Socket)vVsender, vWrapped);
+
         }
 
         private void GetBrainpacks(object vSender, object vArgs)

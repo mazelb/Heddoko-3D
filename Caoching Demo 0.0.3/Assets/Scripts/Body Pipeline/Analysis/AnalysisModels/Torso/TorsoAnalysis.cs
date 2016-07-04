@@ -17,10 +17,14 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
         //Angles extracted 
         [Analysis(IgnoreAttribute = false, AttributeName = "Angle Torso Flexion")]
         public float AngleTorsoFlexion;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Angle Torso Lateral")]
+        [Analysis(IgnoreAttribute = true)]
         public float AngleTorsoLateral;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Angle Torso Rotation")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "Angle Torso Lateral")]
+        public float SignedAngleTorsoLateral;
+        [Analysis(IgnoreAttribute = true)]
         public float AngleTorsoRotation;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Angle Torso Rotation")]
+        public float SignedAngleTorsoRotation;
         //current torso orientation
         [Analysis(IgnoreAttribute = true)]
         public Transform TorsoTransform;
@@ -88,9 +92,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
             AngularAccelerationTorsoFlexion = (vAngularVelocityTorsoFlexionNew - AngularVelocityTorsoFlexion) / vTimeDifference;
             AngularVelocityTorsoFlexion = vAngularVelocityTorsoFlexionNew;
             AngleTorsoFlexion = vAngleTorsoFlexionNew;
-            Debug.DrawLine(HipGlobalTransform.position,HipGlobalTransform.position+HipGlobalTransform.forward*3,Color.red,0.25f);
-            Debug.DrawLine(HipGlobalTransform.position, HipGlobalTransform.position + HipGlobalTransform.up * 3, Color.green, 0.25f);
-            Debug.DrawLine(TorsoTransform.position, TorsoTransform.position + TorsoTransform.up * 3, Color.red, 0.25f);
             Vector3 vCross = Vector3.Cross(vHipAxisUp, Vector3.ProjectOnPlane(vTorsoAxisUp, HipGlobalTransform.right));
             float vSign = Mathf.Sign(Vector3.Dot(vHipAxisRight, vCross));
             SignedTorsoFlexion = vSign*AngleTorsoFlexion;   
@@ -119,19 +120,27 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
 
 
             //  calculate the Torso lateral angle 
-            float vAngleTorsoLateralNew = Vector3.Angle(HipGlobalTransform.up, Vector3.ProjectOnPlane(vTorsoAxisUp, HipGlobalTransform.forward)); 
+            Vector3 vAngleTorsoPlaneProjection = Vector3.ProjectOnPlane(vTorsoAxisUp, HipGlobalTransform.forward);
+            float vAngleTorsoLateralNew = Vector3.Angle(HipGlobalTransform.up, vAngleTorsoPlaneProjection); 
             float vAngularVelocityTorsoLateralNew = (vAngleTorsoLateralNew - Math.Abs(AngleTorsoLateral)) / vTimeDifference;
+            Vector3 vCrossTorsoLateral = Vector3.Cross(HipGlobalTransform.forward, vAngleTorsoPlaneProjection);
+
             AngularAccelerationTorsoLateral = (vAngularVelocityTorsoLateralNew - AngularVelocityTorsoLateral) / vTimeDifference;
             AngularVelocityTorsoLateral = vAngularVelocityTorsoLateralNew;
             AngleTorsoLateral = vAngleTorsoLateralNew;
+            SignedAngleTorsoLateral = 
+                Mathf.Sign(Vector3.Dot(HipGlobalTransform.up, vCrossTorsoLateral)) * AngleTorsoLateral;
 
             // calculate the Torso Rotational angle 
-            float vAngleTorsoRotationNew = Vector3.Angle(HipGlobalTransform.right, Vector3.ProjectOnPlane(vTorsoAxisRight, HipGlobalTransform.up));
+            Vector3 vAngleTorsoRotationPlaneProjection = Vector3.ProjectOnPlane(vTorsoAxisRight, HipGlobalTransform.up);
+            float vAngleTorsoRotationNew = Vector3.Angle(HipGlobalTransform.right, vAngleTorsoRotationPlaneProjection);
             float vAngularVelocityTorsoRotationNew = (vAngleTorsoRotationNew - Mathf.Abs(AngleTorsoRotation)) / vTimeDifference;
             AngularAccelerationTorsoRotation = (vAngularVelocityTorsoRotationNew - AngularVelocityTorsoRotation) / vTimeDifference;
             AngularVelocityTorsoRotation = vAngularVelocityTorsoRotationNew;
-            AngleTorsoRotation = vAngleTorsoRotationNew;
 
+            Vector3 vCrossTorsoRotation = Vector3.Cross(vTorsoAxisRight, vAngleTorsoRotationPlaneProjection);
+            AngleTorsoRotation = vAngleTorsoRotationNew;
+            SignedAngleTorsoRotation = Mathf.Sign(Vector3.Dot(HipGlobalTransform.forward, vCrossTorsoRotation)) * AngleTorsoRotation;
             /*// Turn detection 
             if (Math.Abs(vAngleTorsoRotationNew) < 3)
             {
@@ -161,7 +170,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
             { 
                 NumberOfFlips++;
                 AngleIntegrationFlips = 0; 
-            }//*/ 
+            }//*/
             NotifyAnalysisCompletionListeners();
         }
 

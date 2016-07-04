@@ -116,7 +116,7 @@ namespace Assets.Scripts.UI.MainMenu.View
                 Notify.Template("FadingNotifyTemplate").Show(
                message,
               customHideDelay: 3f,
-              hideAnimation: Notify.AnimationCollapse,clearSequence:true
+              hideAnimation: Notify.AnimationCollapse, clearSequence: true
           );
             }
             else
@@ -137,9 +137,9 @@ namespace Assets.Scripts.UI.MainMenu.View
 
         public void SearchBrainpacks()
         {
-            DisablingProgressBar.Instance.StartProgressBar("SEARCHING FOR BRAINPACKS");
+            DisablingProgressBar.Instance.StartProgressBar("SEARCHING FOR BATTERY PACKS");
+            BrainpackConnectionController.Instance.DisconnectBrainpack();
             PacketCommandRouter.Instance.Process(this, new HeddokoPacket(HeddokoCommands.GetBrainpackResults, ""));
-
         }
         /// <summary>
         /// Display the connecting views

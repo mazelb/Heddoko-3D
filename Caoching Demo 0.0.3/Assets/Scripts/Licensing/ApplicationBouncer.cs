@@ -101,7 +101,15 @@ namespace Assets.Scripts.Licensing
         /// <param name="vUser">The user to validate</param>
         public void ValidateLicense(UserProfileModel vUser)
         {
-            mLicenceCallbackAction[vUser.LicenseInfo.Status].Invoke(vUser);
+            bool vIsActive = vUser.LicenseInfo.IsActive;
+            if (vIsActive)
+            {
+                mLicenceCallbackAction[LicenseStatusType.Active].Invoke(vUser);
+            }
+            else
+            {
+              mLicenceCallbackAction[vUser.LicenseInfo.Status].Invoke(vUser);
+            }
         }
     }
 }

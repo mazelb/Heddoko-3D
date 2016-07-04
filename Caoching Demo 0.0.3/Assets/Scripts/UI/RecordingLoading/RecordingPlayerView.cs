@@ -142,6 +142,14 @@ namespace Assets.Scripts.UI.RecordingLoading
             BodySegment.IsUsingInterpolation = vIsLerp;
         }
 
+
+        void OnDisable()
+        {
+            if (Application.isPlaying)
+            {
+                Hide();
+            }
+        }
         public override void Show()
         {
             gameObject.SetActive(true);

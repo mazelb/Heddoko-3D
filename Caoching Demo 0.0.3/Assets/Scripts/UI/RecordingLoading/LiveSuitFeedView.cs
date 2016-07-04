@@ -4,8 +4,7 @@
 * @date April 2016
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
-
-using System;
+ 
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.Layouts;
@@ -122,6 +121,13 @@ namespace Assets.Scripts.UI.RecordingLoading
             AnaylsisTextContainer.BodyToAnalyze = BrainpackBody;
         }
 
+        void OnDisable()
+        {
+            if (Application.isPlaying)
+            {
+                Hide();
+            }
+        }
         public override void Hide()
         {
             bool vIsLerp = BodySegment.IsUsingInterpolation;

@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Assets.Scripts.Frames_Pipeline; 
 using UnityEngine;
 
@@ -101,8 +102,19 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
                 ExtractRecordingUUIDsHelper(vRecordingLines[0], ref BodyRecordingGuid);
                 ExtractRecordingUUIDsHelper(vRecordingLines[1], ref BodyGuid);
                 ExtractRecordingUUIDsHelper(vRecordingLines[2], ref SuitGuid);
+                //the third line would contain the date/time. If an exception is thrown, then set the date time from now.
+                try
+                {
+                    string vTime = vRecordingLines[3];
+                  CreationTime =  DateTime.ParseExact(vTime, "yyy-MM-ddTHH:mm:ff", CultureInfo.InvariantCulture);
+                }
+                catch (Exception)
+                {
+                    CreationTime = DateTime.Now;
+                }
             }
         }
+        
         
         /// <summary>
         /// Helper to extract recording UUID, that validates a  recording line, checking if the line is 

@@ -84,7 +84,11 @@ E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.e
 E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\BrainpackService.pdb
 E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\HeddokoLib.dll
 E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\InTheHand.Net.Personal.dll
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\protobuf-net.dll
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\HeddokoLib.pdb
 E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\InTheHand.Net.Personal.xml
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\protobuf-net.pdb
+E:\Code\Heddoko3D\BrainpackService\BrainpackService\bin\Debug\protobuf-net.xml
 E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.ProjectInstaller.resources
 E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.csproj.GenerateResource.Cache
 E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.exe

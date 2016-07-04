@@ -105,6 +105,13 @@ namespace Assets.Scripts.UI.Settings
             ResetRequestResponseTimer();
         }
 
+        public void FlushUarts()
+        {
+            //flushUarts
+            BrainpackConnectionController.Instance.SendCommand("flushUarts");
+
+        }
+
         public override void Hide()
         {
             SettingsButton.interactable = true;

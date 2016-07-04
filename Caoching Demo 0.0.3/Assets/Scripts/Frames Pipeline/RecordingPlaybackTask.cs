@@ -18,12 +18,14 @@ using HeddokoLib.body_pipeline;
 
 namespace Assets.Scripts.Frames_Pipeline
 {
+
+   
     /// <summary>
     /// A recording playback task used by body frame thread
     /// </summary>
     public class RecordingPlaybackTask
     {
-        public bool IsWorking;
+        public bool IsWorking; 
         public bool IsPaused { get; set; }
         public bool LoopPlaybackEnabled = true;
         private bool mIsRewinding;
@@ -249,6 +251,8 @@ namespace Assets.Scripts.Frames_Pipeline
                         {
                             continue;
                         }
+                        //Send out an event that the last frame has been reached. 
+                        
                     }
                     BodyFrame vCurrBodyFrame = null;
                     BodyFrame vEnquedBodyFrame = null;

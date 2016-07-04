@@ -14,29 +14,28 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
     * LeftArmAnalysis class 
     * @brief LeftArmAnalysis class 
     */
-    [Serializable]
+    [Serializable ]
     public class LeftArmAnalysis : ArmAnalysis
     {
         //Elbow Angles
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Elbow Flexion")]
+        [Analysis(IgnoreAttribute = true)]
         public float AngleElbowFlexion = 0;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Signed Elbow Flexion")]
-        public float SignedAngleElbowFlexion = 0;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Elbow Pronation")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Shoulder Flexion")]
+        public float SignedShoulderFlexion=0;
+          public float SignedAngleElbowFlexion = 0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngleElbowPronation = 0;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Elbow Adduction")]
-        public float SignedAngleElbowAdduction = 0;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Signed Left Shoulder Flexion")]
-        public float SignedAngleShoulderFlexion = 0;
 
         //Upper Arm Angles
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Shoulder Flexion")]
+        [Analysis(IgnoreAttribute = true)]
         public float AngleShoulderFlexion = 0;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Shoulder Vertical Abduction")]
+        [Analysis(IgnoreAttribute = true)]
         public float AngleShoulderVertAbduction = 0;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Shoulder Horizontal Abduction")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Vertical Abduction")]
+        public float SignedShoulderVerticalAbduction=0;
+        [Analysis(IgnoreAttribute = true)]
         public float AngleShoulderHorAbduction = 0;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Shoulder Rotation")]
+        [Analysis(IgnoreAttribute = true)]
         public float AngleShoulderRotation = 0;
 
         //Velocities and Accelerations
@@ -51,10 +50,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
         [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationElbowPronation = 0;
         [Analysis(IgnoreAttribute = true)]
-
         public float AngularVelocityShoulderFlexion = 0;
         [Analysis(IgnoreAttribute = true)]
-
         public float AngularAccelerationShoulderFlexion = 0;
         [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityShoulderVertAbduction = 0;
@@ -68,7 +65,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
         public float AngularVelocityShoulderRotation = 0;
         [Analysis(IgnoreAttribute = true)]
         public float AngularAccelerationShoulderRotation = 0;
-
+ 
         /// <summary>
         /// Reset the metrics calculations
         /// </summary>
@@ -76,7 +73,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
         {
             PeakAngularVelocityElbowFlexion = 0;
         }
- 
+
 
         /// <summary>
         /// Extract angles from orientations
@@ -87,7 +84,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             // Time.time - mLastTimeCalled;
             if (DeltaTime == 0)
             {
-                 return;
+                return;
             }
             //mLastTimeCalled = Time.time;
 
@@ -102,49 +99,23 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             vTorsoAxisForward = TorsoTransform.forward;
 
             vShoulderAxisUp = UpArTransform.up;
-            vShoulderAxisRight = -UpArTransform.right;
+            vShoulderAxisRight = UpArTransform.right;
             vShoulderAxisForward = UpArTransform.forward;
 
             vElbowAxisUp = LoArTransform.up;
-            vElbowAxisRight = -LoArTransform.right;
+            vElbowAxisRight = LoArTransform.right;
             vElbowAxisForward = LoArTransform.forward;
 
-
             //calculate the Elbow Flexion angle
-
             Vector3 vProjectedShoulderAxisRight = Vector3.ProjectOnPlane(vShoulderAxisRight, vShoulderAxisForward);
             Vector3 vProjectedElbowAxisRight = Vector3.ProjectOnPlane(vElbowAxisRight, vShoulderAxisForward);
-            float vAngleElbowFlexionNew = Vector3.Angle(vElbowAxisRight, vProjectedElbowAxisRight);
+            float vAngleElbowFlexionNew = Vector3.Angle(vProjectedShoulderAxisRight, vProjectedElbowAxisRight);
             float vAngularVelocityElbowFlexionNew = (vAngleElbowFlexionNew - AngleElbowFlexion) / DeltaTime;
             AngularAccelerationElbowFlexion = (vAngularVelocityElbowFlexionNew - AngularVelocityElbowFlexion) / DeltaTime;
             AngularVelocityElbowFlexion = vAngularVelocityElbowFlexionNew;
             PeakAngularVelocityElbowFlexion = Mathf.Max(Mathf.Abs(AngularVelocityElbowFlexion), PeakAngularVelocityElbowFlexion);
             AngleElbowFlexion = vAngleElbowFlexionNew;
-
-
-            //   Vector3 vProjection = Vector3.ProjectOnPlane(vShoulderAxisRight, vTorsoAxisRight);
-            float vAngleSignedAngleShoulderFlexion = Vector3.Angle(-vTorsoAxisUp, vShoulderAxisRight);// Vector3.Angle(-vTorsoAxisUp, vProjection);
-            //Vector3 vCross = Vector3.Cross(-vTorsoAxisUp, vProjection);
-            float vSignShoulderFlexion = 1;//Mathf.Sign(Vector3.Dot(vTorsoAxisRight, vCross));
-            SignedAngleShoulderFlexion = vSignShoulderFlexion * vAngleSignedAngleShoulderFlexion;
-
-
-            Vector3 vProjection = Vector3.ProjectOnPlane(vShoulderAxisRight, -vTorsoAxisRight);
-            float vAngle = Vector3.Angle(-vTorsoAxisUp, vProjection);
-            Vector3 vCross = Vector3.Cross(vProjection ,-vTorsoAxisUp);
-            float vSign = Mathf.Sign(Vector3.Dot(vTorsoAxisRight, vCross));
-            SignedAngleElbowFlexion = vSign * vAngle;
-
-
-            //Signed angle adduction calculation
-            Vector3 vAductionprojection = Vector3.ProjectOnPlane(vShoulderAxisRight, vTorsoAxisForward);
-            float vAductionAngle = Vector3.Angle(-vTorsoAxisUp, vAductionprojection);
-            Vector3 vAductionCross = Vector3.Cross(vAductionprojection  ,- vTorsoAxisUp);
-            float vAductionSign = Mathf.Sign(Vector3.Dot(vTorsoAxisForward, vAductionCross));
-            SignedAngleElbowAdduction = vAductionSign * vAductionAngle;
-            //  SignedAngleElbowFlexion = GetSignedAngle( vShoulderAxisRight, vElbowAxisRight,vElbowAxisUp.normalized);
-
-            //= GetSignedAngle(vShoulderAxisRight, vElbowAxisRight, vElbowAxisUp.normalized);
+            SignedAngleElbowFlexion = GetSignedAngle(vElbowAxisRight, vShoulderAxisRight, vElbowAxisUp.normalized);
 
             //calculate the Elbow Pronation angle
             float vAngleElbowPronationNew = 180 - Mathf.Abs(180 - LoArTransform.rotation.eulerAngles.x);
@@ -153,20 +124,29 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             AngularVelocityPronation = vAngularVelocityElbowPronationNew;
             AngleElbowPronation = vAngleElbowPronationNew;
 
-
             //calculate the Shoulder Flexion angle
-            float vAngleShoulderFlexionNew = Vector3.Angle(-vTorsoAxisUp, Vector3.ProjectOnPlane(vShoulderAxisRight, vTorsoAxisRight));
+            Vector3 vShoulderProjectionOntoTorsoRight = Vector3.ProjectOnPlane(-vShoulderAxisRight, vTorsoAxisRight);
+
+            float vAngleShoulderFlexionNew = Vector3.Angle(-vTorsoAxisUp, vShoulderProjectionOntoTorsoRight);
             float vAngularVelocityShoulderFlexionNew = (vAngleShoulderFlexionNew - Mathf.Abs(AngleShoulderFlexion)) / DeltaTime;
             AngularAccelerationShoulderFlexion = (vAngularVelocityShoulderFlexionNew - AngularVelocityShoulderFlexion) / DeltaTime;
             AngularVelocityShoulderFlexion = vAngularVelocityShoulderFlexionNew;
             AngleShoulderFlexion = vAngleShoulderFlexionNew;
+            //set the the signed component
+            Vector3 vFlexCrossPrdct = Vector3.Cross(vTorsoAxisRight, vShoulderProjectionOntoTorsoRight);
+            float vFlexSign = Mathf.Sign(Vector3.Dot(-vTorsoAxisUp, vFlexCrossPrdct));
+            SignedShoulderFlexion = vFlexSign * AngleShoulderFlexion;
 
             //calculate the Shoulder Abduction Vertical angle
-            float vAngleShoulderVertAbductionNew = Vector3.Angle(-vTorsoAxisUp, Vector3.ProjectOnPlane(vShoulderAxisRight, vTorsoAxisForward));
+            Vector3 vVerticalShoulderAbdProjection = Vector3.ProjectOnPlane(-vShoulderAxisRight, vTorsoAxisForward);
+            float vAngleShoulderVertAbductionNew = Vector3.Angle(-vTorsoAxisUp,vVerticalShoulderAbdProjection );
             float vAngularVelocityShoulderVertAbductionNew = (vAngleShoulderVertAbductionNew - Mathf.Abs(AngleShoulderVertAbduction)) / DeltaTime;
             AngularAccelerationShoulderVertAbduction = (vAngularVelocityShoulderVertAbductionNew - AngularVelocityShoulderVertAbduction) / DeltaTime;
             AngularVelocityShoulderVertAbduction = vAngularVelocityShoulderVertAbductionNew;
             AngleShoulderVertAbduction = vAngleShoulderVertAbductionNew;
+            Vector3 vVertAbductionCrossPrdct = Vector3.Cross(vTorsoAxisForward, vVerticalShoulderAbdProjection);
+            float vVertAbductionSign = Mathf.Sign(Vector3.Dot(-vTorsoAxisUp, vVertAbductionCrossPrdct));
+            SignedShoulderVerticalAbduction = vVertAbductionSign * AngleShoulderVertAbduction;
 
             //calculate the Shoulder Abduction Horizontal angle
             float vAngleShoulderHorAbductionNew = Vector3.Angle(vTorsoAxisForward, Vector3.ProjectOnPlane(vShoulderAxisRight, vTorsoAxisUp));
@@ -181,7 +161,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             AngularAccelerationShoulderRotation = (vAngularVelocityShoulderRotationNew - AngularVelocityShoulderRotation) / DeltaTime;
             AngularVelocityShoulderRotation = vAngularVelocityShoulderRotationNew;
             AngleShoulderRotation = vAngleShoulderRotationNew;
-            NotifyArmAnalysisCompletion();
         }
     }
 }

@@ -206,7 +206,7 @@ namespace Assets.Scripts.UI.AbstractViews.ContextSpecificContainers.Importation
             //send notification that import has been completed
     
             var message = string.Format("{0} movements have been exported ", vTotalImportCount); 
-            Notify.Template("FadinFadoutNotifyTemplate").Show(message, 4.5f, hideAnimation :  Notify.FadeOutAnimation, showAnimation: Notify.FadeInAnimation, sequenceType: NotifySequence.First );
+            Notify.Template("FadingFadoutNotifyTemplate").Show(message, 4.5f, hideAnimation :  Notify.FadeOutAnimation, showAnimation: Notify.FadeInAnimation, sequenceType: NotifySequence.First );
 
         }
 

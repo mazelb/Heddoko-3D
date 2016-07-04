@@ -17,6 +17,8 @@ namespace Assets.Scripts.UI
 
     public class UnityViewFactory : MonoBehaviour, IViewFactory
     {
+        public GameObject LoginRootView;
+        public GameObject MainAppRootView;
         /// <summary>
         /// Construct the application view based on the user role and the platform passed in. 
         /// </summary>
@@ -24,7 +26,17 @@ namespace Assets.Scripts.UI
         /// <param name="vPlatformType"> The platform the construct a scene.</param>
         public void Construct(UserProfileModel vUserProfile, PlatformType vPlatformType)
         {
-            StartCoroutine(Load(vUserProfile, vPlatformType));
+            //  StartCoroutine(Load(vUserProfile, vPlatformType));
+            MainAppRootView.SetActive(true);
+
+            var vGo = GameObject.FindGameObjectWithTag("ApplicationManagement");
+            if (vGo != null)
+            {
+                var vAppManager = vGo.GetComponent<IApplicationManager>();
+                vAppManager.Init(vUserProfile);
+                //unload scene after initialization
+                LoginRootView.SetActive(false);
+            }
         }
 
         private IEnumerator Load(UserProfileModel vUserProfile, PlatformType vPlatformType)

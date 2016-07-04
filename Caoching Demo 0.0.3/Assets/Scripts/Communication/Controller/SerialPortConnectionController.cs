@@ -45,5 +45,7 @@ namespace Assets.Scripts.Communication.Controller
         {
             vTotalTries = 0;
         }
+
+        public abstract void SendCommand(string vArgs);
     }
 }

@@ -22,7 +22,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
 {
 
     public delegate void BodyUpdated(Body vBody);
-
+    public delegate void FinalFramePositionReached();
     public delegate void RecordingUpdated(PlaybackControlPanel vControlPanel);
     /// <summary>
     /// Provides controls for recording play back
@@ -31,6 +31,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     public class PlaybackControlPanel : AbstractControlPanel, IPermissionLevelContractor
     {
         private RecordingPlaybackTask mPlaybackTask;
+        public event FinalFramePositionReached FinalFramePositionEvent;
         private Body mBody;
         public RecordingProgressSubControl RecordingProgressSliderSubControl;
         public RecordingForwardSubControl RecordingForwardSubControl;
@@ -437,6 +438,13 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                     {
                         RecordingProgressSliderSubControl.UpdateCurrentTime(mPlaybackTask.GetCurrentPlaybackIndex);
                         RecordingIndexValue.SetIndexValue(mPlaybackTask.GetCurrentPlaybackIndex);
+                    }
+                    if (mPlaybackTask.GetCurrentPlaybackIndex == mPlaybackTask.RecordingCount - 1)
+                    {
+                        if (FinalFramePositionEvent != null)
+                        {
+                            FinalFramePositionEvent();
+                        }
                     }
                 }
 

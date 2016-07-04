@@ -18,21 +18,22 @@ using UnityEngine;
 namespace Assets.Scripts.Body_Pipeline.Analysis
 {
     /// <summary>
-    /// A data storage mechanism for analysis segments
+    /// A data storage mechanism for analysis segments, mapping to a set of SegmentAnalyis. 
     /// </summary>
     public class AnalysisDataStore
     {
-        private AnaylsisDataStoreSettings mAnaylsisDataStoreSettings; 
-        private Dictionary<SegmentAnalysis, Dictionary<FieldInfo,AnalysisFieldDataStructure>> mStorage = new Dictionary<SegmentAnalysis, Dictionary<FieldInfo,AnalysisFieldDataStructure>>();
+        private Dictionary<SegmentAnalysis, Dictionary<FieldInfo, AnalysisFieldDataStructure>> mStorage = new Dictionary<SegmentAnalysis, Dictionary<FieldInfo, AnalysisFieldDataStructure>>();
+        public List<Dictionary<FieldInfo, string>> SerializedList = new List<Dictionary<FieldInfo, string>>();
         private List<float> mTimeStamps = new List<float>();
+        private AnaylsisDataStoreSettings mAnaylsisDataStoreSettings; 
         public AnalysisDataStoreSerialization mSerialization;
-        public List<Dictionary<FieldInfo, string>> mSerializedList = new List<Dictionary<FieldInfo, string>>();
         private int mFieldInfoCount;
         private int mCounter;
         private int mSubCount = 0;
-        public bool Ignore=false;
+        public bool Ignore { get; set; }
+
         /// <summary>
-        /// Initialize component 
+        /// Constructor accepting a list of analysis segment, using reflection, sifts through fields with AnalysisAttributes marked as do not ignore.  
         /// </summary>
         public AnalysisDataStore(List<SegmentAnalysis> vAnalysisSegments )
         {
@@ -128,9 +129,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             var vFields = mStorage[vKey];
             if (mCounter == 0)
             {
-                mSerializedList.Add( new Dictionary<FieldInfo, string>());
+                SerializedList.Add( new Dictionary<FieldInfo, string>());
             }
-            var vList = mSerializedList.ElementAt(mSerializedList.Count - 1);
+            var vList = SerializedList.ElementAt(SerializedList.Count - 1);
            
             foreach (var vKvPair in vFields)
             {
@@ -176,8 +177,17 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         {
             foreach (var vKvPair in mStorage)
             {
-                vKvPair.Value.Clear();
+                foreach (var vAnalysisFieldDataStructure in vKvPair.Value)
+                {
+                    vAnalysisFieldDataStructure.Value.ClearDataCollection();
+                }
+               // vKvPair.Value.Clear();
             }
+            SerializedList.Clear();
+            mTimeStamps.Clear();
+            mCounter = 0;
+            mSubCount = 0;
+
         }
     }
 }
