@@ -47,7 +47,7 @@ namespace Assets.Scripts.Licensing.Authentication
             HeddokoConfig vConfig = new HeddokoConfig("https://app.heddoko.com/api/v1", "HEDFstcKsx0NHjPSsjcndjnckSDJjknCCSjcnsJSK89SJDkvVBrk");
 
 #if DEBUG
-          //  vConfig = new HeddokoConfig("http://dev.app.heddoko.com/api/v1", "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk");
+           vConfig = new HeddokoConfig("http://dev.app.heddoko.com/api/v1", "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk");
 #endif
 
             mClient = new HeddokoClient(vConfig);
