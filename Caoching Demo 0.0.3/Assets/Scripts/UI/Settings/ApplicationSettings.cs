@@ -25,11 +25,7 @@ namespace Assets.Scripts.UI.Settings
         private static int sResWidth;
         private static int sResHeight;
         private static bool sAppLaunchedSafely;
-
-        public static void SaveSettings()
-        {
-            
-        }
+ 
         /// <summary>
         /// provides and sets the the prefered recordings folder for the application
         /// </summary>

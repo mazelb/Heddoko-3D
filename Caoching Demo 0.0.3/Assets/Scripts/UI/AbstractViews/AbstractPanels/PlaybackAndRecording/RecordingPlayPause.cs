@@ -75,7 +75,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// </summary>
         private void ChangePlayPauseGraphics()
         {
-            PlayPauseButton.image.sprite = IsPaused? PauseSprite : PlaySprite;
+            PlayPauseButton.image.sprite = IsPaused?   PlaySprite:PauseSprite;
         }
         public override void Disable()
         {

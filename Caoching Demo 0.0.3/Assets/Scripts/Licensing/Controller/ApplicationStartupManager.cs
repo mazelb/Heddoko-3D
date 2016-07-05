@@ -8,8 +8,7 @@
  
 using Assets.Scripts.Licensing.Authentication;
 using Assets.Scripts.Licensing.Model;
-using Assets.Scripts.UI;
-using HeddokoSDK;
+using Assets.Scripts.UI; 
 using HeddokoSDK.Models;
 using UIWidgets;
 using UnityEngine;
@@ -29,7 +28,7 @@ namespace Assets.Scripts.Licensing.Controller
         /// <summary>
         /// Initializes parameters
         /// </summary>
-        void Awake()
+       internal void Awake()
         {
             Init();
             ViewFactory = UnityViewFactory;

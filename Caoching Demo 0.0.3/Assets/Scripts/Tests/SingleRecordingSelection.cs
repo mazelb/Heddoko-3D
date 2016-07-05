@@ -9,9 +9,11 @@
 using System;
 using System.IO;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
+using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.Utils;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Assets.Scripts.Tests
 {
@@ -58,7 +60,10 @@ namespace Assets.Scripts.Tests
         {
             SetTransform();
             DisablerPanel.SetActive(true);
-            mRecordingLoadedCallback = vCallback;
+            if (vCallback != null)
+            {
+                mRecordingLoadedCallback = vCallback;
+            }
             var vPaths = new[] { "dat", "hsm" };
             //initialize the browser settings
 #if DEBUG  
@@ -76,11 +81,23 @@ namespace Assets.Scripts.Tests
         /// <param name="vRecordingSelected"></param>
         private void SelectRecordingFile(string vRecordingSelected)
         {
+            FileInfo vInfo = new FileInfo(vRecordingSelected);
+            if (vInfo.Name.Equals("logindex.dat", StringComparison.CurrentCultureIgnoreCase))
+            {
+                string vTopLabel = "CANNOT OPEN A LOGINDEX FILE";
+                string vContent =
+                    "Unfortunately, this file is not a recording file. Typical recordings are longer and start with SXXXX, where the X represents a number. Would you like to try again?";
+                UnityAction vOnYes = () => OpenFileBrowseDialog();
+                UnityAction vOnNo = () => { };
+                ModalPanel.Instance().Choice(vTopLabel, vContent, vOnYes, vOnNo);
+                return;
+            }
             if (StartLoadingEvent != null)
             {
                 StartLoadingEvent();
             }
-            FileInfo vInfo = new FileInfo(vRecordingSelected);
+            //Verify the file first, if it's a logindex.dat file, then throw an error
+            
             ApplicationSettings.PreferedRecordingsFolder = vInfo.DirectoryName;
             BodyRecordingsMgr.Instance.ScanRecordings(UniFileBrowser.use.filePath);
             BodyRecordingsMgr.Instance.ReadRecordingFile(vRecordingSelected, BodyFramesRecordingCallback);

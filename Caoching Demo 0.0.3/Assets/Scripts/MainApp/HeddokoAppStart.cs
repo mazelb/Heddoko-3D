@@ -146,7 +146,7 @@ namespace Assets.Scripts.MainApp
         private void AppNotLaunchedThroughLauncher()
         {
 
-            ModalPanel.SingleChoice("The application wasn't started with the Launcher. Press Ok to exit and try again. ", Application.Quit);
+            ModalPanel.SingleChoice("","The application wasn't started with the Launcher. Press Ok to exit and try again. ", Application.Quit);
         }
 
         void OnApplicationQuit()
