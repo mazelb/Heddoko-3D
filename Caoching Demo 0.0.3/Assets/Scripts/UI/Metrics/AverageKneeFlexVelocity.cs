@@ -7,6 +7,7 @@
 */
 using System;
 using System.Collections;
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using UnityEngine;
 using UnityEngine.UI;

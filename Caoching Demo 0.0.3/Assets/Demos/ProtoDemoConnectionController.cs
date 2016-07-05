@@ -14,13 +14,13 @@ namespace Assets.Demos
 {
     public class ProtoDemoConnectionController : BrainpackConnectionController
     {
-        private SerialPort mSerialPort;
+        private new SerialPort mSerialPort;
         public SerialPort Port
         {
             get { return mSerialPort; }
         }
 
-        void Awake()
+        internal void Awake()
         {
             mInstance = this;
         }
@@ -85,7 +85,7 @@ namespace Assets.Demos
                 base.DisconnectBrainpack();
             }
             else
-            { 
+            {
                 {
                     mCurrentConnectionState = BrainpackConnectionState.Disconnected;
                     mSerialPort.Close();

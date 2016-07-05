@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews;
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using UnityEngine.UI;
 
@@ -44,12 +45,12 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         {
             if (mLeftLegAnalysis != null && mRightLegAnalysis != null)
             {
-                RightHipFlexionText.text = FeedbackAngleToString(mRightLegAnalysis.AngleHipFlexion);
-                LeftHipFlexionText.text = FeedbackAngleToString(mLeftLegAnalysis.AngleHipFlexion);
-                RightHipAbductionText.text = FeedbackAngleToString(mRightLegAnalysis.AngleHipAbduction);
-                LeftHipAbductionText.text = FeedbackAngleToString(mLeftLegAnalysis.AngleHipAbduction);
-                RightHipRotation.text = FeedbackAngleToString(mRightLegAnalysis.AngleHipRotation);
-                LeftHipRotationText.text = FeedbackAngleToString(mLeftLegAnalysis.AngleHipRotation);
+                RightHipFlexionText.text = FeedbackAngleToString(mRightLegAnalysis.SignedAngleHipFlexion);
+                LeftHipFlexionText.text = FeedbackAngleToString(mLeftLegAnalysis.SignedAngleHipFlexion);
+                RightHipAbductionText.text = FeedbackAngleToString(mRightLegAnalysis.SignedAngleHipAbduction);
+                LeftHipAbductionText.text = FeedbackAngleToString(mLeftLegAnalysis.SignedAngleHipAbduction);
+                RightHipRotation.text = FeedbackAngleToString(mRightLegAnalysis.AngleKneeRotation);
+                LeftHipRotationText.text = FeedbackAngleToString(mLeftLegAnalysis.AngleKneeRotation);
             }
             else
             {

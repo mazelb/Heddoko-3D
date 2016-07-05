@@ -24,14 +24,19 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
         public float AngleKneeRotation;
 
         //Hip Angles
+
+        [Analysis(IgnoreAttribute =true)]
+        public float AngleHipFlexion;
         public bool UseGlobalReference = false;
         [Analysis(IgnoreAttribute = false, AttributeName = "Left Hip Flexion")]
-        public float AngleHipFlexion;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Hip Abduction")]
+        public float SignedAngleHipFlexion;
+        [Analysis(IgnoreAttribute = true)]
         public float AngleHipAbduction;
+        [Analysis(IgnoreAttribute = false, AttributeName = "Left Hip Abduction")]
+        public float SignedAngleHipAbduction;
         [Analysis(IgnoreAttribute = false, AttributeName = "Left Hip Rotation")]
         public float AngleHipRotation;
-
+        
         //Accelerations and velocities
         [Analysis(IgnoreAttribute = true)]
         public float AngularVelocityKneeFlexion = 0;
@@ -68,6 +73,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
         private float mInitThighHeight = 0.475f;
         [Analysis(IgnoreAttribute = true)]
         private float mInitTibiaHeight = 0.475f;
+
+
 
         /// <summary>
         /// Listens to events where squats need to be counted
@@ -144,37 +151,60 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
 
             //calculate the Hip Flexion angle (angles between axis projection in YZ plane)
             float vAngleHipFlexionNew;
-
+            Vector3 vFlexCrossPrdct = Vector3.zero;
+            Vector3 vFlexLHS = Vector3.zero;
+            float vFlexSign = 0;
             if (UseGlobalReference)
             {
-                vAngleHipFlexionNew = Vector3.Angle(HipGlobalTransform.up, Vector3.ProjectOnPlane(vThighAxisUp, HipGlobalTransform.right));
+                var vPlaneNormal = Vector3.ProjectOnPlane(vThighAxisUp, HipGlobalTransform.right);
+                vAngleHipFlexionNew = Vector3.Angle(HipGlobalTransform.up, vPlaneNormal);
+                vFlexCrossPrdct = Vector3.Cross(HipGlobalTransform.right, vPlaneNormal);
+                vFlexLHS = HipGlobalTransform.up;
             }
             else
             {
-                vAngleHipFlexionNew = Vector3.Angle(Vector3.ProjectOnPlane(vTorsoAxisUp, vTorsoAxisRight), Vector3.ProjectOnPlane(vThighAxisUp, vTorsoAxisRight));
-            }
+                var vPlaneNormal = Vector3.ProjectOnPlane(vThighAxisUp, vTorsoAxisRight);
+                var vLhsProjection = Vector3.ProjectOnPlane(vTorsoAxisUp, vTorsoAxisRight);
+                vAngleHipFlexionNew = Vector3.Angle(vLhsProjection, vPlaneNormal);
+                vFlexCrossPrdct = Vector3.Cross(vTorsoAxisRight, vPlaneNormal);
+                vFlexLHS = vLhsProjection;
+             }
 
             float vAngularVelocityHipFlexionNew = Mathf.Abs(vAngleHipFlexionNew - Mathf.Abs(AngleHipFlexion)) / vDeltaTime;
             AngularAccelerationHipFlexion = Mathf.Abs(vAngularVelocityHipFlexionNew - AngularVelocityHipFlexion) / vDeltaTime;
             AngularVelocityHipFlexion = vAngularVelocityHipFlexionNew;
             AngleHipFlexion = vAngleHipFlexionNew;
+          
+            vFlexSign = Mathf.Sign(Vector3.Dot(vFlexLHS, vFlexCrossPrdct));
+            SignedAngleHipFlexion = vFlexSign * AngleHipFlexion;
+
 
             //calculate the Hip Abduction angle (angles between axis projection in XY plane)
-            float vAngleHipAbductionNew;
-
+            float vAngleHipAbductionNew;  
+            Vector3 vAbductionCrossPrdct = Vector3.zero;
+            Vector3 vAbdLHS = Vector3.zero;
             if (UseGlobalReference)
             {
-                vAngleHipAbductionNew = Vector3.Angle(HipGlobalTransform.up, Vector3.ProjectOnPlane(vThighAxisUp, HipGlobalTransform.forward));
+                var vPlaneNormal = Vector3.ProjectOnPlane(vThighAxisUp, HipGlobalTransform.forward);
+                vAngleHipAbductionNew = Vector3.Angle(HipGlobalTransform.up, vPlaneNormal);
+                vAbductionCrossPrdct = Vector3.Cross (HipGlobalTransform.forward, vPlaneNormal);
+                vAbdLHS = HipGlobalTransform.up;
             }
             else
             {
-                vAngleHipAbductionNew = Vector3.Angle(Vector3.ProjectOnPlane(vTorsoAxisUp, vTorsoAxisForward), Vector3.ProjectOnPlane(vThighAxisUp, vTorsoAxisForward));
+                var vPlaneNormal = Vector3.ProjectOnPlane(vThighAxisUp, vTorsoAxisForward);
+                var vLhsProjection = Vector3.ProjectOnPlane(vTorsoAxisUp, vTorsoAxisForward);
+                vAbductionCrossPrdct = Vector3.Cross(vTorsoAxisForward, vPlaneNormal);
+                vAbdLHS = vLhsProjection;
+                vAngleHipAbductionNew = Vector3.Angle(vLhsProjection, vPlaneNormal);
             }
 
             float vAngularVelocityHipAbductionNew = Mathf.Abs(vAngleHipAbductionNew - Mathf.Abs(AngleHipAbduction)) / vDeltaTime;
             AngularAccelerationHipAbduction = Mathf.Abs(vAngularVelocityHipAbductionNew - AngularVelocityHipAbduction) / vDeltaTime;
             AngularVelocityHipAbduction = vAngularVelocityHipAbductionNew;
             AngleHipAbduction = vAngleHipAbductionNew;
+            float vAbdSign = Mathf.Sign(Vector3.Dot( vAbductionCrossPrdct, vAbdLHS));
+            SignedAngleHipAbduction = vAbdSign * AngleHipAbduction;
 
             //calculate the Hip Rotation angle (angles between axis projection in XZ plane) 
             float vAngleHipRotationNew = 180 - Mathf.Abs(180 - ThighTransform.rotation.eulerAngles.y);

@@ -18,7 +18,9 @@ namespace Assets.Scripts.Licensing.Authentication
         private UserRequest mUserRequest = new UserRequest();
         public string UserName
         {
-            get { return mUserRequest.Username; }
+            get
+            {return mUserRequest.Username;
+            }
             set { mUserRequest.Username = value; }
         }
         public string Password

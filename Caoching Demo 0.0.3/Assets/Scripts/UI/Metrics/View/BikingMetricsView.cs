@@ -13,6 +13,7 @@ using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.UI.MainMenu;
 using UnityEngine;
 using System.Collections.Generic;
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.UI.Metrics.View;
 using Assets.Scripts.Utils;
 using Assets.Scripts.Utils.Animations;
