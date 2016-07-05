@@ -1,5 +1,6 @@
 C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\bin\Debug\Calibration1.dll
 C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\bin\Debug\Calibration1.pdb
 C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\bin\Debug\System.Threading.dll
+C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\obj\Debug\Calibration1.csprojResolveAssemblyReference.cache
 C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\obj\Debug\Calibration1.dll
 C:\Users\Simon\Documents\Heddoko3D\CalibrationLib\Calibration1\Calibration1\obj\Debug\Calibration1.pdb

@@ -274,14 +274,14 @@ namespace Assets.Scripts.Body_Data.CalibrationData
                 }
             }
             M = p.Parkfunc(Zero, Zero, "Eig");
-            Debug.Log("Transformations X and M");
+            /*Debug.Log("Transformations X and M");
             Print(X, "X", 2);
             Print(M, "M", 2);
             Print(p.vec , "v", 2);
             Print(p.Eigvec, "Eigvec", 2);
             Print(p.vec , "v", 2);
             Debug.Log("Eigval  : "+ p.Eigval);
-            //Debug.Log("End ");
+            Debug.Log("End ");*/
             /////////////////////////////////
             /////////////////////////////////
             CalibrationEnd = true;///////////
