@@ -665,9 +665,9 @@ public partial class BodySegment
     float vCurrentAngle = 0;
     bool vIsIncreasingAngle = true;
 
-    public void MapArmsOrientations(Vector3 vUAInitEuler, Vector3 vUACurEuler    , Vector3 vLAInitEuler,
-                                    Vector3 vLACurEuler , Vector3 vTorsoInitEuler, Vector3 vTorsoCurEuler,
-                                    BodySubSegment vUASubsegment   , BodySubSegment vLASubsegment,
+    public void MapArmsOrientations(Vector3 vUAInitEuler, Vector3 vUACurEuler, Vector3 vLAInitEuler,
+                                    Vector3 vLACurEuler, Vector3 vTorsoInitEuler, Vector3 vTorsoCurEuler,
+                                    BodySubSegment vUASubsegment, BodySubSegment vLASubsegment,
                                     BodySubSegment vTorsoSubSegment, BodySubSegment vHipsSubsegment, bool vIsRight = true)
     {
 
@@ -715,40 +715,55 @@ public partial class BodySegment
         Quaternion vLoArmQuat = vLoArmQuatY * vLoArmQuatX * vLoArmQuatZ;
 
         ///////////////*************************************************************SIM
-        float t = this.mBodyFrameCalibrationContainer.CurrentTime;
-        bool Tp = this.mBodyFrameCalibrationContainer.HasPassedCalibrationTypeEvent(CalibrationType.Tpose);
-        bool Zp = this.mBodyFrameCalibrationContainer.HasPassedCalibrationTypeEvent(CalibrationType.ArmsForward);
-        bool Sp = this.mBodyFrameCalibrationContainer.HasPassedCalibrationTypeEvent(CalibrationType.ArmsDown);
-        bool Cp = BodySegment.RArm.CalCompleted;
-
-        BodySegment.RArm.TimeQ.Add(t);
-        BodySegment.RArm.Q["Up"].Add(vUpArmQuat);
-        BodySegment.RArm.Q["Lo"].Add(vLoArmQuat);
-        if (Tp)
+        float t = BodyFrameCalibrationContainer.CurrentTime;
+        BodySegment.RArm.UpdateStates(t);
+        bool T1pOn = RArm.T1pOn;
+        bool T2pOn = RArm.T2pOn;
+        bool ZpOn  = RArm.ZpOn;
+        bool SpOn  = RArm.SpOn;
+        bool CalOn = RArm.CalibrationOn;
+        bool RecOn = RArm.RecOn;
+        BodySegment.RArm.CountFrame++;
+        if ((BodySegment.RArm.CountFrame % BodySegment.RArm.NFrameOnM) == 0 && RecOn)
         {
-            BodySegment.RArm.SensTPoseQuat["Up"].Add(vUpArmQuat);
-            BodySegment.RArm.SensTPoseQuat["Lo"].Add(vLoArmQuat);
-            BodySegment.RArm.TimePose["Tpose"].Add(t);
-            BodySegment.RArm.UpdateCalibrationStatus("Tpose");
-        }
-        if (Zp)
-        {
-            BodySegment.RArm.SensZPoseQuat["Up"].Add(vUpArmQuat);
-            BodySegment.RArm.SensZPoseQuat["Lo"].Add(vLoArmQuat);
-            BodySegment.RArm.TimePose["Zpose"].Add(t);
-            BodySegment.RArm.UpdateCalibrationStatus("Zpose");
-        }
-        if (Sp)
-        {
-            BodySegment.RArm.SensSPoseQuat["Up"].Add(vUpArmQuat);
-            BodySegment.RArm.SensSPoseQuat["Lo"].Add(vLoArmQuat);
-            BodySegment.RArm.TimePose["Spose"].Add(t);
-            BodySegment.RArm.UpdateCalibrationStatus("Spose");
-        }
-        if (Cp)
-        {
-            BodySegment.RArm.Calibration();
-        }
+            BodySegment.RArm.TimeQ.Add(t);
+            BodySegment.RArm.Q["Up"].Add(vUpArmQuat);
+            BodySegment.RArm.Q["Lo"].Add(vLoArmQuat);
+            BodySegment.RArm.CountQuarRec++;
+            if (T1pOn)
+            {
+                //Debug.Log("T1p:" + t);
+                BodySegment.RArm.SensT1PoseQuat["Up"].Add(vUpArmQuat);
+                BodySegment.RArm.SensT1PoseQuat["Lo"].Add(vLoArmQuat);
+                BodySegment.RArm.TimePose["T1"].Add(t);
+            }
+            if (T2pOn)
+            {
+                //Debug.Log("T2p:" + t);
+                BodySegment.RArm.SensT2PoseQuat["Up"].Add(vUpArmQuat);
+                BodySegment.RArm.SensT2PoseQuat["Lo"].Add(vLoArmQuat);
+                BodySegment.RArm.TimePose["T2"].Add(t);
+            }
+            if (ZpOn)
+            {
+                //Debug.Log("Zp:" + t);
+                BodySegment.RArm.SensZPoseQuat["Up"].Add(vUpArmQuat);
+                BodySegment.RArm.SensZPoseQuat["Lo"].Add(vLoArmQuat);
+                BodySegment.RArm.TimePose["Z"].Add(t);
+            }
+            if (SpOn)
+            {
+                //Debug.Log("Sp:" + t);
+                BodySegment.RArm.SensSPoseQuat["Up"].Add(vUpArmQuat);
+                BodySegment.RArm.SensSPoseQuat["Lo"].Add(vLoArmQuat);
+                BodySegment.RArm.TimePose["S"].Add(t);
+            }
+            if (CalOn)
+            {
+                Debug.Log("Cp:" + t);
+                BodySegment.RArm.Calibration();
+            }
+        } 
         ///////////////*************************************************************SIM
 
         vCurrentAngle += 0.01f;
