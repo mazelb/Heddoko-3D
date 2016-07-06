@@ -58,31 +58,31 @@ namespace Assets.Scripts.Frames_Pipeline
         /// </summary>
         public float AverageSecondsBetweenFrames
         { get { return mAverageSecondsBetweenFrames; } }
-        ///// <summary>
-        ///// Initializes fields and properties, setting the RecordingStats attributes
-        ///// </summary>
-        ///// <param name="vBodyRawFrame"></param>
-        //public void InitAndAnalyze(CsvBodyFramesRecording vBodyRawFrame)
-        //{ 
-        //  //  List<BodyRawFrame> vListOfBodyRawFrames = vBodyRawFrame.RecordingRawFrames;
-        //    mTotalFrames = vListOfBodyRawFrames.Count;
-        //    float.TryParse(vListOfBodyRawFrames[0].RawFrameData[0], out mStartRecordingTime);
-        //    float.TryParse(vListOfBodyRawFrames[mTotalFrames - 1].RawFrameData[0], out mEndRecordingTime);
-        //    if (mTotalFrames > 1)
-        //    { 
-        //        float vSum = 0;
-        //        float mT1 = mStartRecordingTime;
-        //        for (int i = 1; i < mTotalFrames; i++)
-        //        {
-        //            float mT2 = 0;
-        //            float.TryParse(vListOfBodyRawFrames[i].RawFrameData[0], out mT2);
-        //            vSum += (mT2 - mT1);
-        //            mT1 = mT2;
-        //        }
+        /// <summary>
+        /// Initializes fields and properties, setting the RecordingStats attributes
+        /// </summary>
+        /// <param name="vBodyRawFrame"></param>
+        public void InitAndAnalyze(BodyFramesRecording vBodyRawFrame)
+        { 
+            List<BodyRawFrame> vListOfBodyRawFrames = vBodyRawFrame.RecordingRawFrames;
+            mTotalFrames = vListOfBodyRawFrames.Count;
+            float.TryParse(vListOfBodyRawFrames[0].RawFrameData[0], out mStartRecordingTime);
+            float.TryParse(vListOfBodyRawFrames[mTotalFrames - 1].RawFrameData[0], out mEndRecordingTime);
+            if (mTotalFrames > 1)
+            { 
+                float vSum = 0;
+                float mT1 = mStartRecordingTime;
+                for (int i = 1; i < mTotalFrames; i++)
+                {
+                    float mT2 = 0;
+                    float.TryParse(vListOfBodyRawFrames[i].RawFrameData[0], out mT2);
+                    vSum += (mT2 - mT1);
+                    mT1 = mT2;
+                }
           
-        //        mAverageSecondsBetweenFrames = vSum / (mTotalFrames - 1);
-        //    }
+                mAverageSecondsBetweenFrames = vSum / (mTotalFrames - 1);
+            }
            
-        //}
+        }
     }
 }

@@ -173,7 +173,7 @@ namespace Assets.Scripts.Body_Data.View
         /// </summary>
         /// <param name="sstype"></param>
         /// <returns></returns>
-        public Transform GetSubSegmentTransform(BodyStructureMap.SubSegmentTypes sstype)
+        public Transform GetSubSegment(BodyStructureMap.SubSegmentTypes sstype)
         {
             return TransformMapping[sstype].Transform;
         }

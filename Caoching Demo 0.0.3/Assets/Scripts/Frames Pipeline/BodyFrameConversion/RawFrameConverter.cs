@@ -1,6 +1,6 @@
 ﻿using System; 
-using HeddokoLib.utils; 
-
+using HeddokoLib.utils;
+ 
 namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
 {
     /// <summary>
@@ -27,9 +27,9 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
         }
 
         /**
-        * ConvertRawFrame(BodyRawFrame vRawData)
+        * ConvertRawFrame(BodyRawFrame rawData)
         * @brief Pass in a BodyRawFrame and convert it to a body frame
-        * @param BodyRawFrame vRawData
+        * @param BodyRawFrame rawData
         * @return void
         * 
         */
@@ -46,47 +46,17 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
 
         }
 
-        /// <summary>
-        /// From a given BodyRawFrameBase, convert it to a body frame. 
-        ///<remarks>Will return null if the type passed in hasn't been implemented.</remarks>
-        /// </summary>
-        /// <param name="vFrameBase"></param>
-        /// <returns>A converted body frame.</returns>
 
-        public static BodyFrame ConvertRawFrame(BodyRawFrameBase vFrameBase)
-        {
-            Type vType = vFrameBase.GetType();
-            if (vType == typeof (BodyRawFrame))
-            {
-               return  ConvertRawFrame((BodyRawFrame) vFrameBase);
-            }
-            else if (vType == typeof(BodyProtoPacketFrame))
-            {
-                return ConvertRawFrame((BodyProtoPacketFrame)vFrameBase);
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Converts a raw frame from a protobuf packet
-        /// </summary>
-        /// <param name="vProtopacketFrame">The packet containing imu information</param>
-        /// <returns>A converted BodyFrame</returns>
-        public static BodyFrame ConvertRawFrame(BodyProtoPacketFrame vProtopacketFrame)
-        { 
-            return new BodyFrame(vProtopacketFrame.Packet);
-
-        }
         /// <summary>
         /// Converts encoded raw frame data to a bodyframe
         /// </summary>
-        /// <param name="vRawData"></param>
+        /// <param name="rawData"></param>
         /// <returns></returns>
-        public  static BodyFrame ConvertEncodedRawFrame(BodyRawFrame vRawData)
+        public  static BodyFrame ConvertEncodedRawFrame(BodyRawFrame rawData)
         {
-            float vTimeStamp = (float)(Convert.ToInt32(vRawData[0]));
+            float vTimeStamp = (float)(Convert.ToInt32(rawData[0]));
             vTimeStamp =  (vTimeStamp / 1000f) - sStartTime ;
-            Int16 vBitmask = Convert.ToInt16(((string)vRawData[1]), 16);
+            Int16 vBitmask = Convert.ToInt16(rawData[1], 16);
 
             int vStartIndex = 2;
             int vEndIndex = 11;
@@ -100,14 +70,20 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                 //data is valid 
                 if ((vBitmask & (1 << vBitmaskCheck)) == (1 << vBitmaskCheck))
                 {
-                    string[] v3data = ((string)vRawData[i]).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] v3data = rawData[i].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                     int vLength = v3data.Length;
                      var vFinalVals = new BodyFrame.Vect4();
                     for (int j = 0; j < vLength; j++)
                     {
                         vFinalVals[j] = ConversionTools.ConvertHexStringToFloat(v3data[j]); 
-                    } 
-                    PreviouslyValidOrientations[vSetterIndex] = vFinalVals; 
+                    }
+                   
+              //      float vRoll = ConversionTools.ConvertHexStringToFloat((v3data[0]));
+               //     float vPitch = ConversionTools.ConvertHexStringToFloat((v3data[1]));
+//float vYaw = ConversionTools.ConvertHexStringToFloat((v3data[2]));
+
+                    PreviouslyValidOrientations[vSetterIndex] = vFinalVals;
+                        // new BodyFrame.Vect4(vPitch, vRoll, vYaw);// new Vector3(vPitch, vRoll, vYaw);
                 }
             }
             BodyFrame vBodyFrame = CreateBodyFrame(PreviouslyValidOrientations);

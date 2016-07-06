@@ -10,8 +10,7 @@
 using System;
 using System.Collections.Generic; 
 using System.IO;
-using Assets.Scripts.Communication.DatabaseConnectionPipe;
-using Assets.Scripts.Frames_Recorder.FramesRecording;
+using Assets.Scripts.Communication.DatabaseConnectionPipe; 
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.UI.Tagging;
 using UnityEngine;
@@ -61,13 +60,14 @@ namespace Assets.Scripts.Tests.database
             }
         }
 
-        BodyFramesRecordingBase RecordingGetTest()
+        BodyFramesRecording RecordingGetTest()
         {
-            BodyFramesRecordingBase vRec = Database.Connection.GetRawRecording(RecordingGuid);
+            BodyFramesRecording vRec = Database.Connection.GetRawRecording(RecordingGuid);
             if (vRec != null)
             {
                 Debug.Log("<color=green>Success! </color> Found recording GUID " + vRec.BodyRecordingGuid);
-                Debug.Log("<color=green>Success! </color> Recording length " + vRec.RecordingRawFramesCount);
+                Debug.Log("<color=green>Success! </color> Recording length " + vRec.RecordingRawFrames.Count);
+
             }
             return vRec;
         }
@@ -102,7 +102,7 @@ namespace Assets.Scripts.Tests.database
 
 
         }
-        void RecordingAddCallback(BodyFramesRecordingBase vBfRec)
+        void RecordingAddCallback(BodyFramesRecording vBfRec)
         {
             Debug.Log("found " + vBfRec.BodyRecordingGuid + "... now adding to DB");
             Database.Connection.CreateRecording(vBfRec);
@@ -138,7 +138,7 @@ namespace Assets.Scripts.Tests.database
             string vTest = "Testag";
             string vPath = "Assets/Resources/english-words.dict";
             string vFileContent = "";
-            BodyFramesRecordingBase vGet = RecordingGetTest();
+            BodyFramesRecording vGet = RecordingGetTest();
             /*  
               using (StreamReader vStreamReader = new StreamReader(File.OpenRead(vPath)))
               {

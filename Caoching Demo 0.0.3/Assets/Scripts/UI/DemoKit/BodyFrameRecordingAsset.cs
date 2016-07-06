@@ -5,8 +5,7 @@
 * @date  April 2016
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
-
-using Assets.Scripts.Frames_Recorder.FramesRecording;
+ 
 using UnityEngine;
 
 namespace Assets.Scripts.UI.DemoKit
@@ -28,7 +27,7 @@ namespace Assets.Scripts.UI.DemoKit
             Path = vPath;
             //BodyRecordingsMgr.Instance.ReadRecordingFile(Path, RecordingAddCallback);
 
-            CsvBodyRecordingReader vTempReader = new CsvBodyRecordingReader(vPath);
+            BodyRecordingReader vTempReader = new BodyRecordingReader(vPath);
             vTempReader.IsFromDatFile = false;
            Debug.Log(vTempReader.ReadFile(vPath));
             Lines = vTempReader.GetRecordingLines(); 
@@ -39,7 +38,7 @@ namespace Assets.Scripts.UI.DemoKit
         /// callback performed after a recording file has been read
         /// </summary>
         /// <param name="vRecording">A recording and it's information</param>
-        private void RecordingAddCallback(CsvBodyFramesRecording vRecording)
+        private void RecordingAddCallback(BodyFramesRecording vRecording)
         {
          //   mFrameRecording = vRecording;
 

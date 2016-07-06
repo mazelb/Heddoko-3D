@@ -8,9 +8,9 @@
 
 using UnityEngine;
 using System.Collections.Generic;
-using Assets.Scripts.Body_Data.view;
-using Assets.Scripts.Body_Data.View.Anaylsis;
 using Assets.Scripts.Utils.DebugContext;
+using Assets.Scripts.Utils.DebugContext.logging;
+using LogType = Assets.Scripts.Utils.DebugContext.logging.LogType;
 
 
 

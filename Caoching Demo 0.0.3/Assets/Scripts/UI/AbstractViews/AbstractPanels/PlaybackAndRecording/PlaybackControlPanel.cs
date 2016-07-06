@@ -10,7 +10,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Frames_Pipeline;
-using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Layouts;
@@ -22,7 +21,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
 {
 
     public delegate void BodyUpdated(Body vBody);
-    public delegate void FinalFramePositionReached();
+
     public delegate void RecordingUpdated(PlaybackControlPanel vControlPanel);
     /// <summary>
     /// Provides controls for recording play back
@@ -31,7 +30,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     public class PlaybackControlPanel : AbstractControlPanel, IPermissionLevelContractor
     {
         private RecordingPlaybackTask mPlaybackTask;
-        public event FinalFramePositionReached FinalFramePositionEvent;
         private Body mBody;
         public RecordingProgressSubControl RecordingProgressSliderSubControl;
         public RecordingForwardSubControl RecordingForwardSubControl;
@@ -439,13 +437,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                         RecordingProgressSliderSubControl.UpdateCurrentTime(mPlaybackTask.GetCurrentPlaybackIndex);
                         RecordingIndexValue.SetIndexValue(mPlaybackTask.GetCurrentPlaybackIndex);
                     }
-                    if (mPlaybackTask.GetCurrentPlaybackIndex == mPlaybackTask.RecordingCount - 1)
-                    {
-                        if (FinalFramePositionEvent != null)
-                        {
-                            FinalFramePositionEvent();
-                        }
-                    }
                 }
 
             }
@@ -514,17 +505,17 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// <summary>
         /// A new recording has been selected
         /// </summary>
-        /// <param name="vNewCsvBodyFramesRecording"></param>
-        public void NewRecordingSelected(BodyFramesRecordingBase vNewCsvBodyFramesRecording)
+        /// <param name="vNewBodyFramesRecording"></param>
+        public void NewRecordingSelected(BodyFramesRecording vNewBodyFramesRecording)
         {
-            if (mBody != null && vNewCsvBodyFramesRecording != null)
+            if (mBody != null && vNewBodyFramesRecording != null)
             {
                 mBody.StopThread();
                 if (mBody.InitialBodyFrame != null)
                 {
                     mBody.View.ResetInitialFrame();
                 }
-                string vRecGuid = vNewCsvBodyFramesRecording.BodyRecordingGuid;
+                string vRecGuid = vNewBodyFramesRecording.BodyRecordingGuid;
                 mBody.PlayRecording(vRecGuid);
                 //update the recording playback task by polling the body
                 StopCoroutine(CaptureRecordingPlaybackTask());

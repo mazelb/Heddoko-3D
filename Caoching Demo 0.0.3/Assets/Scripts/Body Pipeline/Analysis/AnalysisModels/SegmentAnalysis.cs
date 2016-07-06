@@ -7,7 +7,6 @@
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
 using System;
-using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels;
 using UnityEngine;
 
 namespace Assets.Scripts.Body_Pipeline.Analysis
@@ -40,7 +39,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <param name="vListener"></param>
         internal void AddAnalysisCompletionListener(AnalysisComplete vListener)
         {
-            AnalysisCompletedEvent += vListener;  
+            AnalysisCompletedEvent += vListener; 
         }
 
         /// <summary>
@@ -100,7 +99,5 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
 
             return angle360;
         }
-
-    
     }
 }

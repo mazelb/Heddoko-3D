@@ -30,34 +30,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameEncryption.Decryption
 
         public string Decrypt(string vFilepath)
         {
-            StreamReader vFile = new StreamReader(vFilepath);
-            //Read one line, this line is the header line. Older brainpack firmware did not
-            //include this header file, so we make sure that this file exist. Otherwise, we add in a guid 
-            string vLine ="";
-            while ((vLine = vFile.ReadLine()) != null)
-            {
-                break;
-            }
-            string vStringOut = Guid.NewGuid() + "\r\n" + Guid.NewGuid() + "\r\n";//+ Guid.NewGuid() + "\r\n";
-            try
-            {
-                if (vLine != null && vLine.Contains("BPVERSION:"))
-                {
-                    vLine = vLine.Replace("BPVERSION:", "");
-                    var vExploded = vLine.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-                    vStringOut += vExploded[1]+"\r\n";
-                    //add date time
-                    vStringOut += vExploded[2] + "\r\n";
-                }
-            }
-            catch (Exception)
-            {
-                vStringOut = Guid.NewGuid() + "\r\n" + Guid.NewGuid() + "\r\n" + Guid.NewGuid() + "\r\n" + DateTime.Now.ToString("yyy-MM-ddTHH:mm:ff");
-
-            }
-          
-            
-           
+            string vStringOut = Guid.NewGuid() + "\r\n" + Guid.NewGuid() + "\r\n" + Guid.NewGuid() + "\r\n";
             try
             { 
    

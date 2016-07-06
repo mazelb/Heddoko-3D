@@ -19884,12 +19884,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 987836709}
---- !u!114 &990170747 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11475356, guid: 73745ec5c5a2873409436e5c685c9db4,
-    type: 2}
-  m_PrefabInternal: {fileID: 735924172}
-  m_Script: {fileID: 11500000, guid: f7ad2fe22a9c2f24ba38c8c3c29ef033, type: 3}
 --- !u!1 &1019805302
 GameObject:
   m_ObjectHideFlags: 0
@@ -22196,10 +22190,13 @@ MonoBehaviour:
       LeftLegStride: {x: 0, y: 0, z: 0}
       AngleKneeFlexion: 0
       AngleKneeRotation: 0
-      UseGlobalReference: 0
       AngleHipFlexion: 0
+      UseGlobalReference: 0
+      SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
+      SignedAngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -22221,8 +22218,11 @@ MonoBehaviour:
       AngleKneeRotation: 0
       UseGlobalReference: 0
       AngleHipFlexion: 0
+      SignedAngleHipAbduction: 0
+      SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -25126,10 +25126,13 @@ MonoBehaviour:
       LeftLegStride: {x: 0, y: 0, z: 0}
       AngleKneeFlexion: 0
       AngleKneeRotation: 0
-      UseGlobalReference: 0
       AngleHipFlexion: 0
+      UseGlobalReference: 0
+      SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
+      SignedAngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -25151,8 +25154,11 @@ MonoBehaviour:
       AngleKneeRotation: 0
       UseGlobalReference: 0
       AngleHipFlexion: 0
+      SignedAngleHipAbduction: 0
+      SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -30786,7 +30792,7 @@ GameObject:
   - 114: {fileID: 1569508882}
   - 114: {fileID: 1569508886}
   m_Layer: 5
-  m_Name: Ui canvas
+  m_Name: UI canvas
   m_TagString: UiCanvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31220,10 +31226,13 @@ MonoBehaviour:
       LeftLegStride: {x: 0, y: 0, z: 0}
       AngleKneeFlexion: 0
       AngleKneeRotation: 0
-      UseGlobalReference: 0
       AngleHipFlexion: 0
+      UseGlobalReference: 0
+      SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
+      SignedAngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -31245,8 +31254,11 @@ MonoBehaviour:
       AngleKneeRotation: 0
       UseGlobalReference: 0
       AngleHipFlexion: 0
+      SignedAngleHipAbduction: 0
+      SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -38546,10 +38558,13 @@ MonoBehaviour:
       LeftLegStride: {x: 0, y: 0, z: 0}
       AngleKneeFlexion: 0
       AngleKneeRotation: 0
-      UseGlobalReference: 0
       AngleHipFlexion: 0
+      UseGlobalReference: 0
+      SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
+      SignedAngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -38571,8 +38586,11 @@ MonoBehaviour:
       AngleKneeRotation: 0
       UseGlobalReference: 0
       AngleHipFlexion: 0
+      SignedAngleHipAbduction: 0
+      SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -38671,10 +38689,13 @@ MonoBehaviour:
       LeftLegStride: {x: 0, y: 0, z: 0}
       AngleKneeFlexion: 0
       AngleKneeRotation: 0
-      UseGlobalReference: 0
       AngleHipFlexion: 0
+      UseGlobalReference: 0
+      SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
+      SignedAngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -38696,8 +38717,11 @@ MonoBehaviour:
       AngleKneeRotation: 0
       UseGlobalReference: 0
       AngleHipFlexion: 0
+      SignedAngleHipAbduction: 0
+      SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -40253,7 +40277,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 708447077}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999998
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -41449,7 +41473,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NextView: {fileID: 0}
   PreviousView: {fileID: 0}
-  SettingsView: {fileID: 990170747}
+  SettingsView: {fileID: 0}
   UiCamera: {fileID: 1047580056}
 --- !u!114 &2077341966
 MonoBehaviour:
@@ -41817,10 +41841,13 @@ MonoBehaviour:
       LeftLegStride: {x: 0, y: 0, z: 0}
       AngleKneeFlexion: 0
       AngleKneeRotation: 0
-      UseGlobalReference: 0
       AngleHipFlexion: 0
+      UseGlobalReference: 0
+      SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
+      SignedAngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -41842,8 +41869,11 @@ MonoBehaviour:
       AngleKneeRotation: 0
       UseGlobalReference: 0
       AngleHipFlexion: 0
+      SignedAngleHipAbduction: 0
+      SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0

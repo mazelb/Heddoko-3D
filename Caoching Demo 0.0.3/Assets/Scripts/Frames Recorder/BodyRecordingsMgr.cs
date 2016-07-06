@@ -9,11 +9,9 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
+using System.Linq; 
 using System.Threading;
 using Assets.Scripts.Communication.DatabaseConnectionPipe;
-using Assets.Scripts.Frames_Recorder.FramesReader;
-using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.Utils;
 
 
@@ -28,10 +26,10 @@ public class BodyRecordingsMgr : IDatabaseConsumer
     /// Delegate definition of a callback function
     /// </summary>
     /// <param name="vRecording"></param>
-    public delegate void BodyFramesRecordingFoundDel(BodyFramesRecordingBase vRecording);
+    public delegate void BodyFramesRecordingFoundDel(BodyFramesRecording vRecording);
     #region Singleton definition
     // ReSharper disable once InconsistentNaming
-    private static readonly BodyRecordingsMgr instance = new BodyRecordingsMgr();
+    private static readonly BodyRecordingsMgr instance = new BodyRecordingsMgr();  
     public delegate void StopActionDelegate();
     public event StopActionDelegate StopActionEvent;
 
@@ -55,7 +53,7 @@ public class BodyRecordingsMgr : IDatabaseConsumer
     }
     #endregion
 
-
+    
     //Scanned files 
     private string[] mFilePaths;
 
@@ -63,7 +61,7 @@ public class BodyRecordingsMgr : IDatabaseConsumer
     private string mDirectoryPath;
 
     //Recordings available
-    public List<BodyFramesRecordingBase> Recordings = new List<BodyFramesRecordingBase>();
+    public List<BodyFramesRecording> Recordings = new List<BodyFramesRecording>();
 
     //Map Body UUID to Recording UUID
     Dictionary<string, List<string>> mRecordingsDictionary = new Dictionary<string, List<string>>();
@@ -77,7 +75,7 @@ public class BodyRecordingsMgr : IDatabaseConsumer
         get { return mFilePaths; }
     }
 
-
+    
     /**
     * ScanRecordings()
     * @param vDirectoryPath: The path in which the function will scan
@@ -88,9 +86,9 @@ public class BodyRecordingsMgr : IDatabaseConsumer
     {
         mDirectoryPath = vDirectoryPath;
         string[] vDatFilePaths = Directory.GetFiles(mDirectoryPath, "*.dat");
-        string[] vCsvFilePaths = Directory.GetFiles(mDirectoryPath, "*.csv");
+        string[] vCsvFilePaths = Directory.GetFiles(mDirectoryPath, "*.csv"); 
         //ignore logindex.dat
-        vDatFilePaths = vDatFilePaths.Where(vInvalid => vInvalid.IndexOf("logindex", StringComparison.OrdinalIgnoreCase) < 0).ToArray();
+        vDatFilePaths = vDatFilePaths.Where(vInvalid => vInvalid.IndexOf("logindex",StringComparison.OrdinalIgnoreCase) <0).ToArray();
         //combine the two
         mFilePaths = new string[vDatFilePaths.Length + vCsvFilePaths.Length];
         Array.Copy(vDatFilePaths, mFilePaths, vDatFilePaths.Length);
@@ -126,31 +124,56 @@ public class BodyRecordingsMgr : IDatabaseConsumer
         {
             return;
         }
-        //Create a Recording reader based on the file extension
-        BodyRecordingReaderBase vRecordingBase = null;
 
-        if (vFilePath.EndsWith("csv") || vFilePath.EndsWith("dat"))
+        BodyRecordingReader vTempReader = new BodyRecordingReader(vFilePath);
+
+        if (vTempReader.ReadFile(vTempReader.FilePath) > 0)
         {
-            vRecordingBase = new CsvBodyRecordingReader(vFilePath);
-
-
-        }
-        else if (vFilePath.EndsWith("hsm"))
-        {
-            vRecordingBase = new ProtoBodyRecordingReader(vFilePath);
+            AddNewRecording(vTempReader.GetRecordingLines()  );
         }
 
-        if (vRecordingBase != null)
+    }
+
+ 
+    private void ReadCallback( object threadContext)
+    {
+        if (threadContext is Array)
         {
-            if (vRecordingBase.ReadFile(vFilePath) > 0)
+            object[] vObjectArray = (object[]) threadContext;
+          
+            BodyRecordingReader vTempReader = vObjectArray[0] as BodyRecordingReader;
+            if (vTempReader != null)
             {
-                AddNewRecording(vRecordingBase);
+                StopActionEvent += vTempReader.Stop;
+                Action<BodyFramesRecording> vCallbackAction = (Action<BodyFramesRecording>) vObjectArray[1];
+
+                if (vTempReader.ReadFile(vTempReader.FilePath) > 0)
+                {
+                    string vVersion = vTempReader.CrytoManager.GetCrytpoVersion;
+                    AddNewRecording(vTempReader.GetRecordingLines(), vTempReader.FilePath,vTempReader.IsFromDatFile,vVersion, vCallbackAction);
+                }
+                StopActionEvent -= vTempReader.Stop;
             }
         }
-        //if (vTempReader.ReadFile(vTempReader.FilePath) > 0)
-        //{
+        else
+        {
+            //todo: add listener here
+            BodyRecordingReader vTempReader = (BodyRecordingReader)threadContext;
+            StopActionEvent += vTempReader.Stop;
+            if (vTempReader.ReadFile(vTempReader.FilePath) > 0)
+            {
+                try
+                {
+                    AddNewRecording(vTempReader.GetRecordingLines());
+                }
+                catch
+                {
+                    // ignored
+                }
+            }
+            StopActionEvent -= vTempReader.Stop;
+        }
 
-        //}
 
     }
 
@@ -159,174 +182,60 @@ public class BodyRecordingsMgr : IDatabaseConsumer
     /// </summary>
     /// <param name="vFilePath">the path of the file</param>
     /// <param name="vCallbackAction">the callback action that accepts a BodyFrameRecording</param>
-    public void ReadRecordingFile(string vFilePath, Action<BodyFramesRecordingBase> vCallbackAction)
+    public void ReadRecordingFile(string vFilePath, Action<BodyFramesRecording> vCallbackAction)
     {
-
         //Read recording file
         //ignore meta files
         if (vFilePath.EndsWith("meta"))
         {
             return;
         }
-        FilePathReqCallback vCallbackstruct = new FilePathReqCallback(vFilePath, vCallbackAction);
-        ThreadPool.QueueUserWorkItem(ReaderWorker, vCallbackstruct);
-        //{
-        //     ReadCallback(new object[] { vRecordingBase, vCallbackAction });
-        // });
-        // vThread.Start();
-    }
 
-
-    private void ReaderWorker(object vCallbackStructure)
-    {
-        FilePathReqCallback vStructure = (FilePathReqCallback)vCallbackStructure;
-        var vFilePath = vStructure.FilePath;
-        BodyRecordingReaderBase vRecordingBase = null;
-
-        if (vFilePath.EndsWith("csv") || vFilePath.EndsWith("dat"))
+        BodyRecordingReader vTempReader = new BodyRecordingReader(vFilePath);
+        Thread vThread = new Thread(() =>
         {
-            vRecordingBase = new CsvBodyRecordingReader(vFilePath);
-
-        }
-        else if (vFilePath.EndsWith("hsm"))
-        {
-            vRecordingBase = new ProtoBodyRecordingReader(vFilePath);
-        }
-
-        if (vRecordingBase != null)
-        {
-            if (vRecordingBase.ReadFile(vFilePath) > 0)
-            {
-                AddNewRecording(vRecordingBase, vStructure);
-            }
-        }
-
-    }
-
-
-    public void AddNewRecording(BodyRecordingReaderBase vReaderBase, FilePathReqCallback vRecordingCallback)
-    {
-        BodyFramesRecordingBase vTempRecording = BodyFramesRecordingBase.RecordingFactory(vReaderBase);
-        if (!RecordingExist(vTempRecording.BodyRecordingGuid))
-        {
-            vTempRecording.ExtractRawFramesData(vReaderBase);
-
-            //Add body to the body manager
-            BodiesManager.Instance.AddNewBody(vTempRecording.BodyGuid);
-
-            //Map Body to Recording for future play
-            MapRecordingToBody(vTempRecording.BodyGuid, vTempRecording.BodyRecordingGuid);
-
-            //Add recording to the list 
-            Recordings.Add(vTempRecording);
-        }
-        if (vRecordingCallback.CallbackAction != null)
-        {
-            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => vRecordingCallback.CallbackAction(vTempRecording));
-        }
-    }
-    //private void ReadCallback(object threadContext)
-    //{
-    //    if (threadContext is Array)
-    //    {
-    //        object[] vObjectArray = (object[])threadContext;
-
-    //        BodyRecordingReaderBase vTempReader = vObjectArray[0] as BodyRecordingReaderBase;
-    //        if (vTempReader != null)
-    //        {
-    //            StopActionEvent += vTempReader.Stop;
-    //            Action<CsvBodyFramesRecording> vCallbackAction = (Action<CsvBodyFramesRecording>)vObjectArray[1];
-
-    //            if (vTempReader.ReadFile(vTempReader.FilePath) > 0)
-    //            {
-    //                string vVersion = vTempReader.CrytoManager.GetCrytpoVersion;
-    //                AddNewRecording(vTempReader.GetRecordingLines(), vTempReader.FilePath, vTempReader.IsFromDatFile, vVersion, vCallbackAction);
-    //            }
-    //            StopActionEvent -= vTempReader.Stop;
-    //        }
-    //    }
-    //    else
-    //    {
-    //        //todo: add listener here
-    //        CsvBodyRecordingReader vTempReader = (CsvBodyRecordingReader)threadContext;
-    //        StopActionEvent += vTempReader.Stop;
-    //        if (vTempReader.ReadFile(vTempReader.FilePath) > 0)
-    //        {
-    //            try
-    //            {
-    //                AddNewRecording(vTempReader.GetRecordingLines());
-    //            }
-    //            catch
-    //            {
-    //                // ignored
-    //            }
-    //        }
-    //        StopActionEvent -= vTempReader.Stop;
-    //    }
-
-
-    //}
-
-
-
-    /// <summary>
-    /// Adds a new recording from the contents found in a reader
-    /// </summary>
-    public void AddNewRecording(BodyRecordingReaderBase vReaderBase)
-    {
-
-        BodyFramesRecordingBase vTempRecording = BodyFramesRecordingBase.RecordingFactory(vReaderBase);
-        if (!RecordingExist(vTempRecording.BodyRecordingGuid))
-        {
-            vTempRecording.ExtractRawFramesData(vReaderBase);
-
-            //Add body to the body manager
-            BodiesManager.Instance.AddNewBody(vTempRecording.BodyGuid);
-
-            //Map Body to Recording for future play
-            MapRecordingToBody(vTempRecording.BodyGuid, vTempRecording.BodyRecordingGuid);
-
-            //Add recording to the list 
-            Recordings.Add(vTempRecording);
-        }
+            ReadCallback(new object[] {vTempReader, vCallbackAction});
+        });
+        vThread.Start(); 
     }
  
- //   /**
- //* AddNewRecording()
- //* @param vRecordingLines: The recording file content in lines
- //* @brief Adds a recording to the list
- //*/
- //   public void AddNewRecording(BodyFramesRecordingBase vRecordingBase)
- //   {
+ 
+    /**
+    * AddNewRecording()
+    * @param vRecordingLines: The recording file content in lines
+    * @brief Adds a recording to the list
+    */
+    public void AddNewRecording(string[] vRecordingLines)
+    {
+        BodyFramesRecording vTempRecording = new BodyFramesRecording();
 
- //       // CsvBodyFramesRecording vTempRecording = new CsvBodyFramesRecording();
+        vTempRecording.ExtractRecordingUUIDs(vRecordingLines);
 
- //       vTempRecording.ExtractRecordingUUIDs(vRecordingLines);
+        //If recording already exists, do nothing
+        if (!RecordingExist(vTempRecording.BodyRecordingGuid))
+        {
+            vTempRecording.ExtractRawFramesData(vRecordingLines);
 
- //       //If recording already exists, do nothing
- //       if (!RecordingExist(vTempRecording.BodyRecordingGuid))
- //       {
- //           vTempRecording.ExtractRawFramesData(vRecordingLines);
+            //Add body to the body manager
+            BodiesManager.Instance.AddNewBody(vTempRecording.BodyGuid);
 
- //           //Add body to the body manager
- //           BodiesManager.Instance.AddNewBody(vTempRecording.BodyGuid);
+            //Map Body to Recording for future play
+            MapRecordingToBody(vTempRecording.BodyGuid, vTempRecording.BodyRecordingGuid);
 
- //           //Map Body to Recording for future play
- //           MapRecordingToBody(vTempRecording.BodyGuid, vTempRecording.BodyRecordingGuid);
+            //Add recording to the list 
+            Recordings.Add(vTempRecording);
+        }
+    }
 
- //           //Add recording to the list 
- //           Recordings.Add(vTempRecording);
- //       }
- //   }
     /// <summary>
     /// Adds a recording to the list, with a callback performed on completion
     /// </summary>
     /// <param name="vRecordingLines">the lines of recordings</param>
     /// <param name="vrxFromDatFile">was the source received from a dat file?</param>
-    /// <param name="vCallbackAction">the callback action with a CsvBodyFramesRecording parameter</param>
-    public void AddNewRecording(string[] vRecordingLines, string vTitle, bool vrxFromDatFile, Action<CsvBodyFramesRecording> vCallbackAction, string vVersion ="0")
+    /// <param name="vCallbackAction">the callback action with a BodyFramesRecording parameter</param>
+    public void AddNewRecording(string[] vRecordingLines,string vTitle, bool vrxFromDatFile,string vVersion, Action<BodyFramesRecording> vCallbackAction)
     {
-        CsvBodyFramesRecording vTempRecording = new CsvBodyFramesRecording { FromDatFile = vrxFromDatFile };
+        BodyFramesRecording vTempRecording = new BodyFramesRecording {FromDatFile = vrxFromDatFile};
         vTempRecording.Title = vTitle;
         vTempRecording.ExtractRecordingUUIDs(vRecordingLines);
         vTempRecording.FormatRevision = vrxFromDatFile ? vVersion : "0";
@@ -346,11 +255,11 @@ public class BodyRecordingsMgr : IDatabaseConsumer
         }
         if (vCallbackAction != null)
         {
-            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => vCallbackAction(vTempRecording));
+           OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => vCallbackAction(vTempRecording));
         }
-
+   
     }
-
+     
 
     /**
     * CreateNewRecording()
@@ -403,22 +312,22 @@ public class BodyRecordingsMgr : IDatabaseConsumer
     /**
     * GetRecordingsForBody()
     * @param vBodyUUID: The containing body UUID
-    * @return List<CsvBodyFramesRecording>: the list of recordings assigned to the body
+    * @return List<BodyFramesRecording>: the list of recordings assigned to the body
     * @brief returns all the recordings assigned to a body if they exist
     */
-    public List<BodyFramesRecordingBase> GetRecordingsForBody(string vBodyUuid)
+    public List<BodyFramesRecording> GetRecordingsForBody(string vBodyUuid)
     {
         //look for the recording only if the body exists
         if (BodiesManager.Instance.BodyExist(vBodyUuid))
         {
             //get the recordings from the list of recording IDs assigned to that body
             List<string> vListOfRecordingIds;
-            List<BodyFramesRecordingBase> vListOfRecordings = new List<BodyFramesRecordingBase>();
+            List<BodyFramesRecording> vListOfRecordings = new List<BodyFramesRecording>();
             if (RecordingsDictionary.TryGetValue(vBodyUuid, out vListOfRecordingIds))
             {
                 for (int vIndex = 0; vIndex < vListOfRecordingIds.Count; vIndex++)
                 {
-                    BodyFramesRecordingBase vRecording = GetRecordingByUuid(vListOfRecordingIds[vIndex]);
+                    BodyFramesRecording vRecording = GetRecordingByUuid(vListOfRecordingIds[vIndex]);
                     if (vRecording != null)
                     {
                         vListOfRecordings.Add(vRecording);
@@ -438,20 +347,20 @@ public class BodyRecordingsMgr : IDatabaseConsumer
     /**
     * GetRecordingByUUID()
     * @param vRecUUID: The recording UUID
-    * @return CsvBodyFramesRecording: The recording
+    * @return BodyFramesRecording: The recording
     * @brief looks for a recording by its UUID
     */
-    public BodyFramesRecordingBase GetRecordingByUuid(string vRecUuid)
+    public BodyFramesRecording GetRecordingByUuid(string vRecUuid )
     {
         if (RecordingExist(vRecUuid))
         {
             return Recordings.Find(vX => vX.BodyRecordingGuid == vRecUuid);
         }
-
-        //Get the recording from the database
-        BodyFramesRecordingBase vNewRecording = Database.Connection.GetRawRecording(vRecUuid);
-        Recordings.Add(vNewRecording);
-        return vNewRecording;
+        
+            //Get the recording from the database
+            BodyFramesRecording vNewRecording = Database.Connection.GetRawRecording(vRecUuid);
+            Recordings.Add(vNewRecording);
+            return vNewRecording; 
     }
 
     /// <summary>
@@ -461,7 +370,7 @@ public class BodyRecordingsMgr : IDatabaseConsumer
     /// <param name="vCallbackDel">the callback delegate that accepts a body frame recording</param>
     public void TryGetRecordingByUuid(string vRecUuid, BodyFramesRecordingFoundDel vCallbackDel)
     {
-        BodyFramesRecordingBase vRecording = GetRecordingByUuid(vRecUuid);
+        BodyFramesRecording vRecording = GetRecordingByUuid(vRecUuid);
         if (vCallbackDel != null)
         {
             vCallbackDel(vRecording);
@@ -475,7 +384,7 @@ public class BodyRecordingsMgr : IDatabaseConsumer
     /// <param name="vFilter"></param>
     public void TryGetRecordingUuids(string vFilter)
     {
-
+         
     }
 
     /// <summary>
@@ -494,14 +403,14 @@ public class BodyRecordingsMgr : IDatabaseConsumer
     public struct FilePathReqCallback
     {
         public string FilePath;
-        public Action<BodyFramesRecordingBase> CallbackAction;
+        public Action<BodyFramesRecording> CallbackAction;
 
-        public FilePathReqCallback(string vFilePath, Action<BodyFramesRecordingBase> vCallbackAction)
+        public FilePathReqCallback(string vFilePath, Action<BodyFramesRecording> vCallbackAction)
         {
             FilePath = vFilePath;
             CallbackAction = vCallbackAction;
         }
     }
 
-
+  
 }

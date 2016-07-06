@@ -42,7 +42,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.cam
 
                 mLookAtSubsegmentType = value;
                 //change the target subsegment
-                Target = TargetRenderedBody.GetSubSegmentTransform(mLookAtSubsegmentType);
+                Target = TargetRenderedBody.GetSubSegment(mLookAtSubsegmentType);
 
             }
         }

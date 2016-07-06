@@ -11,15 +11,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Body_Pipeline.Analysis;
-using Assets.Scripts.UI.AbstractViews.Permissions;
 using Assets.Scripts.UI.Loading;
-using HeddokoSDK.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.AnaylsisRecording
 {
-    [UserRolePermission(new[] { UserRoleType.Analyst })]
     public class SegmentAnalysisDataContainerController : MonoBehaviour
     {
         public SegmentAnalysisDataContainer Container;
@@ -68,13 +65,10 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
                     vSegmentAnalysis.RemoveAnalysisCompletionListener(vDataStore.AnalysisSectionModel.DataStore.UpdateSegmentFieldInfo);
                     vSegmentAnalysis.AddAnalysisCompletionListener(vDataStore.AnalysisSectionModel.DataStore.UpdateSegmentFieldInfo);
                 }
-
                 vDataStore.AnalysisSectionModel.DataStore.Ignore = true;
                 vStart = true;
                 DisablingProgressBar.Instance.StartProgressBar("CONVERTING " + vCurrentDataCount + "/" + vMaxConversionCount + " jobs");
                 yield return null;
-
-                //Start updating the body between the given indices
                 for (int i = vDataStore.AnalysisSectionModel.StartIndex; i < vDataStore.AnalysisSectionModel.EndIndex; i++)
                 {
 
@@ -92,8 +86,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
                     }
                     Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic = Body.GetTracking(mPlaceholderBody);
                     Body.ApplyTracking(mPlaceholderBody, vDic);
-
-                    //only ignore the first frame analysis
                     if (vDataStore.AnalysisSectionModel.DataStore.Ignore)
                     {
                         vDataStore.AnalysisSectionModel.DataStore.Ignore = false;
@@ -101,9 +93,9 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
                     }
                 }
 
-                DisablingProgressBar.Instance.StartProgressBar("SAVING ANALYSIS RESULTS TO ... " + AnalysisDataStoreSerialization.GetSerializationStorePath);
+                DisablingProgressBar.Instance.StartProgressBar("SAVING ANALYSIS RESULTS TO ... " + vDataStore.AnalysisSectionModel.DataStore.mSerialization.GetSerializationStorePath);
                 yield return new WaitForSeconds(1.5f);
-                AnalysisDataStoreSerialization.WriteFile(vDataStore.AnalysisSectionModel.DataStore);
+                vDataStore.AnalysisSectionModel.DataStore.mSerialization.WriteFile(vDataStore.AnalysisSectionModel.DataStore);
                 vCurrentDataCount++;
             }
 
@@ -122,6 +114,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
 
         void Update()
         {
-         }
+            Debug.Log("alive");
+        }
     }
 }

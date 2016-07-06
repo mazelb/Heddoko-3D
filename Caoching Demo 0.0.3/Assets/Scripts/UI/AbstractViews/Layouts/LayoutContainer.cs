@@ -7,7 +7,6 @@
 */
 
 using System.Collections.Generic;
-using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.AbstractViews.Templates;
 using UnityEngine;
 
@@ -120,7 +119,7 @@ namespace Assets.Scripts.UI.AbstractViews.Layouts
         /// <param name="vStartNode">the node to start the search from</param>
         /// <param name="vRecording">the recording</param>
         /// <returns></returns>
-        public PanelNode GetPanelOfRecording(PanelNode vStartNode, CsvBodyFramesRecording
+        public PanelNode GetPanelOfRecording(PanelNode vStartNode, BodyFramesRecording
             vRecording)
         {
             PanelNode vEndResult = null;

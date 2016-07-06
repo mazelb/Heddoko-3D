@@ -4,7 +4,8 @@
 * @date April 2016
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
- 
+
+using System;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.Layouts;
@@ -22,15 +23,15 @@ namespace Assets.Scripts.UI.RecordingLoading
     /// </summary>
     public class LiveSuitFeedView : AbstractView
     {
-        internal LayoutType LayoutType = LayoutType.Single;
+        private LayoutType LayoutType = LayoutType.Single;
         public Layout CurrentLayout;
-        internal PanelNode[] mPanelNodes;
-        internal PanelNode mRootNode;
+        private PanelNode[] mPanelNodes;
+        private PanelNode mRootNode;
         public List<List<ControlPanelType>> ControlPanelTypeList = new List<List<ControlPanelType>>(2);
         public Body BrainpackBody;
         public BrainpackConnectionController BpController;
-        internal LiveFeedViewControlPanel mLiveFeedViewControlPanel;
-        internal bool mIsInitialized = false;
+        private LiveFeedViewControlPanel mLiveFeedViewControlPanel;
+        private bool mIsInitialized = false;
         public BodyFrameDataControl BodyFrameDataControl;
         public BodyFrameGraphControl FrameGraphControl; 
         public AnaylsisTextContainer AnaylsisTextContainer;
@@ -121,13 +122,6 @@ namespace Assets.Scripts.UI.RecordingLoading
             AnaylsisTextContainer.BodyToAnalyze = BrainpackBody;
         }
 
-        void OnDisable()
-        {
-            if (Application.isPlaying)
-            {
-                Hide();
-            }
-        }
         public override void Hide()
         {
             bool vIsLerp = BodySegment.IsUsingInterpolation;

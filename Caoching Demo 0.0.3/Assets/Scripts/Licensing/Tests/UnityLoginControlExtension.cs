@@ -15,9 +15,9 @@ namespace Assets.Scripts.Tests
     {
         public void RaiseLoginEvent(UserProfileModel vProfile)
         {
-            if (base.LoginSuccessEvent != null)
+            if (base.mLoginSuccessEvent != null)
             {
-                LoginSuccessEvent(vProfile);
+                mLoginSuccessEvent(vProfile);
             }
         }
     }
