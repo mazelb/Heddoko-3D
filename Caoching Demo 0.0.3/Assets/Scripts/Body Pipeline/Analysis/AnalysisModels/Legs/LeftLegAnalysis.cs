@@ -18,23 +18,24 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
     public class LeftLegAnalysis : LegAnalysis
     {
         //Knee Angles
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Knee Flexion")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "LKnee F/E")]
         public float AngleKneeFlexion;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Knee Rotation")]
+        [Analysis(IgnoreAttribute = true)]
         public float AngleKneeRotation;
 
         //Hip Angles
 
         [Analysis(IgnoreAttribute =true)]
         public float AngleHipFlexion;
+        [Analysis(IgnoreAttribute = true)]
         public bool UseGlobalReference = false;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Hip Flexion")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "LHip F/E")]
         public float SignedAngleHipFlexion;
         [Analysis(IgnoreAttribute = true)]
         public float AngleHipAbduction;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Hip Abduction")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "LHip Add/Abd")]
         public float SignedAngleHipAbduction;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Hip Rotation")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "LHip Int/Ext Rot")]
         public float AngleHipRotation;
         
         //Accelerations and velocities
@@ -64,6 +65,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
         public float NumberofSquats;
         [Analysis(IgnoreAttribute = true)]
         public float AngleSum;
+        [Analysis(IgnoreAttribute = true)]
         private bool mStartCountingSquats = true;
 
         //Detection of vertical Hip position

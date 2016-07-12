@@ -17,7 +17,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
     public class RightArmAnalysis : ArmAnalysis
     {
         //Elbow Angles
-        [Analysis(IgnoreAttribute = true)]
+        [Analysis(IgnoreAttribute = false ,AttributeName = "RElbow F/E")]
         public float AngleElbowFlexion = 0;
         [Analysis(IgnoreAttribute = true)]
         public float SignedAngleElbowFlexion = 0;
@@ -27,11 +27,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
         //Upper Arm Angles
         [Analysis(IgnoreAttribute = true)]
         public float AngleShoulderFlexion = 0;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Right Shoulder Flexion")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "RShould F/E")]
         public float SignedShoulderFlexion = 0;
         [Analysis(IgnoreAttribute = true)]
         public float AngleShoulderVertAbduction = 0;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Right Elbow Abduction")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "RShould Add/Abd")]
         public float SignedShoulderVerticalAbduction = 0;
         [Analysis(IgnoreAttribute = true)]
         public float AngleShoulderHorAbduction = 0;
@@ -175,6 +175,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             AngleShoulderReferenceXY = Vector3.Angle(Vector3.ProjectOnPlane(vShoulderAxisRight, Vector3.forward), Vector3.ProjectOnPlane(ReferenceVector, Vector3.forward));
             AngleShoulderReferenceXZ = Vector3.Angle(Vector3.ProjectOnPlane(vShoulderAxisRight, Vector3.up), Vector3.ProjectOnPlane(ReferenceVector, Vector3.up));
             AngleShoulderReferenceYZ = Vector3.Angle(Vector3.ProjectOnPlane(vShoulderAxisRight, Vector3.right), Vector3.ProjectOnPlane(ReferenceVector, Vector3.right));
+            NotifyAnalysisCompletionListeners();
         }
     }
 }

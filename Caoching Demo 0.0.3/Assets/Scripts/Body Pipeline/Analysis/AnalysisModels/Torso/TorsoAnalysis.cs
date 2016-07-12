@@ -15,15 +15,15 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
     public class TorsoAnalysis: SegmentAnalysis
     {
         //Angles extracted 
-        [Analysis(IgnoreAttribute = false, AttributeName = "Angle Torso Flexion")]
+        [Analysis(IgnoreAttribute = true)]
         public float AngleTorsoFlexion;
         [Analysis(IgnoreAttribute = true)]
         public float AngleTorsoLateral;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Angle Torso Lateral")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "Trunk LatBend R/L")]
         public float SignedAngleTorsoLateral;
         [Analysis(IgnoreAttribute = true)]
         public float AngleTorsoRotation;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Angle Torso Rotation")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "Trunk Rot R/L")]
         public float SignedAngleTorsoRotation;
         //current torso orientation
         [Analysis(IgnoreAttribute = true)]
@@ -36,7 +36,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
         public Transform KneeTransform;
 
 
-        [Analysis(IgnoreAttribute = false, AttributeName = "Signed Torso Flexion")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "Trunk F/E")]
         public float SignedTorsoFlexion;
 
         //Accelerations and velocities

@@ -366,9 +366,9 @@ public class BodyFrameThread : ThreadedJob
                     {
                         //conversion happens here, todo: place a check here for invalid data(less than 4 bytes in length
                         string[] v3data = vExploded[i].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                        float vRoll = ConversionTools.ConvertHexStringToFloat((v3data[0]));
-                        float vPitch = ConversionTools.ConvertHexStringToFloat((v3data[1]));
-                        float vYaw = ConversionTools.ConvertHexStringToFloat((v3data[2]));
+                        float vRoll = ConversionTools.ConvertHexStringToFloat((v3data[0])); //y
+                        float vPitch = ConversionTools.ConvertHexStringToFloat((v3data[1])); //x
+                        float vYaw = ConversionTools.ConvertHexStringToFloat((v3data[2]));//z
                         //mPreviouslyValidValues[vSetterIndex] = new Vector3(vPitch, vRoll, vYaw);
                         mPreviouslyValidValues[vSetterIndex] = new BodyFrame.Vect4(vPitch, vRoll, vYaw);
 

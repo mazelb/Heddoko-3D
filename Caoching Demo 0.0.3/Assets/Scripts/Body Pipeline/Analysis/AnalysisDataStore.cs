@@ -144,9 +144,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
 
                 }
                 catch (Exception vE)
-                {
-
-                    Debug.Log("Key "+vKvPair.Key);
+                { 
                     throw;
                 }
                 

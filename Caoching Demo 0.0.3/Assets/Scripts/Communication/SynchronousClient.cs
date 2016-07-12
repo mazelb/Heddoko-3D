@@ -315,7 +315,7 @@ namespace Assets.Scripts.Communication
         private bool mIsworking;
         public void Stop()
         {
-            while (mPriorityMessages.Count != 0) ;
+            //while (mPriorityMessages.Count != 0) ;
             mIsworking = false;
         }
 

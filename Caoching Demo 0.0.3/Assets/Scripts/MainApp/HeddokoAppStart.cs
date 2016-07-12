@@ -150,10 +150,25 @@ namespace Assets.Scripts.MainApp
         }
 
         void OnApplicationQuit()
-        { 
+        {
+            CleanUpOnQuit();
+        }
+
+        public void CleanUpOnQuit()
+        {
             DebugLogger.Instance.Stop();
-            mDbAccess.SaveApplicationSettings();
-            mDbAccess.Dispose();
+            try
+            {
+                mDbAccess.SaveApplicationSettings();
+                mDbAccess.Dispose();
+
+            }
+            catch
+            {
+                
+            }
+            
+
         }
 
         /// <summary>

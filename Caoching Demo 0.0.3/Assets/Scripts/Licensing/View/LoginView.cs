@@ -20,6 +20,7 @@ namespace Assets.Scripts.Licensing.Authentication
     public class LoginView : MonoBehaviour
     {
         public InputField UsernameInputField;
+        public Image LoadingImage;
         public Text UserNameErrorLabel;
         private IEnumerator mPassErrorAnim;
         public Text PasswordErrorLabel;
@@ -104,6 +105,7 @@ namespace Assets.Scripts.Licensing.Authentication
         public void EnableButtonControls()
         {
             SubmitInfoButton.interactable = true;
+            LoadingImage.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -142,6 +144,15 @@ namespace Assets.Scripts.Licensing.Authentication
                     SubmitUserNamePassword();
                 }
             }
+        }
+
+        /// <summary>
+        /// Enables or disables the loading icon
+        /// </summary>
+        /// <param name="vStatus">true  = active, false = inactive</param>
+        public void SetLoadingIconAsActive(bool vStatus)
+        {
+            LoadingImage.gameObject.SetActive(false);
         }
     }
 }

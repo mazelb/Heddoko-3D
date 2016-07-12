@@ -73,7 +73,7 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
                 var vRecordingReader = vReaderBase as CsvBodyRecordingReader;
                 CsvBodyFramesRecording vRecording = new CsvBodyFramesRecording();
                 vRecording.FromDatFile = false;
-                vRecording.ExtractRecordingUUIDs(vRecordingReader.GetRecordingLines());
+                vRecording.ExtractRecordingUuiDs(vRecordingReader.GetRecordingLines());
                 return vRecording;
             }
             else if (vType == typeof(ProtoBodyRecordingReader))

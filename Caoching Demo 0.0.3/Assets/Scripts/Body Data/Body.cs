@@ -313,8 +313,11 @@ public class Body
     {
         if (vBodyFrameRecording != null && vBodyFrameRecording.RecordingRawFramesCount > 0)
         {
-             //Setting the first frame as the initial frame
-            BodyFrame vBodyFrame = RawFrameConverter.ConvertRawFrame(vBodyFrameRecording.GetBodyRawFrameAt(0));
+            BodyFrame vBodyFrame = null;
+            vBodyFrame = RawFrameConverter.ConvertRawFrame(vBodyFrameRecording.GetBodyRawFrameAt(0));
+
+            //Setting the first frame as the initial frame
+
 
             SetInitialFrame(vBodyFrame);
             BodyFrameBuffer vBuffer1 = new BodyFrameBuffer();

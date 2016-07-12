@@ -8,8 +8,10 @@
 
 using System;
 using System.Collections.Generic;
-using HeddokoSDK;
-namespace Assets.Scripts.Licensing.Authentication
+using Assets.Scripts.Licensing.Authentication;
+
+// ReSharper disable DelegateSubtraction
+namespace Assets.Scripts.Licensing.Controller
 {
     public delegate void LoginError(string vMsg);
 
@@ -23,14 +25,14 @@ namespace Assets.Scripts.Licensing.Authentication
         public LoginModel LoginModel { get; set; }
         public LoginView LoginView { get; set; }
         private Dictionary<LoginErrorType, LoginError> mLoginError = new Dictionary<LoginErrorType, LoginError>();
-        internal LoginSubmission mLoginSubmissionEvent;
+        internal LoginSubmission LoginSubmissionEvent;
 
         public void Init(LoginModel vModel, LoginView vView)
         {
             LoginModel = vModel;
             LoginView = vView;
             LoginView.PasswordSubmissionEvent += Login;
-            LoginError vGeneric = (x) => { };
+            LoginError vGeneric = vX => { };
             var vEnumIterable = Enum.GetValues(typeof (LoginErrorType));
             foreach (var vErrorType in vEnumIterable)
             {
@@ -44,7 +46,7 @@ namespace Assets.Scripts.Licensing.Authentication
         /// <param name="vHandler">Handler</param>
         public void AddLoginSubmissionHandler(LoginSubmission vHandler)
         {
-            mLoginSubmissionEvent += vHandler;
+            LoginSubmissionEvent += vHandler;
         }
 
         /// <summary>
@@ -53,8 +55,12 @@ namespace Assets.Scripts.Licensing.Authentication
         /// <param name="vHandler">Handler</param>
         public void RemoveLoginSubmissionHandler(LoginSubmission vHandler)
         {
-            mLoginSubmissionEvent -= vHandler;
+            if (LoginSubmissionEvent != null)
+            {
+                LoginSubmissionEvent -= vHandler;
+            }
         }
+
         /// <summary>
         /// Adds an error handler with the specified type
         /// </summary>
@@ -82,7 +88,7 @@ namespace Assets.Scripts.Licensing.Authentication
             if (ValidateUserName() && ValidatePassword())
             {
                 //proceed to login. 
-                mLoginSubmissionEvent.Invoke(LoginModel);
+                LoginSubmissionEvent.Invoke(LoginModel);
             }
 
         }
@@ -91,6 +97,8 @@ namespace Assets.Scripts.Licensing.Authentication
         {
             mLoginError[vType].Invoke(vMsg);
         }
+
+        
         /// <summary>
         /// Validates user name
         /// </summary>

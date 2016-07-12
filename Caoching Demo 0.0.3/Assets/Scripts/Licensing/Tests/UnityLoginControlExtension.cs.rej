@@ -1,0 +1,13 @@
+diff a/Caoching Demo 0.0.3/Assets/Scripts/Licensing/Tests/UnityLoginControlExtension.cs b/Caoching Demo 0.0.3/Assets/Scripts/Licensing/Tests/UnityLoginControlExtension.cs	(rejected hunks)
+@@ -15,9 +15,9 @@
+     {
+         public void RaiseLoginEvent(UserProfileModel vProfile)
+         {
+-            if (base.LoginSuccessEvent != null)
++            if (base.mLoginSuccessEvent != null)
+             {
+-                LoginSuccessEvent(vProfile);
++                mLoginSuccessEvent(vProfile);
+             }
+         }
+     }

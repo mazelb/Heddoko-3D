@@ -18,9 +18,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
     public class LeftArmAnalysis : ArmAnalysis
     {
         //Elbow Angles
-        [Analysis(IgnoreAttribute = true)]
+        [Analysis(IgnoreAttribute = false, AttributeName = "LElbow F/E")]
         public float AngleElbowFlexion = 0;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Shoulder Flexion")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "LShould F/E")]
         public float SignedShoulderFlexion=0;
           public float SignedAngleElbowFlexion = 0;
         [Analysis(IgnoreAttribute = true)]
@@ -31,7 +31,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
         public float AngleShoulderFlexion = 0;
         [Analysis(IgnoreAttribute = true)]
         public float AngleShoulderVertAbduction = 0;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Left Vertical Abduction")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "LShould Add/Abd")] 
         public float SignedShoulderVerticalAbduction=0;
         [Analysis(IgnoreAttribute = true)]
         public float AngleShoulderHorAbduction = 0;
@@ -161,6 +161,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             AngularAccelerationShoulderRotation = (vAngularVelocityShoulderRotationNew - AngularVelocityShoulderRotation) / DeltaTime;
             AngularVelocityShoulderRotation = vAngularVelocityShoulderRotationNew;
             AngleShoulderRotation = vAngleShoulderRotationNew;
+            NotifyAnalysisCompletionListeners();
         }
     }
 }

@@ -6,16 +6,16 @@
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
 
-using Assets.Scripts.Licensing.Authentication;
+using Assets.Scripts.Licensing.Controller;
 using Assets.Scripts.Licensing.Model;
 
-namespace Assets.Scripts.Tests
+namespace Assets.Scripts.Licensing.Tests
 {
     public class UnityLoginControlExtension : UnityLoginControl
     {
         public void RaiseLoginEvent(UserProfileModel vProfile)
         {
-            if (base.LoginSuccessEvent != null)
+            if (LoginSuccessEvent != null)
             {
                 LoginSuccessEvent(vProfile);
             }

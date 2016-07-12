@@ -75,6 +75,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Views
         }
 
 
+        
+
         /// <summary>
         /// Changes the analysis view to the one requested
         /// </summary>

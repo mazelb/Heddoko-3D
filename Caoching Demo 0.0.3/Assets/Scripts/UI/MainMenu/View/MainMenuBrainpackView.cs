@@ -113,7 +113,7 @@ namespace Assets.Scripts.UI.MainMenu.View
                 ConnectionController.BrainpackComPort = mDropdownItems[vKey];
                 var message =
                     "Found " + vObj.Count + " Battery packs";
-                Notify.Template("FadingNotifyTemplate").Show(
+                Notify.Template("fade").Show(
                message,
               customHideDelay: 3f,
               hideAnimation: Notify.AnimationCollapse, clearSequence: true
@@ -123,7 +123,7 @@ namespace Assets.Scripts.UI.MainMenu.View
             {
                 var message =
                     "Could not locate any Battery packs. Please try again.";
-                Notify.Template("FadingNotifyTemplate").Show(
+                Notify.Template("fade").Show(
                  message,
                 customHideDelay: 4f,
                 hideAnimation: Notify.AnimationCollapse

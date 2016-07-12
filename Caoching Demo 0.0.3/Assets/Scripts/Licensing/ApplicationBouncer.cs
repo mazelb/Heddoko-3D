@@ -1,21 +1,23 @@
-﻿ /**
- * @file ApplicationBouncer.cs
- * @brief Contains the ApplicationBouncer class
- * @author Mohammed Haider( mohammed @heddoko.com)
- * @date June 2016
- * Copyright Heddoko(TM) 2016,  all rights reserved
- */
+﻿/**
+* @file ApplicationBouncer.cs
+* @brief Contains the ApplicationBouncer class
+* @author Mohammed Haider( mohammed @heddoko.com)
+* @date June 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using System;
 using System.Collections.Generic;
 using Assets.Scripts.Licensing.Model;
 using HeddokoSDK.Models;
+// ReSharper disable DelegateSubtraction
 
 namespace Assets.Scripts.Licensing
 {
     public delegate void UserAccessAction(UserProfileModel vModel);
 
     public delegate void LicenseAccessAction(UserProfileModel vModel);
+
     /// <summary>
     /// The ApplicationBouncer behaves as a bouncer to the main application. Depending on the license status and user's access status, a set of event(s) is(are) triggered. 
     /// </summary>
@@ -24,27 +26,35 @@ namespace Assets.Scripts.Licensing
         /// <summary>
         /// A set of associated access actions to  a user's status
         /// </summary>
-        private  readonly  Dictionary<UserStatusType, UserAccessAction> mUserCallbackAction = new Dictionary<UserStatusType, UserAccessAction>();
+        private readonly Dictionary<UserStatusType, UserAccessAction> mUserCallbackAction = new Dictionary<UserStatusType, UserAccessAction>();
 
         /// <summary>
         /// A set of associated access action to a user's license information
         /// </summary>
-        private readonly  Dictionary<LicenseStatusType, LicenseAccessAction>  mLicenceCallbackAction = new Dictionary<LicenseStatusType, LicenseAccessAction>();
+        private readonly Dictionary<LicenseStatusType, LicenseAccessAction> mLicenceCallbackAction = new Dictionary<LicenseStatusType, LicenseAccessAction>();
+
+
 
         public ApplicationBouncer()
         {
-            var vUserStatusTypes = Enum.GetValues(typeof (UserStatusType)) as UserStatusType[];
-            var vLicenseStatusTypes = Enum.GetValues(typeof (LicenseStatusType)) as LicenseStatusType[];
-            foreach (var vUserStatusType in vUserStatusTypes)
+            var vUserStatusTypes = Enum.GetValues(typeof(UserStatusType)) as UserStatusType[];
+            var vLicenseStatusTypes = Enum.GetValues(typeof(LicenseStatusType)) as LicenseStatusType[];
+            if (vUserStatusTypes != null)
             {
-                mUserCallbackAction.Add(vUserStatusType, (x) =>{});
+                foreach (var vUserStatusType in vUserStatusTypes)
+                {
+                    mUserCallbackAction.Add(vUserStatusType, vX => { });
+                }
             }
-            foreach (var vLicenseStatusType in vLicenseStatusTypes)
+            if (vLicenseStatusTypes != null)
             {
-                mLicenceCallbackAction.Add(vLicenseStatusType, (x) => { });
+                foreach (var vLicenseStatusType in vLicenseStatusTypes)
+                {
+                    mLicenceCallbackAction.Add(vLicenseStatusType, vX => { });
+                }
             }
-
         }
+
 
         /// <summary>
         /// Registers a user access action event. 
@@ -64,8 +74,12 @@ namespace Assets.Scripts.Licensing
         /// <param name="vHandler">the callback handle</param>
         public void RemoveUserAccessActionEvent(UserStatusType vStatusType, UserAccessAction vHandler)
         {
-            mUserCallbackAction[vStatusType] -= vHandler;
+            if (mUserCallbackAction.ContainsKey(vStatusType))
+            {
+                mUserCallbackAction[vStatusType] -= vHandler;
+            }
         }
+
         /// <summary>
         /// Registers a license access action event. 
         /// </summary>
@@ -92,7 +106,7 @@ namespace Assets.Scripts.Licensing
         /// <param name="vUser">The user to validate</param>
         public void ValidateUser(UserProfileModel vUser)
         {
-            mUserCallbackAction[vUser.User.Status].Invoke(vUser);   
+            mUserCallbackAction[vUser.User.Status].Invoke(vUser);
         }
 
         /// <summary>
@@ -108,7 +122,7 @@ namespace Assets.Scripts.Licensing
             }
             else
             {
-              mLicenceCallbackAction[vUser.LicenseInfo.Status].Invoke(vUser);
+                mLicenceCallbackAction[vUser.LicenseInfo.Status].Invoke(vUser);
             }
         }
     }

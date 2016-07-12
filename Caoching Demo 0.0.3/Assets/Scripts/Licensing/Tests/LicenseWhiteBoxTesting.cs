@@ -1,10 +1,10 @@
-﻿ /**
- * @file LicenseWhiteBoxTesting.cs
- * @brief Contains the 
- * @author Mohammed Haider( mohammed @ heddoko.com)
- * @date June 2016
- * Copyright Heddoko(TM) 2016,  all rights reserved
- */
+﻿/**
+* @file LicenseWhiteBoxTesting.cs
+* @brief Contains the 
+* @author Mohammed Haider( mohammed @ heddoko.com)
+* @date June 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using System;
 using Assets.Scripts.Licensing.Controller;
@@ -13,7 +13,7 @@ using HeddokoSDK.Models;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.Tests
+namespace Assets.Scripts.Licensing.Tests
 {
     /// <summary>
     /// A white box test of license
@@ -31,30 +31,36 @@ namespace Assets.Scripts.Tests
         private UserStatusType mUserStatusType;
         private LicenseStatusType[] mLicenseStatuses;
         private UserStatusType[] mUserStatuses;
-         void Awake()
+        internal void Awake()
         {
-             mUserProfileModel.User = new User();
+            mUserProfileModel.User = new User();
             mUserProfileModel.LicenseInfo = new LicenseInfo();
             LicenseTypeDropDown.onValueChanged.AddListener(OnLicenseDropDown);
             UserTypeDropDown.onValueChanged.AddListener(OnUserDropDown);
-             mLicenseStatuses = Enum.GetValues(typeof (LicenseStatusType)) as LicenseStatusType[];
+            mLicenseStatuses = Enum.GetValues(typeof(LicenseStatusType)) as LicenseStatusType[];
             mUserStatuses = Enum.GetValues(typeof(UserStatusType)) as UserStatusType[];
 
             LicenseTypeDropDown.options.Clear();
-            foreach (var vArrayType in mLicenseStatuses)
+            if (mLicenseStatuses != null)
             {
-                LicenseTypeDropDown.options.Add(new Dropdown.OptionData(vArrayType.GetName()));
+                foreach (var vArrayType in mLicenseStatuses)
+                {
+                    LicenseTypeDropDown.options.Add(new Dropdown.OptionData(vArrayType.GetName()));
+                }
             }
             LicenseTypeDropDown.RefreshShownValue();
 
             UserTypeDropDown.options.Clear();
-            foreach (var vArrayType in mUserStatuses)
+            if (mUserStatuses != null)
             {
-                UserTypeDropDown.options.Add(new Dropdown.OptionData(vArrayType.GetName()));
+                foreach (var vArrayType in mUserStatuses)
+                {
+                    UserTypeDropDown.options.Add(new Dropdown.OptionData(vArrayType.GetName()));
+                }
             }
             UserTypeDropDown.RefreshShownValue();
 
-            LicenceButton.onClick.AddListener(()=>ApplicationStartupManager.Bouncer.ValidateLicense(mUserProfileModel));
+            LicenceButton.onClick.AddListener(() => ApplicationStartupManager.Bouncer.ValidateLicense(mUserProfileModel));
             UserButton.onClick.AddListener(() => ApplicationStartupManager.Bouncer.ValidateUser(mUserProfileModel));
 
             ComboButton.onClick.AddListener(() =>
@@ -79,6 +85,6 @@ namespace Assets.Scripts.Tests
             mUserStatusType = mUserStatuses[vValue];
             mUserProfileModel.User.Status = mUserStatusType;
         }
-        
+
     }
 }

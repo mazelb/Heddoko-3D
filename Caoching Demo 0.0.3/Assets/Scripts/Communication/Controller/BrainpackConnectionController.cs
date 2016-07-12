@@ -408,12 +408,13 @@ namespace Assets.Scripts.Communication.Controller
                 //Enable sleep timer on the brainpack
                 EnableBrainpackSleepTimer();
                 DisconnectBrainpack();
+                HeddokoPacket vHeddokoPacket = new HeddokoPacket(HeddokoCommands.StopHeddokoUnityClient, "");
+                PacketCommandRouter.Instance.Process(this, vHeddokoPacket);
             }
 
             mUdpListener.Stop();
 
-            HeddokoPacket vHeddokoPacket = new HeddokoPacket(HeddokoCommands.StopHeddokoUnityClient, "");
-            PacketCommandRouter.Instance.Process(this, vHeddokoPacket);
+            
         }
 
         /// <summary>
@@ -577,11 +578,10 @@ namespace Assets.Scripts.Communication.Controller
         public override void TimeoutHandler()
         {
             DisablingProgressBar.Instance.StopAnimation();
-            var message =
-                "Connection to the brainpack service timedout.You can try to connect again or restart the brainpack service";
-            Notify.Template("FadingNotifyTemplate")
-                .Show(message, 4.5f, hideAnimation: Notify.FadeOutAnimation, showAnimation: Notify.FadeInAnimation,
-                    sequenceType: NotifySequence.First, clearSequence: true);
+            var vMsg =
+                "Connection to the brainpack service timedout. You can try to connect again or restart the brainpack service";
+            Notify.Template("fade")
+                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First);
             Reset();
             ChangeCurrentState(BrainpackConnectionState.Disconnected);
         }
@@ -674,8 +674,8 @@ namespace Assets.Scripts.Communication.Controller
         {
             DisablingProgressBar.Instance.StopAnimation();
             var vMessage =vResult;
-            Notify.Template("FadingNotifyTemplate")
-                .Show(vMessage, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
+            Notify.Template("fade")
+                 .Show(vMessage, customHideDelay: 5f, sequenceType: NotifySequence.First);
             Reset();
             ChangeCurrentState(BrainpackConnectionState.Disconnected);
         }

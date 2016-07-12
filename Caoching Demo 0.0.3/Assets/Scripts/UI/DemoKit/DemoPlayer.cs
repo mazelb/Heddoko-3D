@@ -34,7 +34,7 @@ namespace Assets.Scripts.UI.DemoKit
         public void InitBodyPlayback(string[] vLines)
         {
             CsvBodyFramesRecording vTempRecording = new CsvBodyFramesRecording();
-            vTempRecording.ExtractRecordingUUIDs(vLines);
+            vTempRecording.ExtractRecordingUuiDs(vLines);
             vTempRecording.ExtractRawFramesData(vLines);
             BodyRecordingsMgr.Instance.AddNewRecording(vLines,"Demo recording",false, PlayRecordingCallback);
 

@@ -19,22 +19,22 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
     [Serializable]
     public class RightLegAnalysis : LegAnalysis
     { //Knee Angles
-        [Analysis(IgnoreAttribute = false, AttributeName = "Right Knee Flexion")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "RKnee F/E")]
         public float AngleKneeFlexion;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Right Knee Rotation")]
+        [Analysis(IgnoreAttribute = true )]
         public float AngleKneeRotation;
 
         //Hip Angles
         public bool UseGlobalReference = false;
         [Analysis(IgnoreAttribute = true)]
         public float AngleHipFlexion;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Right Hip Flexion")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "RHip F/E")]
         public float SignedAngleHipAbduction;
         [Analysis(IgnoreAttribute = true)]
         public float SignedAngleHipFlexion;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Right Hip Abduction")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "RHip Add/Abd")]
         public float AngleHipAbduction;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Right Hip Rotation")]
+        [Analysis(IgnoreAttribute = false, AttributeName = "RHip Int/Ext Rot")]
         public float AngleHipRotation;
  
         //Accelerations and velocities

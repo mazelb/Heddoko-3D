@@ -11,6 +11,7 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using Assets.Scripts.UI.Loading;
  
 
@@ -34,15 +35,18 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameEncryption.Decryption
             //Read one line, this line is the header line. Older brainpack firmware did not
             //include this header file, so we make sure that this file exist. Otherwise, we add in a guid 
             string vLine ="";
+            int vHeaderLength = 0;
             while ((vLine = vFile.ReadLine()) != null)
             {
                 break;
             }
+            int vSize = 0;
             string vStringOut = Guid.NewGuid() + "\r\n" + Guid.NewGuid() + "\r\n";//+ Guid.NewGuid() + "\r\n";
             try
             {
                 if (vLine != null && vLine.Contains("BPVERSION:"))
                 {
+                    vSize= System.Text.Encoding.Default.GetByteCount(vLine+"\r\n");
                     vLine = vLine.Replace("BPVERSION:", "");
                     var vExploded = vLine.Split(new[] { "," }, StringSplitOptions.RemoveEmptyEntries);
                     vStringOut += vExploded[1]+"\r\n";
@@ -59,16 +63,20 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameEncryption.Decryption
             
            
             try
-            { 
-   
-               byte[] vByteArr = File.ReadAllBytes(vFilepath);
-             
-                
-                for (int i = 0; i < vByteArr.Length; i++)
+            {
+                var vStartIndex = vLine == null ? 0 : vSize;
+
+                FileInfo vFileInfo = new FileInfo(vFilepath);
+                 
+               byte[] vByteArr = new byte[vFileInfo.Length- vStartIndex];//File.ReadAllBytes(vFilepath);
+                FileStream vFileStream = new FileStream(vFilepath, FileMode.Open, FileAccess.Read);
+                vFileStream.Seek(vStartIndex, SeekOrigin.Begin);
+                vFileStream.Read(vByteArr, 0, vByteArr.Length);
+                for (int vIndex =0; vIndex < vByteArr.Length; vIndex++)
                 {
-                    byte vReadbyte = vByteArr[i];
+                    byte vReadbyte = vByteArr[vIndex];
                     const byte vAdd = 0x80;
-                    vByteArr[i] -= vAdd;
+                    vByteArr[vIndex] -= vAdd;
                     // vStringOut += vTemp.ToString();\
                     //vByteArr[i] = vTemp;
                     if (StopDecryption)
@@ -77,6 +85,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameEncryption.Decryption
                     }
                    // LoadingBoard.UpdateAnimation();
                 }
+                //strip away first 
                 vStringOut += System.Text.Encoding.Default.GetString(vByteArr);
            
             }

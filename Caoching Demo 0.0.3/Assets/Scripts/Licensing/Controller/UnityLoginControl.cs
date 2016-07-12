@@ -11,8 +11,11 @@ using System.Collections;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using System.Threading;
+using Assets.Scripts.Licensing.Authentication;
 using Assets.Scripts.Licensing.Model;
+using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.Utils;
 using HeddokoSDK;
 using HeddokoSDK.Models;
@@ -20,7 +23,9 @@ using UIWidgets;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.Scripts.Licensing.Authentication
+// ReSharper disable DelegateSubtraction
+
+namespace Assets.Scripts.Licensing.Controller
 {
     public delegate void OnLoginSuccess(UserProfileModel vModel);
 
@@ -37,28 +42,34 @@ namespace Assets.Scripts.Licensing.Authentication
         internal OnLoginSuccess LoginSuccessEvent;
         private Thread mConnectionThread;
         public Image LoadingIcon;
+        private string mUrl;
+        private string mUrlExt;
+        private string mSecret;
         public LoginController LoginController
         {
             get { return mLoginController; }
         }
 
-        void Awake()
+       internal void Awake()
         {
-            HeddokoConfig vConfig = new HeddokoConfig("https://app.heddoko.com/api/v1", "HEDFstcKsx0NHjPSsjcndjnckSDJjknCCSjcnsJSK89SJDkvVBrk");
+            mUrlExt = "api/v1";
+            mUrl = "https://app.heddoko.com/";
+            mSecret = "HEDFstcKsx0NHjPSsjcndjnckSDJjknCCSjcnsJSK89SJDkvVBrk";
 
 #if DEBUG
-           vConfig = new HeddokoConfig("http://dev.app.heddoko.com/api/v1", "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk");
+            mUrl = "http://dev.app.heddoko.com/";
+                mSecret = "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk";
 #endif
-
+            HeddokoConfig vConfig = new HeddokoConfig(mUrl+ mUrlExt, mSecret);
             mClient = new HeddokoClient(vConfig);
-            ServicePointManager.ServerCertificateValidationCallback = RemoteCertificateValidationCallback;
+              ServicePointManager.ServerCertificateValidationCallback = RemoteCertificateValidationCallback;
             mLoginController = new LoginController();
             mLoginController.Init(LoginModel, LoginView);
             mLoginController.AddErrorHandler(LoginErrorType.CannotAuthenticate, DisplayErrorNotification);
-            mLoginController.AddErrorHandler(LoginErrorType.CannotAuthenticate, (vX) => EnableControls());
+            mLoginController.AddErrorHandler(LoginErrorType.CannotAuthenticate, vX => EnableControls());
             mLoginController.AddErrorHandler(LoginErrorType.NullLicense, DisplayErrorNotification);
             mLoginController.AddErrorHandler(LoginErrorType.NoNetworkConnectionFound, NoNetworkConnectionErrorHandler);
-            mLoginController.AddErrorHandler(LoginErrorType.NullLicense, (vX) => EnableControls());
+            mLoginController.AddErrorHandler(LoginErrorType.NullLicense, vX => EnableControls());
             mLoginController.AddErrorHandler(LoginErrorType.ZeroLengthPassword, LoginView.DisplayProblemWithPassword);
             mLoginController.AddErrorHandler(LoginErrorType.ZeroLengthUserName, LoginView.DisplayProblemWithUsername);
             mLoginController.AddErrorHandler(LoginErrorType.Other, DisplayErrorNotification);
@@ -81,7 +92,6 @@ namespace Assets.Scripts.Licensing.Authentication
         /// <summary>
         /// enable login controls
         /// </summary>
-        /// <param name="vVmsg"></param>
         public void EnableControls()
         {
             LoginView.EnableButtonControls();
@@ -101,7 +111,10 @@ namespace Assets.Scripts.Licensing.Authentication
         /// <param name="vHandler">The handler to remove</param>
         public void RemoveOnLoginEvent(OnLoginSuccess vHandler)
         {
-            LoginSuccessEvent -= vHandler;
+            if (LoginSuccessEvent != null)
+            {
+                LoginSuccessEvent -= vHandler;
+            }
         }
 
 
@@ -111,9 +124,10 @@ namespace Assets.Scripts.Licensing.Authentication
         /// <param name="vMsg"></param>
         void DisplayErrorNotification(string vMsg)
         {
+
             Notify.Template("fade")
                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First);
-            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoadingIcon.gameObject.SetActive(false));
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(false));
 
         }
 
@@ -122,7 +136,7 @@ namespace Assets.Scripts.Licensing.Authentication
             //verify internet connection first
             LoginView.DisableButtonControls();
             StartCoroutine(VerifyInternetConnection(vModel));
-            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoadingIcon.gameObject.SetActive(true));
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(true));
 
 
         }
@@ -130,7 +144,6 @@ namespace Assets.Scripts.Licensing.Authentication
         /// <summary>
         /// Verify the internet connection first
         /// </summary>
-        /// <param name="action"></param>
         /// <returns></returns>
         IEnumerator VerifyInternetConnection(LoginModel vModel)
         {
@@ -160,6 +173,17 @@ namespace Assets.Scripts.Licensing.Authentication
             {
                 UserRequest vRequest = vModel.UserRequest;
                 User vUser = mClient.SignIn(vRequest);
+                if (!vUser.IsOk)
+                {
+                    OutterThreadToUnityThreadIntermediary.QueueActionInUnity(EnableControls);
+                    var vErrorMsg = FormatLoginNoOkError(vUser.Errors);
+                    Action vRaiseModalPanelAction  = () => ModalPanel.Instance().Choice("LOGIN FAILED", vErrorMsg, () =>
+                    {
+                        Application.OpenURL(mUrl);
+                    }, ()=> {});
+                    OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vRaiseModalPanelAction);
+                    return;
+                }
                 LicenseInfo vLicense = vUser.LicenseInfo;
                 mClient.SetToken(vUser.Token);
                 ResultBool vCheck = mClient.Check();
@@ -175,7 +199,7 @@ namespace Assets.Scripts.Licensing.Authentication
                     {
                         OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginSuccessEvent(vProfileModel));
                         OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
-                            () => LoadingIcon.gameObject.SetActive(false));
+                            () => LoginView.SetLoadingIconAsActive(false));
                     }
                 }
 
@@ -229,7 +253,7 @@ namespace Assets.Scripts.Licensing.Authentication
                         break;
                 }
             }
-           
+
         }
 
 
@@ -261,12 +285,34 @@ namespace Assets.Scripts.Licensing.Authentication
             }
             return vIsOk;
         }
-        void OnApplicationQuit()
+     internal void OnApplicationQuit()
         {
             if (mConnectionThread != null)
             {
-                mConnectionThread.Abort();
+                try
+                {
+                    mConnectionThread.Abort();
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
             }
+        }
+
+        private static string FormatLoginNoOkError(ErrorCollection vErrors)
+        {
+            int vListCount = 1;
+            StringBuilder vBuilder = new StringBuilder();
+            string vPlural = vErrors.Errors.Count > 1 ? "s were provided" : " was given";
+            vBuilder.Append("There was an issue accessing your account. The following reason" + vPlural + ":\n");
+            foreach (var vError in vErrors.Errors)
+            {
+                vBuilder.Append(vListCount + "." + vError.Message + "");
+                vListCount++;
+            }
+            vBuilder.Append("\nClick \"Yes\" to launch your browser and log into Heddoko for further details. ");
+            return vBuilder.ToString();
         }
 
     }

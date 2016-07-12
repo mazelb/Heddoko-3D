@@ -8,7 +8,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Assets.Scripts.Frames_Pipeline; 
+using System.Linq;
+using Assets.Scripts.Frames_Pipeline;
 using UnityEngine;
 
 namespace Assets.Scripts.Frames_Recorder.FramesRecording
@@ -30,13 +31,13 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
         public List<BodyRawFrame> RecordingRawFrames = new List<BodyRawFrame>();
         [SerializeField]
         //current raw frame index
-        private int currentRawFrameIndex;
+        private int mCurrentRawFrameIndex;
         // statistics of a recording
         // public RecordingStats Statistics = new RecordingStats();
 
         public bool FromDatFile { get; set; }
 
-     
+
 
         /// <summary>
         /// Extracts raw frame data found in a csv recording reader.
@@ -53,14 +54,14 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
         /// The title of the recording
         /// </summary>
         [SerializeField]
-        public override string Title { get;   set; }
+        public override string Title { get; set; }
 
         /**
     * CreateNewRecordingUUID()
     * @brief Creates a new recording UUID
     */
 
-        public void CreateNewRecordingUUID()
+        public void CreateNewRecordingUuid()
         {
             BodyRecordingGuid = Guid.NewGuid().ToString();
         }
@@ -94,43 +95,47 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
      * @brief Gets the UUID of the recording and Body from the content
      */
 
-        public void ExtractRecordingUUIDs(string[] vRecordingLines)
+        public void ExtractRecordingUuiDs(string[] vRecordingLines)
         {
             //The minimum amount of lines in the recording
             if (vRecordingLines.Length > sNumberOfUUIDs)
             {
-                ExtractRecordingUUIDsHelper(vRecordingLines[0], ref BodyRecordingGuid);
-                ExtractRecordingUUIDsHelper(vRecordingLines[1], ref BodyGuid);
-                ExtractRecordingUUIDsHelper(vRecordingLines[2], ref SuitGuid);
+                ExtractRecordingUuiDsHelper(vRecordingLines[0], ref BodyRecordingGuid);
+                ExtractRecordingUuiDsHelper(vRecordingLines[1], ref BodyGuid);
+                ExtractRecordingUuiDsHelper(vRecordingLines[2], ref SuitGuid);
                 //the third line would contain the date/time. If an exception is thrown, then set the date time from now.
                 try
                 {
                     string vTime = vRecordingLines[3];
-                  CreationTime =  DateTime.ParseExact(vTime, "yyy-MM-ddTHH:mm:ff", CultureInfo.InvariantCulture);
+                    CreationTime = DateTime.ParseExact(vTime, "yyyy-MM-ddTHH:mm:ff", CultureInfo.InvariantCulture);
+                    //remove this line
+                    vRecordingLines = vRecordingLines.Where((vSource, vIndex) => vIndex != 3).ToArray();
+                    sNumberOfUUIDs = 4;
                 }
                 catch (Exception)
                 {
                     CreationTime = DateTime.Now;
+                    sNumberOfUUIDs = 3;
                 }
             }
         }
-        
-        
+
+
         /// <summary>
         /// Helper to extract recording UUID, that validates a  recording line, checking if the line is 
         /// in the UUID format
         /// </summary>
         /// <param name="vRecordingLine">The recording line to validate</param>
-        /// <param name="vUUID">The uuid that will store the new uuid extracted from vRecordingline.</param>
-        private void ExtractRecordingUUIDsHelper(string vRecordingLine, ref string vUUID)
+        /// <param name="vUuid">The uuid that will store the new uuid extracted from vRecordingline.</param>
+        private void ExtractRecordingUuiDsHelper(string vRecordingLine, ref string vUuid)
         {
             if (vRecordingLine.Split('-').Length - 1 != 4)
             {
-                vUUID = Guid.NewGuid().ToString();
+                vUuid = Guid.NewGuid().ToString();
             }
             else
             {
-                vUUID = vRecordingLine;
+                vUuid = vRecordingLine;
             }
         }
 
@@ -146,7 +151,7 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
             if (vRecordingLines.Length > sNumberOfUUIDs)
             {
                 //Get the data line by line and add them as frames 
-                for (uint i = (sNumberOfUUIDs); i < vRecordingLines.Length; i++)
+                for (uint vI = (sNumberOfUUIDs); vI < vRecordingLines.Length; vI++)
                 {
                     BodyRawFrame vTempRaw = new BodyRawFrame();
                     // vTempRaw.IsDecoded = !FromDatFile;
@@ -154,17 +159,17 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
                     vTempRaw.BodyGuid = BodyGuid;
                     vTempRaw.SuitGuid = SuitGuid;
                     vTempRaw.IsDecoded = !FromDatFile;
-                    vTempRaw.RawFrameData = vRecordingLines[i].Split(",".ToCharArray(),
+                    vTempRaw.RawFrameData = vRecordingLines[vI].Split(",".ToCharArray(),
                         StringSplitOptions.RemoveEmptyEntries);
                     RecordingRawFrames.Add(vTempRaw);
 
                 }
             }
             //analyze statistics of a current recording
-  
+
         }
 
-    
+
         //    //Send each line to a BodyFrameStream
         //    //Each line start by sending Frame start "S"
         //    //Send the frame data 
@@ -183,7 +188,7 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
         //    //Send Frame End: "E"
         //}
 
-   
+
 
         public override int RecordingRawFramesCount
         {
@@ -195,7 +200,7 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
                     vCount = RecordingRawFrames.Count;
                 }
                 return vCount;
-            } 
+            }
         }
 
 
@@ -211,7 +216,7 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
         public override void ExtractRawFramesData(BodyRecordingReaderBase vRecordingReaderbase)
         {
             FromDatFile = vRecordingReaderbase.FilePath.EndsWith("dat");
-            ExtractRawFramesData((CsvBodyRecordingReader) vRecordingReaderbase);
+            ExtractRawFramesData((CsvBodyRecordingReader)vRecordingReaderbase);
         }
     }
 

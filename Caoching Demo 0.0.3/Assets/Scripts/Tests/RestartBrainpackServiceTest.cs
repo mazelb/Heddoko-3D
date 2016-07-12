@@ -93,19 +93,19 @@ namespace Assets
             {
                 var message =
                "there was a problem with stopping the brainpack service. Verify that you are running the application in an administrative capacity or try again";
-                Notify.Template("FadingNotifyTemplate").Show(message, 4.5f, hideAnimation: Notify.FadeOutAnimation, showAnimation: Notify.FadeInAnimation, sequenceType: NotifySequence.First, clearSequence: true);
+                Notify.Template("fade").Show(message, 4.5f, hideAnimation: Notify.FadeOutAnimation, showAnimation: Notify.FadeInAnimation, sequenceType: NotifySequence.First, clearSequence: true);
             }
             if (!vStartSucess)
             {
                 var message =
                "there was a problem with starting the brainpack service. Verify that you are running the application in an administrative capacity or try again";
-                Notify.Template("FadingNotifyTemplate").Show(message, 4.5f, hideAnimation: Notify.FadeOutAnimation, showAnimation: Notify.FadeInAnimation, sequenceType: NotifySequence.First, clearSequence: true);
+                Notify.Template("fade").Show(message, 4.5f, hideAnimation: Notify.FadeOutAnimation, showAnimation: Notify.FadeInAnimation, sequenceType: NotifySequence.First, clearSequence: true);
             }
             if (mStopSuccess && vStartSucess)
             {
                 var message =
                "Service restarted";
-                Notify.Template("FadingNotifyTemplate").Show(message, 2.5f, hideAnimation: Notify.FadeOutAnimation, showAnimation: Notify.FadeInAnimation, sequenceType: NotifySequence.First, clearSequence: true);
+                Notify.Template("fade").Show(message, 2.5f, hideAnimation: Notify.FadeOutAnimation, showAnimation: Notify.FadeInAnimation, sequenceType: NotifySequence.First, clearSequence: true);
             }
             RestartServiceButton.interactable = true;
         }

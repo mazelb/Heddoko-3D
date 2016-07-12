@@ -1,0 +1,48 @@
+diff a/Caoching Demo 0.0.3/Assets/Scripts/MainApp/HeddokoAppStart.cs b/Caoching Demo 0.0.3/Assets/Scripts/MainApp/HeddokoAppStart.cs	(rejected hunks)
+@@ -49,7 +49,8 @@
+             InjectTaggingManagerDependents();
+             InitializeLoggers();
+             QualitySettings.vSyncCount = 0;
+-            bool vAppSafelyLaunched; 
++            bool vAppSafelyLaunched;
++            EnableObjects(false);
+             HVector3.Vector3MathServiceProvider = new UVector3MathServiceProvider();
+             BodySegment.IsTrackingHeight = false;
+  
+@@ -57,8 +58,26 @@
+             {
+ 
+                 mDbAccess = new LocalDBAccess();
+-                EnableObjects(true);
+-                mDbAccess.SetApplicationSettings();
++
++                bool vApplicationSettingsFound = mDbAccess.SetApplicationSettings();
++
++ 
++                if (vApplicationSettingsFound)
++                {
++                    vAppSafelyLaunched = ApplicationSettings.AppLaunchedSafely;
++                    if (vAppSafelyLaunched)
++                    {
++                        string vGet = ApplicationSettings.PreferedConnName;
++                      
++                        EnableObjects(true);
++                    }
++                    else
++                    {
++                        AppNotLaunchedThroughLauncher();
++                    }
++                }
++
++
+             }
+         }
+         // ReSharper disable once UnusedMember.Local
+@@ -153,7 +172,6 @@
+         { 
+             DebugLogger.Instance.Stop();
+             mDbAccess.SaveApplicationSettings();
+-            mDbAccess.Dispose();
+         }
+ 
+         /// <summary>

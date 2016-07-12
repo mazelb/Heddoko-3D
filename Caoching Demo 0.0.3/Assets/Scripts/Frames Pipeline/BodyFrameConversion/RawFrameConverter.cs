@@ -103,11 +103,18 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                     string[] v3data = ((string)vRawData[i]).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                     int vLength = v3data.Length;
                      var vFinalVals = new BodyFrame.Vect4();
-                    for (int j = 0; j < vLength; j++)
-                    {
-                        vFinalVals[j] = ConversionTools.ConvertHexStringToFloat(v3data[j]); 
-                    } 
-                    PreviouslyValidOrientations[vSetterIndex] = vFinalVals; 
+                    vFinalVals.z = ConversionTools.ConvertHexStringToFloat(v3data[2]);
+                    vFinalVals.x = ConversionTools.ConvertHexStringToFloat(v3data[1]);
+                    vFinalVals.y = ConversionTools.ConvertHexStringToFloat(v3data[0]);
+
+                    //for (int j = 0; j < vLength; j++)
+                    //{
+                    //    vFinalVals[j] = ConversionTools.ConvertHexStringToFloat(v3data[j]); 
+                    //} 
+                     
+
+                    PreviouslyValidOrientations[vSetterIndex] = vFinalVals;
+                    // new BodyFrame.Vect4(vPitch, vRoll, vYaw);// new Vector3(vPitch, vRoll, vYaw);
                 }
             }
             BodyFrame vBodyFrame = CreateBodyFrame(PreviouslyValidOrientations);

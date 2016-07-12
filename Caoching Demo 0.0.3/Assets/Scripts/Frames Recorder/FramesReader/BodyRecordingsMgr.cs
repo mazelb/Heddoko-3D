@@ -161,7 +161,6 @@ public class BodyRecordingsMgr : IDatabaseConsumer
     /// <param name="vCallbackAction">the callback action that accepts a BodyFrameRecording</param>
     public void ReadRecordingFile(string vFilePath, Action<BodyFramesRecordingBase> vCallbackAction)
     {
-
         //Read recording file
         //ignore meta files
         if (vFilePath.EndsWith("meta"))
@@ -169,11 +168,7 @@ public class BodyRecordingsMgr : IDatabaseConsumer
             return;
         }
         FilePathReqCallback vCallbackstruct = new FilePathReqCallback(vFilePath, vCallbackAction);
-        ThreadPool.QueueUserWorkItem(ReaderWorker, vCallbackstruct);
-        //{
-        //     ReadCallback(new object[] { vRecordingBase, vCallbackAction });
-        // });
-        // vThread.Start();
+        ThreadPool.QueueUserWorkItem(ReaderWorker, vCallbackstruct); 
     }
 
 
@@ -225,49 +220,6 @@ public class BodyRecordingsMgr : IDatabaseConsumer
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => vRecordingCallback.CallbackAction(vTempRecording));
         }
     }
-    //private void ReadCallback(object threadContext)
-    //{
-    //    if (threadContext is Array)
-    //    {
-    //        object[] vObjectArray = (object[])threadContext;
-
-    //        BodyRecordingReaderBase vTempReader = vObjectArray[0] as BodyRecordingReaderBase;
-    //        if (vTempReader != null)
-    //        {
-    //            StopActionEvent += vTempReader.Stop;
-    //            Action<CsvBodyFramesRecording> vCallbackAction = (Action<CsvBodyFramesRecording>)vObjectArray[1];
-
-    //            if (vTempReader.ReadFile(vTempReader.FilePath) > 0)
-    //            {
-    //                string vVersion = vTempReader.CrytoManager.GetCrytpoVersion;
-    //                AddNewRecording(vTempReader.GetRecordingLines(), vTempReader.FilePath, vTempReader.IsFromDatFile, vVersion, vCallbackAction);
-    //            }
-    //            StopActionEvent -= vTempReader.Stop;
-    //        }
-    //    }
-    //    else
-    //    {
-    //        //todo: add listener here
-    //        CsvBodyRecordingReader vTempReader = (CsvBodyRecordingReader)threadContext;
-    //        StopActionEvent += vTempReader.Stop;
-    //        if (vTempReader.ReadFile(vTempReader.FilePath) > 0)
-    //        {
-    //            try
-    //            {
-    //                AddNewRecording(vTempReader.GetRecordingLines());
-    //            }
-    //            catch
-    //            {
-    //                // ignored
-    //            }
-    //        }
-    //        StopActionEvent -= vTempReader.Stop;
-    //    }
-
-
-    //}
-
-
 
     /// <summary>
     /// Adds a new recording from the contents found in a reader
@@ -328,7 +280,7 @@ public class BodyRecordingsMgr : IDatabaseConsumer
     {
         CsvBodyFramesRecording vTempRecording = new CsvBodyFramesRecording { FromDatFile = vrxFromDatFile };
         vTempRecording.Title = vTitle;
-        vTempRecording.ExtractRecordingUUIDs(vRecordingLines);
+        vTempRecording.ExtractRecordingUuiDs(vRecordingLines);
         vTempRecording.FormatRevision = vrxFromDatFile ? vVersion : "0";
         //If recording already exists, do nothing
         if (!RecordingExist(vTempRecording.BodyRecordingGuid))

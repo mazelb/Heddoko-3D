@@ -117,9 +117,14 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// </summary>
         public void RequestResources()
         {
-            InputHandler.RegisterKeyboardAction(KeyCode.Space, ParentPanel.SetPlayState);
+            InputHandler.RegisterKeyboardAction(KeyCode.Space, SetPlayState);
+            
         }
 
+        private void SetPlayState()
+        { 
+            ParentPanel.SetPlayState();
+        }
     
 
         /// <summary>
@@ -127,7 +132,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// </summary>
         public void ReleaseResources()
         {
-            InputHandler.RemoveKeybinding(KeyCode.RightArrow, ParentPanel.SetPlayState);
+            InputHandler.RemoveKeybinding(KeyCode.RightArrow, SetPlayState);
         }
     }
 }
