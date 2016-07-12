@@ -12,7 +12,6 @@ using System.Text.RegularExpressions;
 using Assets.Scripts.Communication.Communicators;
 using Assets.Scripts.Communication.View;
 using Assets.Scripts.Interfaces;
-using Assets.Scripts.UI.Loading;
 using Assets.Scripts.UI.MainMenu.View;
 using HeddokoLib.networking;
 using HeddokoLib.utils;
@@ -32,20 +31,22 @@ namespace Assets.Scripts.Communication.Controller
     /// <summary>
     /// BrainpackConnectionController class that controls the connection to the heddoko body suit
     /// </summary>
-    public class BrainpackConnectionController : SerialPortConnectionController
+    public class BrainpackConnectionController : AbstractSuitConnection
     {
 
+        public System.Action<Dictionary<string, string>> BpListUpdateHandle;
         public OutterThreadToUnityTrigger BrainpackConnectedTrigger = new OutterThreadToUnityTrigger();
         public OutterThreadToUnityTrigger SocketClientErrorTrigger = new OutterThreadToUnityTrigger();
         public string Output = "";
-        internal static BrainpackConnectionController mInstance;
+        private static BrainpackConnectionController mInstance;
 
-        [SerializeField]
-        internal BrainpackConnectionState mCurrentConnectionState =
+        [SerializeField] private BrainpackConnectionState mCurrentConnectionState =
             BrainpackConnectionState.Disconnected;
 
+        public string BrainpackComPort = "";
         private UdpListener mUdpListener = new UdpListener();
 
+        [SerializeField] private int vTotalTries;
 
         public float Timeout = 4;
         public int MaxConnectionAttempts = 4;
@@ -54,14 +55,12 @@ namespace Assets.Scripts.Communication.Controller
         private IBrainpackConnectionView mView;
         public float StateReqTimer { get; set; }
 
-
-        
         /// <summary>
         /// returns the current state of the controller
         /// </summary>
-        public override BrainpackConnectionState ConnectionState
+        public BrainpackConnectionState ConnectionState
         {
-            get { return mCurrentConnectionState; } 
+            get { return mCurrentConnectionState; }
         }
 
         /// <summary>
@@ -139,7 +138,7 @@ namespace Assets.Scripts.Communication.Controller
         /// </summary>
         /// <param name="vComport"></param>
         /// <returns></returns>
-        internal bool Validate(string vComport)
+        private bool Validate(string vComport)
         {
             if (string.IsNullOrEmpty(vComport))
             {
@@ -172,11 +171,6 @@ namespace Assets.Scripts.Communication.Controller
 
         }
 
-        public override void SendCommand(string vArgs)
-        {
-            HeddokoPacket vHeddokoPacket = new HeddokoPacket(HeddokoCommands.SendCommand, vArgs); 
-            PacketCommandRouter.Instance.Process(this, vHeddokoPacket);
-        }
         public override void DisconnectBrainpack()
         {
             HeddokoPacket vHeddokoPacket = new HeddokoPacket(HeddokoCommands.DisconnectBrainpack, "");
@@ -259,7 +253,6 @@ namespace Assets.Scripts.Communication.Controller
                     }
                     break;
                 }
-
                 case BrainpackConnectionState.Connecting:
                 {
                     if (vNewState == BrainpackConnectionState.Failure)
@@ -370,15 +363,11 @@ namespace Assets.Scripts.Communication.Controller
         /// </summary>
         public void Awake()
         {
-            Instance.Initialize();
-        }
-
-        public void Initialize()
-        {
             BrainpackShutdown += () =>
             {
                 ChangeCurrentState(BrainpackConnectionState.Disconnected);
             };
+
         }
 
         void OnEnable()
@@ -418,6 +407,14 @@ namespace Assets.Scripts.Communication.Controller
         }
 
         /// <summary>
+        /// reset the number of reconnect tries
+        /// </summary>
+        public void ResetTries()
+        {
+            vTotalTries = 0;
+        }
+
+        /// <summary>
         /// Requests brainpack responses
         /// </summary>
         public void RequestBrainpackResponses()
@@ -428,7 +425,7 @@ namespace Assets.Scripts.Communication.Controller
         /// <summary>
         /// The update function monitors the connected flag and starts to pull data
         /// </summary>
-         internal void Update()
+        void Update()
         {
             if (BrainpackConnectedTrigger.Triggered)
             {
@@ -577,11 +574,19 @@ namespace Assets.Scripts.Communication.Controller
         /// </summary>
         public override void TimeoutHandler()
         {
+<<<<<<< HEAD
             DisablingProgressBar.Instance.StopAnimation();
             var vMsg =
                 "Connection to the brainpack service timedout. You can try to connect again or restart the brainpack service";
             Notify.Template("fade")
                  .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First);
+=======
+            var message =
+                "Connection to the brainpack service timedout.You can try to connect again or restart the brainpack service";
+            Notify.Template("FadingNotifyTemplate")
+                .Show(message, 4.5f, hideAnimation: Notify.FadeOutAnimation, showAnimation: Notify.FadeInAnimation,
+                    sequenceType: NotifySequence.First, clearSequence: true);
+>>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
             Reset();
             ChangeCurrentState(BrainpackConnectionState.Disconnected);
         }
@@ -670,6 +675,7 @@ namespace Assets.Scripts.Communication.Controller
         }
 
 
+<<<<<<< HEAD
         public void NetworkExceptionHandler(string vResult)
         {
             DisablingProgressBar.Instance.StopAnimation();
@@ -679,5 +685,7 @@ namespace Assets.Scripts.Communication.Controller
             Reset();
             ChangeCurrentState(BrainpackConnectionState.Disconnected);
         }
+=======
+>>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
     }
 }

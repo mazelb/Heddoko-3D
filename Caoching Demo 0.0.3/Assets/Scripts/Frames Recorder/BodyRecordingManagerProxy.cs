@@ -10,7 +10,6 @@
 
 using System; 
 using Assets.Scripts.Communication.DatabaseConnectionPipe;
-using Assets.Scripts.Frames_Recorder.FramesRecording;
 
 namespace Assets.Scripts.Frames_Recorder
 {
@@ -35,9 +34,9 @@ namespace Assets.Scripts.Frames_Recorder
         /// <param name="vRecguid"></param>
         /// <param name="vCallback">optional paramater to call back once recording is retrieved</param>
         /// <returns></returns>
-        public BodyFramesRecordingBase GetRecording(string vRecguid, Action<BodyFramesRecordingBase> vCallback = null)
+        public BodyFramesRecording GetRecording(string vRecguid, Action<BodyFramesRecording> vCallback = null)
         {
-            BodyFramesRecordingBase vRecording = BodyRecordingsMgr.Instance.GetRecordingByUuid(vRecguid);
+            BodyFramesRecording vRecording = BodyRecordingsMgr.Instance.GetRecordingByUuid(vRecguid);
             if (vRecording == null)
             {
                 //locate it from the database

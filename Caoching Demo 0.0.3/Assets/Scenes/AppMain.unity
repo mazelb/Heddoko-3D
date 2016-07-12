@@ -21336,6 +21336,7 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 987836709}
+<<<<<<< HEAD
 --- !u!114 &990170747 stripped
 MonoBehaviour:
   m_PrefabParentObject: {fileID: 11475356, guid: 73745ec5c5a2873409436e5c685c9db4,
@@ -21412,6 +21413,8 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1001482248}
+=======
+>>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
 --- !u!1 &1019805302
 GameObject:
   m_ObjectHideFlags: 0
@@ -23791,6 +23794,7 @@ MonoBehaviour:
       AngleHipAbduction: 0
       SignedAngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -23816,6 +23820,7 @@ MonoBehaviour:
       SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -27322,6 +27327,7 @@ MonoBehaviour:
       AngleHipAbduction: 0
       SignedAngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -27347,6 +27353,7 @@ MonoBehaviour:
       SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -34329,7 +34336,7 @@ GameObject:
   - 114: {fileID: 1569508882}
   - 114: {fileID: 1569508886}
   m_Layer: 5
-  m_Name: Ui canvas
+  m_Name: UI canvas
   m_TagString: UiCanvas
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34769,6 +34776,7 @@ MonoBehaviour:
       AngleHipAbduction: 0
       SignedAngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -34794,6 +34802,7 @@ MonoBehaviour:
       SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -42892,6 +42901,7 @@ MonoBehaviour:
       AngleHipAbduction: 0
       SignedAngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -42917,6 +42927,7 @@ MonoBehaviour:
       SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -43021,6 +43032,7 @@ MonoBehaviour:
       AngleHipAbduction: 0
       SignedAngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -43046,6 +43058,7 @@ MonoBehaviour:
       SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -46366,7 +46379,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NextView: {fileID: 0}
   PreviousView: {fileID: 0}
-  SettingsView: {fileID: 990170747}
+  SettingsView: {fileID: 0}
   UiCamera: {fileID: 1047580056}
 --- !u!114 &2077341966
 MonoBehaviour:
@@ -46740,6 +46753,7 @@ MonoBehaviour:
       AngleHipAbduction: 0
       SignedAngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -46765,6 +46779,7 @@ MonoBehaviour:
       SignedAngleHipFlexion: 0
       AngleHipAbduction: 0
       AngleHipRotation: 0
+      SignedAngleHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0

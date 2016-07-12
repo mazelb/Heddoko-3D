@@ -1,5 +1,5 @@
 ﻿/** 
-* @file CsvBodyRecordingReader.cs
+* @file BodyRecordingReader.cs
 * @brief Contains the BodyFramesReader class
 * @author Mazen Elbawab (mazen@heddoko.com)
 * @date June 2015
@@ -13,7 +13,7 @@ using Assets.Scripts.Frames_Pipeline.BodyFrameEncryption.Encryption;
  
 
 /**
-* CsvBodyRecordingReader class 
+* BodyRecordingReader class 
 * @brief Class reads body frames from Recorded CSV file
 * CSV line structure (single frame):
 * RECORDING GUID
@@ -21,9 +21,10 @@ using Assets.Scripts.Frames_Pipeline.BodyFrameEncryption.Encryption;
 * SUIT GUID
 * BOIMECH_sensorID_1, Yaw;Pitch;Roll, ... BOIMECH_sensorID_9, Yaw;Pitch;Roll, FLEXCORE_sensorID_1, SensorValue, ... ,FLEXCORE_sensorID_4, SensorValue
 */
-public class CsvBodyRecordingReader : BodyRecordingReaderBase
+public class BodyRecordingReader
 {
-   
+    //The file path to read
+    private string mFilePath;
     //The entire file content
     private string mFileContents;
     //Line by line content
@@ -31,7 +32,9 @@ public class CsvBodyRecordingReader : BodyRecordingReaderBase
 
     private CryptoManager mCryptoManager;
 
-    
+   
+
+    public string FilePath { get { return mFilePath; } }
 
     /// <summary>
     /// Was the recording taken from a dat file or csv file?
@@ -44,13 +47,13 @@ public class CsvBodyRecordingReader : BodyRecordingReaderBase
     }
 
     /// <summary>
-    /// A body recording reader with a path to default reading from a csv file
+    /// A body recording reader with a path to default reading from
     /// </summary>
     /// <param name="vFilepath"></param>
-    public CsvBodyRecordingReader(string vFilepath)
+    public BodyRecordingReader(string vFilepath)
     {
         mCryptoManager = new CryptoManager(new DecryptionVersion0(), new EncryptionVersion0());
-        FilePath = vFilepath;
+        mFilePath = vFilepath;
     }
 
     /**
@@ -60,14 +63,14 @@ public class CsvBodyRecordingReader : BodyRecordingReaderBase
     * if the file contents are not empty automatically 
     * populates line data
     */
-    public override int ReadFile(string vFilePath)
+    public int ReadFile(string vFilePath)
     {
-        FilePath = vFilePath;
+        mFilePath = vFilePath;
 
         //open file from the disk (file path is the path to the file to be opened)
         if (vFilePath.Contains(".csv"))
         {
-            using (StreamReader vStreamReader = new StreamReader(File.OpenRead(FilePath)))
+            using (StreamReader vStreamReader = new StreamReader(File.OpenRead(mFilePath)))
             {
                 mFileContents = vStreamReader.ReadToEnd();
                 if (mFileContents.Length > 0)
@@ -105,7 +108,7 @@ public class CsvBodyRecordingReader : BodyRecordingReaderBase
     * PopulateRecordingLines()
     * @brief splits the string into frame lines
     */
-    public   void PopulateRecordingLines()
+    public void PopulateRecordingLines()
     {
         if (mFileContents.Length > 0)
         {

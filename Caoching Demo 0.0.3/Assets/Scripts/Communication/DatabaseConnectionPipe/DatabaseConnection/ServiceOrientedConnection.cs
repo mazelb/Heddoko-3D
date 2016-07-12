@@ -8,7 +8,6 @@
 */
 using System;
 using System.Collections.Generic;
-using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI;
 using Assets.Scripts.UI.AbstractViews.SelectableGridList.Descriptors;
 using Assets.Scripts.UI.Tagging;
@@ -49,18 +48,17 @@ namespace Assets.Scripts.Communication.DatabaseConnectionPipe.DatabaseConnection
             throw new NotImplementedException();
         }
 
-        public bool CreateRecording(BodyFramesRecordingBase vRecording)
-        {
-            throw new NotImplementedException();
-        }
- 
-
-        public bool CreateRecording(BodyFramesRecordingBase vRecording, RecordingItemDescriptor vDescriptor, Action<int> vTotalImportProgress)
+        public bool CreateRecording(BodyFramesRecording vRecording)
         {
             throw new NotImplementedException();
         }
 
-        public BodyFramesRecordingBase GetRawRecording(string vRecordingId)
+        public bool CreateRecording(BodyFramesRecording vRecording, RecordingItemDescriptor vDescriptor, Action<int> vTotalImportProgress)
+        {
+            throw new NotImplementedException();
+        }
+
+        public BodyFramesRecording GetRawRecording(string vRecordingId)
         {
             throw new NotImplementedException();
         }
@@ -76,11 +74,6 @@ namespace Assets.Scripts.Communication.DatabaseConnectionPipe.DatabaseConnection
         }
 
         public List<Tag> GetTagsOfRecording(string vRecGuid)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void AddTagToRecording(BodyFramesRecordingBase vRec, Tag vTag)
         {
             throw new NotImplementedException();
         }
@@ -110,7 +103,10 @@ namespace Assets.Scripts.Communication.DatabaseConnectionPipe.DatabaseConnection
             throw new NotImplementedException();
         }
 
-        
+        public void AddTagToRecording(BodyFramesRecording vRec, Tag vTag)
+        {
+            throw new NotImplementedException();
+        }
 
         public List<Tag> LoadAllTags()
         {

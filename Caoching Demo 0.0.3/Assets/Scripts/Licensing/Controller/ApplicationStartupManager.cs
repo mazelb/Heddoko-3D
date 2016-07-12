@@ -7,9 +7,15 @@
 */
 
 using Assets.Scripts.Licensing.Authentication;
+<<<<<<< HEAD
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI;
+=======
+using Assets.Scripts.Licensing.Model; 
+using Assets.Scripts.UI; 
+ 
+>>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
 using HeddokoSDK.Models;
 using UIWidgets;
 using UnityEngine;
@@ -24,8 +30,11 @@ namespace Assets.Scripts.Licensing.Controller
     {
         public UnityLoginControl LoginControl;
         public ApplicationBouncer Bouncer = new ApplicationBouncer();
+<<<<<<< HEAD
         public UnityViewFactory UnityViewFactory;
         public HeddokoAppStart Appstart;
+=======
+>>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
 
         /// <summary>
         /// Initializes parameters
@@ -33,10 +42,7 @@ namespace Assets.Scripts.Licensing.Controller
         internal void Awake()
         {
             Init();
-            ViewFactory = UnityViewFactory;
         }
-
-
 
         public IViewFactory ViewFactory { get; private set; }
 
@@ -50,6 +56,7 @@ namespace Assets.Scripts.Licensing.Controller
             Bouncer.RegisterUserAccessActionEvent(UserStatusType.Banned, BannedUserHandler);
             Bouncer.RegisterUserAccessActionEvent(UserStatusType.NotActive, InactiveUserHandler);
             LoginControl.RegisterOnLoginEvent(Bouncer.ValidateUser);
+            ViewFactory = gameObject.AddComponent<UnityViewFactory>();
         }
 
         /// <summary>
@@ -76,8 +83,6 @@ namespace Assets.Scripts.Licensing.Controller
                  "This account has been banned. ";
             Notify.Template("fade")
                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
-            LoginControl.EnableControls();
-
         }
         /// <summary>
         /// Handler for inactive user event
@@ -88,8 +93,6 @@ namespace Assets.Scripts.Licensing.Controller
                 "This account is not active. Please contact your license administrator for further support.";
             Notify.Template("fade")
                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
-            LoginControl.EnableControls();
-
         }
 
         /// <summary>
@@ -106,8 +109,14 @@ namespace Assets.Scripts.Licensing.Controller
         {
             string vMsg =
                 "The provided license is inactive. Please contact your license administator for further support.";
+<<<<<<< HEAD
             Notify.Template("fade")
                .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
+=======
+            Debug.Log("Inactive license");
+            Notify.Template("FadingFadoutNotifyTemplate")
+                .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
+>>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
         }
 
 
@@ -121,8 +130,7 @@ namespace Assets.Scripts.Licensing.Controller
                   "The provided license has expired. Please contact your license administator for further support.";
             Notify.Template("fade")
                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
-            LoginControl.EnableControls();
-
+            Debug.Log("expired license");
 
         }/// <summary>
          /// Handler for deleted license event
@@ -134,8 +142,7 @@ namespace Assets.Scripts.Licensing.Controller
                  "We could not find a license associated with your account. Please contact your license administator for further support.";
             Notify.Template("fade")
                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
-            LoginControl.EnableControls();
-
+            Debug.Log("deleted license");
         }
 
 

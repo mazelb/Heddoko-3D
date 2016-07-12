@@ -8,7 +8,6 @@
 
 using System.Collections;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.Licensing.Authentication
@@ -27,18 +26,12 @@ namespace Assets.Scripts.Licensing.Authentication
         private IEnumerator mUserErrorAnim;
         public PasswordInputField PasswordInputField;
         public event SubmitLogin PasswordSubmissionEvent;
-        public EventSystem EventSystem;
         public Button SubmitInfoButton;
-
         void Awake()
         {
             SubmitInfoButton.onClick.AddListener(SubmitUserNamePassword);
         }
 
-        void OnDisable()
-        {
-            EnableButtonControls();
-        }
         /// <summary>
         /// Submits the user name and password
         /// </summary>
@@ -83,7 +76,7 @@ namespace Assets.Scripts.Licensing.Authentication
             }
             mUserErrorAnim = AnimationHelpers.FadeTextBoxWithMessage(vMsg, UserNameErrorLabel, 5f);
             StartCoroutine(mUserErrorAnim);
-        }
+         }
         /// <summary>
         /// Displays an error with regards to the password
         /// </summary>
@@ -115,6 +108,7 @@ namespace Assets.Scripts.Licensing.Authentication
         {
             SubmitInfoButton.interactable = false;
         }
+<<<<<<< HEAD
 
 
         void Update()
@@ -154,5 +148,7 @@ namespace Assets.Scripts.Licensing.Authentication
         {
             LoadingImage.gameObject.SetActive(false);
         }
+=======
+>>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
     }
 }

@@ -21,7 +21,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         public FieldInfo FieldInfoKey;
         private int mCount = 0;
         private readonly List<System.Single> mDataCollection = new List<System.Single>(10000);
- 
+        private readonly List<float> mTimeStampList = new List<float>(10000);
+
         public int Count
         {
             get
@@ -34,16 +35,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             get { return mDataCollection; }
         }
 
-        /// <summary>
-        /// Clears the list of data collection
-        /// </summary>
-        public void ClearDataCollection()
+        public List<float> TimeStampList
         {
-            mDataCollection.Clear();
+            get { return mTimeStampList; }
         }
-
-
-      
         /// <summary>
         /// Adds a timestamp and value to the current list
         /// </summary>

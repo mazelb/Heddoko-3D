@@ -6,7 +6,6 @@
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
 
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Communication.Controller
@@ -16,7 +15,6 @@ namespace Assets.Scripts.Communication.Controller
     /// </summary>
     public abstract class AbstractSuitConnection : MonoBehaviour
     {
-
         public delegate void BpConnectionControllerDel();
 
         public delegate void BpConnectionControllerRespDel(string vResponse);

@@ -6,7 +6,6 @@
 * Copyright Heddoko(TM) 2016, all rights reserved 
 */
 
-using System;
 using System.Collections;
 using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.Enums;
@@ -16,7 +15,6 @@ using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
 using Assets.Scripts.UI.DemoKit.android;
 using System.Linq;
 using Assets.Scripts.Body_Data.View;
-using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.AbstractViews.camera;
 using UnityEngine;
 
@@ -131,20 +129,19 @@ namespace Assets.Scripts.UI.DemoKit
 
         public void InitBodyPlayback(string[] vLines)
         {
-            throw new NotImplementedException("Changed body frames recording to be a master class, have to change the behaviour of the android playback mechanics");
-            //CsvBodyFramesRecording vTempRecording = new CsvBodyFramesRecording();
-            //vTempRecording.ExtractRecordingUUIDs(vLines);
-            ////verify the recording doesn't exist in the rec manager
-            //List<BodyFramesRecordingBase> vRecording = BodyRecordingsMgr.Instance.Recordings;
-            //bool vContain = vRecording.Any(x => x.BodyRecordingGuid == vTempRecording.BodyRecordingGuid);
-            //if (!vContain)
-            //{
-            //    vTempRecording.ExtractRawFramesData(vLines);
-            //    BodyRecordingsMgr.Instance.AddNewRecording(vTempRecording);
-            //}
-            //BodyFramesRecordingBase vRecorder =  BodyRecordingsMgr.Instance.GetRecordingByUuid(vTempRecording.BodyRecordingGuid);
+            BodyFramesRecording vTempRecording = new BodyFramesRecording();
+            vTempRecording.ExtractRecordingUUIDs(vLines);
+            //verify the recording doesn't exist in the rec manager
+            List<BodyFramesRecording> vRecording = BodyRecordingsMgr.Instance.Recordings;
+            bool vContain = vRecording.Any(x => x.BodyRecordingGuid == vTempRecording.BodyRecordingGuid);
+            if (!vContain)
+            {
+                vTempRecording.ExtractRawFramesData(vLines);
+                BodyRecordingsMgr.Instance.AddNewRecording(vLines);
+            }
+            BodyFramesRecording vRecorder =  BodyRecordingsMgr.Instance.GetRecordingByUuid(vTempRecording.BodyRecordingGuid);
 
-            //mPlaybackControlPanel.NewRecordingSelected(vRecorder); 
+            mPlaybackControlPanel.NewRecordingSelected(vRecorder); 
         }
     }
 }

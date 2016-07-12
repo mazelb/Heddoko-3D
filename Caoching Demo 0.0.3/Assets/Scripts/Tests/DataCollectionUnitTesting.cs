@@ -88,7 +88,7 @@ namespace Assets.Scripts.Tests
 
             }
           //  string[,] vSerializedData = mDataStore.mSerialization.SerializeToString();
-            int vTotalCount = mDataStore.SerializedList.Count;
+            int vTotalCount = mDataStore.mSerializedList.Count;
             UnityEngine.Debug.Log("total " + (vTotalCount));
 
             vStop.Stop();
@@ -96,7 +96,7 @@ namespace Assets.Scripts.Tests
             UnityEngine.Debug.Log("writing to file");
             vStop.Reset();
             vStop.Start();
-           AnalysisDataStoreSerialization.WriteFile(mDataStore);
+            mDataStore.mSerialization.WriteFile(mDataStore);
             vStop.Stop();
             UnityEngine.Debug.Log("Total time taken " + (vStop.ElapsedMilliseconds / 1000f));
 

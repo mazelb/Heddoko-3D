@@ -155,10 +155,10 @@ namespace Assets.Scripts.Body_Data.view
             {
                 mSpriteMover.ResetOrientations();
             }
-            //if (Camera.main != null && Camera.main.gameObject.activeInHierarchy)
-            //{
-            //    Camera.main.Render();
-            //}
+            if (Camera.main != null)
+            {
+                Camera.main.Render();
+            }
         }
 
         public void ResetPositions()
@@ -169,10 +169,10 @@ namespace Assets.Scripts.Body_Data.view
                 //vObjTransform.position = mInitialPosition;
             }
 
-            //if (Camera.main != null)
-            //{
-            //    Camera.main.Render();
-            //}
+            if (Camera.main != null)
+            {
+                Camera.main.Render();
+            }
         }
 
         /**

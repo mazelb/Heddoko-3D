@@ -33,13 +33,8 @@ namespace Assets.Scripts.UI.Settings
         {
             get
             {
-                if (string.IsNullOrEmpty(sPreferedRecordingsFolder))
-                {
-                    DirectoryInfo vDirectoryInfo = new DirectoryInfo(Application.dataPath);
-                    sPreferedRecordingsFolder = vDirectoryInfo.Name;
-
-                }
-                    return sPreferedRecordingsFolder;
+ 
+                return sPreferedRecordingsFolder;
             }
             set
             {
@@ -99,12 +94,7 @@ namespace Assets.Scripts.UI.Settings
         {
             get
             {
-                string vSubPath = Application.persistentDataPath + "/db/";
-                if (!Directory.Exists(vSubPath))
-                {
-                    Directory.CreateDirectory(vSubPath);
-                }
-                string vLocalDbPath = vSubPath + DBSettings.DbName;
+                string vLocalDbPath = Application.persistentDataPath + "/db/" + DBSettings.DbName;
           
                 return vLocalDbPath;
             }

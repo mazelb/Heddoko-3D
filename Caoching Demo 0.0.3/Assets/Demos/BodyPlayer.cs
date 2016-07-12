@@ -8,7 +8,6 @@
 */
  
 using Assets.Scripts.Communication.Controller;
-using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.MainScene.Model;
 using Assets.Scripts.Utils.UnityUtilities;
 using Assets.Scripts.Utils.UnityUtilities.Repos;
@@ -53,7 +52,7 @@ namespace Assets.Demos
         void Start()
         {
             mPlayButtonOriginalIcon = PlayButton.image.sprite;
-            BodyFramesRecordingBase vRec = BodySelectedInfo.Instance.CurrentSelectedRecording;
+            BodyFramesRecording vRec = BodySelectedInfo.Instance.CurrentSelectedRecording;
             if (vRec != null)
             {
                 mBodyRecordingUuid = vRec.BodyRecordingGuid;
@@ -198,7 +197,7 @@ namespace Assets.Demos
             {
                 CurrentBodyInPlay.StopThread(); 
             }
-            BodyFramesRecordingBase vRec = BodySelectedInfo.Instance.CurrentSelectedRecording;
+            BodyFramesRecording vRec = BodySelectedInfo.Instance.CurrentSelectedRecording;
             mBodyRecordingUuid = vRec.BodyRecordingGuid;
             CurrentBodyInPlay = BodiesManager.Instance.GetBodyFromRecordingUUID(mBodyRecordingUuid);
             mPlayButtonPushed = false;
@@ -246,8 +245,7 @@ namespace Assets.Demos
             {
                 Destroy(vFadeInFadeOutEffectToDestroy);
             }
-            PlayButton.image.sprite = mPlayButtonOriginalIcon;
-            //reset the play button back to its original sprite
+            PlayButton.image.sprite = mPlayButtonOriginalIcon; //reset the play button back to its original sprite
             PlayButton.GetComponentInChildren<Text>().text = "Play";
             PlayButton.interactable = true;
             ChangeState(BodyPlaybackState.Waiting);

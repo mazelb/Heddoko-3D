@@ -65,7 +65,7 @@ namespace Assets.Scripts.Licensing.Tests
 
             ComboButton.onClick.AddListener(() =>
             {
-                ApplicationStartupManager.LoginControl.LoginSuccessEvent(mUserProfileModel);
+                ApplicationStartupManager.LoginControl.mLoginSuccessEvent(mUserProfileModel);
                 //ApplicationStartupManager.Bouncer.ValidateLicense(mUserProfileModel);
                 // ApplicationStartupManager.Bouncer.ValidateUser(mUserProfileModel);
             });

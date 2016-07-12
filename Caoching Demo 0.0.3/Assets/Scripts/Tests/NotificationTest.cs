@@ -20,7 +20,7 @@ namespace Assets.Scripts.Tests
           {
 
                 var message = string.Format("{0} movements have been exported ", 10);
-                Notify.Template("FadingFadoutNotifyTemplate").Show(message, 4.5f, hideAnimation: Notify.FadeOutAnimation, showAnimation: Notify.FadeInAnimation, sequenceType: NotifySequence.First);
+                Notify.Template("FadinFadoutNotifyTemplate").Show(message, 4.5f, hideAnimation: Notify.FadeOutAnimation, showAnimation: Notify.FadeInAnimation, sequenceType: NotifySequence.First);
             }
       }
     }

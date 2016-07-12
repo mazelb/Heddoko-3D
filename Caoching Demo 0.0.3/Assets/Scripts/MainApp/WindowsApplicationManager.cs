@@ -7,7 +7,6 @@
 // */
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Licensing.Model;
@@ -16,7 +15,6 @@ using Assets.Scripts.UI.RecordingLoading;
 using Assets.Scripts.UI.Settings;
 using HeddokoSDK.Models;
 using UnityEngine;
-using UnityEngine.EventSystems; 
 
 namespace Assets.Scripts.MainApp
 {
@@ -25,17 +23,7 @@ namespace Assets.Scripts.MainApp
     /// </summary>
     public class WindowsApplicationManager: MonoBehaviour,IApplicationManager
     {
-        /// <summary>
-        /// Worker role objects to disable
-        /// </summary>
-        public GameObject[] DisableWorkerRoleObjects;
 
-        public GameObject LoginViewRoot;
-        public GameObject ApplicationRoot;
-        /// <summary>
-        /// Because of a bug in unity, the event system needs to be disabled and reenabled. 
-        /// </summary>
-        public EventSystem EventSystem;
         public RecordingPlayerView RecordingPlayer ;
         public ControlPanel ControlPanel;
         private UserProfileModel mCurrentProfileModel;
@@ -51,32 +39,14 @@ namespace Assets.Scripts.MainApp
             var vAttribute =
                 (UserRolePermission) Attribute.GetCustomAttribute(typeof (RecordingPlayerView), typeof (UserRolePermission));
             List<UserRoleType> vType = vAttribute.AllowedRoles.ToList();
-            if (vUserRole == UserRoleType.Worker)
+            if (!vType.Contains(vUserRole))
             {
-                foreach (var vDisableUserRoleObject in DisableWorkerRoleObjects)
-                {
-                    vDisableUserRoleObject.SetActive(false);
-                }
+               // ControlPanel.LoadRecordingsButton.gameObject.SetActive(false);
+
             }
-            StartCoroutine(FlipEventSystemStates());
-            //if (!vType.Contains(vUserRole))
-            //{
-            //   // ControlPanel.LoadRecordingsButton.gameObject.SetActive(false);
-
-            //}
-            //RecordingPlayer.RecordingPlayerViewLayoutCreatedEvent += SetPermissions;
+            RecordingPlayer.RecordingPlayerViewLayoutCreatedEvent += SetPermissions;
         }
 
-        /// <summary>
-        /// Flips the event system state, between inactive and active. 
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator FlipEventSystemStates()
-        {
-            EventSystem.gameObject.SetActive(false);
-            yield return new WaitForSeconds(0.6f);
-            EventSystem.gameObject.SetActive(true);
-        }
         /// <summary>
         /// Sets the recording player sub control panels.
         /// </summary>
@@ -85,21 +55,5 @@ namespace Assets.Scripts.MainApp
         {
             vView.SetPermissions(mCurrentProfileModel);
         }
-
-        public void ReturnToLoginView()
-        {
-            ApplicationRoot.gameObject.SetActive(false);
-            LoginViewRoot.gameObject.SetActive(true);
-            foreach (var vDisableWorkerRoleObject in DisableWorkerRoleObjects)
-            {
-                vDisableWorkerRoleObject.gameObject.SetActive(true);
-            }
-        }
-
-        public void ExitApplication()
-        {
-            Application.Quit(); 
-        }
- 
     }
 }

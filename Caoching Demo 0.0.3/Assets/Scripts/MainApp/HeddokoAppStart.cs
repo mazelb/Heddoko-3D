@@ -49,7 +49,8 @@ namespace Assets.Scripts.MainApp
             InjectTaggingManagerDependents();
             InitializeLoggers();
             QualitySettings.vSyncCount = 0;
-            bool vAppSafelyLaunched; 
+            bool vAppSafelyLaunched;
+            EnableObjects(false);
             HVector3.Vector3MathServiceProvider = new UVector3MathServiceProvider();
             BodySegment.IsTrackingHeight = false;
  
@@ -57,8 +58,26 @@ namespace Assets.Scripts.MainApp
             {
 
                 mDbAccess = new LocalDBAccess();
-                EnableObjects(true);
-                mDbAccess.SetApplicationSettings();
+
+                bool vApplicationSettingsFound = mDbAccess.SetApplicationSettings();
+
+ 
+                if (vApplicationSettingsFound)
+                {
+                    vAppSafelyLaunched = ApplicationSettings.AppLaunchedSafely;
+                    if (vAppSafelyLaunched)
+                    {
+                        string vGet = ApplicationSettings.PreferedConnName;
+                      
+                        EnableObjects(true);
+                    }
+                    else
+                    {
+                        AppNotLaunchedThroughLauncher();
+                    }
+                }
+
+
             }
         }
         // ReSharper disable once UnusedMember.Local
@@ -157,6 +176,7 @@ namespace Assets.Scripts.MainApp
         public void CleanUpOnQuit()
         {
             DebugLogger.Instance.Stop();
+<<<<<<< HEAD
             try
             {
                 mDbAccess.SaveApplicationSettings();
@@ -169,6 +189,9 @@ namespace Assets.Scripts.MainApp
             }
             
 
+=======
+            mDbAccess.SaveApplicationSettings();
+>>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
         }
 
         /// <summary>

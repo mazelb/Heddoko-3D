@@ -1,16 +1,4 @@
-﻿/// <summary>
-/// LinearSystems is a Class used by ShiuTransform and desing to 
-/// form and solve the calibation systems of equations : 
-/// A1 X = X B1 and A2 X = X B2  
-/// From the papers: 
-/// 1)Calibration of Wrist-Mounted Robotic Sensors by Solving by
-/// Solving Homogeneous Transform Equations of the Form AX = XB.(Y.C.Shiu)
-/// 2) An Overview of Robot-Sensor Calibration Methods for Evaluation 
-/// of Perception Systems (M.Shah).  
-/// </summary>
-/// <param name="vA"> Matrix<float> 9x2 : contain the matrix A of the linear systems Ax=b </param> 
-/// <param name="vb"> Matrix<float> 9x1 : contain the matrix b of the linear systems Ax=b</param> 
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,12 +6,6 @@ using UnityEngine;
 using MathNet.Numerics.LinearAlgebra;
 namespace Calibration1.CalibrationTransformation
 {
-    /// build 2 matrix vA and vb objects with predefined length because we 
-    /// know how many set of data we are going to used: 
-    /// A1 X = X B1 (first set)
-    /// A2 X = X B2 (second set) 
-    /// The method allow to handle more then 2 set but now it's
-    /// hard coded. 
     public class LinearSystem
     {
         public int mNumbercolA = 0;
@@ -35,17 +17,11 @@ namespace Calibration1.CalibrationTransformation
         const int mMaxnumbercolb = 1;
         public Matrix<float> mA;
         public Matrix<float> mB;
-        /// <summary>
-        /// Default constructor        
-        /// </summary>
         public LinearSystem()
         {
             this.mB = Matrix<float>.Build.Dense(LinearSystem.mMaxnumberlineb, LinearSystem.mMaxnumbercolb);
             this.mA = Matrix<float>.Build.Dense(LinearSystem.mMaxnumberlineA, LinearSystem.mMaxnumbercolA);
         }
-        /// <summary>
-        /// constructor       
-        /// </summary>
         public LinearSystem(Matrix<float> vA, Matrix<float> vb)
         {
             this.mB = Matrix<float>.Build.Dense(LinearSystem.mMaxnumberlineb, LinearSystem.mMaxnumbercolb);
@@ -62,13 +38,6 @@ namespace Calibration1.CalibrationTransformation
             mNumbercolA = 2;
             mNumberOfSystemAdd++;
         }
-        /// <summary>
-        /// Method whith allows to add a set of equations to the global linear system
-        /// 1 set for each data set associated to a pose taken by the wearer .
-        /// Hard coded for two sets of data (could be extended).
-        /// </summary>
-        /// <param name="vA"> Matrix<float> 9x2 : contain the matrix A of the linear systems Ax=b </param> 
-        /// <param name="vb"> Matrix<float> 9x1 : contain the matrix b of the linear systems Ax=b </param> 
         public void AddEquation(Matrix<float> vA, Matrix<float> vb)
         {
             float Sign = 1.0F;
@@ -90,12 +59,6 @@ namespace Calibration1.CalibrationTransformation
             mNumbercolA += 2;
             mNumberOfSystemAdd++;
         }
-        /// <summary>
-        /// Method who solve the internal linear system and output the solution
-        /// </summary>
-        /// <returns> Beta contain two solutions those two solution shoud be almost the same if
-        /// the method is successful.
-        /// </returns>
         public Matrix<float> Solve()
         {
             Matrix<float> b = this.mB;
