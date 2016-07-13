@@ -17,6 +17,7 @@ namespace Assets.Scripts.Frames_Pipeline
     /// </summary>
     public class BodyProtoPacketFrame : BodyRawFrameBase
     {
+        //A protobuf defined packet
         public Packet Packet;
 
         public BodyProtoPacketFrame(Packet vPacket)
