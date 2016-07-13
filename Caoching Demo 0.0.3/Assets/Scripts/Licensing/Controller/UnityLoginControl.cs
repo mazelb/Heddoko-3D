@@ -68,11 +68,12 @@ namespace Assets.Scripts.Licensing.Controller
             mLoginController.AddErrorHandler(LoginErrorType.CannotAuthenticate, DisplayErrorNotification);
             mLoginController.AddErrorHandler(LoginErrorType.CannotAuthenticate, vX => EnableControls());
             mLoginController.AddErrorHandler(LoginErrorType.NullLicense, DisplayErrorNotification);
-            mLoginController.AddErrorHandler(LoginErrorType.NoNetworkConnectionFound, NoNetworkConnectionErrorHandler);
             mLoginController.AddErrorHandler(LoginErrorType.NullLicense, vX => EnableControls());
+            mLoginController.AddErrorHandler(LoginErrorType.NoNetworkConnectionFound, NoNetworkConnectionErrorHandler);
             mLoginController.AddErrorHandler(LoginErrorType.ZeroLengthPassword, LoginView.DisplayProblemWithPassword);
             mLoginController.AddErrorHandler(LoginErrorType.ZeroLengthUserName, LoginView.DisplayProblemWithUsername);
             mLoginController.AddErrorHandler(LoginErrorType.Other, DisplayErrorNotification);
+            mLoginController.AddErrorHandler(LoginErrorType.Other, vX => EnableControls());
             mLoginController.AddLoginSubmissionHandler(SubmitLogin);
             OutterThreadToUnityThreadIntermediary.Instance.Init();
 
@@ -124,7 +125,10 @@ namespace Assets.Scripts.Licensing.Controller
         /// <param name="vMsg"></param>
         void DisplayErrorNotification(string vMsg)
         {
-
+            //Action vRaiseModalPanelAction = () => ModalPanel.Instance().Choice("ERROR", vMsg, () =>
+            //{
+            //    Application.OpenURL(mUrl);
+            //}, () => { });
             Notify.Template("fade")
                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First);
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(false));

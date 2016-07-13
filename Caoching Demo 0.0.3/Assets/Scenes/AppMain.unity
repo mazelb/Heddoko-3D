@@ -10003,7 +10003,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1785145547}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!108 &416491681
 Light:
   m_ObjectHideFlags: 0
@@ -11290,6 +11290,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71b651ffbd9875c4aad28a7b02b5c729, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DisableWorkerRoleObjects: []
+  LoginViewRoot: {fileID: 1785145544}
+  ApplicationRoot: {fileID: 1716404034}
+  EventSystem: {fileID: 2102495836}
   RecordingPlayer: {fileID: 1103780630}
   ControlPanel: {fileID: 779078133}
 --- !u!1 &536278063
@@ -12718,7 +12722,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1785145547}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!114 &598641892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15617,7 +15621,7 @@ RectTransform:
   m_Father: {fileID: 1897158140}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.99999964}
+  m_AnchorMax: {x: 1, y: 0.9999999}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -18602,6 +18606,12 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 872454417}
+--- !u!114 &874077231 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11475356, guid: 73745ec5c5a2873409436e5c685c9db4,
+    type: 2}
+  m_PrefabInternal: {fileID: 735924172}
+  m_Script: {fileID: 11500000, guid: f7ad2fe22a9c2f24ba38c8c3c29ef033, type: 3}
 --- !u!1 &876998726
 GameObject:
   m_ObjectHideFlags: 0
@@ -24566,11 +24576,11 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1181528337}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -611.5, y: -343, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1868436788}
-  m_RootOrder: 2
+  m_Father: {fileID: 1785145547}
+  m_RootOrder: 0
 --- !u!81 &1181528339
 AudioListener:
   m_ObjectHideFlags: 0
@@ -28339,7 +28349,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 890272455}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -39649,6 +39659,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1181528338}
   - {fileID: 416491680}
   - {fileID: 1785145548}
   - {fileID: 598641891}
@@ -39667,7 +39678,7 @@ Transform:
   m_Children:
   - {fileID: 786575445}
   m_Father: {fileID: 1785145547}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!114 &1785145549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -41176,7 +41187,6 @@ RectTransform:
   m_Children:
   - {fileID: 2094367925}
   - {fileID: 815031534}
-  - {fileID: 1181528338}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_AnchorMin: {x: 0, y: 0}
@@ -44997,7 +45007,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1785145547}
-  m_RootOrder: 3
+  m_RootOrder: 4
 --- !u!1 &2050083326
 GameObject:
   m_ObjectHideFlags: 0
@@ -46245,7 +46255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NextView: {fileID: 0}
   PreviousView: {fileID: 0}
-  SettingsView: {fileID: 0}
+  SettingsView: {fileID: 874077231}
   UiCamera: {fileID: 1047580056}
 --- !u!114 &2077341966
 MonoBehaviour:
