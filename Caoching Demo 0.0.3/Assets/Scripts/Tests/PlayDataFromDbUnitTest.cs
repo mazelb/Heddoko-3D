@@ -12,6 +12,7 @@ using Assets.Scripts.UI.AbstractViews.Layouts;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
 
@@ -97,7 +98,7 @@ namespace Assets.Scripts.Tests
         {
             if (Input.GetKeyDown(KeyCode.P))
             {
-                BodyFramesRecording vRecording =
+                BodyFramesRecordingBase vRecording =
                     BodyRecordingsMgr.Instance.GetRecordingByUuid("2e6a7559-d623-43b2-8336-9b0de00d4d96");
                 mControlPanel.NewRecordingSelected(vRecording);
             }    

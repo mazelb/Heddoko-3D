@@ -1,0 +1,10 @@
+diff a/Caoching Demo 0.0.3/Assets/Resources/Prefabs/UI/Brainpack Settings tab.prefab b/Caoching Demo 0.0.3/Assets/Resources/Prefabs/UI/Brainpack Settings tab.prefab	(rejected hunks)
+@@ -930,7 +930,7 @@
+   m_Icon: {fileID: 0}
+   m_NavMeshLayer: 0
+   m_StaticEditorFlags: 0
+-  m_IsActive: 0
++  m_IsActive: 1
+ --- !u!1 &198026
+ GameObject:
+   m_ObjectHideFlags: 1

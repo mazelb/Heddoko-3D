@@ -1,16 +1,20 @@
 diff a/Caoching Demo 0.0.3/Assets/Scripts/Licensing/Controller/UnityLoginControl.cs b/Caoching Demo 0.0.3/Assets/Scripts/Licensing/Controller/UnityLoginControl.cs	(rejected hunks)
-@@ -8,9 +8,8 @@
+@@ -8,10 +8,14 @@
  
  using System;
  using System.Collections;
 +using System.Collections.Generic;
  using System.Net;
--using System.Net.Security;
--using System.Security.Cryptography.X509Certificates;
++<<<<<<< HEAD
+ using System.Net.Security;
+ using System.Security.Cryptography.X509Certificates;
+ using System.Text;
++=======
++>>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
  using System.Threading;
+ using Assets.Scripts.Licensing.Authentication;
  using Assets.Scripts.Licensing.Model;
- using Assets.Scripts.Utils;
-@@ -33,8 +32,8 @@
+@@ -38,8 +42,8 @@
          public LoginView LoginView;
          public Notify NotificationTemplate;
          private LoginController mLoginController;
@@ -20,28 +24,27 @@ diff a/Caoching Demo 0.0.3/Assets/Scripts/Licensing/Controller/UnityLoginControl
 +        internal OnLoginSuccess mLoginSuccessEvent;
          private Thread mConnectionThread;
          public Image LoadingIcon;
-         public LoginController LoginController
-@@ -44,45 +43,26 @@
+         private string mUrl;
+@@ -52,6 +56,7 @@
  
-         void Awake()
+        internal void Awake()
          {
--            HeddokoConfig vConfig = new HeddokoConfig("https://app.heddoko.com/api/v1", "HEDFstcKsx0NHjPSsjcndjnckSDJjknCCSjcnsJSK89SJDkvVBrk");
--
--#if DEBUG
--           vConfig = new HeddokoConfig("http://dev.app.heddoko.com/api/v1", "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk");
--#endif
--
--            mClient = new HeddokoClient(vConfig);
--            ServicePointManager.ServerCertificateValidationCallback = RemoteCertificateValidationCallback;
-             mLoginController = new LoginController();
-             mLoginController.Init(LoginModel, LoginView);
-             mLoginController.AddErrorHandler(LoginErrorType.CannotAuthenticate, DisplayErrorNotification);
--            mLoginController.AddErrorHandler(LoginErrorType.CannotAuthenticate, (vX) => EnableControls());
-+            mLoginController.AddErrorHandler(LoginErrorType.CannotAuthenticate, (x) => EnableControls());
++<<<<<<< HEAD
+             mUrlExt = "api/v1";
+             mUrl = "https://app.heddoko.com/";
+             mSecret = "HEDFstcKsx0NHjPSsjcndjnckSDJjknCCSjcnsJSK89SJDkvVBrk";
+@@ -70,29 +75,32 @@
              mLoginController.AddErrorHandler(LoginErrorType.NullLicense, DisplayErrorNotification);
--            mLoginController.AddErrorHandler(LoginErrorType.NoNetworkConnectionFound, NoNetworkConnectionErrorHandler);
--            mLoginController.AddErrorHandler(LoginErrorType.NullLicense, (vX) => EnableControls());
+             mLoginController.AddErrorHandler(LoginErrorType.NoNetworkConnectionFound, NoNetworkConnectionErrorHandler);
+             mLoginController.AddErrorHandler(LoginErrorType.NullLicense, vX => EnableControls());
++=======
++            mLoginController = new LoginController();
++            mLoginController.Init(LoginModel, LoginView);
++            mLoginController.AddErrorHandler(LoginErrorType.CannotAuthenticate, DisplayErrorNotification);
++            mLoginController.AddErrorHandler(LoginErrorType.CannotAuthenticate, (x) => EnableControls());
++            mLoginController.AddErrorHandler(LoginErrorType.NullLicense, DisplayErrorNotification);
 +            mLoginController.AddErrorHandler(LoginErrorType.NullLicense, (x) => EnableControls());
++>>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
              mLoginController.AddErrorHandler(LoginErrorType.ZeroLengthPassword, LoginView.DisplayProblemWithPassword);
              mLoginController.AddErrorHandler(LoginErrorType.ZeroLengthUserName, LoginView.DisplayProblemWithUsername);
 -            mLoginController.AddErrorHandler(LoginErrorType.Other, DisplayErrorNotification);
@@ -65,13 +68,16 @@ diff a/Caoching Demo 0.0.3/Assets/Scripts/Licensing/Controller/UnityLoginControl
          /// <summary>
          /// enable login controls
          /// </summary>
-         /// <param name="vVmsg"></param>
--        public void EnableControls()
++<<<<<<< HEAD
+         public void EnableControls()
++=======
++        /// <param name="vVmsg"></param>
 +        private void EnableControls()
++>>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
          {
              LoginView.EnableButtonControls();
          }
-@@ -93,7 +73,7 @@
+@@ -103,7 +111,7 @@
          /// <param name="vHandler">The handler to registers</param>
          public void RegisterOnLoginEvent(OnLoginSuccess vHandler)
          {
@@ -80,25 +86,35 @@ diff a/Caoching Demo 0.0.3/Assets/Scripts/Licensing/Controller/UnityLoginControl
          }
          /// <summary>
          /// Removes handler to user's on login success.
-@@ -101,7 +81,7 @@
+@@ -111,10 +119,14 @@
          /// <param name="vHandler">The handler to remove</param>
          public void RemoveOnLoginEvent(OnLoginSuccess vHandler)
          {
--            LoginSuccessEvent -= vHandler;
++<<<<<<< HEAD
+             if (LoginSuccessEvent != null)
+             {
+                 LoginSuccessEvent -= vHandler;
+             }
++=======
 +            mLoginSuccessEvent -= vHandler;
++>>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
          }
  
  
-@@ -111,7 +91,7 @@
+@@ -124,8 +136,12 @@
          /// <param name="vMsg"></param>
          void DisplayErrorNotification(string vMsg)
          {
--            Notify.Template("fade")
-+            Notify.Template("FadingFadoutNotifyTemplate")
-                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First);
-             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoadingIcon.gameObject.SetActive(false));
++<<<<<<< HEAD
  
-@@ -134,12 +114,13 @@
+             Notify.Template("fade")
++=======
++            Notify.Template("FadingFadoutNotifyTemplate")
++>>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
+                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First);
+             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(false));
+ 
+@@ -147,12 +163,13 @@
          /// <returns></returns>
          IEnumerator VerifyInternetConnection(LoginModel vModel)
          {
@@ -115,7 +131,7 @@ diff a/Caoching Demo 0.0.3/Assets/Scripts/Licensing/Controller/UnityLoginControl
              }
              else
              {
-@@ -155,32 +136,29 @@
+@@ -168,7 +185,6 @@
          /// <param name="vModel">The login model to submit</param>
          private void SubmitLoginInfo(LoginModel vModel)
          {
@@ -123,7 +139,8 @@ diff a/Caoching Demo 0.0.3/Assets/Scripts/Licensing/Controller/UnityLoginControl
              try
              {
                  UserRequest vRequest = vModel.UserRequest;
-                 User vUser = mClient.SignIn(vRequest);
+@@ -186,25 +202,29 @@
+                 }
                  LicenseInfo vLicense = vUser.LicenseInfo;
                  mClient.SetToken(vUser.Token);
 -                ResultBool vCheck = mClient.Check();
@@ -142,11 +159,14 @@ diff a/Caoching Demo 0.0.3/Assets/Scripts/Licensing/Controller/UnityLoginControl
 -                    if (LoginSuccessEvent != null)
 +                    if (mLoginSuccessEvent != null)
                      {
--                        OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginSuccessEvent(vProfileModel));
--                        OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
--                            () => LoadingIcon.gameObject.SetActive(false));
++<<<<<<< HEAD
+                         OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginSuccessEvent(vProfileModel));
+                         OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
+                             () => LoginView.SetLoadingIconAsActive(false));
++=======
 +                        OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => mLoginSuccessEvent(vProfileModel));
 +                        OutterThreadToUnityThreadIntermediary.QueueActionInUnity(()=> LoadingIcon.gameObject.SetActive(false));
++>>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
                      }
                  }
  
@@ -155,7 +175,7 @@ diff a/Caoching Demo 0.0.3/Assets/Scripts/Licensing/Controller/UnityLoginControl
              catch (WebException vWebException)
              {
                  switch (vWebException.Status)
-@@ -194,83 +172,31 @@
+@@ -218,41 +238,29 @@
                                  switch (vWebResponse.StatusCode)
                                  {
                                      case HttpStatusCode.NotFound:
@@ -200,49 +220,22 @@ diff a/Caoching Demo 0.0.3/Assets/Scripts/Licensing/Controller/UnityLoginControl
                          break;
                  }
              }
--           
++<<<<<<< HEAD
+ 
          }
  
+@@ -314,9 +322,11 @@
+             vBuilder.Append("\nClick \"Yes\" to launch your browser and log into Heddoko for further details. ");
+             return vBuilder.ToString();
+         }
+-
+-    }
++=======
++        }
  
--        /// <summary>
--        /// Since we need to use HTTPS to authenticate, the application needs to add a valid certificate to unity's empty certificates  store.
--        /// </summary> 
--        /// <returns></returns>
--        public bool RemoteCertificateValidationCallback(System.Object vSender, X509Certificate vCertificate, X509Chain vChain, SslPolicyErrors vSslPolicyErrors)
--        {
--            bool vIsOk = true;
--            // If there are errors in the certificate chain, look at each error to determine the cause.
--            if (vSslPolicyErrors != SslPolicyErrors.None)
--            {
--                for (int vI = 0; vI < vChain.ChainStatus.Length; vI++)
--                {
--                    if (vChain.ChainStatus[vI].Status != X509ChainStatusFlags.RevocationStatusUnknown)
--                    {
--                        vChain.ChainPolicy.RevocationFlag = X509RevocationFlag.EntireChain;
--                        vChain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
--                        vChain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan(0, 1, 0);
--                        vChain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
--                        bool vChainIsValid = vChain.Build((X509Certificate2)vCertificate);
--                        if (!vChainIsValid)
--                        {
--                            vIsOk = false;
--                        }
--                    }
--                }
--            }
--            return vIsOk;
--        }
--        void OnApplicationQuit()
--        {
--            if (mConnectionThread != null)
--            {
--                mConnectionThread.Abort();
--            }
--        }
  
-     }
--
--
--
++>>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
+ 
++    }
  }
 \ No newline at end of file

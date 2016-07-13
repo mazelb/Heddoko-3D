@@ -93,9 +93,11 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
                     }
                 }
 
-                DisablingProgressBar.Instance.StartProgressBar("SAVING ANALYSIS RESULTS TO ... " + vDataStore.AnalysisSectionModel.DataStore.mSerialization.GetSerializationStorePath);
+                DisablingProgressBar.Instance.StartProgressBar("SAVING ANALYSIS RESULTS TO ... " +
+                   AnalysisDataStoreSerialization.GetSerializationStorePath);
                 yield return new WaitForSeconds(1.5f);
-                vDataStore.AnalysisSectionModel.DataStore.mSerialization.WriteFile(vDataStore.AnalysisSectionModel.DataStore);
+                AnalysisDataStoreSerialization.WriteFile(vDataStore.AnalysisSectionModel.DataStore);
+             //   vDataStore.AnalysisSectionModel.DataStore.mSerialization.WriteFile(vDataStore.AnalysisSectionModel.DataStore);
                 vCurrentDataCount++;
             }
 

@@ -15,13 +15,9 @@ namespace Assets.Scripts.Licensing.Tests
     {
         public void RaiseLoginEvent(UserProfileModel vProfile)
         {
-<<<<<<< HEAD
             if (LoginSuccessEvent != null)
-=======
-            if (base.mLoginSuccessEvent != null)
->>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
             {
-                mLoginSuccessEvent(vProfile);
+                LoginSuccessEvent(vProfile);
             }
         }
     }

@@ -18,8 +18,12 @@ using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Torso;
+using Assets.Scripts.Communication;
 using Assets.Scripts.Communication.Controller;
-using Assets.Scripts.Frames_Pipeline.BodyFrameConversion; 
+using Assets.Scripts.Frames_Pipeline;
+using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
+using HeddokoLib.adt;
 
 /**
 * Body class 
@@ -300,31 +304,26 @@ public class Body
         //first try to get the recording from the recording manager. 
         BodyRecordingsMgr.Instance.TryGetRecordingByUuid(vRecUuid, PlayRecordingCallback);
     }
-
+ 
     /// <summary>
     /// Callback action after a body frames recording has been retrieved
     /// </summary>
-    /// <param name="vBodyFramesRec"></param>
-    private void PlayRecordingCallback(BodyFramesRecording vBodyFramesRec)
+    /// <param name="vBodyFrameRecording"></param>
+    private void PlayRecordingCallback(BodyFramesRecordingBase vBodyFrameRecording)
     {
-        if (vBodyFramesRec != null && vBodyFramesRec.RecordingRawFrames.Count > 0)
+        if (vBodyFrameRecording != null && vBodyFrameRecording.RecordingRawFramesCount > 0)
         {
-<<<<<<< HEAD
             BodyFrame vBodyFrame = null;
             vBodyFrame = RawFrameConverter.ConvertRawFrame(vBodyFrameRecording.GetBodyRawFrameAt(0));
 
             //Setting the first frame as the initial frame
 
-=======
-            //Setting the first frame as the initial frame
-            BodyFrame vBodyFrame = RawFrameConverter.ConvertRawFrame(vBodyFramesRec.RecordingRawFrames[0]);
->>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
 
             SetInitialFrame(vBodyFrame);
             BodyFrameBuffer vBuffer1 = new BodyFrameBuffer();
 
             // mBodyFrameThread = new BodyFrameThread(bodyFramesRec.RecordingRawFrames, vBuffer1);
-            mBodyFrameThread = new BodyFrameThread(vBodyFramesRec, vBuffer1);
+            mBodyFrameThread = new BodyFrameThread(vBodyFrameRecording, vBuffer1);
             View.Init(this, vBuffer1);
             View.StartUpdating = true;
             mBodyFrameThread.Start();
@@ -380,6 +379,14 @@ public class Body
         View.StartUpdating = true;
     }
 
+    public void PlayFromDataStream(ProtobuffFrameRouter vRouter)
+    {
+        mBodyFrameThread.StopThread();
+        mBodyFrameThread.Init(vRouter);
+        mBodyFrameThread.Start();
+        View.Init(this, vRouter.OutBoundBuffer);
+        View.StartUpdating = true;
+    }
     /// <summary>
     /// Listener whos responsibility is to plug the bodyframe thread into controller.
     /// </summary>
@@ -549,5 +556,15 @@ public class Body
         {
             BodySegments[i].ReleaseResources();
         }
+    }
+    /// <summary>
+    /// Sets the buffer to stream Body frames    from
+    /// </summary>
+    /// <param name="vBodyFrames"></param>
+    public void SetBuffer(BodyFrameBuffer vBodyFrames)
+    {
+        StopThread();
+        View.Init(this, vBodyFrames);
+        View.StartUpdating = true;
     }
 }

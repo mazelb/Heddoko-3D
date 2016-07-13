@@ -1,0 +1,10 @@
+diff a/Caoching Demo 0.0.3/Assets/Scripts/UI/Tagging/TaggingManager.cs b/Caoching Demo 0.0.3/Assets/Scripts/UI/Tagging/TaggingManager.cs	(rejected hunks)
+@@ -64,7 +64,7 @@
+             return vTags;
+         }
+ 
+-        public void AttachTagToRecording(BodyFramesRecordingBase vRec, Tag vTag)
++        public void AttachTagToRecording(BodyFramesRecording vRec, Tag vTag)
+         {
+             Database.Connection.AddTagToRecording(vRec, vTag);
+             //try to add the tag to the current collection

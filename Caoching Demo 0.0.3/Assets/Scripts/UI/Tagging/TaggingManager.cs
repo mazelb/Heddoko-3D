@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Communication.DatabaseConnectionPipe;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 
 namespace Assets.Scripts.UI.Tagging
 {
@@ -64,7 +65,7 @@ namespace Assets.Scripts.UI.Tagging
             return vTags;
         }
 
-        public void AttachTagToRecording(BodyFramesRecording vRec, Tag vTag)
+        public void AttachTagToRecording(BodyFramesRecordingBase vRec, Tag vTag)
         {
             Database.Connection.AddTagToRecording(vRec, vTag);
             //try to add the tag to the current collection
@@ -109,7 +110,7 @@ namespace Assets.Scripts.UI.Tagging
             List<Tag> vFoundTags = new List<Tag>();
             vFoundTags = Database.Connection.GetTagsOfRecording(vRecGuid);
             //update the recording from body recordings manager
-            BodyFramesRecording vRec = BodyRecordingsMgr.Instance.GetRecordingByUuid(vRecGuid);
+            BodyFramesRecordingBase vRec = BodyRecordingsMgr.Instance.GetRecordingByUuid(vRecGuid);
             vRec.Tags = vFoundTags;
             return vFoundTags;
         }
@@ -188,7 +189,7 @@ namespace Assets.Scripts.UI.Tagging
         /// </summary>
         /// <param name="vTagSet">the tag set to add</param>
         /// <param name="vRecording">the recording to add the tag set to</param>
-        public void AttachTagSetToRecording(ICollection<string> vTagSet, BodyFramesRecording vRecording)
+        public void AttachTagSetToRecording(ICollection<string> vTagSet, BodyFramesRecordingBase vRecording)
         {
             if (vTagSet.Count == 0)
             {

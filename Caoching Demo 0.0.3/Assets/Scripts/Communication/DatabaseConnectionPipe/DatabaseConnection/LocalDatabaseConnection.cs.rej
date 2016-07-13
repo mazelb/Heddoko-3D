@@ -1,0 +1,14 @@
+diff a/Caoching Demo 0.0.3/Assets/Scripts/Communication/DatabaseConnectionPipe/DatabaseConnection/LocalDatabaseConnection.cs b/Caoching Demo 0.0.3/Assets/Scripts/Communication/DatabaseConnectionPipe/DatabaseConnection/LocalDatabaseConnection.cs	(rejected hunks)
+@@ -121,10 +121,10 @@
+         /// <param name="vDescriptor"></param>
+         /// <param name="vTotalImportProgress"></param>
+         /// <returns></returns>
+-        public bool CreateRecording(BodyFramesRecordingBase vRecording, RecordingItemDescriptor vDescriptor, Action<int> vTotalImportProgress)
++        public bool CreateRecording(BodyFramesRecording vRecording, RecordingItemDescriptor vDescriptor, Action<int> vTotalImportProgress)
+         {
+             bool vResult = false;
+-            int vTotalFrames = vRecording.RecordingRawFramesCount;
++            int vTotalFrames = vRecording.RecordingRawFrames.Count;
+             using (var vCmd = mDbConnection.CreateCommand())
+             {
+                 using (var vTransaction = mDbConnection.BeginTransaction())

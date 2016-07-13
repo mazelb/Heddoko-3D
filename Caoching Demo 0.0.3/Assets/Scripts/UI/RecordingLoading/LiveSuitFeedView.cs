@@ -23,15 +23,15 @@ namespace Assets.Scripts.UI.RecordingLoading
     /// </summary>
     public class LiveSuitFeedView : AbstractView
     {
-        private LayoutType LayoutType = LayoutType.Single;
+        internal LayoutType LayoutType = LayoutType.Single;
         public Layout CurrentLayout;
-        private PanelNode[] mPanelNodes;
-        private PanelNode mRootNode;
+        internal PanelNode[] mPanelNodes;
+        internal PanelNode mRootNode;
         public List<List<ControlPanelType>> ControlPanelTypeList = new List<List<ControlPanelType>>(2);
         public Body BrainpackBody;
         public BrainpackConnectionController BpController;
-        private LiveFeedViewControlPanel mLiveFeedViewControlPanel;
-        private bool mIsInitialized = false;
+        internal LiveFeedViewControlPanel mLiveFeedViewControlPanel;
+        internal bool mIsInitialized = false;
         public BodyFrameDataControl BodyFrameDataControl;
         public BodyFrameGraphControl FrameGraphControl; 
         public AnaylsisTextContainer AnaylsisTextContainer;

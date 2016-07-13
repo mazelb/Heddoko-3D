@@ -1,0 +1,10 @@
+diff a/Caoching Demo 0.0.3/Assets/Demos/BodyPlayer.cs b/Caoching Demo 0.0.3/Assets/Demos/BodyPlayer.cs	(rejected hunks)
+@@ -52,7 +52,7 @@
+         void Start()
+         {
+             mPlayButtonOriginalIcon = PlayButton.image.sprite;
+-            BodyFramesRecordingBase vRec = BodySelectedInfo.Instance.CurrentSelectedRecording;
++            BodyFramesRecording vRec = BodySelectedInfo.Instance.CurrentSelectedRecording;
+             if (vRec != null)
+             {
+                 mBodyRecordingUuid = vRec.BodyRecordingGuid;

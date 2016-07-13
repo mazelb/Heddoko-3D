@@ -1,0 +1,10 @@
+diff a/Caoching Demo 0.0.3/Assets/Scripts/UI/MainMenu/PlayerStreamManager.cs b/Caoching Demo 0.0.3/Assets/Scripts/UI/MainMenu/PlayerStreamManager.cs	(rejected hunks)
+@@ -57,7 +57,7 @@
+         public Button[] TPoseButtons;
+ 
+         public List<IResettableMetricView> ResettableViews = new List<IResettableMetricView>(4);
+-        private Dictionary<string, BodyFramesRecordingBase> mRecordings = new Dictionary<string, BodyFramesRecordingBase>(10);
++        private Dictionary<string, BodyFramesRecording> mRecordings = new Dictionary<string, BodyFramesRecording>(10);
+ 
+         public BodyPlaybackState CurrentState { get { return mCurrentState; } }
+         /// <summary>

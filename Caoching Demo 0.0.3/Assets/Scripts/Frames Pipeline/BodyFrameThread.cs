@@ -8,12 +8,14 @@
 
 using System;
 using System.Collections.Generic;
+using Assets.Scripts.Communication;
 using Assets.Scripts.Frames_Pipeline;
-using Assets.Scripts.Frames_Pipeline.BodyFrameConversion; 
+using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 using HeddokoLib.adt;
 using HeddokoLib.networking;
 using HeddokoLib.utils;
-using UnityEngine;
+ 
 using LogType = Assets.Scripts.Utils.DebugContext.logging.LogType;
 
 /**
@@ -29,6 +31,7 @@ public class BodyFrameThread : ThreadedJob
     private PlaybackSettings mPlaybackSettings;
     private List<BodyRawFrame> mRawFrames;
     private RecordingPlaybackTask mPlaybackTask;
+    internal ProtobuffFrameRouter ProtoframFrameRouter;
     private bool mContinueWorking;
     private const int MinSuitBufferSize = 10;
     private static int mInboudSuitBufferCap = 1500;
@@ -122,6 +125,7 @@ public class BodyFrameThread : ThreadedJob
     internal CircularQueue<HeddokoPacket> InboundSuitBuffer
     {
         get { return mInboundSuitBuffer; }
+        set { mInboundSuitBuffer = value; }
     }
 
     /** 
@@ -134,13 +138,19 @@ public class BodyFrameThread : ThreadedJob
         this.mBuffer = vBuffer;
         mDataSourceType = SourceDataType.Recording;
     }
-    public BodyFrameThread(BodyFramesRecording vFrameRecording, BodyFrameBuffer vBuffer)
+    public BodyFrameThread(BodyFramesRecordingBase vFrameRecording, BodyFrameBuffer vBuffer)
     {
         this.mBuffer = vBuffer;
         mDataSourceType = SourceDataType.Recording;
         mPlaybackTask = new RecordingPlaybackTask(vFrameRecording, BodyFrameBuffer);
     }
 
+    public BodyFrameThread(List<BodyFrame> vFrames, BodyFrameBuffer vBuffer)
+    {
+        this.mBuffer = vBuffer;
+        mDataSourceType = SourceDataType.Recording;
+        //mPlaybackTask = new RecordingPlaybackTask(vFrames, BodyFrameBuffer);
+    }
     /**
     * @brief Default constructor
     */
@@ -155,20 +165,36 @@ public class BodyFrameThread : ThreadedJob
     /// <param name="vBuffer"></param>
     public BodyFrameThread(BodyFrameBuffer vBuffer, SourceDataType vDataType)
     {
+      Init(vBuffer,vDataType);
+    }
+   
+    /// <summary>
+    /// Initialize
+    /// </summary>
+    /// <param name="vBuffer"></param>
+    /// <param name="vDataType"></param>
+    public void Init(BodyFrameBuffer vBuffer, SourceDataType vDataType)
+    {
         this.mBuffer = vBuffer;
         if (vDataType == SourceDataType.BrainFrame)
         {
             mBuffer.AllowOverflow = true;
+            mInboundSuitBuffer = new CircularQueue<HeddokoPacket>(InboundSuitBufferCap, true);
         }
         if (vDataType == SourceDataType.Recording)
         {
             mBuffer.AllowOverflow = false;
         }
 
-        mDataSourceType = SourceDataType.BrainFrame;
-        mInboundSuitBuffer = new CircularQueue<HeddokoPacket>(InboundSuitBufferCap,true);
+        mDataSourceType = vDataType;
+        
     }
 
+    public void Init(ProtobuffFrameRouter vRouter)
+    {
+        mDataSourceType = SourceDataType.DataStream;
+        ProtoframFrameRouter = vRouter;
+    }
     public override void Start()
     {
         
@@ -207,6 +233,9 @@ public class BodyFrameThread : ThreadedJob
             case SourceDataType.Suit:
                 //todo
                 break;
+            case SourceDataType.DataStream:
+                DataStreamTask();
+                break;
         }
 
     }
@@ -216,6 +245,7 @@ public class BodyFrameThread : ThreadedJob
     * @brief Helping function that ensures that pushes data onto a circular buffer. If the buffer is filled,then the tasks waits until cancelled. this task is for the case that the data 
     * comes from a recording
     */
+    [Obsolete]
     private void RecordingTask()
     {
         int vBodyFrameIndex = 0;
@@ -260,10 +290,15 @@ public class BodyFrameThread : ThreadedJob
         }
     }
 
+    /// <summary>
+    /// Starts the recording playback task
+    /// </summary>
     private void RecordingPlaybackTask()
     {
         mPlaybackTask.Play();
     }
+
+
 
     /**
     * BrainFrameTask()
@@ -367,24 +402,7 @@ public class BodyFrameThread : ThreadedJob
         }
     }
 
-    /// <summary>
-    /// Close the file
-    /// </summary>
-    private void CloseFile()
-    {
-        try
-        {
-            //mStreamWriter.Flush();
-            //  mStreamWriter.Close();
-        }
-        catch (Exception)
-        {
-
-
-        }
-
-    }
-
+  
     /**
     * DataStreamTask()
     * @brief Helping function that ensures that pushes data onto a circular buffer. If the buffer is filled,then the oldest frame gets overwritten. this task is for the case that the data 
@@ -392,9 +410,11 @@ public class BodyFrameThread : ThreadedJob
     */
     private void DataStreamTask()
     {
-
-
-
+        if (ProtoframFrameRouter != null)
+        {
+            ProtoframFrameRouter.Start();
+        }
+          
     }
 
 
@@ -411,7 +431,11 @@ public class BodyFrameThread : ThreadedJob
         {
             mPlaybackTask.IsWorking = false;
         }
-        CloseFile();
+        if (ProtoframFrameRouter != null)
+        {
+            ProtoframFrameRouter.StopIfWorking();
+        }
+
     }
 
     /**

@@ -10,7 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
+using Assets.Scripts.Frames_Pipeline;
 using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.AbstractViews.SelectableGridList.Descriptors;
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.UI.Tagging;
@@ -109,7 +111,7 @@ namespace Assets.Scripts.Communication.DatabaseConnectionPipe.DatabaseConnection
         /// </summary>
         /// <param name="vRecording"></param>
         /// <returns></returns>
-        public bool CreateRecording(BodyFramesRecording vRecording)
+        public bool CreateRecording(BodyFramesRecordingBase vRecording)
         {
             return CreateRecording(vRecording, null, null);
         }
@@ -121,10 +123,10 @@ namespace Assets.Scripts.Communication.DatabaseConnectionPipe.DatabaseConnection
         /// <param name="vDescriptor"></param>
         /// <param name="vTotalImportProgress"></param>
         /// <returns></returns>
-        public bool CreateRecording(BodyFramesRecording vRecording, RecordingItemDescriptor vDescriptor, Action<int> vTotalImportProgress)
+        public bool CreateRecording(BodyFramesRecordingBase vRecording, RecordingItemDescriptor vDescriptor, Action<int> vTotalImportProgress)
         {
             bool vResult = false;
-            int vTotalFrames = vRecording.RecordingRawFrames.Count;
+            int vTotalFrames = vRecording.RecordingRawFramesCount;
             using (var vCmd = mDbConnection.CreateCommand())
             {
                 using (var vTransaction = mDbConnection.BeginTransaction())
@@ -159,7 +161,7 @@ namespace Assets.Scripts.Communication.DatabaseConnectionPipe.DatabaseConnection
                         vCmd.Parameters.Add(new SqliteParameter("@param1", Guid.NewGuid().ToString()));
                         vCmd.Parameters.Add(new SqliteParameter("@param2", vRecording.BodyRecordingGuid));
                         vCmd.Parameters.Add(new SqliteParameter("@param3", "0"));
-                        vCmd.Parameters.Add(new SqliteParameter("@param4", (vRecording.RecordingRawFrames.Count - 1) + ""));
+                        vCmd.Parameters.Add(new SqliteParameter("@param4", (vRecording.RecordingRawFramesCount - 1) + ""));
                         vCmd.ExecuteNonQuery();
 
                         //initialize variable to avoid GC punishes
@@ -176,7 +178,7 @@ namespace Assets.Scripts.Communication.DatabaseConnectionPipe.DatabaseConnection
                             }
                             try
                             {
-                                vRawFrame = vRecording.RecordingRawFrames[i];
+                                vRawFrame = (BodyRawFrame)vRecording.GetBodyRawFrameAt(i);//[i];
                                 vConvertedFrame = RawFrameConverter.ConvertEncodedRawFrame(vRawFrame);
                                 //+++++++++++++++++++++Frames table insertion +++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -258,9 +260,9 @@ namespace Assets.Scripts.Communication.DatabaseConnectionPipe.DatabaseConnection
         /// </summary>
         /// <param name="vRecordingId">the recording id</param> 
         /// <returns></returns>
-        public BodyFramesRecording GetRawRecording(string vRecordingId)
+        public BodyFramesRecordingBase GetRawRecording(string vRecordingId)
         {
-            BodyFramesRecording vBodyFramesRecording = new BodyFramesRecording();
+            CsvBodyFramesRecording vCsvBodyFramesRecording = new CsvBodyFramesRecording();
             List<BodyRawFrame> vRawFrames = new List<BodyRawFrame>(500);
 
             SqliteDataReader vDataReader = null;
@@ -323,14 +325,14 @@ namespace Assets.Scripts.Communication.DatabaseConnectionPipe.DatabaseConnection
                     }
                   //  vTransaction.Commit();
                 }
-                vBodyFramesRecording.BodyRecordingGuid = vRecordingId;
-                vBodyFramesRecording.BodyGuid = vBodyGuid;
-                vBodyFramesRecording.SuitGuid = vSuitGuid;
-                vBodyFramesRecording.FromDatFile = false;
-                vBodyFramesRecording.RecordingRawFrames = vRawFrames;
-                vBodyFramesRecording.FormatRevision = vFormatVersion;
+                vCsvBodyFramesRecording.BodyRecordingGuid = vRecordingId;
+                vCsvBodyFramesRecording.BodyGuid = vBodyGuid;
+                vCsvBodyFramesRecording.SuitGuid = vSuitGuid;
+                vCsvBodyFramesRecording.FromDatFile = false;
+                vCsvBodyFramesRecording.RecordingRawFrames = vRawFrames;
+                vCsvBodyFramesRecording.FormatRevision = vFormatVersion;
             }
-            return vBodyFramesRecording;
+            return vCsvBodyFramesRecording;
         }
 
         /// <summary>
@@ -587,7 +589,7 @@ namespace Assets.Scripts.Communication.DatabaseConnectionPipe.DatabaseConnection
         /// </summary>
         /// <param name="vRec"></param>
         /// <param name="vTag"></param>
-        public void AddTagToRecording(BodyFramesRecording vRec, Tag vTag)
+        public void AddTagToRecording(BodyFramesRecordingBase vRec, Tag vTag)
         {
             AddNewTag(vTag);
 

@@ -8,7 +8,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO; 
+using System.IO;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 
 namespace Assets.Scripts.UI.DemoKit.TechstarsKit
 {
@@ -18,9 +19,9 @@ namespace Assets.Scripts.UI.DemoKit.TechstarsKit
     public class TechStarsDemoRecordingsContainer 
     {
         private string mRecordingsDirectory;
-        private List<  BodyFramesRecording> mRecordings = new List< BodyFramesRecording>();
+        private List<  BodyFramesRecordingBase> mRecordings = new List<BodyFramesRecordingBase>();
         private int mCurrentRecordingIndex = 0;
-        public List< BodyFramesRecording> Recordings
+        public List<BodyFramesRecordingBase> Recordings
         {
             get { return mRecordings; }
             set { mRecordings = value; }

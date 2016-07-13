@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO; 
 using System.Threading;
 using Assets.Scripts.Communication.DatabaseConnectionPipe;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.AbstractViews.SelectableGridList;
 using Assets.Scripts.UI.AbstractViews.SelectableGridList.Descriptors;
@@ -205,7 +206,8 @@ namespace Assets.Scripts.UI.AbstractViews.ContextSpecificContainers.Importation
             //send notification that import has been completed
     
             var message = string.Format("{0} movements have been exported ", vTotalImportCount); 
-            Notify.Template("FadinFadoutNotifyTemplate").Show(message, 4.5f, hideAnimation :  Notify.FadeOutAnimation, showAnimation: Notify.FadeInAnimation, sequenceType: NotifySequence.First );
+            Notify.Template("FadingFadoutNotifyTemplate").Show(message, 4.5f, hideAnimation :  
+                Notify.FadeOutAnimation, showAnimation: Notify.FadeInAnimation, sequenceType: NotifySequence.First );
 
         }
 
@@ -214,11 +216,12 @@ namespace Assets.Scripts.UI.AbstractViews.ContextSpecificContainers.Importation
         /// callback performed after a recording file has been read
         /// </summary>
         /// <param name="vRecording">A recording and it's information</param>
-        private void RecordingAddCallback(BodyFramesRecording vRecording)
+        private void RecordingAddCallback(BodyFramesRecordingBase vRecording)
         {
             //remove the first item from the stack
             RecordingItemDescriptor vCurrItemDescriptor = mItemStack.Pop();
-            CurrentImportTask = new ImportTaskStructure() { CurrentProgressIndex = 0, ItemDescriptor = vCurrItemDescriptor, Recording = vRecording };
+            CurrentImportTask = new ImportTaskStructure() { CurrentProgressIndex = 0, ItemDescriptor = vCurrItemDescriptor,
+                Recording = vRecording };
             //check if item needs to be deleted
             if (CurrentImportTask.ItemDescriptor.IsMarkedForDeletion)
             {
@@ -322,7 +325,7 @@ namespace Assets.Scripts.UI.AbstractViews.ContextSpecificContainers.Importation
 
         public struct ImportTaskStructure
         {
-            public BodyFramesRecording Recording;
+            public BodyFramesRecordingBase Recording;
             public RecordingItemDescriptor ItemDescriptor;
             public int CurrentProgressIndex;
 
@@ -330,7 +333,7 @@ namespace Assets.Scripts.UI.AbstractViews.ContextSpecificContainers.Importation
             {
                 get
                 {
-                    return Recording.RecordingRawFrames.Count;
+                    return Recording.RecordingRawFramesCount;
                 }
             }
         }

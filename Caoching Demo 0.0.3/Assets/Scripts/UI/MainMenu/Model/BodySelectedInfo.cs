@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using Assets.Scripts.Communication;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.Utils;
 using UnityEngine;
 
@@ -31,7 +32,7 @@ namespace Assets.Scripts.UI.MainScene.Model
         public string mSelectedRecordingPath;
         public string mSelectedBody;
         public int TotalRecordingsAvailable;
-        private Dictionary<string, BodyFramesRecording> mBodyRecordingMap = new Dictionary<string, BodyFramesRecording>(1);
+        private Dictionary<string, BodyFramesRecordingBase> mBodyRecordingMap = new Dictionary<string, BodyFramesRecordingBase>(1);
 
         /// <summary>
         /// Singleton instance of the class
@@ -76,7 +77,7 @@ namespace Assets.Scripts.UI.MainScene.Model
         /// <summary>
         /// Returns the current selected Recording based on the selected recording from the main menu
         /// </summary>
-        public BodyFramesRecording CurrentSelectedRecording
+        public BodyFramesRecordingBase CurrentSelectedRecording
         {
             get
             {
@@ -147,7 +148,7 @@ namespace Assets.Scripts.UI.MainScene.Model
             {
                 BodyRecordingsMgr.Instance.ReadRecordingFile(mSelectedRecordingPath);
                 //the latest item to be placed in the list is now the current body frame recording
-                BodyFramesRecording vCurrBFR = BodyRecordingsMgr.Instance.Recordings[BodyRecordingsMgr.Instance.Recordings.Count - 1];
+                BodyFramesRecordingBase vCurrBFR = BodyRecordingsMgr.Instance.Recordings[BodyRecordingsMgr.Instance.Recordings.Count - 1];
                 mBodyRecordingMap.Add(mSelectedRecordingPath,vCurrBFR); 
             }
         }

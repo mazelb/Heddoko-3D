@@ -50,17 +50,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         {
             if (mLeftArmAnalysis != null && mRightArmAnalysis != null)
             {
-<<<<<<< HEAD
                 RightShoulderFlexionText.text = FeedbackAngleToString(mRightArmAnalysis.SignedShoulderFlexion);
                 LeftShoulderFlexionText.text = FeedbackAngleToString(mLeftArmAnalysis.SignedShoulderFlexion);
                 RightShoulderAbductionText.text = FeedbackAngleToString(mRightArmAnalysis.SignedShoulderVerticalAbduction);
                 LeftShoulderAbductionText.text = FeedbackAngleToString(-1f * mLeftArmAnalysis.SignedShoulderVerticalAbduction); 
-=======
-                RightShoulderFlexionText.text = FeedbackAngleToString(mRightArmAnalysis.SignedAngleShoulderFlexion);
-                LeftShoulderFlexionText.text = FeedbackAngleToString(mLeftArmAnalysis.SignedAngleElbowFlexion);
-                RightShoulderAbductionText.text = FeedbackAngleToString(mRightArmAnalysis.SignedAngleElbowAdduction);
-                LeftShoulderAbductionText.text = FeedbackAngleToString(mLeftArmAnalysis.SignedAngleElbowAdduction); 
->>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
             }
         }
 

@@ -31,7 +31,6 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameEncryption.Decryption
 
         public string Decrypt(string vFilepath)
         {
-<<<<<<< HEAD
             StreamReader vFile = new StreamReader(vFilepath);
             //Read one line, this line is the header line. Older brainpack firmware did not
             //include this header file, so we make sure that this file exist. Otherwise, we add in a guid 
@@ -63,9 +62,6 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameEncryption.Decryption
           
             
            
-=======
-            string vStringOut = Guid.NewGuid() + "\r\n" + Guid.NewGuid() + "\r\n" + Guid.NewGuid() + "\r\n";
->>>>>>> 096bb2ae014b51e65bce63c5e77e735a22c23b39
             try
             {
                 var vStartIndex = vLine == null ? 0 : vSize;

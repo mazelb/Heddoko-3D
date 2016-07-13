@@ -1,0 +1,19 @@
+diff a/Caoching Demo 0.0.3/Assets/Scripts/Tests/database/RecordingDBCRUDTest.cs b/Caoching Demo 0.0.3/Assets/Scripts/Tests/database/RecordingDBCRUDTest.cs	(rejected hunks)
+@@ -60,13 +60,14 @@
+             }
+         }
+ 
+-        BodyFramesRecordingBase RecordingGetTest()
++        BodyFramesRecording RecordingGetTest()
+         {
+-            BodyFramesRecordingBase vRec = Database.Connection.GetRawRecording(RecordingGuid);
++            BodyFramesRecording vRec = Database.Connection.GetRawRecording(RecordingGuid);
+             if (vRec != null)
+             {
+                 Debug.Log("<color=green>Success! </color> Found recording GUID " + vRec.BodyRecordingGuid);
+-                Debug.Log("<color=green>Success! </color> Recording length " + vRec.RecordingRawFramesCount);
++                Debug.Log("<color=green>Success! </color> Recording length " + vRec.RecordingRawFrames.Count);
++
+             }
+             return vRec;
+         }
