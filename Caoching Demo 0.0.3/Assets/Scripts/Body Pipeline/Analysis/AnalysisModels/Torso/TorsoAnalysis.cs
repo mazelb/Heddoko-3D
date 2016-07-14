@@ -15,48 +15,48 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
     public class TorsoAnalysis: SegmentAnalysis
     {
         //Angles extracted 
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleTorsoFlexion;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleTorsoLateral;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Trunk LatBend R/L")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "Trunk LatBend R/L")]
         public float SignedAngleTorsoLateral;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleTorsoRotation;
-        [Analysis(IgnoreAttribute = false, AttributeName = "Trunk Rot R/L")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "Trunk Rot R/L")]
         public float SignedAngleTorsoRotation;
         //current torso orientation
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public Transform TorsoTransform;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public Transform HipGlobalTransform;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public Transform HipTransform;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public Transform KneeTransform;
 
 
-        [Analysis(IgnoreAttribute = false, AttributeName = "Trunk F/E")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "Trunk F/E")]
         public float SignedTorsoFlexion;
 
         //Accelerations and velocities
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationTorsoFlexion;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityTorsoFlexion;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationTorsoLateral;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityTorsoLateral;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationTorsoRotation;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityTorsoRotation;
 
         //Flips and turns detections
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleIntegrationTurns;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleIntegrationFlips;
         public int NumberOfTurns;
         public int NumberOfFlips;

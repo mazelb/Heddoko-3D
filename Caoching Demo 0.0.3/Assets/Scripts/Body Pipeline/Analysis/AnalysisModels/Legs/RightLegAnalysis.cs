@@ -19,59 +19,59 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
     [Serializable]
     public class RightLegAnalysis : LegAnalysis
     { //Knee Angles
-        [Analysis(IgnoreAttribute = false, AttributeName = "RKnee F/E")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RKnee F/E")]
         public float AngleKneeFlexion;
-        [Analysis(IgnoreAttribute = true )]
+        [AnalysisSerialization(IgnoreAttribute = true )]
         public float AngleKneeRotation;
 
         //Hip Angles
         public bool UseGlobalReference = false;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleHipFlexion;
-        [Analysis(IgnoreAttribute = false, AttributeName = "RHip F/E")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip F/E")]
         public float SignedAngleHipAbduction;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float SignedAngleHipFlexion;
-        [Analysis(IgnoreAttribute = false, AttributeName = "RHip Add/Abd")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip Add/Abd")]
         public float AngleHipAbduction;
-        [Analysis(IgnoreAttribute = false, AttributeName = "RHip Int/Ext Rot")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip Int/Ext Rot")]
         public float AngleHipRotation;
  
         //Accelerations and velocities
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityKneeFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationKneeFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityKneeRotation = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationKneeRotation = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityHipFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationHipFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityHipAbduction = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationHipAbduction = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityHipRotation = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationHipRotation = 0;
 
         //Squats Analytics
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float NumberofSquats;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleSum;
         private bool mStartCountingSquats = true;
 
         //Detection of vertical Hip position
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float LegHeight;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         private float mInitThighHeight = 0.475f;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         private float mInitTibiaHeight = 0.475f;
 
 

@@ -37,6 +37,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// </summary>
         public AnalysisDataStore(List<SegmentAnalysis> vAnalysisSegments )
         {
+            
             mAnaylsisDataStoreSettings=  new AnaylsisDataStoreSettings(vAnalysisSegments);
             mSerialization = new AnalysisDataStoreSerialization(this);
             foreach (var vKvPairing in mAnaylsisDataStoreSettings.StoredAnalysisFields)

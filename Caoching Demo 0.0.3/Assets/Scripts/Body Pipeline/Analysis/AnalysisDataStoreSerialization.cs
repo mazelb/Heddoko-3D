@@ -73,10 +73,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                 {
                     foreach (var vFieldInfo in vKey)
                     {
-                        var vCustomAttribute = vFieldInfo.Key.GetCustomAttributes(typeof(AnalysisAttribute), true);
+                        var vCustomAttribute = vFieldInfo.Key.GetCustomAttributes(typeof(AnalysisSerialization), true);
                         foreach (var vAttri in vCustomAttribute)
                         {
-                            vFileOut.Write(((AnalysisAttribute)vAttri).AttributeName + ",");
+                            vFileOut.Write(((AnalysisSerialization)vAttri).AttributeName + ",");
                         }
                     }
                 }

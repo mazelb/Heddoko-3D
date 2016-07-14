@@ -18,10 +18,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
     [Serializable]
     public abstract class SegmentAnalysis
     {
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float DeltaTime;
         internal BodyStructureMap.SegmentTypes SegmentType;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         internal float mLastTimeCalled;
         internal event AnalysisComplete AnalysisCompletedEvent;
         /// <summary>

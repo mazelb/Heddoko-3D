@@ -17,61 +17,61 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
     public class RightArmAnalysis : ArmAnalysis
     {
         //Elbow Angles
-        [Analysis(IgnoreAttribute = false ,AttributeName = "RElbow F/E")]
+        [AnalysisSerialization(IgnoreAttribute = false ,AttributeName = "RElbow F/E")]
         public float AngleElbowFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float SignedAngleElbowFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleElbowPronation = 0;
 
         //Upper Arm Angles
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleShoulderFlexion = 0;
-        [Analysis(IgnoreAttribute = false, AttributeName = "RShould F/E")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RShould F/E")]
         public float SignedShoulderFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleShoulderVertAbduction = 0;
-        [Analysis(IgnoreAttribute = false, AttributeName = "RShould Add/Abd")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RShould Add/Abd")]
         public float SignedShoulderVerticalAbduction = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleShoulderHorAbduction = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleShoulderRotation = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleShoulderReference = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleShoulderReferenceXY = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleShoulderReferenceXZ = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleShoulderReferenceYZ = 0;
 
         //Velocities and Accelerations
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityElbowFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float PeakAngularVelocityElbowFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationElbowFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityPronation = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationElbowPronation = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityShoulderFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationShoulderFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityShoulderVertAbduction = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationShoulderVertAbduction = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityShoulderHorAbduction = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationShoulderHorAbduction = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityShoulderRotation = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationShoulderRotation = 0;
 
         /// <summary>

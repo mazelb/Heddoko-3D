@@ -122,10 +122,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
             List<FieldInfo> vFieldTypes = new List<FieldInfo>();
             foreach (var vField in vFields)
             {
-                var vCustomAttribute = vField.GetCustomAttributes(typeof (AnalysisAttribute), true);
+                var vCustomAttribute = vField.GetCustomAttributes(typeof (AnalysisSerialization), true);
                 foreach (var vAttri in vCustomAttribute)
                 {
-                    if (((AnalysisAttribute) vAttri).IgnoreAttribute)
+                    if (((AnalysisSerialization) vAttri).IgnoreAttribute)
                     {
                         continue;
                     }

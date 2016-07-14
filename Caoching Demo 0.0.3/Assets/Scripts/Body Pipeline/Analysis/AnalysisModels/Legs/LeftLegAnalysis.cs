@@ -18,62 +18,62 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
     public class LeftLegAnalysis : LegAnalysis
     {
         //Knee Angles
-        [Analysis(IgnoreAttribute = false, AttributeName = "LKnee F/E")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LKnee F/E")]
         public float AngleKneeFlexion;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleKneeRotation;
 
         //Hip Angles
 
-        [Analysis(IgnoreAttribute =true)]
+        [AnalysisSerialization(IgnoreAttribute =true)]
         public float AngleHipFlexion;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public bool UseGlobalReference = false;
-        [Analysis(IgnoreAttribute = false, AttributeName = "LHip F/E")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip F/E")]
         public float SignedAngleHipFlexion;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleHipAbduction;
-        [Analysis(IgnoreAttribute = false, AttributeName = "LHip Add/Abd")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip Add/Abd")]
         public float SignedAngleHipAbduction;
-        [Analysis(IgnoreAttribute = false, AttributeName = "LHip Int/Ext Rot")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip Int/Ext Rot")]
         public float AngleHipRotation;
         
         //Accelerations and velocities
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityKneeFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationKneeFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityKneeRotation = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationKneeRotation = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityHipFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationHipFlexion = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityHipAbduction = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationHipAbduction = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularVelocityHipRotation = 0;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngularAccelerationHipRotation = 0;
 
         //Squats Analytics
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float NumberofSquats;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleSum;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         private bool mStartCountingSquats = true;
 
         //Detection of vertical Hip position
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         public float LegHeight;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         private float mInitThighHeight = 0.475f;
-        [Analysis(IgnoreAttribute = true)]
+        [AnalysisSerialization(IgnoreAttribute = true)]
         private float mInitTibiaHeight = 0.475f;
 
 
