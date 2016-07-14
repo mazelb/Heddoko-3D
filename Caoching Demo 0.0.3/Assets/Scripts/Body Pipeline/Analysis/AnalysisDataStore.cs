@@ -1,10 +1,10 @@
-﻿ /**
- * @file AnalysisDataStore.cs
- * @brief Contains the 
- * @author Mohammed Haider( mohammed@heddoko.com)
- * @date June 2016
- * Copyright Heddoko(TM) 2016,  all rights reserved
- */
+﻿/**
+* @file AnalysisDataStore.cs
+* @brief Contains the 
+* @author Mohammed Haider( mohammed@heddoko.com)
+* @date June 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using System;
 using System.Collections.Generic;
@@ -25,7 +25,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         private Dictionary<SegmentAnalysis, Dictionary<FieldInfo, AnalysisFieldDataStructure>> mStorage = new Dictionary<SegmentAnalysis, Dictionary<FieldInfo, AnalysisFieldDataStructure>>();
         public List<Dictionary<FieldInfo, string>> SerializedList = new List<Dictionary<FieldInfo, string>>();
         private List<float> mTimeStamps = new List<float>();
-        private AnaylsisDataStoreSettings mAnaylsisDataStoreSettings; 
+        internal AnaylsisDataStoreSettings AnaylsisDataStoreSettings;
         public AnalysisDataStoreSerialization mSerialization;
         private int mFieldInfoCount;
         private int mCounter;
@@ -35,22 +35,23 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <summary>
         /// Constructor accepting a list of analysis segment, using reflection, sifts through fields with AnalysisAttributes marked as do not ignore.  
         /// </summary>
-        public AnalysisDataStore(List<SegmentAnalysis> vAnalysisSegments )
+        public AnalysisDataStore(List<SegmentAnalysis> vAnalysisSegments)
         {
-            
-            mAnaylsisDataStoreSettings=  new AnaylsisDataStoreSettings(vAnalysisSegments);
+
+            AnaylsisDataStoreSettings = new AnaylsisDataStoreSettings(vAnalysisSegments);
             mSerialization = new AnalysisDataStoreSerialization(this);
-            foreach (var vKvPairing in mAnaylsisDataStoreSettings.StoredAnalysisFields)
-            { 
-                var  vAnalysisTrackingDataStructure =new   Dictionary<FieldInfo,  AnalysisFieldDataStructure>(vKvPairing.Value.Count);
+            foreach (var vKvPairing in AnaylsisDataStoreSettings.StoredAnalysisFields)
+            {
+                var vAnalysisTrackingDataStructure = new Dictionary<FieldInfo, AnalysisFieldDataStructure>(vKvPairing.Value.Count);
                 foreach (var vField in vKvPairing.Value)
                 {
-                    var vAnalysisDataStruct = new AnalysisFieldDataStructure();
-                    vAnalysisDataStruct.FieldInfoKey = vField;
+                    var vAnalysisDataStruct = new AnalysisFieldDataStructure { FieldInfoKey = vField };
                     vAnalysisTrackingDataStructure.Add(vField, vAnalysisDataStruct);
+
                     mFieldInfoCount++;
+
                 }
-                mStorage.Add(vKvPairing.Key,vAnalysisTrackingDataStructure);
+                mStorage.Add(vKvPairing.Key, vAnalysisTrackingDataStructure);
             }
         }
 
@@ -74,7 +75,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <param name="vValue"></param>
         public void RemoveAnalysisFieldInfo(SegmentAnalysis vKey, FieldInfo vValue)
         {
-            mAnaylsisDataStoreSettings.RemoveAnalysisFieldInfo(vKey, vValue);
+            AnaylsisDataStoreSettings.RemoveAnalysisFieldInfo(vKey, vValue);
             if (mStorage.ContainsKey(vKey))
             {
                 if (mStorage[vKey].ContainsKey(vValue))
@@ -83,7 +84,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                 }
             }
 
-          
         }
         /// <summary>
         /// Removes an entire analysis segment from being tracked
@@ -91,7 +91,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <param name="vKey"></param>
         public void RemoveAnalysisType(SegmentAnalysis vKey)
         {
-            mAnaylsisDataStoreSettings.RemoveSegment(vKey);
+            AnaylsisDataStoreSettings.RemoveSegment(vKey);
             if (mStorage.ContainsKey(vKey))
             {
                 mStorage[vKey] = new Dictionary<FieldInfo, AnalysisFieldDataStructure>();
@@ -100,7 +100,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
 
         public void AddAnalyisSegment(SegmentAnalysis vKey)
         {
-            mAnaylsisDataStoreSettings.Reset(vKey);
+            AnaylsisDataStoreSettings.Reset(vKey);
             if (mStorage.ContainsKey(vKey))
             {
                 mStorage[vKey] = new Dictionary<FieldInfo, AnalysisFieldDataStructure>();
@@ -113,9 +113,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <param name="vFrame"></param>
         public void AddNewTimestamp(BodyFrame vFrame)
         {
-         mTimeStamps.Add(vFrame.Timestamp);   
+            mTimeStamps.Add(vFrame.Timestamp);
         }
 
+        /// <summary>
+        /// Updates segment field info. 
+        /// </summary>
+        /// <param name="vKey"></param>
         public void UpdateSegmentFieldInfo(SegmentAnalysis vKey)
         {
             if (Ignore)
@@ -124,16 +128,16 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             }
             if (!mStorage.ContainsKey(vKey))
             {
-               Debug.Log("no key found");
+                Debug.Log("no key found");
                 return;
             }
             var vFields = mStorage[vKey];
             if (mCounter == 0)
             {
-                SerializedList.Add( new Dictionary<FieldInfo, string>());
+                SerializedList.Add(new Dictionary<FieldInfo, string>());
             }
             var vList = SerializedList.ElementAt(SerializedList.Count - 1);
-           
+
             foreach (var vKvPair in vFields)
             {
                 try
@@ -145,16 +149,16 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
 
                 }
                 catch (Exception vE)
-                { 
-                    throw;
+                {
+
                 }
-                
+
             }
-            if (mCounter >=mFieldInfoCount   )
+            if (mCounter >= mFieldInfoCount)
             {
                 mCounter = 0;
             }
-            
+
         }
 
         /// <summary>
@@ -180,7 +184,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                 {
                     vAnalysisFieldDataStructure.Value.ClearDataCollection();
                 }
-               // vKvPair.Value.Clear();
             }
             SerializedList.Clear();
             mTimeStamps.Clear();

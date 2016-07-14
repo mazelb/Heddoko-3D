@@ -19,7 +19,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
     [Serializable]
     public class RightLegAnalysis : LegAnalysis
     { //Knee Angles
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RKnee F/E")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RKnee F/E", Order = 15)]
         public float AngleKneeFlexion;
         [AnalysisSerialization(IgnoreAttribute = true )]
         public float AngleKneeRotation;
@@ -28,13 +28,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
         public bool UseGlobalReference = false;
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleHipFlexion;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip F/E")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip F/E", Order = 7)]
         public float SignedAngleHipAbduction;
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float SignedAngleHipFlexion;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip Add/Abd")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip Add/Abd", Order = 9)]
         public float AngleHipAbduction;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip Int/Ext Rot")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip Int/Ext Rot", Order = 11)]
         public float AngleHipRotation;
  
         //Accelerations and velocities

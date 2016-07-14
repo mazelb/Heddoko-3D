@@ -8,11 +8,13 @@
 namespace Assets.Scripts.Body_Pipeline.Analysis
 {
     /// <summary>
-    /// A custom attribute to denote whether an analysis segment is to be ignored, if not, what is its custom Attribute name. 
+    /// A custom attribute to denote whether an analysis segment serialization is to be ignored, if not, what is its custom Attribute name and its order
     /// </summary>
     public class AnalysisSerialization : System.Attribute
     {
         public bool IgnoreAttribute { get; set; }
         public string AttributeName { get; set; }
+
+        public int Order { get; set; }
     }
 }

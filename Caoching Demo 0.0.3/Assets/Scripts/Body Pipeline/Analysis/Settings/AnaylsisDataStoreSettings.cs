@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using System.Reflection; 
 
 namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
 {
@@ -20,12 +20,41 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
     {
         private Dictionary<SegmentAnalysis, List<FieldInfo>> mStoredAnalysisFields;
         private List<SegmentAnalysis> mAnalsisSegmentTemplate;
+        private Dictionary<FieldInfo, int> mSerializedAnalyisFieldOrderMap = new Dictionary<FieldInfo, int>();
+
         public AnaylsisDataStoreSettings(List<SegmentAnalysis> vAnalsisSegments)
         {
             mStoredAnalysisFields = new Dictionary<SegmentAnalysis, List<FieldInfo>>();
             AddAnalysisSegments(ref mStoredAnalysisFields, vAnalsisSegments);
+            //once all analysis segments are finished, then get the sorting map
+            foreach (var vKeyValuePair in mStoredAnalysisFields)
+            {
+                foreach (var vField in vKeyValuePair.Value)
+                {
+                    var vCustomAttrList= vField.GetCustomAttributes(typeof(AnalysisSerialization), true);
+                    foreach (var vAttri in vCustomAttrList)
+                    {
+                        int vOrder = ((AnalysisSerialization) vAttri).Order;
+                        mSerializedAnalyisFieldOrderMap.Add(vField, vOrder);
+                    }
+                }
+            }
         }
 
+        /// <summary>
+        /// Returns the order of the analysis field. If not found, then -1 is returned. 
+        /// </summary>
+        /// <param name="vInfo">The field to look for</param>
+        /// <returns></returns>
+        internal int GetOrderOfAnalysisField(FieldInfo vInfo)
+        {
+            int vResult = -1;
+            if (mSerializedAnalyisFieldOrderMap.ContainsKey(vInfo))
+            {
+                vResult = mSerializedAnalyisFieldOrderMap[vInfo];
+            }
+            return vResult;
+        }
         public Dictionary<SegmentAnalysis, List<FieldInfo>> StoredAnalysisFields
         {
             get { return mStoredAnalysisFields; }
@@ -131,8 +160,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
                     }
                     vFieldTypes.Add(vField);
                 }
-                 
-              
             }
             //store it
             vDictionary.Add(vKey, vFieldTypes);

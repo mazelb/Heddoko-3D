@@ -44,12 +44,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             mDataStore = vDataStore;
         }
 
-        public static string CamelCaseToSpaces(string vInput)
-        {
-            var vReturn = Regex.Replace(vInput, "(\\B[A-Z])", " $1");
-            return vReturn;
-        }
-
+       
         /// <summary>
         /// Writes the data store to a csv file
         /// </summary>
@@ -69,15 +64,32 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             {
                 //write the header
                 vFileOut.Write("Timestamp,");
-                foreach (var vKey in vAnalysisDataStore.Storage.Values)
+                List<FieldInfo>  vSortedList = new List<FieldInfo>();
+                foreach (var vAnalysisFieldDataStructures in vAnalysisDataStore.Storage.Values)
                 {
-                    foreach (var vFieldInfo in vKey)
+                    foreach (var vKvPair in vAnalysisFieldDataStructures)
                     {
-                        var vCustomAttribute = vFieldInfo.Key.GetCustomAttributes(typeof(AnalysisSerialization), true);
-                        foreach (var vAttri in vCustomAttribute)
-                        {
-                            vFileOut.Write(((AnalysisSerialization)vAttri).AttributeName + ",");
-                        }
+                        vSortedList.Add(vKvPair.Key);
+                    }
+                    //foreach (var vFieldInfo in vKey)
+                    //{
+
+                    //    var vCustomAttribute = vFieldInfo.Key.GetCustomAttributes(typeof(AnalysisSerialization), true);
+                    //    foreach (var vAttri in vCustomAttribute)
+                    //    {
+                    //        vFileOut.Write(((AnalysisSerialization)vAttri).AttributeName + ",");
+                    //    }
+                    //}
+                } 
+                //sort it 
+                vSortedList.Sort((vX,vY)=> vAnalysisDataStore.AnaylsisDataStoreSettings.GetOrderOfAnalysisField(vX).CompareTo(
+                   vAnalysisDataStore.AnaylsisDataStoreSettings.GetOrderOfAnalysisField(vY)));
+                foreach (var vFieldInfo in vSortedList)
+                {
+                    var vCustomAttribute = vFieldInfo.GetCustomAttributes(typeof(AnalysisSerialization), true);
+                    foreach (var vAttri in vCustomAttribute)
+                    {
+                        vFileOut.Write(((AnalysisSerialization)vAttri).AttributeName + ",");
                     }
                 }
                 vFileOut.Write("\r\n");
@@ -85,10 +97,15 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                 for (int i = 0; i<vAnalysisDataStore.SerializedList.Count; i++)
                 {
                     vFileOut.Write(vAnalysisDataStore.TimeStamps[i] + ",");
-                    foreach (var vSerializableIterable in vAnalysisDataStore.SerializedList[i])
+                    var vSerializedList = vAnalysisDataStore.SerializedList[i];
+                    foreach (var vItem in vSortedList)
                     {
-                        vFileOut.Write(vSerializableIterable.Value+ ",");
+                        vFileOut.Write(vSerializedList[vItem] + ",");
                     }
+                    //foreach (var vSerializableIterable in vAnalysisDataStore.SerializedList[i])
+                    //{
+                    //    vFileOut.Write(vSerializableIterable.Value+ ",");
+                    //}
                     vFileOut.Write("\r\n");
                 }
                 

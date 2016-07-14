@@ -19,11 +19,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
         public float AngleTorsoFlexion;
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleTorsoLateral;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "Trunk LatBend R/L")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "Trunk LatBend R/L", Order = 0)]
         public float SignedAngleTorsoLateral;
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleTorsoRotation;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "Trunk Rot R/L")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "Trunk Rot R/L", Order = 2)]
         public float SignedAngleTorsoRotation;
         //current torso orientation
         [AnalysisSerialization(IgnoreAttribute = true)]
@@ -36,7 +36,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
         public Transform KneeTransform;
 
 
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "Trunk F/E")]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "Trunk F/E", Order = 1)]
         public float SignedTorsoFlexion;
 
         //Accelerations and velocities
