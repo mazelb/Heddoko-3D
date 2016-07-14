@@ -27,12 +27,15 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         private IEnumerator mMultiLabelError;
         private int mFrameMultiSkippingValue;
         public Button ApplyButton;
+        public Text FrameSkipAmountLabel;
+        public Slider FrameSkipSlider;
         void Awake()
         {
             RecordingPlayerView.RecordingPlayerViewLayoutCreatedEvent += RegisterSettingsPanel;
             FrameSkippingInput.onValueChanged.AddListener(ValidateFrameSkippingInput);
             FrameSkippingInputMulitiplier.onValueChanged.AddListener(ValidateFrameMultiplierInput);
             ApplyButton.onClick.AddListener(ApplySettings);
+            FrameSkipSlider.onValueChanged.AddListener(SetFrameSkipValue);
         }
 
        
@@ -124,6 +127,17 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         {
             RecordingPlayerView.PbControlPanel.PlaybackSettings.FrameSkip = mFrameSkippingValue;
             RecordingPlayerView.PbControlPanel.PlaybackSettings.FrameSkipMultiplier = mFrameMultiSkippingValue;
+
+        }
+
+        public void SetFrameSkipValue(float vFrameSkipAmount)
+        {
+            int vFrameSkip = (int) vFrameSkipAmount;
+            mFrameSkippingValue = vFrameSkip;
+            FrameSkipAmountLabel.text = vFrameSkip+"";
+            RecordingPlayerView.PbControlPanel.PlaybackSettings.FrameSkip = mFrameSkippingValue;
+            RecordingPlayerView.PbControlPanel.PlaybackSettings.FrameSkipMultiplier = 1;
+
 
         }
     }
