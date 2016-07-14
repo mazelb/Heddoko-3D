@@ -106,14 +106,19 @@ namespace Assets.Scripts.Licensing.Authentication
         {
             SubmitInfoButton.interactable = true;
             LoadingImage.gameObject.SetActive(false);
+            UsernameInputField.interactable = true;
+            PasswordInputField.InputField.interactable = true;
         }
 
         /// <summary>
         /// Disable button controls
         /// </summary>
-        public void DisableButtonControls()
+        public void DisableSubmissionControls()
         {
             SubmitInfoButton.interactable = false;
+            LoadingImage.gameObject.SetActive(true);
+            UsernameInputField.interactable = false;
+            PasswordInputField.InputField.interactable = false;
         }
 
 

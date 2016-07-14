@@ -41,8 +41,7 @@ namespace Assets.Scripts.Licensing.Controller
         private HeddokoClient mClient;
         internal OnLoginSuccess LoginSuccessEvent;
         private Thread mConnectionThread;
-        public Image LoadingIcon;
-        private string mUrl;
+         private string mUrl;
         private string mUrlExt;
         private string mSecret;
         public LoginController LoginController
@@ -129,8 +128,7 @@ namespace Assets.Scripts.Licensing.Controller
             //{
             //    Application.OpenURL(mUrl);
             //}, () => { });
-            Notify.Template("fade")
-                .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First);
+            Notify.Template("fade").Show(vMsg);
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(false));
 
         }
@@ -138,7 +136,7 @@ namespace Assets.Scripts.Licensing.Controller
         void SubmitLogin(LoginModel vModel)
         {
             //verify internet connection first
-            LoginView.DisableButtonControls();
+            LoginView.DisableSubmissionControls();
             StartCoroutine(VerifyInternetConnection(vModel));
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(true));
 
