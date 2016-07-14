@@ -191,5 +191,16 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             mSubCount = 0;
 
         }
+
+        /// <summary>
+        /// Prepares the data store for serialization. 
+        /// </summary>
+        public void PrepareDataStore()
+        {
+            if (mCounter < mFieldInfoCount && mCounter != 0)
+            {
+                SerializedList.RemoveAt(SerializedList.Count - 1);
+            }
+        }
     }
 }

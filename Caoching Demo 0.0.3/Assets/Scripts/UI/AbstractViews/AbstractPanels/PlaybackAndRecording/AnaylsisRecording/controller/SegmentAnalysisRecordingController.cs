@@ -46,6 +46,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             BodyModel = RecordingPlayerView.CurrBody;
             //register listeners
             RecordingPlayerView.PbControlPanel.FinalFramePositionEvent += OnEnd;
+            //if the recording has been changed, finish data collection
+            RecordingPlayerView.PbControlPanel.NewRecordingSelectedEvent += OnEnd;
             BodyModel.View.BodyFrameUpdatedEvent += CollectTimeStampData;
             //Remove button listener and register correct listener
             ExportDataButton.onClick.RemoveAllListeners();
@@ -86,6 +88,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             //Remove listeners
             BodyModel.View.BodyFrameUpdatedEvent -= CollectTimeStampData;
             RecordingPlayerView.PbControlPanel.FinalFramePositionEvent -= OnEnd;
+            RecordingPlayerView.PbControlPanel.NewRecordingSelectedEvent -= OnEnd;
             ExportDataButton.onClick.RemoveAllListeners();
             ExportDataButton.onClick.AddListener(OnStart);
             ExportDataButtonText.text = "COLLECT ANALYTICS";
@@ -116,7 +119,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
         /// </summary>
         /// <param name="vArg0"></param>
         private void SaveFile(string vArg0)
-        { 
+        {
             AnalysisDataStoreSerialization.WriteFile(mDataStore,vArg0+".csv"); 
             mDataStore.Clear();
         }

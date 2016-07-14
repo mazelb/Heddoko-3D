@@ -15,6 +15,7 @@ using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Layouts;
 using Assets.Scripts.UI.AbstractViews.Permissions;
+using Assets.Scripts.Utils;
 using HeddokoSDK.Models;
 using UnityEngine;
 
@@ -22,8 +23,9 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
 {
 
     public delegate void BodyUpdated(Body vBody);
-    public delegate void FinalFramePositionReached();
     public delegate void RecordingUpdated(PlaybackControlPanel vControlPanel);
+
+    public delegate void NewRecordingSelected();
     /// <summary>
     /// Provides controls for recording play back
     /// </summary>
@@ -42,6 +44,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public RecordingProgressSubControl PlaybackProgressSubControl;
         public RecordingIndexValue RecordingIndexValue;
         public LoadSingleRecordingSubControl SingleRecordingLoadSubControl;
+        public NewRecordingSelected NewRecordingSelectedEvent;
         public event BodyUpdated BodyUpdatedEvent;
         public event RecordingUpdated RecordingUpdatedEvent;
         private bool mIsNewRecording = true;
@@ -94,9 +97,18 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// </summary>
         public void UpdateRecording(RecordingPlaybackTask vPlaybackTask)
         {
+            if (mPlaybackTask != null)
+            {
+                mPlaybackTask.RemoveFinalFrameEventHandler(InvokeFinalFrameReachedEvent);
+            }
+            if (NewRecordingSelectedEvent != null)
+            {
+                NewRecordingSelectedEvent();
+            }
             if (vPlaybackTask != null)
             {
                 mPlaybackTask = vPlaybackTask;
+                mPlaybackTask.AttachFinalFrameEventHandler(InvokeFinalFrameReachedEvent);
                 foreach (AbstractSubControl vAbsSubCtrl in mSubControls)
                 {
                     vAbsSubCtrl.Enable();
@@ -439,13 +451,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                         RecordingProgressSliderSubControl.UpdateCurrentTime(mPlaybackTask.GetCurrentPlaybackIndex);
                         RecordingIndexValue.SetIndexValue(mPlaybackTask.GetCurrentPlaybackIndex);
                     }
-                    if (mPlaybackTask.GetCurrentPlaybackIndex == mPlaybackTask.RecordingCount - 1)
-                    {
-                        if (FinalFramePositionEvent != null)
-                        {
-                            FinalFramePositionEvent();
-                        }
-                    }
+
                 }
 
             }
@@ -629,6 +635,18 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             {
                 vAbstractSubControl.SetInteractionLevel(vRoleType);
             }
+        }
+
+        private void InvokeFinalFrameReachedEvent()
+        {
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
+            {
+                if (FinalFramePositionEvent != null)
+                {
+                    FinalFramePositionEvent();
+                }
+            });
+
         }
     }
 

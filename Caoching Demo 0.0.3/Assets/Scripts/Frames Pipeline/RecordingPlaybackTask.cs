@@ -19,7 +19,8 @@ using HeddokoLib.body_pipeline;
 namespace Assets.Scripts.Frames_Pipeline
 {
 
-   
+    public delegate void FinalFramePositionReached();
+
     /// <summary>
     /// A recording playback task used by body frame thread
     /// </summary>
@@ -33,6 +34,7 @@ namespace Assets.Scripts.Frames_Pipeline
         private BodyFrameBuffer mFrameBuffer;
         private int mCurrentIdx;
         private int mFirstPos = 0;
+        internal event FinalFramePositionReached FinalFramePositionReachedEvent;
 
         private int mFinalFramePos { get; set; }
 
@@ -238,6 +240,12 @@ namespace Assets.Scripts.Frames_Pipeline
 
                     if (mCurrentIdx == mFinalFramePos)
                     {
+
+                        //Send out an event that the last frame has been reached. 
+                        if (FinalFramePositionReachedEvent != null)
+                        {
+                            FinalFramePositionReachedEvent();
+                        }
                         //reset the start time
                         vStartTime = 0;
                         //check if looping is enabled, set vCurrPos to first postion
@@ -251,7 +259,6 @@ namespace Assets.Scripts.Frames_Pipeline
                         {
                             continue;
                         }
-                        //Send out an event that the last frame has been reached. 
                         
                     }
                     BodyFrame vCurrBodyFrame = null;
@@ -328,8 +335,7 @@ namespace Assets.Scripts.Frames_Pipeline
             BodyFrame vFirst = mConvertedFrames[0];
             BodyFrame vLast = mConvertedFrames[mCurrentRecording.RecordingRawFramesCount - 1];
             TotalRecordingTime = vLast.Timestamp - vFirst.Timestamp;
-            ConversionCompleted = true;
-            //   BodyFrame.PrintErrorCount();
+            ConversionCompleted = true;  
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
                 var vProgressBar = DisablingProgressBar.Instance;
@@ -384,6 +390,21 @@ namespace Assets.Scripts.Frames_Pipeline
             }
         }
 
-
+        /// <summary>
+        /// Attach an event handler to the final frame position reached event
+        /// </summary>
+        /// <param name="vFinalFrameHandler">the event handler to attach</param>
+        public void AttachFinalFrameEventHandler(FinalFramePositionReached vFinalFrameHandler)
+        {
+            FinalFramePositionReachedEvent += vFinalFrameHandler;
+        }
+        /// <summary>
+        /// Remove an event handler to the final frame position reached event
+        /// </summary>
+        /// <param name="vFinalFrameHandler">the event handler to remove</param>
+        public void RemoveFinalFrameEventHandler(FinalFramePositionReached vFinalFrameHandler)
+        {
+            FinalFramePositionReachedEvent -= vFinalFrameHandler;
+        }
     }
 }

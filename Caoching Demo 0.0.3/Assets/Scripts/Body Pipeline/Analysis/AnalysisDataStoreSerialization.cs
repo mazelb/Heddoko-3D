@@ -60,6 +60,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <param name="vPath">the path to save to </param>
         public static void WriteFile (AnalysisDataStore vAnalysisDataStore,string vPath)
         {
+            //prepare the data store to serialize data
+            vAnalysisDataStore.PrepareDataStore();
             using (StreamWriter vFileOut = new StreamWriter(vPath))
             {
                 //write the header
@@ -100,12 +102,17 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                     var vSerializedList = vAnalysisDataStore.SerializedList[i];
                     foreach (var vItem in vSortedList)
                     {
-                        vFileOut.Write(vSerializedList[vItem] + ",");
+                        if((vSerializedList.ContainsKey(vItem)))
+                        {
+                            var vSerializedItem = vSerializedList[vItem];
+                            vFileOut.Write(vSerializedList[vItem] + ",");
+                        }
+                        else
+                        {
+                            Debug.Log("already have key "+ vItem);
+                        }
+                        
                     }
-                    //foreach (var vSerializableIterable in vAnalysisDataStore.SerializedList[i])
-                    //{
-                    //    vFileOut.Write(vSerializableIterable.Value+ ",");
-                    //}
                     vFileOut.Write("\r\n");
                 }
                 
