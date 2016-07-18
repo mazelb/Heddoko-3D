@@ -23,8 +23,7 @@ namespace Assets.Scripts.Frames_Pipeline
  
         //Containing Suit GUID 
         public string SuitGuid { get; set; }
-
-        public object RawData { get; set; }
+ 
 
 
     }

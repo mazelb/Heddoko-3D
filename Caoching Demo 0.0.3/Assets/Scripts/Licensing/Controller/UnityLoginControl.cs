@@ -124,10 +124,6 @@ namespace Assets.Scripts.Licensing.Controller
         /// <param name="vMsg"></param>
         void DisplayErrorNotification(string vMsg)
         {
-            //Action vRaiseModalPanelAction = () => ModalPanel.Instance().Choice("ERROR", vMsg, () =>
-            //{
-            //    Application.OpenURL(mUrl);
-            //}, () => { });
             Notify.Template("fade").Show(vMsg);
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(false));
 

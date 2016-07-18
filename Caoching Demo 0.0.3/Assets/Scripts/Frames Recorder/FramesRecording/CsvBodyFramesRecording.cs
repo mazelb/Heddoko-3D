@@ -38,7 +38,6 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
         public bool FromDatFile { get; set; }
 
 
-
         /// <summary>
         /// Extracts raw frame data found in a csv recording reader.
         /// </summary>

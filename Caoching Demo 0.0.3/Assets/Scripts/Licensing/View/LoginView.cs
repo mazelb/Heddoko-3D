@@ -105,8 +105,7 @@ namespace Assets.Scripts.Licensing.Authentication
         public void EnableButtonControls()
         {
             SubmitInfoButton.interactable = true;
-            LoadingImage.gameObject.SetActive(false);
-            UsernameInputField.interactable = true;
+             UsernameInputField.interactable = true;
             PasswordInputField.InputField.interactable = true;
         }
 
@@ -116,14 +115,13 @@ namespace Assets.Scripts.Licensing.Authentication
         public void DisableSubmissionControls()
         {
             SubmitInfoButton.interactable = false;
-            LoadingImage.gameObject.SetActive(true);
-            UsernameInputField.interactable = false;
+             UsernameInputField.interactable = false;
             PasswordInputField.InputField.interactable = false;
         }
 
 
         void Update()
-        {
+        { 
             //Allow for tab controls
             if (Input.GetKeyDown(KeyCode.Tab))
             {
@@ -157,7 +155,9 @@ namespace Assets.Scripts.Licensing.Authentication
         /// <param name="vStatus">true  = active, false = inactive</param>
         public void SetLoadingIconAsActive(bool vStatus)
         {
-            LoadingImage.gameObject.SetActive(false);
+            LoadingImage.gameObject.SetActive(vStatus);
         }
+
+        
     }
 }
