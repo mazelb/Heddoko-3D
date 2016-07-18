@@ -25,13 +25,13 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public int ForwardFrameSkip =1;
         public int BackwardFrameSkip = 1;
 
-        private int mFrameSkip = 10;
+        private static int mFrameSkip = 10;
 
-        public int FrameSkip
+        public static int FrameSkip
         {
             get { return mFrameSkip*FrameSkipMultiplier; }
             set { mFrameSkip = value; }
         }
-        public int FrameSkipMultiplier = 1;
+        public static int FrameSkipMultiplier = 1;
     }
 }

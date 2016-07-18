@@ -180,6 +180,7 @@ namespace Assets.Scripts.Licensing.Controller
                         Application.OpenURL(mUrl);
                     }, ()=> {});
                     OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vRaiseModalPanelAction);
+                    OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(false));
                     return;
                 }
                 LicenseInfo vLicense = vUser.LicenseInfo;

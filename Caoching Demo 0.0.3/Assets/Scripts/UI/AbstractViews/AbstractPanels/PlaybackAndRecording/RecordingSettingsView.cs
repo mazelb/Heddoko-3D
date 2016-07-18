@@ -36,6 +36,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             FrameSkippingInputMulitiplier.onValueChanged.AddListener(ValidateFrameMultiplierInput);
             ApplyButton.onClick.AddListener(ApplySettings);
             FrameSkipSlider.onValueChanged.AddListener(SetFrameSkipValue);
+            PlaybackSettings.FrameSkip = 10;
         }
 
        
@@ -117,16 +118,16 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         }
         private void RegisterSettingsPanel(RecordingPlayerView vView)
         {
-            FrameSkippingInput.text = vView.PbControlPanel.PlaybackSettings.FrameSkip + "";
-            FrameSkippingInputMulitiplier.text = vView.PbControlPanel.PlaybackSettings.FrameSkipMultiplier + "";
+            FrameSkippingInput.text =  PlaybackSettings.FrameSkip + "";
+            FrameSkippingInputMulitiplier.text =  PlaybackSettings.FrameSkipMultiplier + "";
         } 
         /// <summary>
           /// Apply settings 
           /// </summary>
         private void ApplySettings()
         {
-            RecordingPlayerView.PbControlPanel.PlaybackSettings.FrameSkip = mFrameSkippingValue;
-            RecordingPlayerView.PbControlPanel.PlaybackSettings.FrameSkipMultiplier = mFrameMultiSkippingValue;
+             PlaybackSettings.FrameSkip = mFrameSkippingValue;
+             PlaybackSettings.FrameSkipMultiplier = mFrameMultiSkippingValue;
 
         }
 
@@ -135,8 +136,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             int vFrameSkip = (int) vFrameSkipAmount;
             mFrameSkippingValue = vFrameSkip;
             FrameSkipAmountLabel.text = vFrameSkip+"";
-            RecordingPlayerView.PbControlPanel.PlaybackSettings.FrameSkip = mFrameSkippingValue;
-            RecordingPlayerView.PbControlPanel.PlaybackSettings.FrameSkipMultiplier = 1;
+             PlaybackSettings.FrameSkip = mFrameSkippingValue;
+             PlaybackSettings.FrameSkipMultiplier = 1;
 
 
         }

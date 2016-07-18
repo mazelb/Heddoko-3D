@@ -233,7 +233,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                     PlaybackSpeedModifierSubControl.IsInteractable = false;
                     break;
                 case PlaybackState.StepBackward:
-                    vCurrIdx -= mPlaybackSettings.FrameSkip;
+                    vCurrIdx -= PlaybackSettings.FrameSkip;
                     mPlaybackTask.PlayFromIndex(vCurrIdx);
                     mPlaybackTask.IsPaused = true;
                     vNewState = PlaybackState.Pause;
@@ -243,7 +243,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                     OnPause();
                     break;
                 case PlaybackState.StepForward:
-                    vCurrIdx += mPlaybackSettings.FrameSkip;
+                    vCurrIdx += PlaybackSettings.FrameSkip;
                     PlaybackProgressSubControl.UpdateCurrentTime(vCurrIdx);
                     RecordingIndexValue.SetIndexValue(vCurrIdx);
                     mPlaybackTask.PlayFromIndex(vCurrIdx);
@@ -569,7 +569,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         {
             if (CurrentState == PlaybackState.Pause)
             {
-                mPlaybackSettings.FrameSkipMultiplier = vStepForwardMultiplier;
+                PlaybackSettings.FrameSkipMultiplier = vStepForwardMultiplier;
                 ChangeState(PlaybackState.StepForward);
             }
         }
@@ -578,7 +578,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         {
             if (CurrentState == PlaybackState.Pause)
             {
-                mPlaybackSettings.FrameSkipMultiplier = vStepbackMultiplier;
+                PlaybackSettings.FrameSkipMultiplier = vStepbackMultiplier;
                 ChangeState(PlaybackState.StepBackward);
             }
 
