@@ -111,10 +111,13 @@ namespace Assets.Scripts.UI.MainMenu.View
                 //Set the first item as the default
                 var vKey = DropDownList.options[0].text;
                 ConnectionController.BrainpackComPort = mDropdownItems[vKey];
-                var message =
-                    "Found " + vObj.Count + " Battery packs";
+
+                var vMsg =
+                    "Found " + vObj.Count + " Battery pack";
+                //plural
+                vMsg += vObj.Count > 1 ? "s" : string.Empty;
                 Notify.Template("fade").Show(
-               message,
+               vMsg,
               customHideDelay: 3f,
               hideAnimation: Notify.AnimationCollapse, clearSequence: true
           );
@@ -128,8 +131,6 @@ namespace Assets.Scripts.UI.MainMenu.View
                 customHideDelay: 4f,
                 hideAnimation: Notify.AnimationCollapse
             );
-                //.Show(message, 10.5f, hideAnimation: Notify.AnimationCollapseUnscaledTime, showAnimation: Notify.FadeInAnimation,
-                //    sequenceType: NotifySequence.First, clearSequence: true);
             }
 
         }
