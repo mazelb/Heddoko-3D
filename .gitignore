@@ -30,3 +30,9 @@ Temp
 !HeddokoLib/HeddokoLib/HeddokoLib.csproj
 !CalibrationLib/Calibration1/Calibration1/Calibration1.csproj
 !CalibrationLib/Calibration1/CalibrationTest/CalibrationTest.csproj
+BrainpackService/BrainpackService/obj/
+BrainpackService/BrainpackService/bin/Debug/BrainpackService.application
+BrainpackService/BrainpackService/publish/
+BrainpackService/BrainpackService/bin/
+HeddokoLib/HeddokoLib/obj/
+BrainpackService/BrainpackService/Properties/
