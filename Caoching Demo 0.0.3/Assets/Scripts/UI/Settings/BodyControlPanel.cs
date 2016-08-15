@@ -32,6 +32,7 @@ namespace Assets.Scripts.UI.Settings
         public BodyFrameDataControl BodyFrameControl;
         public AnaylsisTextContainer AnalysisTextContainer;
         public bool DisablePanelShowClicks = false;
+        public AnalysisContainerToggle Toggler;
         public Body Body
         {
             get { return mBody; }
@@ -47,6 +48,7 @@ namespace Assets.Scripts.UI.Settings
             {
                 TogglePanel();
                 AnalysisTextContainer.ChangeAnalysisView(AnaylsisTextContainer.CurrentAnalysisTextView.Trunk);
+                Toggler.OnSwitchToggle("Trunk");
             });
 
 
@@ -54,24 +56,28 @@ namespace Assets.Scripts.UI.Settings
             {
                 TogglePanel();
                 AnalysisTextContainer.ChangeAnalysisView(AnaylsisTextContainer.CurrentAnalysisTextView.Shoulders);
+                Toggler.OnSwitchToggle("Shoulders");
             });
 
             ElbowsButton.onClick.AddListener(() =>
             {
                 TogglePanel();
                 AnalysisTextContainer.ChangeAnalysisView(AnaylsisTextContainer.CurrentAnalysisTextView.Elbows);
+                Toggler.OnSwitchToggle("Elbows");
             });
 
             HipsButton.onClick.AddListener(() =>
             {
                 TogglePanel();
                 AnalysisTextContainer.ChangeAnalysisView(AnaylsisTextContainer.CurrentAnalysisTextView.Hips);
+                Toggler.OnSwitchToggle("Hips");
             });
 
             KneesButton.onClick.AddListener(() =>
             {
                 TogglePanel();
                 AnalysisTextContainer.ChangeAnalysisView(AnaylsisTextContainer.CurrentAnalysisTextView.Knees);
+                Toggler.OnSwitchToggle("Knees");
             });
 
             SensorDataButton.onClick.AddListener(ToggleSensorPanel);
