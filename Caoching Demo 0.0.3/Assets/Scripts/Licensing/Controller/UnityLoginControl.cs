@@ -170,6 +170,7 @@ namespace Assets.Scripts.Licensing.Controller
             try
             {
                 UserRequest vRequest = vModel.UserRequest;
+                
                 User vUser = mClient.SignIn(vRequest);
                 if (!vUser.IsOk)
                 {
