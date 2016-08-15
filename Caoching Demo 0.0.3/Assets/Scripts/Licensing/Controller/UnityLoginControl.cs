@@ -185,10 +185,9 @@ namespace Assets.Scripts.Licensing.Controller
                 }
                 LicenseInfo vLicense = vUser.LicenseInfo;
                 mClient.SetToken(vUser.Token);
-                ResultBool vCheck = mClient.Check();
-                User vProfile = mClient.Profile();
-                if (vCheck.Result)
+               if (vUser.IsOk)
                 {
+                    User vProfile = mClient.Profile();
                     UserProfileModel vProfileModel = new UserProfileModel()
                     {
                         User = vProfile,
