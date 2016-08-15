@@ -35,6 +35,7 @@ namespace Assets.Scripts.UI
         private Resolution[] mSupportedResolutions;
         private bool mIsFullscreen = true;
         public Resolution CurrentSelectedResolution;
+        private Resolution mCurrentResolution { get { return Screen.currentResolution; } }
         /// <summary>
         /// Global function to set the new valid aspect ratio
         /// </summary>
@@ -82,7 +83,35 @@ namespace Assets.Scripts.UI
             return Instance.mSupportedResolutions;
         }
 
+        /// <summary>
+        /// Get the current screen resolution that the application is rendering in
+        /// </summary>
+        /// <returns></returns>
+        public static Resolution GetCurrentResolution()
+        {
 
+            return Instance.mCurrentResolution;
+        }
+
+        /// <summary>
+        /// Get the current resolution index
+        /// </summary>
+        /// <returns></returns>
+        public static int GetCurrentResolutionIndex()
+        {
+
+            int vIndex = -1;
+            Resolution vCurrentResolution = GetCurrentResolution();
+            for (int i = 0; i < Instance.mSupportedResolutions.Length; i++)
+            {
+                if (vCurrentResolution.Equals(Instance.mSupportedResolutions[i]))
+                {
+                    vIndex = i;
+                    break;
+                }
+            }
+            return vIndex;
+        }
 
         /// <summary>
         /// Initializes supported resolutions

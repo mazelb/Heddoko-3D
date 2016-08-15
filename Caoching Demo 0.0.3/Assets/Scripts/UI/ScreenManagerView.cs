@@ -28,6 +28,8 @@ namespace Assets.Scripts.UI
             ScreenResolutionManager.Instance.AllResolutionsScannedEvent += UpdateResolutionDropdown;
             ScreenResolutionManager.Instance.NewResolutionSetEvent += RedrawSlideBlock;
             UpdateResolutionDropdown(ScreenResolutionManager.GetAllSupportedResolution());
+            //set the resolution in the dropdown
+            ResolutionDropDown.value = ScreenResolutionManager.GetCurrentResolutionIndex(); 
             ResolutionDropDown.onValueChanged.AddListener(ScreenResolutionManager.SelectResolutionId);
             GraphicsQualityManager.AvailableGraphicsQualityScannedEvent += SetGraphicsDropdownValues;
             VSyncToggle.isOn = GraphicsQualityManager.VsyncOn;
@@ -36,6 +38,7 @@ namespace Assets.Scripts.UI
                 int vSyncCount = x ? 1 : 0;
                 GraphicsQualityManager.SetVsync(vSyncCount);
             });
+             
         }
 
         /// <summary>
@@ -73,6 +76,8 @@ namespace Assets.Scripts.UI
             GraphicsDropDown.onValueChanged.AddListener(x => GraphicsQualityManager.SetNewQualitySetting(x));
 
         }
+
+       
         /// <summary>
         /// Updates the resolution drop down view
         /// </summary>

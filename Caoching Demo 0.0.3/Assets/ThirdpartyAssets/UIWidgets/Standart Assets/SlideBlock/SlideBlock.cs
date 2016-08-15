@@ -140,6 +140,7 @@ namespace UIWidgets
                 {
                     rectTransform = transform as RectTransform;
                 }
+                
                 return rectTransform;
             }
         }
