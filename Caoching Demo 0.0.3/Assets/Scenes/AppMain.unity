@@ -9881,6 +9881,7 @@ GameObject:
   - 114: {fileID: 415361736}
   - 114: {fileID: 415361735}
   - 114: {fileID: 415361737}
+  - 114: {fileID: 415361738}
   m_Layer: 5
   m_Name: Right Side Info panel
   m_TagString: Untagged
@@ -9970,6 +9971,19 @@ MonoBehaviour:
   BodyFrameControl: {fileID: 1959099060}
   AnalysisTextContainer: {fileID: 1318448005}
   DisablePanelShowClicks: 0
+  Toggler: {fileID: 415361738}
+--- !u!114 &415361738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 415361733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 427ddb45931838743b0596a529ba95b6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mSliderBlock: {fileID: 1058035754}
 --- !u!1 &415374931
 GameObject:
   m_ObjectHideFlags: 0
@@ -15810,7 +15824,7 @@ RectTransform:
   m_Father: {fileID: 1897158140}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 0.9999999}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -22447,14 +22461,14 @@ MonoBehaviour:
       inSlope: 0
       outSlope: 0
       tangentMode: 0
-    - time: 1
-      value: 1
+    - time: 0.5028563
+      value: 1.0023153
       inSlope: 0
       outSlope: 0
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   Direction: 2
   isOpen: 0
   scrollRectSupport: 0
@@ -28705,7 +28719,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 890272456}
   m_HandleRect: {fileID: 890272455}
   m_Direction: 2
-  m_Value: 0
+  m_Value: 1
   m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -35629,8 +35643,8 @@ RectTransform:
   m_RootOrder: 5
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 159.16364, y: -228.62915}
-  m_SizeDelta: {x: 318.32727, y: 457.2583}
+  m_AnchoredPosition: {x: 242.13089, y: -315.7038}
+  m_SizeDelta: {x: 484.26178, y: 631.4076}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1605863462
 GameObject:
@@ -45232,7 +45246,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 708447077}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999999
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -46513,7 +46527,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.046408564}
   m_AnchorMax: {x: 0.90300006, y: 1}
   m_AnchoredPosition: {x: 0.5, y: 0.000061035156}
-  m_SizeDelta: {x: 1, y: -311.2858}
+  m_SizeDelta: {x: 1, y: -428.7511}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &2068942971
 MonoBehaviour:
