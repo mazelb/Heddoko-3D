@@ -7,6 +7,7 @@
 // */
 
 using Assets.Scripts.Licensing.Model;
+using HeddokoSDK;
 
 namespace Assets.Scripts.MainApp
 {
@@ -14,8 +15,7 @@ namespace Assets.Scripts.MainApp
     {
         /// <summary>
         /// Initializes the view with regards to user's profile
-        /// </summary>
-        /// <param name="vProfileModel"></param>
-        void Init(UserProfileModel vProfileModel);
+        /// </summary> 
+        void Init(UserProfileModel vProfileModel );
     }
 }

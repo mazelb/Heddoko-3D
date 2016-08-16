@@ -8,10 +8,10 @@
 */
 
 
-using System.IO;
-using Assets.Scripts.Utils;
+using System;
+using System.IO; 
 using Assets.Scripts.Utils.DatabaseAccess;
-using UnityEngine;
+using UnityEngine; 
 
 namespace Assets.Scripts.UI.Settings
 {
@@ -25,7 +25,9 @@ namespace Assets.Scripts.UI.Settings
         private static int sResWidth;
         private static int sResHeight;
         private static bool sAppLaunchedSafely;
- 
+        private static string sCacheFolderPath;
+        //set it to -1 to  force a registry check
+        private static int sCacheSize = 0;
         /// <summary>
         /// provides and sets the the prefered recordings folder for the application
         /// </summary>
@@ -33,30 +35,90 @@ namespace Assets.Scripts.UI.Settings
         {
             get
             {
- 
                 return sPreferedRecordingsFolder;
             }
             set
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    DirectoryInfo vDirectoryInfo = new DirectoryInfo(Application.dataPath );
-                    sPreferedRecordingsFolder =     vDirectoryInfo.Parent+"\\DemoRecordings";
+                    DirectoryInfo vDirectoryInfo = new DirectoryInfo(Application.dataPath);
+                    sPreferedRecordingsFolder = vDirectoryInfo.Parent + "\\DemoRecordings";
                     value = sPreferedRecordingsFolder;
                 }
-                 
+
                 //make sure that this folder exists. else set it to the default application folder
-                if (Directory.Exists(value) )
+                if (Directory.Exists(value))
                 {
                     sPreferedRecordingsFolder = value;
                 }
                 else
                 {
-                    sPreferedRecordingsFolder =  Application.dataPath + "\\DemoRecordings";
+                    sPreferedRecordingsFolder = Application.dataPath + "\\DemoRecordings";
                 }
             }
         }
 
+        /// <summary>
+        /// Getter/setter property : returns and sets the cache folder.
+        /// </summary>
+        public static string CacheFolderPath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(sCacheFolderPath))
+                {
+                    //check player prefs
+                    string vVal = PlayerPrefs.GetString("RecCache");
+                    if (string.IsNullOrEmpty(vVal))
+                    {
+                        //set the default to the current executable's directory + cache
+                        vVal = Application.dataPath;
+                        PlayerPrefs.SetString("RecCache", vVal);
+                    }
+                    sCacheFolderPath = vVal;
+                }
+                return sCacheFolderPath;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    throw new NullReferenceException("The cached folder's cannot be an empty string");
+                }
+                sCacheFolderPath = value;
+                PlayerPrefs.SetString("RecCache", sCacheFolderPath);
+            }
+        }
+
+        /// <summary>
+        /// Getter/setter: returns or sets the recording file cache size in mega bytes
+        /// </summary>
+        public static int CacheSize
+        {
+            get
+            {
+                int vVal = PlayerPrefs.GetInt("RecCacheSize");
+                if (vVal == 0)
+                {
+                    vVal = 250;
+                    sCacheSize = vVal;
+                    PlayerPrefs.SetInt("RecCacheSize", sCacheSize);
+                }
+                return sCacheSize;
+            }
+            set
+            {
+                if (value <= 0)
+                {
+                    sCacheSize = 250;
+                }
+                else
+                {
+                    sCacheSize = value;
+                }
+                PlayerPrefs.SetInt("RecCacheSize", sCacheSize);
+            }
+        }
         /// <summary>
         /// Prefered connection name
         /// </summary>
@@ -95,7 +157,7 @@ namespace Assets.Scripts.UI.Settings
             get
             {
                 string vLocalDbPath = Application.persistentDataPath + "/db/" + DBSettings.DbName;
-          
+
                 return vLocalDbPath;
             }
         }

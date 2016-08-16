@@ -16,16 +16,15 @@ namespace Assets.Scripts.UI.RecordingLoading.View
     public class SingleRecordingListItemComponent:ListViewItem, IResizableItem
     {
         public Text NameRow;
-        public Text UploadDate;
-        public Text CreationDateField;
-        public Text PlayedDateField;
-        public GameObject ButtonContainer;
+       // public Text UploadDate;
+     //   public Text CreationDateField;
+    //    public Text PlayedDateField;
+        public SingleRecListItemButtons ButtonContainer;
         private GameObject[] mObjectsToResize;
         void Awake()
         {
             base.Awake();
-            mObjectsToResize = new[] {NameRow.gameObject, UploadDate.gameObject, CreationDateField.gameObject, PlayedDateField.gameObject, ButtonContainer.gameObject };
-
+            mObjectsToResize = new[] {NameRow.gameObject, ButtonContainer.gameObject}; 
         }
 
         /// <summary>
@@ -43,9 +42,10 @@ namespace Assets.Scripts.UI.RecordingLoading.View
         public void SetData(RecordingListItem vItem)
         {
             NameRow.text = vItem.Name;
-            UploadDate.text = vItem.UploadDate.ToString();
-            CreationDateField.text = vItem.CreationDate.ToString();
-            PlayedDateField.text = vItem.LastPlayedDate.ToString();  
+            ButtonContainer.SetData(vItem);
+          //  UploadDate.text = vItem.UploadDate.ToString();
+          // CreationDateField.text = vItem.CreationDate.ToString();
+          //  PlayedDateField.text = vItem.LastPlayedDate.ToString();  
         }
 
 

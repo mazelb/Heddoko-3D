@@ -14,6 +14,7 @@ using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.UI.AbstractViews.Permissions;
 using Assets.Scripts.UI.RecordingLoading;
 using Assets.Scripts.UI.Settings;
+using HeddokoSDK;
 using HeddokoSDK.Models;
 using UnityEngine;
 using UnityEngine.EventSystems; 
@@ -59,14 +60,9 @@ namespace Assets.Scripts.MainApp
                 }
             }
             StartCoroutine(FlipEventSystemStates());
-            //if (!vType.Contains(vUserRole))
-            //{
-            //   // ControlPanel.LoadRecordingsButton.gameObject.SetActive(false);
-
-            //}
-            //RecordingPlayer.RecordingPlayerViewLayoutCreatedEvent += SetPermissions;
+            UserSessionManager.UserProfile = mCurrentProfileModel;
         }
-
+ 
         /// <summary>
         /// Flips the event system state, between inactive and active. 
         /// </summary>

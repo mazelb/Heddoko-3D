@@ -32,7 +32,7 @@ namespace Assets.Scripts.UI.RecordingLoading.Model
         /// <summary>
         /// Public getter, internal setter property: the location of the item
         /// </summary>
-        public   RecordingItemLocation  Location{ get; internal set; }
+        public RecordingItemLocation Location;
 
         /// <summary>
         /// Public getter, internal setter property: last time the item was played back
@@ -65,19 +65,29 @@ namespace Assets.Scripts.UI.RecordingLoading.Model
         /// </summary>
         public struct RecordingItemLocation
         {
+            private string mRelativePath;
+            private LocationType mType;
             /// <summary>
             /// Public getter, internal setter property: the relative path of the recording item
             /// </summary>
-            public string RelativePath { get; internal set;}
+            public string RelativePath {
+                get { return mRelativePath; }
+                 set { mRelativePath = value; }
+            }
 
             /// <summary>
             /// Public getter, internal setter property: the location type of the recording item
             /// </summary>
             public LocationType LocationType
             {
-                get; internal set;
+                get {  return mType; }
+                set { mType = value; }
             }
-
+            public RecordingItemLocation(string vRelativePath, LocationType vLocationType)
+            {
+                mRelativePath = vRelativePath;
+                mType = vLocationType;
+            }
         }
 
         public enum LocationType

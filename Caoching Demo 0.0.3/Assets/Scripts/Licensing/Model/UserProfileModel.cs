@@ -6,6 +6,7 @@
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
 
+using HeddokoSDK;
 using HeddokoSDK.Models;
 
 namespace Assets.Scripts.Licensing.Model
@@ -17,5 +18,7 @@ namespace Assets.Scripts.Licensing.Model
     {
          public User User { get; set; }
         public LicenseInfo LicenseInfo { get; set; }
+
+        public HeddokoClient Client { get; set; }
     }
 }

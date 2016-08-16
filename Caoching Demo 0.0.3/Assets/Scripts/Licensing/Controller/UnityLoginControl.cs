@@ -192,7 +192,8 @@ namespace Assets.Scripts.Licensing.Controller
                     UserProfileModel vProfileModel = new UserProfileModel()
                     {
                         User = vProfile,
-                        LicenseInfo = vLicense
+                        LicenseInfo = vLicense,
+                        Client =  mClient
                     };
                     if (LoginSuccessEvent != null)
                     {
