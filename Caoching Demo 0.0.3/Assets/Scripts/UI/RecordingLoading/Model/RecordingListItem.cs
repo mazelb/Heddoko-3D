@@ -23,11 +23,7 @@ namespace Assets.Scripts.UI.RecordingLoading.Model
         /// Getter/Setter property
         /// </summary>
         public string Name { get; set; }
-
-        /// <summary>
-        /// Relative path of the item
-        /// </summary>
-        public string RelativePath { get; internal set; }
+ 
 
         /// <summary>
         /// Public getter, internal setter property: the location of the item
@@ -94,6 +90,7 @@ namespace Assets.Scripts.UI.RecordingLoading.Model
         {
             CachedLocal,
             OnBrainpack,
+            DownloadingAndUnavailable,
             RemoteEndPoint,
         }
     }

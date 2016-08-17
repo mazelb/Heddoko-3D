@@ -5,15 +5,10 @@
 // * @date August 2016
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
-
-using System;
-using System.Collections.Generic;
-using Assets.Scripts.UI.AbstractViews.SelectableGridList;
-using Assets.Scripts.UI.AbstractViews.SelectableGridList.Descriptors;
-using Assets.Scripts.UI.RecordingLoading.Model;
-using Assets.Scripts.UI.Tagging;
-using UIWidgets;
-using UnityEngine;
+ 
+using System.Collections.Generic; 
+using Assets.Scripts.UI.RecordingLoading.Model; 
+using UIWidgets; 
 
 namespace Assets.Scripts.UI.RecordingLoading.View
 {

@@ -18,6 +18,7 @@ using Assets.Scripts.UI.AbstractViews.Permissions;
 using Assets.Scripts.Utils;
 using HeddokoSDK.Models;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
 {
@@ -47,6 +48,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public NewRecordingSelected NewRecordingSelectedEvent;
         public event BodyUpdated BodyUpdatedEvent;
         public event RecordingUpdated RecordingUpdatedEvent;
+        public Text CurrentRecordingInfo;
         private bool mIsNewRecording = true;
         private List<AbstractSubControl> mAbstractSubControls = new List<AbstractSubControl>();
         [SerializeField]
@@ -542,8 +544,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 {
                     BodyUpdatedEvent(mBody);
                 }
+                CurrentRecordingInfo.text = vNewCsvBodyFramesRecording.Title;
             }
-
             mIsNewRecording = true;
         }
 
@@ -617,7 +619,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlayPauseSubControls.ReleaseResources();
             RecordingForwardSubControl.ReleaseResources();
             RecordingRewindSubControl.ReleaseResources();
-
+            CurrentRecordingInfo.text = "";
         }
 
         /// <summary>

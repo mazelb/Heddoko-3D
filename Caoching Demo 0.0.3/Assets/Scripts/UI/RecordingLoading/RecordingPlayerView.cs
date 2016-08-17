@@ -62,6 +62,8 @@ namespace Assets.Scripts.UI.RecordingLoading
             
             SingleRecordingSelection.Instance.StartLoadingEvent += StartLoadHookFunc;
             SingleRecordingSelection.Instance.FinishLoadingEvent += StopLoadHookFunc;
+            PbControlPanel.SingleRecordingLoadSubControl.OnRecordingSelected += () =>
+            { SingleRecordingSelection.Instance.OpenFileBrowseDialog(PbControlPanel.NewRecordingSelected); };
             Hide();
 
         }

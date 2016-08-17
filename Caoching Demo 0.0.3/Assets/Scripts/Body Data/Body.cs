@@ -290,7 +290,7 @@ public class Body
     }
 
     /**
-    * PlayRecording(string vRecUuid)
+    * ProcessRecording(string vRecUuid)
     * @param vRecUuid, the recording UUID
     * @brief  Play a recording from the given recording UUID. 
     */

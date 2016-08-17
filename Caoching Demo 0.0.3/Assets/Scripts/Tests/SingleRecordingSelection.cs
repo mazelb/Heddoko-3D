@@ -76,6 +76,19 @@ namespace Assets.Scripts.Tests
         }
 
         /// <summary>
+        /// Load a recording file without the need of a file browser dialog
+        /// </summary>
+        /// <param name="vPath">the path of the file to load</param>
+        /// <param name="vCallback">on load completion, initiate callback.</param>
+        public void LoadFile(string vPath ,Action<BodyFramesRecordingBase> vCallback)
+        {
+            if (vCallback != null)
+            {
+                mRecordingLoadedCallback = vCallback;
+            }
+            SelectRecordingFile(vPath);
+        }
+        /// <summary>
         /// Callback, on file selection
         /// </summary>
         /// <param name="vRecordingSelected"></param>

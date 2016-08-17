@@ -72,7 +72,11 @@ namespace Assets.Scripts.UI.Settings
                     if (string.IsNullOrEmpty(vVal))
                     {
                         //set the default to the current executable's directory + cache
-                        vVal = Application.dataPath;
+                        vVal = Application.dataPath+ Path.DirectorySeparatorChar+"RecCache";
+                        if (!Directory.Exists(vVal))
+                        {
+                            Directory.CreateDirectory(vVal);
+                        }
                         PlayerPrefs.SetString("RecCache", vVal);
                     }
                     sCacheFolderPath = vVal;

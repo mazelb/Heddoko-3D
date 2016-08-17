@@ -181,6 +181,7 @@ public class BodyRecordingsMgr : IDatabaseConsumer
         if (vFilePath.EndsWith("csv") || vFilePath.EndsWith("dat"))
         {
             vRecordingBase = new CsvBodyRecordingReader(vFilePath);
+            
 
         }
         else if (vFilePath.EndsWith("hsm"))
@@ -202,6 +203,8 @@ public class BodyRecordingsMgr : IDatabaseConsumer
     public void AddNewRecording(BodyRecordingReaderBase vReaderBase, FilePathReqCallback vRecordingCallback)
     {
         BodyFramesRecordingBase vTempRecording = BodyFramesRecordingBase.RecordingFactory(vReaderBase);
+        FileInfo vFileInfo = new FileInfo(vReaderBase.FilePath);
+        vTempRecording.Title = vFileInfo.Name;
         if (!RecordingExist(vTempRecording.BodyRecordingGuid))
         {
             vTempRecording.ExtractRawFramesData(vReaderBase);

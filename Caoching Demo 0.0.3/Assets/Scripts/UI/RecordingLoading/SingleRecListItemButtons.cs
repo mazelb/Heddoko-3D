@@ -18,21 +18,46 @@ namespace Assets.Scripts.UI.RecordingLoading
     public class SingleRecListItemButtons : MonoBehaviour
     {
         public Button PlayButton;
+        public Button DownloadButton;
+        public Image InProgressIcon;
         public SynchronizableRecordingListController Controller;
         private RecordingListItem mCurrentItem;
 
         void Awake()
         {
-            PlayButton.onClick.AddListener(() =>
+            DownloadButton.onClick.AddListener(() =>
             {
                 if (mCurrentItem != null)
                 {
-                    Controller.PlayRecording(ref mCurrentItem);
+                    Controller.ProcessRecording(ref mCurrentItem);
                 }
             });
+            PlayButton.onClick.AddListener(() =>
+            {
+                Controller.PlayRecording( mCurrentItem);
+            });
+
         }
         public void SetData(RecordingListItem vItem)
         {
+            if (vItem.Location.LocationType == RecordingListItem.LocationType.DownloadingAndUnavailable)
+            {
+                PlayButton.gameObject.SetActive(false);
+                InProgressIcon.gameObject.SetActive(true);
+                DownloadButton.gameObject.SetActive(false);
+            }
+            else if (vItem.Location.LocationType == RecordingListItem.LocationType.CachedLocal)
+            {
+                PlayButton.gameObject.SetActive(true);
+                InProgressIcon.gameObject.SetActive(false);
+                DownloadButton.gameObject.SetActive(false);
+            }
+            else if (vItem.Location.LocationType == RecordingListItem.LocationType.RemoteEndPoint)
+            {
+                PlayButton.gameObject.SetActive(false);
+                InProgressIcon.gameObject.SetActive(false);
+                DownloadButton.gameObject.SetActive(true);
+            }
             mCurrentItem = vItem;
         }
     }

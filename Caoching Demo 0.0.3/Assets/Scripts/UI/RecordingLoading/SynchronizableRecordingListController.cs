@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
+using Assets.Scripts.Tests;
 using Assets.Scripts.UI.RecordingLoading.Model;
 using Assets.Scripts.UI.RecordingLoading.View;
 using Assets.Scripts.UI.Settings;
@@ -30,8 +31,9 @@ namespace Assets.Scripts.UI.RecordingLoading
     {
 
         public RecordingListSyncView RecordingListSyncView;
+        public RecordingPlayerView RecordingPlayerView;
         private UserProfileModel mProfile;
-
+        private List<RecordingListItem> vRecordingItems = new List<RecordingListItem>();
         public UserProfileModel Profile
         {
             get
@@ -47,7 +49,6 @@ namespace Assets.Scripts.UI.RecordingLoading
         private int mSkipMultiplier = 0;
         public void GetList()
         {
-            List<RecordingListItem> vItemDescriptors = new List<RecordingListItem>();
             //ping server: get list
             ListCollection<Asset> vRecords = Profile.Client.AssetsCollection(new AssetListRequest()
             {
@@ -66,45 +67,19 @@ namespace Assets.Scripts.UI.RecordingLoading
                     {
                         RecordingListItem vItem = new RecordingListItem();
                         vItem.Name = vRecordedAsset.Name;
-                        vItem.RelativePath = vRecordedAsset.Url;
-                        RecordingListItem.RecordingItemLocation vLoc = new RecordingListItem.RecordingItemLocation(vItem.Name, RecordingListItem.LocationType.RemoteEndPoint);
+                     //   vItem.Location.RelativePath = vRecordedAsset.Url;
+                        RecordingListItem.RecordingItemLocation vLoc = new RecordingListItem.RecordingItemLocation(vRecordedAsset.Url, RecordingListItem.LocationType.RemoteEndPoint);
                         vItem.Location = vLoc;
-                        vItemDescriptors.Add(vItem);
+                        vRecordingItems.Add(vItem);
                     }
                 }
 
                 //it is still possible that the count == 0, because of null name check
                 if (vRecords.Collection.Count > 0)
                 {
-                    RecordingListSyncView.LoadData(vItemDescriptors);
+                    RecordingListSyncView.LoadData(vRecordingItems);
                 }
             }
-
-            //get files in cache directory.
-            // BodyRecordingsMgr.Instance.ScanRecordings(ApplicationSettings.CacheFolderPath);
-            // string[] vFilePaths = BodyRecordingsMgr.Instance.FilePaths;
-            //FileInfo[] vFilesInfos= new FileInfo[vFilePaths.Length];
-            // for (int i = 0; i < vFilePaths.Length; i ++)
-            // {
-            //     vFilesInfos[i] =  new FileInfo(vFilePaths[i]);
-            // }
-
-            // //cross compare records vs vFilepaths. Only Display recordings that belong to the passed in user.
-            // var vFilteredLocalPaths = vFilesInfos.Where(x => vRecords.Collection.Any(y => y.Name.Equals(x.Name))).ToList();
-            // foreach (var vFilteredLocalPath in vFilteredLocalPaths)
-            // {
-            //     RecordingListItem vItem = new RecordingListItem();
-            //     vItem.Name = vFilteredLocalPath.Name;
-            //     RecordingListItem.RecordingItemLocation vLoc = new RecordingListItem.RecordingItemLocation(vFilteredLocalPath.FullName, RecordingListItem.LocationType.CachedLocal);
-            //     vItem.Location = vLoc;
-            //     vItemDescriptors.Add(vItem);
-            // }
-            // //filter out cached recordings from new recordings
-            // var vFilteredRemoteRecordings = vRecords.Collection.Where(x => vItemDescriptors.Any(y => y.Name.Equals(x.Name))).ToList();
-            // foreach (var vFilteredRemoteRecording in vFilteredRemoteRecordings)
-            // {
-            //     vItemDescriptors.Add(vi);
-            // }
 
         }
 
@@ -141,18 +116,13 @@ namespace Assets.Scripts.UI.RecordingLoading
         }
 
 
+
+
         /// <summary>
-        /// Play a recording from its id. 
+        /// Play a recording from the  given RecordingListItem
         /// </summary>
-        /// <param name="vId"></param>
-        public void PlayRecording(int vId)
-        {
-            //Implement a state machine for playing. 
-            throw new NotImplementedException();
-        }
-
-
-        public void PlayRecording(ref RecordingListItem vItem)
+        /// <param name="vItem">the tiem to try to play</param>
+        public void ProcessRecording(ref RecordingListItem vItem)
         {
 
             //Check if the item exists in the cache already. else proceed to download it. 
@@ -162,68 +132,96 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
             else
             {
+                //start downloading file. since this responsiblity will be delegated to a seperate thread, 
+                //wait until completed.
+
                 string vCachePath = ApplicationSettings.CacheFolderPath;
                 DirectoryInfo vInfo = new DirectoryInfo(vCachePath);
                 var vFilesInfo = vInfo.GetFiles();
                 RecordingListItem vRecItem = vItem;
                 var vFoundItem = vFilesInfo.FirstOrDefault(x => x.Name.Equals(vRecItem.Name));
+                DataFetchingStructure vStructure = new DataFetchingStructure();
+                //a cached item has been found
                 if (vFoundItem != null)
                 {
                     //change the location type
                     vItem.Location.LocationType = RecordingListItem.LocationType.CachedLocal;
-                    vItem.RelativePath = vFoundItem.FullName;
-                    //todo: load and play from this location
+                    vItem.Location.RelativePath = vFoundItem.FullName;
+                    RecordingListSyncView.LoadData(vRecordingItems);
                 }
                 else
                 {
-                    DataFetchingStructure vStructure = new DataFetchingStructure();
-                    vStructure.DownloadPath = vItem.RelativePath;
+                    //start downloading
+                    vStructure.DownloadLocation = vCachePath + Path.DirectorySeparatorChar + vItem.Name;
+                    //=    vItem.RelativePath;
                     vStructure.Item = vItem;
-                    //set the relative path to the cached path on completion
-                    vItem.RelativePath = vCachePath + Path.DirectorySeparatorChar + vItem.Name; 
-                    //change the location type
-                    vItem.Location.LocationType = RecordingListItem.LocationType.CachedLocal;
-                   
-                   //todo: load and play from this location
-                   var vItem2 = ThreadPool.QueueUserWorkItem(FetchData, vStructure);
+                    vItem.Location.LocationType = RecordingListItem.LocationType.DownloadingAndUnavailable;
+                    RecordingListSyncView.LoadData(vRecordingItems);
+                    ThreadPool.QueueUserWorkItem(FetchData, vStructure);
                 }
-
-
             }
         }
 
-
+        public void PlayRecording(RecordingListItem vItem)
+        {
+            Debug.Log("hide item");
+            SingleRecordingSelection.Instance.LoadFile(vItem.Location.RelativePath, RecordingPlayerView.PbControlPanel.NewRecordingSelected);
+            
+        }
         public void FetchData(object vCallbackStruct)
         {
+            BaseModel vHedAsset = null;
             try
             {
-                DataFetchingStructure vStructure = (DataFetchingStructure) vCallbackStruct;
-                BaseModel vHedAsset = Profile.Client.DownloadFile(vStructure.Item.RelativePath, vStructure.DownloadPath);
-                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => DownloadCompleted(vHedAsset));
+                DataFetchingStructure vStructure = (DataFetchingStructure)vCallbackStruct;
+                vHedAsset = Profile.Client.DownloadFile(vStructure.Item.Location.RelativePath, vStructure.DownloadLocation);
+                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => DownloadCompletedCallback(vHedAsset, ref vStructure.Item));
+                Profile.Client.DownloadFile(vStructure.Item.Location.RelativePath, vStructure.DownloadLocation);
             }
             catch (Exception vE)
             {
-                Debug.Log("Donwload not completed");
-
+                ErrrorDownloadHandler(vE);
             }
-        
         }
 
-        private void DownloadCompleted(HeddokoSDK.Models.BaseModel vHedAsset)
+        /// <summary>
+        /// Handle's fetch data errors
+        /// </summary>
+        /// <param name="vE"></param>
+        private void ErrrorDownloadHandler(Exception vE)
         {
-            Debug.Log("Donwload completed");
+            //check if response stream is null message
+            if (vE.Message.Equals("Response stream is null"))
+            {
+                Debug.Log("handle this message");
+            }
+            Debug.Log(vE.Message + " " + vE.StackTrace);
+        }
+
+        /// <summary>
+        /// When the download is complete, this callback function puts the item in a playable state.
+        /// </summary>
+        /// <param name="vHedAsset"></param>
+        /// <param name="vItem"></param>
+        private void DownloadCompletedCallback(BaseModel vHedAsset, ref RecordingListItem vItem)
+        {
+            Debug.Log("Download completed");
+            vItem.Location.RelativePath = ApplicationSettings.CacheFolderPath + Path.DirectorySeparatorChar + vItem.Name;
+            vItem.Location.LocationType = RecordingListItem.LocationType.CachedLocal;
+            //reload the data
+            RecordingListSyncView.LoadData(vRecordingItems);
         }
         /// <summary>
-        /// Start the syncing process. 
+        ///setup uploading. 
         /// </summary>
-        public void Sync()
+        public void PrepareToUpload()
         {
 
         }
 
         private struct DataFetchingStructure
         {
-            public string DownloadPath;
+            public string DownloadLocation;
             public RecordingListItem Item;
         }
     }
