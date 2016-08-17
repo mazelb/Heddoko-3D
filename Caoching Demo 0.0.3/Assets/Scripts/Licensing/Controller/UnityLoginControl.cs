@@ -188,10 +188,11 @@ namespace Assets.Scripts.Licensing.Controller
                 mClient.SetToken(vUser.Token);
                if (vUser.IsOk)
                 {
-                    User vProfile = mClient.Profile();
+                    Debug.Log(vUser.Kit.ID);
+                     
                     UserProfileModel vProfileModel = new UserProfileModel()
                     {
-                        User = vProfile,
+                        User = vUser,
                         LicenseInfo = vLicense,
                         Client =  mClient
                     };
