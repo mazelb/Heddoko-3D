@@ -36,3 +36,5 @@ BrainpackService/BrainpackService/publish/
 BrainpackService/BrainpackService/bin/
 HeddokoLib/HeddokoLib/obj/
 BrainpackService/BrainpackService/Properties/
+HeddokoLib/HeddokoLib/bin/
+**.suo
