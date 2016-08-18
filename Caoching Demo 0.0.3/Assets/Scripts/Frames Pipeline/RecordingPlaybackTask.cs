@@ -26,7 +26,8 @@ namespace Assets.Scripts.Frames_Pipeline
     /// </summary>
     public class RecordingPlaybackTask
     {
-        public bool IsWorking; 
+        public bool IsWorking;
+        public static int StartConversionIndex=1;
         public bool IsPaused { get; set; }
         public bool LoopPlaybackEnabled = true;
         private bool mIsRewinding;
@@ -314,18 +315,18 @@ namespace Assets.Scripts.Frames_Pipeline
 
             ConversionCompleted = false;
             //first convert all the frames
-            mConvertedFrames = new BodyFrame[mCurrentRecording.RecordingRawFramesCount];
+            mConvertedFrames = new BodyFrame[mCurrentRecording.RecordingRawFramesCount-StartConversionIndex];
 
-            for (int i = 0; i < mConvertedFrames.Length; i++)
+            for (int i = StartConversionIndex, vConvertIndex = 0; i < mCurrentRecording.RecordingRawFramesCount; i++, vConvertIndex++)
             {
                 try
                 {
-                    mConvertedFrames[i] = RawFrameConverter.ConvertRawFrame(mCurrentRecording.GetBodyRawFrameAt(i));
-
+                    BodyFrame vFramereion =mConvertedFrames[vConvertIndex] = RawFrameConverter.ConvertRawFrame(mCurrentRecording.GetBodyRawFrameAt(i));
+                    string v = "afda";
                 }
                 catch (Exception vE)
                 {
-                    if (i != 0)
+                    if (i != StartConversionIndex)
                     {
                         mConvertedFrames[i] = mConvertedFrames[i - 1];
                     }
@@ -333,7 +334,7 @@ namespace Assets.Scripts.Frames_Pipeline
 
             }
             BodyFrame vFirst = mConvertedFrames[0];
-            BodyFrame vLast = mConvertedFrames[mCurrentRecording.RecordingRawFramesCount - 1];
+            BodyFrame vLast = mConvertedFrames[mConvertedFrames.Length - 1];
             TotalRecordingTime = vLast.Timestamp - vFirst.Timestamp;
             ConversionCompleted = true;  
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
