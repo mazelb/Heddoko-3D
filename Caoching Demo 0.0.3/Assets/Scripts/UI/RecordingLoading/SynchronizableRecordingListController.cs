@@ -7,6 +7,7 @@
 // */
 
 using System;
+using System.CodeDom;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -24,6 +25,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.UI.RecordingLoading
 {
+
     /// <summary>
     /// A controller that fetches recordings from multiple data sources, and allows for the manipulation of this data. 
     /// </summary>
@@ -33,52 +35,39 @@ namespace Assets.Scripts.UI.RecordingLoading
         public RecordingListSyncView RecordingListSyncView;
         public RecordingPlayerView RecordingPlayerView;
         private UserProfileModel mProfile;
-        private List<RecordingListItem> vRecordingItems = new List<RecordingListItem>();
-        public UserProfileModel Profile
+        private List<RecordingListItem> mRecordingItems = new List<RecordingListItem>();
+        private RecordingListFetcher mFetcher;
+        private HeddokoDownloadFetcher Fetcher;
+
+        void Awake()
         {
-            get
-            {
-                if (mProfile == null)
-                {
-                    mProfile = UserSessionManager.UserProfile;
-                }
-                return mProfile;
-            }
+            mFetcher = new RecordingListFetcher(UserSessionManager.UserProfile);
+            mFetcher.RecordingListUpdatedHandler += LoadDataThroughUnityThread;
+            Fetcher = new HeddokoDownloadFetcher(UserSessionManager.UserProfile);
         }
+
+
         public int ItemNumbersPerPage = 25;
         private int mSkipMultiplier = 0;
-        public void GetList()
+
+        /// <summary>
+        /// Update a list by ensuring it is handled by a unity thread
+        /// </summary>
+        /// <param name="vList"></param>
+        private void LoadDataThroughUnityThread(List<RecordingListItem> vList)
         {
-            //ping server: get list
-            ListCollection<Asset> vRecords = Profile.Client.AssetsCollection(new AssetListRequest()
+            OutterThreadToUnityThreadIntermediary.EnqueueOverwrittableActionInUnity("LoadDownloadedRecordingsList", () => RecordingListSyncView.LoadData(vList));
+        }
+        /// <summary>
+        /// Updates the recording list of items that belong to a user
+        /// </summary>
+        public void UpdateList()
+        {
+            mFetcher.UpdateFetchedList();
+            if (mFetcher.RecordingItems.Count > 0)
             {
-                UserID = Profile.User.ID,//optional
-                Take = ItemNumbersPerPage,
-                Skip = mSkipMultiplier * ItemNumbersPerPage
-            });
-            //Skip number of items in order to paginate properly.
-            mSkipMultiplier++;
-
-            if (vRecords.Collection.Count > 0)
-            {
-                foreach (var vRecordedAsset in vRecords.Collection)
-                {
-                    if (!string.IsNullOrEmpty(vRecordedAsset.Name) && vRecordedAsset.Type == AssetType.Record)
-                    {
-                        RecordingListItem vItem = new RecordingListItem();
-                        vItem.Name = vRecordedAsset.Name;
-                     //   vItem.Location.RelativePath = vRecordedAsset.Url;
-                        RecordingListItem.RecordingItemLocation vLoc = new RecordingListItem.RecordingItemLocation(vRecordedAsset.Url, RecordingListItem.LocationType.RemoteEndPoint);
-                        vItem.Location = vLoc;
-                        vRecordingItems.Add(vItem);
-                    }
-                }
-
-                //it is still possible that the count == 0, because of null name check
-                if (vRecords.Collection.Count > 0)
-                {
-                    RecordingListSyncView.LoadData(vRecordingItems);
-                }
+                mRecordingItems = mFetcher.RecordingItems;
+                RecordingListSyncView.LoadData(mRecordingItems);
             }
 
         }
@@ -91,31 +80,8 @@ namespace Assets.Scripts.UI.RecordingLoading
 
         void OnApplicationQuit()
         {
-
+            throw new NotImplementedException("clear out threads before quitting");
         }
-
-        public void UploadRecording(string vRelativePath)
-        {
-            //verify the user passed in has a kit assigned to him
-            Kit vKit = mProfile.User.Kit;
-            if (vKit != null)
-            {
-                Asset asset = Profile.Client.Upload(new AssetRequest
-                {
-                    KitID = vKit.ID, //optional
-                    Type = AssetType.Record //required
-                },
-                    @vRelativePath);
-            }
-            else
-            {
-                //Throw or handle exception when a user doesn't have a kit assigned to him and try to upload a recording.
-                throw new NotImplementedException();
-
-            }
-        }
-
-
 
 
         /// <summary>
@@ -147,7 +113,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                     //change the location type
                     vItem.Location.LocationType = RecordingListItem.LocationType.CachedLocal;
                     vItem.Location.RelativePath = vFoundItem.FullName;
-                    RecordingListSyncView.LoadData(vRecordingItems);
+                    RecordingListSyncView.LoadData(mRecordingItems);
                 }
                 else
                 {
@@ -156,47 +122,21 @@ namespace Assets.Scripts.UI.RecordingLoading
                     //=    vItem.RelativePath;
                     vStructure.Item = vItem;
                     vItem.Location.LocationType = RecordingListItem.LocationType.DownloadingAndUnavailable;
-                    RecordingListSyncView.LoadData(vRecordingItems);
-                    ThreadPool.QueueUserWorkItem(FetchData, vStructure);
+                    RecordingListSyncView.LoadData(mRecordingItems);
+                    Fetcher.DownloadCompletedHandler += DownloadCompletedCallback;
+                    ThreadPool.QueueUserWorkItem(Fetcher.FetchData, vStructure);
+
                 }
             }
         }
-
+ 
         public void PlayRecording(RecordingListItem vItem)
         {
             Debug.Log("hide item");
             SingleRecordingSelection.Instance.LoadFile(vItem.Location.RelativePath, RecordingPlayerView.PbControlPanel.NewRecordingSelected);
-            
-        }
-        public void FetchData(object vCallbackStruct)
-        {
-            BaseModel vHedAsset = null;
-            try
-            {
-                DataFetchingStructure vStructure = (DataFetchingStructure)vCallbackStruct;
-                vHedAsset = Profile.Client.DownloadFile(vStructure.Item.Location.RelativePath, vStructure.DownloadLocation);
-                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => DownloadCompletedCallback(vHedAsset, ref vStructure.Item));
-                Profile.Client.DownloadFile(vStructure.Item.Location.RelativePath, vStructure.DownloadLocation);
-            }
-            catch (Exception vE)
-            {
-                ErrrorDownloadHandler(vE);
-            }
+
         }
 
-        /// <summary>
-        /// Handle's fetch data errors
-        /// </summary>
-        /// <param name="vE"></param>
-        private void ErrrorDownloadHandler(Exception vE)
-        {
-            //check if response stream is null message
-            if (vE.Message.Equals("Response stream is null"))
-            {
-                Debug.Log("handle this message");
-            }
-            Debug.Log(vE.Message + " " + vE.StackTrace);
-        }
 
         /// <summary>
         /// When the download is complete, this callback function puts the item in a playable state.
@@ -205,11 +145,19 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <param name="vItem"></param>
         private void DownloadCompletedCallback(BaseModel vHedAsset, ref RecordingListItem vItem)
         {
+            RecordingListItem vNonRefItem = vItem;
+            Action vAction = () =>UpdateList(vHedAsset, ref vNonRefItem);
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vAction);
+        }
+
+        private void UpdateList(BaseModel vHedAsset, ref RecordingListItem vItem)
+        {
+
             Debug.Log("Download completed");
             vItem.Location.RelativePath = ApplicationSettings.CacheFolderPath + Path.DirectorySeparatorChar + vItem.Name;
             vItem.Location.LocationType = RecordingListItem.LocationType.CachedLocal;
             //reload the data
-            RecordingListSyncView.LoadData(vRecordingItems);
+            RecordingListSyncView.LoadData(mRecordingItems);
         }
         /// <summary>
         ///setup uploading. 
@@ -219,10 +167,6 @@ namespace Assets.Scripts.UI.RecordingLoading
 
         }
 
-        private struct DataFetchingStructure
-        {
-            public string DownloadLocation;
-            public RecordingListItem Item;
-        }
+
     }
 }

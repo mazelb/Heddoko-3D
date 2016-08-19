@@ -9,14 +9,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
 using Assets.Scripts.UI.RecordingLoading.View;
 using HeddokoSDK.Models;
 using UnityEngine;
-using UnityEngine.Networking;
-
+ 
 namespace Assets.Scripts.UI.RecordingLoading
 {
     public class UploadableListController : MonoBehaviour
@@ -28,7 +28,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         public UploadableListSyncView UploadableListSyncView;
         private string mSelectedDirectory = "";
         private UserProfileModel mProfile;
-        
+        private RecordingsUploader mUploader;
         public void StartDirectorySelection()
         {
             UniFileBrowser.use.OpenFolderWindow(false, SelectDirectory);
@@ -36,6 +36,10 @@ namespace Assets.Scripts.UI.RecordingLoading
             UniFileBrowser.use.showVolumes = true;
         }
 
+        void Awake()
+        {
+            mUploader = new RecordingsUploader(Profile);
+        }
         public void SelectDirectory(string vDir)
         {
             mSelectedDirectory = vDir;
@@ -148,13 +152,14 @@ namespace Assets.Scripts.UI.RecordingLoading
 
         }
 
+        
+        /// <summary>
+        /// upload a single recording
+        /// </summary>
+        /// <param name="vItem"></param>
         void UploadSingleRecording(UploadableListItem vItem)
         {
-            Asset vAsset = Profile.Client.Upload(new AssetRequest()
-            {
-                KitID = Profile.User.Kit.ID,
-                Type = AssetType.Record
-            }, vItem.RelativePath);
+            ThreadPool.QueueUserWorkItem(mUploader.UploadSingleRecording, vItem);
         }
 
         public List<FileInfo> SimpleScan(DirectoryInfo vInfo)
