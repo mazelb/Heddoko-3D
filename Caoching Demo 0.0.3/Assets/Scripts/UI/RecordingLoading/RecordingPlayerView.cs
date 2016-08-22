@@ -43,9 +43,10 @@ namespace Assets.Scripts.UI.RecordingLoading
         public Body CurrBody;
         public BodyFrameDataControl BodyFrameDataControl;
         public BodyFrameGraphControl FrameGraphControl;
-        public Button LoadRecordingButton;
+      //  public Button LoadRecordingButton;
         public AnaylsisTextContainer AnaylsisTextContainer;
         public event RecordingPlayerViewLayoutCreated RecordingPlayerViewLayoutCreatedEvent;
+        
         public PanelNode RootNode
         {
             get { return mPanelNodes[0]; }
@@ -107,7 +108,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                 (PlaybackControlPanel)
                     mPanelNodes[0].PanelSettings.GetPanelOfType(ControlPanelType.RecordingPlaybackControlPanel);
             PbControlPanel.BodyUpdatedEvent += SetNewBody;
-            PbControlPanel.SingleRecordingLoadSubControl.SetNewButtonControl(LoadRecordingButton);
+          //  PbControlPanel.SingleRecordingLoadSubControl.SetNewButtonControl(LoadRecordingButton);
             if (RecordingPlayerViewLayoutCreatedEvent != null)
             {
                 RecordingPlayerViewLayoutCreatedEvent(this);

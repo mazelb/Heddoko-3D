@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Policy;
 using System.Threading;
 using Assets.Scripts.Licensing.Model;
+using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
 using Assets.Scripts.UI.RecordingLoading.View; 
 using Assets.Scripts.Utils;
@@ -21,15 +22,16 @@ namespace Assets.Scripts.UI.RecordingLoading
     /// </summary>
     public class HeddokoDownloadFetcher
     {
-        public string CacheDirectory;
-        public UserProfileModel Profile { get; private set; }
+        public string CacheDirectory;  
 
         public DownloadCompleted DownloadCompletedHandler;
         public ErrorDownloadingException ErrorDownloadingExceptionHandler;
+        public IUserProfileManager mProfileManager { get; set; }
 
-        public HeddokoDownloadFetcher(UserProfileModel vModel)
+
+        public HeddokoDownloadFetcher(IUserProfileManager vManager)
         {
-            Profile =  new UserProfileModel();
+            mProfileManager = vManager;
         }
         /// <summary>
         /// Fetches data from heddoko servers through a client. The callback structure needs to be of type DataFetchingStructure<see cref="DataFetchingStructure"/>
@@ -41,7 +43,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             try
             {
                 DataFetchingStructure vStructure = (DataFetchingStructure)vCallbackStruct;
-                vHedAsset = Profile.Client.DownloadFile(vStructure.Item.Location.RelativePath, vStructure.DownloadLocation); 
+                vHedAsset = mProfileManager.UserProfile.Client.DownloadFile(vStructure.Item.Location.RelativePath, vStructure.DownloadLocation); 
                 if (DownloadCompletedHandler != null)
                 {
                     DownloadCompletedHandler(vHedAsset, ref vStructure.Item);

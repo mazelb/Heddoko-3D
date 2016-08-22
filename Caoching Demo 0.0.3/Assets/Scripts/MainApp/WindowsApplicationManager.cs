@@ -60,7 +60,7 @@ namespace Assets.Scripts.MainApp
                 }
             }
             StartCoroutine(FlipEventSystemStates());
-            UserSessionManager.UserProfile = mCurrentProfileModel;
+            UserSessionManager.Instance.UserProfile = mCurrentProfileModel;
         }
  
         /// <summary>

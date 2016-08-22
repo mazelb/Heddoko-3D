@@ -139,7 +139,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
             vBodyFrame.Timestamp = vTimestamp;
 
             //placeholder data to be used in the dictionary until it gets populated by the following loop
-            BodyFrame.Vect4 vPlaceholderV3 = new BodyFrame.Vect4();//Vector3.zero;
+            BodyFrame.Vect4 vPlaceholderV3 = new BodyFrame.Vect4();
 
             int vKey = 0;
             //initializing sensor positions to some default value

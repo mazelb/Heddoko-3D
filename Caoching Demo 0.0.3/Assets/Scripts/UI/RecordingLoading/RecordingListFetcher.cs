@@ -22,37 +22,26 @@ namespace Assets.Scripts.UI.RecordingLoading
         public int ItemNumbersPerPage = 25;
         private int mSkipMultiplier = 0;
         public RecordingListUpdated RecordingListUpdatedHandler;
-
-        public RecordingListFetcher(UserProfileModel vClient)
+        private IUserProfileManager mManager;
+        public RecordingListFetcher(IUserProfileManager vManager)
         {
-            mProfile = vClient;
+            mManager = vManager;
         }
-
         public List<RecordingListItem> RecordingItems
         {
             get { return mRecordingItems; }
             set { mRecordingItems = value; }
         }
-        public UserProfileModel Profile
-        {
-            get
-            {
-                if (mProfile == null)
-                {
-                    mProfile = UserSessionManager.UserProfile;
-                }
-                return mProfile;
-            }
-        }
+        
 
         /// <summary>
         /// Updates the fetched list
         /// </summary>
         public void UpdateFetchedList()
         {
-            ListCollection<Asset> vRecords = Profile.Client.AssetsCollection(new AssetListRequest()
+            ListCollection<Asset> vRecords = mManager.UserProfile.Client.AssetsCollection(new AssetListRequest()
             {
-                UserID = Profile.User.ID,//optional
+                UserID = mManager.UserProfile.User.ID,//optional
                 Take = ItemNumbersPerPage,
                 Skip = mSkipMultiplier * ItemNumbersPerPage
             });

@@ -59,7 +59,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 if (mProfile == null)
                 {
-                    mProfile = UserSessionManager.UserProfile;
+                    mProfile = UserSessionManager.Instance.UserProfile;
                 }
                 return mProfile;
             }

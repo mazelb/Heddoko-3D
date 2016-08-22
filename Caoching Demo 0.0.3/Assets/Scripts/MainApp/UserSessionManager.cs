@@ -12,10 +12,18 @@ using UnityEngine;
 
 namespace Assets.Scripts.MainApp
 {
+    public interface IUserProfileManager
+    {
+        /// <summary>
+        /// The current loaded profile model
+        /// </summary>
+        UserProfileModel UserProfile { get; set; }
+    }
+
     /// <summary>
     /// A singleton who's responsibility is to manage a user's session
     /// </summary>
-    public class UserSessionManager : MonoBehaviour
+    public class UserSessionManager : MonoBehaviour, IUserProfileManager
     {
         private static UserSessionManager sInstance;
         private UserProfileModel mModel;
@@ -41,18 +49,18 @@ namespace Assets.Scripts.MainApp
         /// <summary>
         /// The current loaded profile model
         /// </summary>
-        public static UserProfileModel UserProfile
+        public UserProfileModel UserProfile
         {
-            get { return Instance.mModel; }
-            set { Instance.mModel = value; }
+            get { return mModel; }
+            set { mModel = value; }
         }
 
         /// <summary>
         /// The current connected client
         /// </summary>
-        public static HeddokoClient HeddokoClient {
-            get { return Instance.mHeddokoClient; }
-            set { Instance.mHeddokoClient = value; }
+        public HeddokoClient HeddokoClient {
+            get { return mHeddokoClient; }
+            set { mHeddokoClient = value; }
         }
     }
 }

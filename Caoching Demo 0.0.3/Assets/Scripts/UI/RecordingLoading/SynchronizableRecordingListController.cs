@@ -6,9 +6,7 @@
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
 
-using System;
-using System.CodeDom;
-using System.Collections;
+using System; 
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -36,19 +34,20 @@ namespace Assets.Scripts.UI.RecordingLoading
         public RecordingPlayerView RecordingPlayerView;
         private UserProfileModel mProfile;
         private List<RecordingListItem> mRecordingItems = new List<RecordingListItem>();
-        private RecordingListFetcher mFetcher;
-        private HeddokoDownloadFetcher Fetcher;
+        private RecordingListFetcher mListFetcher;
+        private HeddokoDownloadFetcher mRecordingFetcher;
+        public int ItemNumbersPerPage = 25;
+        private int mSkipMultiplier = 0;
 
         void Awake()
         {
-            mFetcher = new RecordingListFetcher(UserSessionManager.UserProfile);
-            mFetcher.RecordingListUpdatedHandler += LoadDataThroughUnityThread;
-            Fetcher = new HeddokoDownloadFetcher(UserSessionManager.UserProfile);
+            mListFetcher = new RecordingListFetcher(UserSessionManager.Instance);
+            mListFetcher.RecordingListUpdatedHandler += LoadDataThroughUnityThread;
+            mRecordingFetcher = new HeddokoDownloadFetcher(UserSessionManager.Instance);
+            mRecordingFetcher.ErrorDownloadingExceptionHandler += ExceptionHandler;
         }
 
 
-        public int ItemNumbersPerPage = 25;
-        private int mSkipMultiplier = 0;
 
         /// <summary>
         /// Update a list by ensuring it is handled by a unity thread
@@ -63,10 +62,10 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         public void UpdateList()
         {
-            mFetcher.UpdateFetchedList();
-            if (mFetcher.RecordingItems.Count > 0)
+            mListFetcher.UpdateFetchedList();
+            if (mListFetcher.RecordingItems.Count > 0)
             {
-                mRecordingItems = mFetcher.RecordingItems;
+                mRecordingItems = mListFetcher.RecordingItems;
                 RecordingListSyncView.LoadData(mRecordingItems);
             }
 
@@ -123,8 +122,8 @@ namespace Assets.Scripts.UI.RecordingLoading
                     vStructure.Item = vItem;
                     vItem.Location.LocationType = RecordingListItem.LocationType.DownloadingAndUnavailable;
                     RecordingListSyncView.LoadData(mRecordingItems);
-                    Fetcher.DownloadCompletedHandler += DownloadCompletedCallback;
-                    ThreadPool.QueueUserWorkItem(Fetcher.FetchData, vStructure);
+                    mRecordingFetcher.DownloadCompletedHandler += DownloadCompletedCallback;
+                    ThreadPool.QueueUserWorkItem(mRecordingFetcher.FetchData, vStructure);
 
                 }
             }
@@ -167,6 +166,9 @@ namespace Assets.Scripts.UI.RecordingLoading
 
         }
 
-
+        private void ExceptionHandler(Exception vE)
+        {
+            Debug.Log(vE.Message);
+        }
     }
 }
