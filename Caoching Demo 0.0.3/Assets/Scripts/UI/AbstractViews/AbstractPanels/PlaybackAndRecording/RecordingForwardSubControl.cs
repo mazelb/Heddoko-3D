@@ -20,7 +20,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     /// controls a recording to fast forward, step forward
     /// </summary>
     [UserRolePermission()]
-
     public class RecordingForwardSubControl : AbstractSubControl
     {
         public Button ForwardButton;

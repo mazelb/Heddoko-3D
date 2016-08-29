@@ -42,10 +42,10 @@ namespace Assets.Scripts.UI.RecordingLoading
         private bool mIsInitialized = false;
         public Body CurrBody;
         public BodyFrameDataControl BodyFrameDataControl;
-        public BodyFrameGraphControl FrameGraphControl;
-        public Button LoadRecordingButton;
+        public BodyFrameGraphControl FrameGraphControl; 
         public AnaylsisTextContainer AnaylsisTextContainer;
         public event RecordingPlayerViewLayoutCreated RecordingPlayerViewLayoutCreatedEvent;
+        public CloudLocalStorageViewManager CloudLocalStorageViewManager;
         public PanelNode RootNode
         {
             get { return mPanelNodes[0]; }
@@ -59,9 +59,10 @@ namespace Assets.Scripts.UI.RecordingLoading
             vRightSide.Add(ControlPanelType.RecordingPlaybackControlPanel);
             ControlPanelTypeList.Add(vLeftSide);
             ControlPanelTypeList.Add(vRightSide);
-            
-            SingleRecordingSelection.Instance.StartLoadingEvent += StartLoadHookFunc;
-            SingleRecordingSelection.Instance.FinishLoadingEvent += StopLoadHookFunc;
+            //SingleRecordingSelection.Instance.StartLoadingEvent += StartLoadHookFunc;
+            //SingleRecordingSelection.Instance.FinishLoadingEvent += StopLoadHookFunc;
+            //PbControlPanel.SingleRecordingLoadSubControl.OnRecordingSelected += () =>
+            //{ SingleRecordingSelection.Instance.OpenFileBrowseDialog(PbControlPanel.NewRecordingSelected); };
             Hide();
 
         }
@@ -105,7 +106,9 @@ namespace Assets.Scripts.UI.RecordingLoading
                 (PlaybackControlPanel)
                     mPanelNodes[0].PanelSettings.GetPanelOfType(ControlPanelType.RecordingPlaybackControlPanel);
             PbControlPanel.BodyUpdatedEvent += SetNewBody;
-            PbControlPanel.SingleRecordingLoadSubControl.SetNewButtonControl(LoadRecordingButton);
+            CloudLocalStorageViewManager.RecordingLoadingCompleteEvent += PbControlPanel.NewRecordingSelected;
+
+            //  PbControlPanel.SingleRecordingLoadSubControl.SetNewButtonControl(LoadRecordingButton);
             if (RecordingPlayerViewLayoutCreatedEvent != null)
             {
                 RecordingPlayerViewLayoutCreatedEvent(this);

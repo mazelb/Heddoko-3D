@@ -49,8 +49,16 @@ namespace UIWidgets {
 		/// <summary>
 		/// What to do when the event system send a submit event.
 		/// </summary>
-		public ListViewItemSelect onSubmit = new ListViewItemSelect();
+		public ListViewItemSelect vonSubmit = new ListViewItemSelect();
 
+	    public ListViewItemSelect onSubmit
+	    {
+	        get
+	        {
+	            return vonSubmit;
+	        }
+            set { vonSubmit = value; }
+	    }
 		/// <summary>
 		/// What to do when the event system send a cancel event.
 		/// </summary>
@@ -154,6 +162,7 @@ namespace UIWidgets {
 		public virtual void OnSubmit(BaseEventData eventData)
 		{
 			onSubmit.Invoke(this);
+            Debug.Log("OnSubmit " + gameObject.name);
 		}
 
 		/// <summary>
@@ -191,7 +200,7 @@ namespace UIWidgets {
 		public virtual void OnPointerClick(PointerEventData eventData)
 		{
 			onPointerClick.Invoke(eventData);
-
+            Debug.Log("Clicking "+gameObject.name);
 			if (eventData.button!=PointerEventData.InputButton.Left)
 			{
 				return;
@@ -206,8 +215,8 @@ namespace UIWidgets {
 		/// </summary>
 		/// <param name="eventData">Event data.</param>
 		public virtual void OnPointerEnter(PointerEventData eventData)
-		{
-			onPointerEnter.Invoke(eventData);
+		{ 
+            onPointerEnter.Invoke(eventData);
 		}
 		
 		/// <summary>
@@ -215,8 +224,8 @@ namespace UIWidgets {
 		/// </summary>
 		/// <param name="eventData">Event data.</param>
 		public virtual void OnPointerExit(PointerEventData eventData)
-		{
-			onPointerExit.Invoke(eventData);
+		{ 
+            onPointerExit.Invoke(eventData);
 		}
 
 		/// <summary>

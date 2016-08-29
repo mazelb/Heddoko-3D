@@ -54,7 +54,7 @@ namespace Assets.Scripts.Tests
 
         private void PumpData()
         {   
-            ConvertedFrame = mRecordingPlayerBoedy.MBodyFrameThread.PlaybackTask.ConvertedFrames;
+            ConvertedFrame = mRecordingPlayerBoedy.MBodyFrameThread.PlaybackTask.ConvertedFrames.ToArray();
  
             StartCoroutine(vTesterino());
             StartCoroutine(Loadthis());

@@ -94,9 +94,9 @@ namespace UIWidgetsSamples {
 			DataSource.Add(item);
 		}
 
-		protected override void SetData(SteamSpyComponent component, SteamSpyItem item)
+		protected override void SetData(SteamSpyComponent vComponent, SteamSpyItem item)
 		{
-			component.SetData(item);
+			vComponent.SetData(item);
 		}
 		
 		protected override void HighlightColoring(SteamSpyComponent component)

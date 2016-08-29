@@ -10,11 +10,11 @@ namespace UIWidgets {
 		/// <summary>
 		/// Sets component data with specified item.
 		/// </summary>
-		/// <param name="component">Component.</param>
+		/// <param name="vComponent">Component.</param>
 		/// <param name="item">Item.</param>
-		protected override void SetData(TreeViewComponent component, ListNode<TreeViewItem> item)
+		protected override void SetData(TreeViewComponent vComponent, ListNode<TreeViewItem> item)
 		{
-			component.SetData(item.Node, item.Depth);
+			vComponent.SetData(item.Node, item.Depth);
 		}
 		
 		/// <summary>

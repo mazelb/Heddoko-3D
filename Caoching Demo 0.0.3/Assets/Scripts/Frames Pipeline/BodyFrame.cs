@@ -7,7 +7,6 @@
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
 
-using UnityEngine;
 using System.Collections.Generic;
 using System;
 using System.Runtime.Serialization;

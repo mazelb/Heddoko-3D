@@ -73,11 +73,11 @@ namespace UIWidgets {
 		/// <summary>
 		/// Sets component data with specified item.
 		/// </summary>
-		/// <param name="component">Component.</param>
+		/// <param name="vComponent">Component.</param>
 		/// <param name="item">Item.</param>
-		protected override void SetData(ListViewIconsItemComponent component, ListViewIconsItemDescription item)
+		protected override void SetData(ListViewIconsItemComponent vComponent, ListViewIconsItemDescription item)
 		{
-			component.SetData(item);
+			vComponent.SetData(item);
 		}
 
 		/// <summary>

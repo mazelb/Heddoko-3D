@@ -493,9 +493,9 @@ namespace UIWidgets {
 		/// <summary>
 		/// Sets component data with specified item.
 		/// </summary>
-		/// <param name="component">Component.</param>
+		/// <param name="vComponent">Component.</param>
 		/// <param name="item">Item.</param>
-		protected override void SetData(TComponent component, ListNode<TItem> item)
+		protected override void SetData(TComponent vComponent, ListNode<TItem> item)
 		{
 
 		}

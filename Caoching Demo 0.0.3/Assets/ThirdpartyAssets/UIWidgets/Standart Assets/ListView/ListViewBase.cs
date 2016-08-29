@@ -35,9 +35,11 @@ namespace UIWidgets
 		[SerializeField]
 		[HideInInspector]
 		List<ListViewItem> items = new List<ListViewItem>();
-
-		List<UnityAction> callbacks = new List<UnityAction>();
-
+        private List<UnityAction> mCallbacks = new List<UnityAction>();
+	    private List<UnityAction> callbacks {
+	        get { return mCallbacks; }
+            set { mCallbacks = value; }
+	    }
 		/// <summary>
 		/// Gets or sets the items.
 		/// </summary>
@@ -261,7 +263,7 @@ namespace UIWidgets
 		/// <param name="index">Index.</param>
 		void RemoveCallback(ListViewItem item, int index)
 		{
-			if (item == null)
+ 			if (item == null)
 			{
 				return;
 			}
@@ -299,7 +301,8 @@ namespace UIWidgets
 		/// </summary>
 		void RemoveCallbacks()
 		{
-			if (callbacks.Count > 0)
+             
+            if (callbacks.Count > 0)
 			{
 				items.ForEach(RemoveCallback);
 			}
@@ -310,8 +313,8 @@ namespace UIWidgets
 		/// Adds the callbacks.
 		/// </summary>
 		void AddCallbacks()
-		{
-			items.ForEach(AddCallback);
+		{ 
+            items.ForEach(AddCallback);
 		}
 
 		/// <summary>
@@ -320,8 +323,8 @@ namespace UIWidgets
 		/// <param name="item">Item.</param>
 		/// <param name="index">Index.</param>
 		void AddCallback(ListViewItem item, int index)
-		{
-			callbacks.Insert(index, () => Toggle(item));
+		{ 
+            callbacks.Insert(index, () => Toggle(item));
 
 			item.onClick.AddListener(callbacks[index]);
 
@@ -648,7 +651,7 @@ namespace UIWidgets
 			}
 			else
 			{
-				Select(index);
+			Select(index);
 			}
 		}
 
@@ -777,7 +780,9 @@ namespace UIWidgets
 		/// <param name="eventData">Event data.</param>
 		void ISelectHandler.OnSelect(BaseEventData eventData)
 		{
-			if (!EventSystem.current.alreadySelecting)
+
+            Debug.Log("Selecting " +gameObject.name);
+            if (!EventSystem.current.alreadySelecting)
 			{
 				EventSystem.current.SetSelectedGameObject(gameObject);
 			}

@@ -65,11 +65,11 @@ namespace Assets.Scripts.Communication.View.Table
         /// <summary>
         /// Sets the component with spefied vItem
         /// </summary>
-        /// <param name="vComponenent"></param>
+        /// <param name="vComponent"></param>
         /// <param name="vItem"></param>
-        protected override void SetData(FrameSelectionComponent vComponenent, BodyFrame vItem)
+        protected override void SetData(FrameSelectionComponent vComponent, BodyFrame vItem)
         {
-            vComponenent.SetData(vItem); 
+            vComponent.SetData(vItem); 
         }
 
         protected override void HighlightColoring(FrameSelectionComponent vComponent )

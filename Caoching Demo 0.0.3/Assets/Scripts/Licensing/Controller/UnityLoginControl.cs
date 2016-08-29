@@ -41,7 +41,7 @@ namespace Assets.Scripts.Licensing.Controller
         private HeddokoClient mClient;
         internal OnLoginSuccess LoginSuccessEvent;
         private Thread mConnectionThread;
-         private string mUrl;
+        private string mUrl;
         private string mUrlExt;
         private string mSecret;
         public LoginController LoginController
@@ -49,7 +49,7 @@ namespace Assets.Scripts.Licensing.Controller
             get { return mLoginController; }
         }
 
-       internal void Awake()
+        internal void Awake()
         {
             mUrlExt = "api/v1";
             mUrl = "https://app.heddoko.com/";
@@ -57,11 +57,11 @@ namespace Assets.Scripts.Licensing.Controller
 
 #if DEBUG
             mUrl = "http://dev.app.heddoko.com/";
-                mSecret = "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk";
+            mSecret = "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk";
 #endif
-            HeddokoConfig vConfig = new HeddokoConfig(mUrl+ mUrlExt, mSecret);
+            HeddokoConfig vConfig = new HeddokoConfig(mUrl + mUrlExt, mSecret);
             mClient = new HeddokoClient(vConfig);
-              ServicePointManager.ServerCertificateValidationCallback = RemoteCertificateValidationCallback;
+            ServicePointManager.ServerCertificateValidationCallback += RemoteCertificateValidationCallback;
             mLoginController = new LoginController();
             mLoginController.Init(LoginModel, LoginView);
             mLoginController.AddErrorHandler(LoginErrorType.CannotAuthenticate, DisplayErrorNotification);
@@ -170,28 +170,31 @@ namespace Assets.Scripts.Licensing.Controller
             try
             {
                 UserRequest vRequest = vModel.UserRequest;
+
                 User vUser = mClient.SignIn(vRequest);
                 if (!vUser.IsOk)
                 {
                     OutterThreadToUnityThreadIntermediary.QueueActionInUnity(EnableControls);
                     var vErrorMsg = FormatLoginNoOkError(vUser.Errors);
-                    Action vRaiseModalPanelAction  = () => ModalPanel.Instance().Choice("LOGIN FAILED", vErrorMsg, () =>
-                    {
-                        Application.OpenURL(mUrl);
-                    }, ()=> {});
+                    Action vRaiseModalPanelAction = () => ModalPanel.Instance().Choice("LOGIN FAILED", vErrorMsg, () =>
+                   {
+                       Application.OpenURL(mUrl);
+                   }, () => { });
                     OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vRaiseModalPanelAction);
                     OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(false));
                     return;
                 }
                 LicenseInfo vLicense = vUser.LicenseInfo;
                 mClient.SetToken(vUser.Token);
-               if (vUser.IsOk)
+                if (vUser.IsOk)
                 {
-                    User vProfile = mClient.Profile();
+                    Debug.Log(vUser.Kit.ID);
+
                     UserProfileModel vProfileModel = new UserProfileModel()
                     {
-                        User = vProfile,
-                        LicenseInfo = vLicense
+                        User = vUser,
+                        LicenseInfo = vLicense,
+                        Client = mClient
                     };
                     if (LoginSuccessEvent != null)
                     {
@@ -200,6 +203,7 @@ namespace Assets.Scripts.Licensing.Controller
                             () => LoginView.SetLoadingIconAsActive(false));
                     }
                 }
+            
 
             }
 
@@ -259,7 +263,7 @@ namespace Assets.Scripts.Licensing.Controller
         /// Since we need to use HTTPS to authenticate, the application needs to add a valid certificate to unity's empty certificates  store.
         /// </summary> 
         /// <returns></returns>
-        public bool RemoteCertificateValidationCallback(System.Object vSender, X509Certificate vCertificate, X509Chain vChain, SslPolicyErrors vSslPolicyErrors)
+        public static bool RemoteCertificateValidationCallback(System.Object vSender, X509Certificate vCertificate, X509Chain vChain, SslPolicyErrors vSslPolicyErrors)
         {
             bool vIsOk = true;
             // If there are errors in the certificate chain, look at each error to determine the cause.
@@ -283,7 +287,7 @@ namespace Assets.Scripts.Licensing.Controller
             }
             return vIsOk;
         }
-     internal void OnApplicationQuit()
+        internal void OnApplicationQuit()
         {
             if (mConnectionThread != null)
             {

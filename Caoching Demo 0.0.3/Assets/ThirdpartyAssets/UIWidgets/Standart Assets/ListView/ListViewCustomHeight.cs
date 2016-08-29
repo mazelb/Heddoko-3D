@@ -268,7 +268,7 @@ namespace UIWidgets
 		/// Updates the items.
 		/// </summary>
 		/// <param name="newItems">New items.</param>
-		protected override void SetNewItems(ObservableList<TItem> newItems)
+		protected internal override void SetNewItems(ObservableList<TItem> newItems)
 		{
 			SetItemsHeight(newItems);
 			CalculateMaxVisibleItems(newItems);

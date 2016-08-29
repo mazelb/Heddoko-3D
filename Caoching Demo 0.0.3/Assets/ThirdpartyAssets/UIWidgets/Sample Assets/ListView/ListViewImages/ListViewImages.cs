@@ -9,11 +9,11 @@ namespace UIWidgetsSamples {
 		/// <summary>
 		/// Sets component data with specified item.
 		/// </summary>
-		/// <param name="component">Component.</param>
+		/// <param name="vComponent">Component.</param>
 		/// <param name="item">Item.</param>
-		protected override void SetData(ListViewImagesComponent component, ListViewImagesItem item)
+		protected override void SetData(ListViewImagesComponent vComponent, ListViewImagesItem item)
 		{
-			component.SetData(item);
+			vComponent.SetData(item);
 		}
 	}
 }

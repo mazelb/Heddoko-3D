@@ -5,9 +5,7 @@
 * @date March 2016
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
-
-using System;
-using Assets.Scripts.Tests;
+ 
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Permissions;
@@ -16,21 +14,22 @@ using UnityEngine.UI;
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
 {
    
+    public delegate void SelectRecordingCallback();
     /// <summary>
     /// A subcontrol that brings up a panel to load recordings
     /// </summary>
     [UserRolePermission()]
-
     public class LoadSingleRecordingSubControl : AbstractSubControl
     {
         public Button LoadButton;
         public PlaybackControlPanel ParentPanel;
+        public event SelectRecordingCallback OnRecordingSelected;
 
         /// <summary>
         /// Initialize with the parent playback control panel
         /// </summary>
         /// <param name="mParentPanel"></param>
-        public void Init(PlaybackControlPanel mParentPanel)
+        public virtual void Init(PlaybackControlPanel mParentPanel)
         {
             ParentPanel = mParentPanel;
             LoadButton.onClick.AddListener(SelectedRecording);
@@ -39,11 +38,14 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// <summary>
         /// Recording selected
         /// </summary>
-        internal void SelectedRecording()
+        internal  virtual void SelectedRecording()
         {
             ParentPanel.ChangeState(PlaybackState.Pause);
-            SingleRecordingSelection.Instance.OpenFileBrowseDialog(ParentPanel.NewRecordingSelected);
-
+            //callback function
+            if (OnRecordingSelected != null)
+            {
+                OnRecordingSelected();
+            }
         }
         public override SubControlType SubControlType
         {
@@ -64,7 +66,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// Changes the Load recording button to the one passed in
         /// </summary>
         /// <param name="vNewRecordingButton"></param>
-        public void SetNewButtonControl(Button vNewRecordingButton)
+        public virtual void SetNewButtonControl(Button vNewRecordingButton)
         {
             if (LoadButton != null)
             {

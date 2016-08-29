@@ -5,9 +5,9 @@ using UIWidgets;
 namespace UIWidgetsSamples {
 	public class Table : ListViewCustom<TableRowComponent,TableRow> {
 		// this function is required
-		protected override void SetData(TableRowComponent component, TableRow item)
+		protected override void SetData(TableRowComponent vComponent, TableRow item)
 		{
-			component.SetData(item);
+			vComponent.SetData(item);
 		}
 
 		// those functions are optional

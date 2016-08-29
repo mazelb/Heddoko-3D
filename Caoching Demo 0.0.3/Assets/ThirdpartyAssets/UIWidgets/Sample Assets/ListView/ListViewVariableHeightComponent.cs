@@ -13,12 +13,14 @@ namespace UIWidgetsSamples {
 		public float Height {
 			get {
 				return CalculateHeight();
+                
 			}
 		}
 
 		// Displaying item data
 		public void SetData(ListViewVariableHeightItemDescription item)
 		{
+
 			Name.text = item.Name;
 			Text.text = item.Text.Replace("\\n", "\n");
 		}
