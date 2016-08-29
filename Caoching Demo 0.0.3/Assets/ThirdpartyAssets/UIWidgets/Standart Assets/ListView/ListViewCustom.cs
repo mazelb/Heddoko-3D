@@ -931,7 +931,7 @@ namespace UIWidgets
 		/// <param name="item">Item.</param>
 		/// <param name="index">Index.</param>
 		protected virtual void AddCallback(ListViewItem item, int index)
-		{
+		{ 
 			callbacksEnter.Add(index, ev => OnPointerEnterCallback(item));
 			callbacksExit.Add(index, ev => OnPointerExitCallback(item));
 			
@@ -968,9 +968,9 @@ namespace UIWidgets
 		/// <summary>
 		/// Sets component data with specified item.
 		/// </summary>
-		/// <param name="component">Component.</param>
+		/// <param name="vComponent">Component.</param>
 		/// <param name="item">Item.</param>
-		protected virtual void SetData(TComponent component, TItem item)
+		protected virtual void SetData(TComponent vComponent, TItem item)
 		{
 		}
 
@@ -1276,7 +1276,7 @@ namespace UIWidgets
 		/// Updates the items.
 		/// </summary>
 		/// <param name="newItems">New items.</param>
-		protected virtual void SetNewItems(ObservableList<TItem> newItems)
+		protected internal virtual void SetNewItems(ObservableList<TItem> newItems)
 		{
 			//Start();
 

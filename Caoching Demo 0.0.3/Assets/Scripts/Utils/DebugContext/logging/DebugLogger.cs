@@ -205,7 +205,6 @@ namespace Assets.Scripts.Utils.DebugContext.logging
         private void RegisterPaths()
         { 
             string vms = Instance.mLogDirPath = OutterThreadToUnityThreadIntermediary.Instance.ApplicationPath + "\\Application_logs";
-            Debug.Log(vms);
 
             mLogTypeToLogpathType.Add(LogType.ApplicationCommand, OutputLogPath.ApplicationLog);
             mLogTypeToLogpathType.Add(LogType.ApplicationResponse, OutputLogPath.ApplicationLog);

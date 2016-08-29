@@ -4,9 +4,9 @@ using UIWidgets;
 namespace UIWidgetsSamples {
 
 	public class ListViewSlider : ListViewCustom<ListViewSliderComponent,ListViewSliderItem> {
-		protected override void SetData(ListViewSliderComponent component, ListViewSliderItem item)
+		protected override void SetData(ListViewSliderComponent vComponent, ListViewSliderItem item)
 		{
-			component.SetData(item);
+			vComponent.SetData(item);
 		}
 		
 		protected override void HighlightColoring(ListViewSliderComponent component)

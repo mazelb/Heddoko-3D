@@ -5,9 +5,7 @@
 * @date March 2016
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
-
-using System;
-using Assets.Scripts.Tests;
+ 
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Permissions;

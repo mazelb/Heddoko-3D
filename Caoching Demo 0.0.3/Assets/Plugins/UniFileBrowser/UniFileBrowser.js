@@ -52,9 +52,20 @@ class UniFileBrowser extends MonoBehaviour {
         var driveIcon : Texture;
         var folderIcon : Texture;
         var fileIcon : Texture;
+
     public var ErrorHandler :  function(String) ;
-    public var OnCancel: Function;
+    public var OnCancel: Function; 
+    public var OnEscape : function(int);
     private var _allowMultiSelect : boolean;
+    public var _allowWindowClose: boolean;
+
+    public function get allowWindowClose() {
+        return _allowWindowClose;
+    }
+
+    public function set allowWindowClose(value: boolean){
+    _allowWindowClose = value;
+}
     public function get allowMultiSelect () {
         return _allowMultiSelect;
     }
@@ -149,7 +160,8 @@ class UniFileBrowser extends MonoBehaviour {
     private var doFileFunction = false;
     private var folderFunction : function(FileInfo[]) : boolean;
     private var fileFunction : function(String) : boolean;
-
+    public var ShowCancelButton: boolean;
+    public var fontSize :int;
     #if UNITY_EDITOR
         function Reset () {
             var paths = AssetDatabase.GetAllAssetPaths();
@@ -409,11 +421,12 @@ class UniFileBrowser extends MonoBehaviour {
             }
         #endif
 
-            function OnGUI () {
-                defaultSkin = GUI.skin;
+        function OnGUI () {
+            
+                defaultSkin = GUI.skin; 
                 GUI.skin = guiSkin;
                 GUI.depth = guiDepth;
-
+            
                 // Keyboard input in editor and non-touch platforms
             #if UNITY_EDITOR || (!UNITY_IPHONE && !UNITY_ANDROID && !UNITY_BLACKBERRY && !UNITY_WP8)
                 if (Event.current.type == EventType.KeyDown) {
@@ -464,7 +477,7 @@ class UniFileBrowser extends MonoBehaviour {
 
                 GUI.skin = defaultSkin;
             }
-
+             
         private function DrawFileWindow () 
         {
             if (allowWindowDrag) {
@@ -574,8 +587,11 @@ class UniFileBrowser extends MonoBehaviour {
                 buttonRect.width = fileAreaRect.width - iconWidth - (showDate? dateWidth : 0) - scrollbarOffset;
 		
                 // File/folder name
-                if (GUI.Button (buttonRect, fileDisplayList[i], selected? scrollViewStyleSelected : scrollViewStyle) && frameDone) {
+                //                if (GUI.Button (buttonRect, fileDisplayList[i], selected? scrollViewStyleSelected : scrollViewStyle) && frameDone) {
+                scrollViewStyle.fontSize = 12;
+                if (GUI.Button (buttonRect, fileDisplayList[i],   scrollViewStyle) && frameDone) {
                     GUI.FocusControl ("Area");
+                    
                     selectedFileNumber = i;
                     if (multi) {
                         if (commandDown) {
@@ -758,11 +774,16 @@ class UniFileBrowser extends MonoBehaviour {
                 GUI.enabled = true;
             }
 	
+
             // Cancel button
-            if (GUI.Button (Rect(fileWindowRect.width - buttonPositionX - (buttonSize.x+15), fileWindowRect.height - buttonPositionY, buttonSize.x, buttonSize.y),
-                            "Cancel") ) {
-                CloseFileWindow();
+            if (ShowCancelButton) {
+                if (GUI.Button (Rect(fileWindowRect.width - buttonPositionX - (buttonSize.x+15), fileWindowRect.height - buttonPositionY, buttonSize.x, buttonSize.y),
+                          "Cancel") ) {
+
+                    CloseFileWindow();
+                }
             }
+          
 	
             // Open/Save button
             if (fileType == FileType.Open) {
@@ -856,7 +877,7 @@ class UniFileBrowser extends MonoBehaviour {
             }
         }
 
-        private function CloseMessageWindow (isConfirmed : boolean) {
+        public function CloseMessageWindow (isConfirmed : boolean) {
             showMessageWindow = false;
             confirm = isConfirmed;
         }
@@ -928,11 +949,16 @@ class UniFileBrowser extends MonoBehaviour {
         }
 
         private function EscapeHit () {
+    if (!allowWindowClose)
+        return;
             if (showMessageWindow) {
                 CloseMessageWindow (false);
             }
             else {
                 CloseFileWindow();
+            }
+            if (OnEscape != null) {
+                OnEscape(0);
             }
         }
         #endif
@@ -1298,7 +1324,7 @@ class UniFileBrowser extends MonoBehaviour {
 
         public function CloseFileWindow () {
             if (showMessageWindow) return;	// Don't let window close if error/confirm window is open
-	
+    if (!allowWindowClose) return;           //don't let the window close if it isnt allowed.
             fileWindowOpen = false;
             selectedFileNumber = oldSelectedFileNumber = -1;
             fileName = "";

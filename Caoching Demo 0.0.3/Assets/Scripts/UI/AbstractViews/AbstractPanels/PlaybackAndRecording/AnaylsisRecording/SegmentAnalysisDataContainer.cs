@@ -73,7 +73,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
 
         void UpdateConvertedFrames(PlaybackControlPanel vControlPanel)
         {
-            mConvertedFrames = vControlPanel.PlaybackTask.ConvertedFrames;
+            mConvertedFrames = vControlPanel.PlaybackTask.ConvertedFrames.ToArray();
             if (NewConvertedFramesReceivedEvent != null)
             {
                 NewConvertedFramesReceivedEvent(mConvertedFrames);
@@ -124,8 +124,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             vObj.Init(vSegments);
             mList.Add(vObj);
         }
-
-
        
     }
 }

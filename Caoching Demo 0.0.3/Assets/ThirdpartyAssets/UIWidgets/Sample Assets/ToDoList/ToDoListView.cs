@@ -22,9 +22,9 @@ namespace UIWidgetsSamples.ToDoList {
 			base.Start();
 		}
 			
-		protected override void SetData(ToDoListViewComponent component, ToDoListItem item)
+		protected override void SetData(ToDoListViewComponent vComponent, ToDoListItem item)
 		{
-			component.SetData(item);
+			vComponent.SetData(item);
 		}
 			
 		protected override void HighlightColoring(ToDoListViewComponent component)

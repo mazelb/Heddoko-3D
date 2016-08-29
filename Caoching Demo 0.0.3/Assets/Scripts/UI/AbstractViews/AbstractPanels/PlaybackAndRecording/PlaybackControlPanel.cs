@@ -525,6 +525,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// <param name="vNewCsvBodyFramesRecording"></param>
         public void NewRecordingSelected(BodyFramesRecordingBase vNewCsvBodyFramesRecording)
         {
+            Debug.Log("Recording selected");
             if (mBody != null && vNewCsvBodyFramesRecording != null)
             {
                 mBody.StopThread();
@@ -544,7 +545,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 {
                     BodyUpdatedEvent(mBody);
                 }
-                CurrentRecordingInfo.text = vNewCsvBodyFramesRecording.Title;
+                //   CurrentRecordingInfo.text = vNewCsvBodyFramesRecording.Title;
+                Debug.Log("playing back "+ vNewCsvBodyFramesRecording.Title);
             }
             mIsNewRecording = true;
         }
@@ -588,13 +590,11 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
 
         void OnEnable()
         {
-            Debug.Log("PlaybackControlPanel: being enabled. Can use? " + mCanUse);
             if (!mCanUse)
             {
                 gameObject.SetActive(false);
                 return;
             }
-
             PlayPauseSubControls.RequestResources();
             RecordingForwardSubControl.RequestResources();
             RecordingRewindSubControl.RequestResources();
@@ -619,7 +619,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlayPauseSubControls.ReleaseResources();
             RecordingForwardSubControl.ReleaseResources();
             RecordingRewindSubControl.ReleaseResources();
-            CurrentRecordingInfo.text = "";
+           // CurrentRecordingInfo.text = "";
         }
 
         /// <summary>

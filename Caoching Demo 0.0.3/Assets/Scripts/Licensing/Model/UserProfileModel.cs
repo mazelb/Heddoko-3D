@@ -20,5 +20,7 @@ namespace Assets.Scripts.Licensing.Model
         public LicenseInfo LicenseInfo { get; set; }
 
         public HeddokoClient Client { get; set; }
+
+        //todo: add a the current kit to be used(for uploading)
     }
 }

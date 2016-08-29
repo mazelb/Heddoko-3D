@@ -4,9 +4,9 @@ using UIWidgets;
 namespace UIWidgetsSamples {
 	
 	public class ListViewVariableHeight : ListViewCustomHeight<ListViewVariableHeightComponent,ListViewVariableHeightItemDescription> {
-		protected override void SetData(ListViewVariableHeightComponent component, ListViewVariableHeightItemDescription item)
+		protected override void SetData(ListViewVariableHeightComponent vComponent, ListViewVariableHeightItemDescription item)
 		{
-			component.SetData(item);
+			vComponent.SetData(item);
 		}
 		
 		protected override void HighlightColoring(ListViewVariableHeightComponent component)

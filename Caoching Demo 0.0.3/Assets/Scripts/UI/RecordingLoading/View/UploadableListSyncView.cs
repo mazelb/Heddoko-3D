@@ -30,9 +30,9 @@ namespace Assets.Scripts.UI.RecordingLoading.View
             DataSource.EndUpdate();
         }
          
-        protected override void SetData(SingleUploadableListComponent vComponenent, UploadableListItem vItem)
+        protected override void SetData(SingleUploadableListComponent vComponent, UploadableListItem vItem)
         {
-            vComponenent.SetData(vItem); 
+            vComponent.SetData(vItem); 
         }
     }
 }

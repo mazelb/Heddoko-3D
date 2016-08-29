@@ -1,13 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Security.Policy;
-using System.Threading;
-using Assets.Scripts.Licensing.Model;
+﻿using System; 
 using Assets.Scripts.MainApp;
-using Assets.Scripts.UI.RecordingLoading.Model;
-using Assets.Scripts.UI.RecordingLoading.View; 
-using Assets.Scripts.Utils;
+using Assets.Scripts.UI.RecordingLoading.Model; 
 using HeddokoSDK.Models;
 
 namespace Assets.Scripts.UI.RecordingLoading

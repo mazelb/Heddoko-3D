@@ -8,11 +8,11 @@ namespace UIWidgetsSamples {
 		/// <summary>
 		/// Sets component data with specified item.
 		/// </summary>
-		/// <param name="component">Component.</param>
+		/// <param name="vComponent">Component.</param>
 		/// <param name="item">Item.</param>
-		protected override void SetData(ChatLineComponent component, ChatLine item)
+		protected override void SetData(ChatLineComponent vComponent, ChatLine item)
 		{
-			component.SetData(item);
+			vComponent.SetData(item);
 		}
 
 		// leave coloring functions empty

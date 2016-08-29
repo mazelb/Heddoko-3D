@@ -102,12 +102,12 @@ namespace Assets.Scripts.UI.AbstractViews.SelectableGridList
         /// <summary>
         /// Sets the component with spefied vItem
         /// </summary>
-        /// <param name="vComponenent"></param>
+        /// <param name="vComponent"></param>
         /// <param name="vItem"></param>
-        protected override void SetData(ImportRecordingGridSelectionComponent vComponenent, RecordingItemDescriptor vItem)
+        protected override void SetData(ImportRecordingGridSelectionComponent vComponent, RecordingItemDescriptor vItem)
         {
-            vComponenent.SetData(vItem);
-            vComponenent.TaggingManager = TaggingManager;
+            vComponent.SetData(vItem);
+            vComponent.TaggingManager = TaggingManager;
         }
 
         protected override void HighlightColoring(ImportRecordingGridSelectionComponent vComponent)

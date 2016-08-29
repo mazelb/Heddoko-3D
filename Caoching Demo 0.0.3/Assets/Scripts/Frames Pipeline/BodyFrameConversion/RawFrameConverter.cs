@@ -1,5 +1,5 @@
-﻿using System; 
-using HeddokoLib.utils; 
+﻿using System;
+using HeddokoLib.utils;
 
 namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
 {
@@ -11,7 +11,6 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
         /// <summary>
         /// holds a reference to previously valid values
         /// </summary>
-     //   public static Vector3[] PreviouslyValidOrientations = new Vector3[9];
         public static BodyFrame.Vect4[] PreviouslyValidOrientations = new BodyFrame.Vect4[9];
         private static float sStartTime = 0;
 
@@ -56,9 +55,9 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
         public static BodyFrame ConvertRawFrame(BodyRawFrameBase vFrameBase)
         {
             Type vType = vFrameBase.GetType();
-            if (vType == typeof (BodyRawFrame))
+            if (vType == typeof(BodyRawFrame))
             {
-               return  ConvertRawFrame((BodyRawFrame) vFrameBase);
+                return ConvertRawFrame((BodyRawFrame)vFrameBase);
             }
             else if (vType == typeof(BodyProtoPacketFrame))
             {
@@ -73,7 +72,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
         /// <param name="vProtopacketFrame">The packet containing imu information</param>
         /// <returns>A converted BodyFrame</returns>
         public static BodyFrame ConvertRawFrame(BodyProtoPacketFrame vProtopacketFrame)
-        { 
+        {
             return new BodyFrame(vProtopacketFrame.Packet);
 
         }
@@ -82,10 +81,12 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
         /// </summary>
         /// <param name="vRawData"></param>
         /// <returns></returns>
-        public  static BodyFrame ConvertEncodedRawFrame(BodyRawFrame vRawData)
+        public static BodyFrame ConvertEncodedRawFrame(BodyRawFrame vRawData)
         {
-            float vTimeStamp = (float)(Convert.ToInt32(vRawData[0]));
-            vTimeStamp =  (vTimeStamp / 1000f) - sStartTime ;
+            float vTimeStamp = 0;
+
+            vTimeStamp = (float)(Convert.ToInt32(vRawData[0]));
+            vTimeStamp = (vTimeStamp / 1000f) - sStartTime;
             Int16 vBitmask = Convert.ToInt16(((string)vRawData[1]), 16);
 
             int vStartIndex = 2;
@@ -102,7 +103,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                 {
                     string[] v3data = ((string)vRawData[i]).Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                     int vLength = v3data.Length;
-                     var vFinalVals = new BodyFrame.Vect4();
+                    var vFinalVals = new BodyFrame.Vect4();
                     vFinalVals.z = ConversionTools.ConvertHexStringToFloat(v3data[2]);
                     vFinalVals.x = ConversionTools.ConvertHexStringToFloat(v3data[1]);
                     vFinalVals.y = ConversionTools.ConvertHexStringToFloat(v3data[0]);
@@ -111,12 +112,20 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                     //{
                     //    vFinalVals[j] = ConversionTools.ConvertHexStringToFloat(v3data[j]); 
                     //} 
-                     
 
-                    PreviouslyValidOrientations[vSetterIndex] = vFinalVals;
+                    try
+                    {
+                        PreviouslyValidOrientations[vSetterIndex] = vFinalVals;
+                    }
+                    catch (Exception vE)
+                    {
+                         UnityEngine.Debug.Log("here");
+                    }
+                   
                     // new BodyFrame.Vect4(vPitch, vRoll, vYaw);// new Vector3(vPitch, vRoll, vYaw);
                 }
             }
+
             BodyFrame vBodyFrame = CreateBodyFrame(PreviouslyValidOrientations);
             vBodyFrame.Timestamp = vTimeStamp;
             return vBodyFrame;
@@ -190,8 +199,6 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                     }
 
                     vBodyFrame.FrameData[vSensorPosAsKey] = vFinalVals;
-                        //new BodyFrame.Vect4(vParsedValues[0], vParsedValues[1], vParsedValues[2], vParsedValues[4]);//new Vector3(value[0], value[1], value[2])); 
-
                 }
 
             }
@@ -340,7 +347,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                     {
                         value[j] = ConversionTools.ConvertHexStringToFloat((v3data[j]));
                     }
-                    vBodyFrame.FrameData[vSensorPosAsKey] =new BodyFrame.Vect4(value[0], value[1], value[2]); //new Vector3(value[0], value[1], value[2]);
+                    vBodyFrame.FrameData[vSensorPosAsKey] = new BodyFrame.Vect4(value[0], value[1], value[2]); //new Vector3(value[0], value[1], value[2]);
                 }
             }
             return vBodyFrame;

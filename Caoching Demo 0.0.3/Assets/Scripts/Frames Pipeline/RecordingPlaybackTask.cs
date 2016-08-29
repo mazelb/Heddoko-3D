@@ -26,7 +26,8 @@ namespace Assets.Scripts.Frames_Pipeline
     /// </summary>
     public class RecordingPlaybackTask
     {
-        public bool IsWorking; 
+        public bool IsWorking;
+        public static int StartConversionIndex = 6;
         public bool IsPaused { get; set; }
         public bool LoopPlaybackEnabled = true;
         private bool mIsRewinding;
@@ -39,8 +40,8 @@ namespace Assets.Scripts.Frames_Pipeline
         private int mFinalFramePos { get; set; }
 
         private float mTotalRecordingTime;
-
-        private BodyFrame[] mConvertedFrames;
+        private List<BodyFrame> mConvertedBodyFrames; 
+    //    private BodyFrame[] mConvertedFrames;
 
         private float mPlaybackSpeed = 1f;
 
@@ -89,13 +90,13 @@ namespace Assets.Scripts.Frames_Pipeline
                 if (mIsRewinding)
                 {
                     IteratorAdder = -1;
-                    mFirstPos = mConvertedFrames.Length - 1;
+                    mFirstPos = ConvertedFrames.Count - 1;
                     mFinalFramePos = 0;
                 }
                 else
                 {
                     mFirstPos = 0;
-                    mFinalFramePos = mConvertedFrames.Length - 1;
+                    mFinalFramePos = ConvertedFrames.Count - 1;
                     IteratorAdder = 1;
                 }
 
@@ -110,11 +111,11 @@ namespace Assets.Scripts.Frames_Pipeline
         {
             get
             {
-                if (mConvertedFrames == null)
+                if (ConvertedFrames == null)
                 {
                     return -1;
                 }
-                return mConvertedFrames.Length;
+                return ConvertedFrames.Count;
             }
         }
 
@@ -133,11 +134,11 @@ namespace Assets.Scripts.Frames_Pipeline
         {
             get
             {
-                if (mConvertedFrames == null)
+                if (ConvertedFrames == null)
                 {
                     return -1f;
                 }
-                if (mConvertedFrames.Length == 0)
+                if (ConvertedFrames.Count == 0)
                 {
                     return 0f;
                 }
@@ -153,15 +154,15 @@ namespace Assets.Scripts.Frames_Pipeline
         {
             get
             {
-                if (mConvertedFrames == null)
+                if (ConvertedFrames == null)
                 {
                     return null;
                 }
-                if (mConvertedFrames.Length == 0)
+                if (ConvertedFrames.Count == 0)
                 {
                     return null;
                 }
-                return mConvertedFrames[mCurrentIdx];
+                return ConvertedFrames[mCurrentIdx];
             }
         }
 
@@ -180,11 +181,15 @@ namespace Assets.Scripts.Frames_Pipeline
             get { return mCurrentRecording; }
         }
 
-        public BodyFrame[] ConvertedFrames
-        {
-            get { return mConvertedFrames; }
-        }
+     //   public BodyFrame[] ConvertedFrames
+   //     {
+    //        get { return mConvertedFrames; }
+    //    }
 
+        public List<BodyFrame> ConvertedFrames
+        {
+            get {return mConvertedBodyFrames; }
+        } 
 
         public RecordingPlaybackTask(BodyFramesRecordingBase vRecording, BodyFrameBuffer vBuffer)
         {
@@ -205,14 +210,14 @@ namespace Assets.Scripts.Frames_Pipeline
         public void Play()
         {
             ConvertFrames();
-            int vTotalCount = mConvertedFrames.Length;
+            int vTotalCount = ConvertedFrames.Count;
             if (vTotalCount == 0)
             {
                 return;
             }
             //calculate a delta time between frames, capture the first time stamp
-            BodyFrame vFirstFrame = mConvertedFrames[0];
-            BodyFrame vLastFrame = mConvertedFrames[vTotalCount - 1];
+            BodyFrame vFirstFrame = ConvertedFrames[0];
+            BodyFrame vLastFrame = ConvertedFrames[vTotalCount - 1];
             float vPrevTimeStamp = vFirstFrame.Timestamp;
             float vRecDeltatime = 0;
             float vStartTime = 0;
@@ -235,56 +240,51 @@ namespace Assets.Scripts.Frames_Pipeline
                 }
                 try
                 {
-
                     //check if we've reached the last position
-
                     if (mCurrentIdx == mFinalFramePos)
                     {
-
                         //Send out an event that the last frame has been reached. 
                         if (FinalFramePositionReachedEvent != null)
                         {
                             FinalFramePositionReachedEvent();
                         }
-                        //reset the start time
-                        vStartTime = 0;
+                       
                         //check if looping is enabled, set vCurrPos to first postion
                         if (LoopPlaybackEnabled)
                         {
                             mCurrentIdx = mFirstPos;
                             vPrevTimeStamp = IsRewinding ? vLastFrame.Timestamp : vFirstFrame.Timestamp;
-
                         }
                         else
                         {
                             continue;
                         }
-                        
+
                     }
                     BodyFrame vCurrBodyFrame = null;
                     BodyFrame vEnquedBodyFrame = null;
                     //if the current position is last -1
                     if (mCurrentIdx == mFinalFramePos)
                     {
-                        vEnquedBodyFrame = mConvertedFrames[mCurrentIdx];
+                        vEnquedBodyFrame = ConvertedFrames[mCurrentIdx];
                         mFrameBuffer.Enqueue(vEnquedBodyFrame);
                     }
 
-                    vCurrBodyFrame = mConvertedFrames[mCurrentIdx];
+                    vCurrBodyFrame = ConvertedFrames[mCurrentIdx];
                     int vPreviousIndex = IsRewinding ? mCurrentIdx + 1 : mCurrentIdx - 1;
-                    if (IsRewinding && vPreviousIndex >= mConvertedFrames.Length)
+                    if (IsRewinding && vPreviousIndex >= ConvertedFrames.Count)
                     {
-                        vPreviousIndex = mConvertedFrames.Length - 1;
+                        vPreviousIndex = ConvertedFrames.Count - 1;
                     }
                     if (!IsRewinding && vPreviousIndex < 0)
                     {
                         vPreviousIndex = 0;
                     }
-                    vPrevTimeStamp = mConvertedFrames[vPreviousIndex].Timestamp;//vCurrBodyFrame.Timestamp;
+                    vPrevTimeStamp = ConvertedFrames[vPreviousIndex].Timestamp;//vCurrBodyFrame.Timestamp;
                     vRecDeltatime = Math.Abs(vCurrBodyFrame.Timestamp - vPrevTimeStamp);
                     int vSleepTime = (int)((vRecDeltatime / Math.Abs(PlaybackSpeed)) * 1000);
                     Thread.Sleep(vSleepTime);
-                    vEnquedBodyFrame = mConvertedFrames[mCurrentIdx];
+                    vEnquedBodyFrame = ConvertedFrames[mCurrentIdx];
                     mFrameBuffer.Enqueue(vEnquedBodyFrame);
 
                     mCurrentIdx += IteratorAdder;
@@ -297,7 +297,6 @@ namespace Assets.Scripts.Frames_Pipeline
                     vMessage += "\n" + vException.StackTrace;
                     break;
                 }
-
             }
         }
 
@@ -313,29 +312,24 @@ namespace Assets.Scripts.Frames_Pipeline
             });
 
             ConversionCompleted = false;
-            //first convert all the frames
-            mConvertedFrames = new BodyFrame[mCurrentRecording.RecordingRawFramesCount];
-
-            for (int i = 0; i < mConvertedFrames.Length; i++)
+            //first convert all the frames 
+            mConvertedBodyFrames = new List<BodyFrame>();
+            for (int i = StartConversionIndex, vConvertIndex = 0; i < mCurrentRecording.RecordingRawFramesCount; i++, vConvertIndex++)
             {
                 try
                 {
-                    mConvertedFrames[i] = RawFrameConverter.ConvertRawFrame(mCurrentRecording.GetBodyRawFrameAt(i));
-
+                    mConvertedBodyFrames.Add(RawFrameConverter.ConvertRawFrame(mCurrentRecording.GetBodyRawFrameAt(i))); 
                 }
                 catch (Exception vE)
                 {
-                    if (i != 0)
-                    {
-                        mConvertedFrames[i] = mConvertedFrames[i - 1];
-                    }
+                    //It is very likely that items weren't parsed correctly. don't add them 
                 }
 
             }
-            BodyFrame vFirst = mConvertedFrames[0];
-            BodyFrame vLast = mConvertedFrames[mCurrentRecording.RecordingRawFramesCount - 1];
+            BodyFrame vFirst = mConvertedBodyFrames[0];
+            BodyFrame vLast = mConvertedBodyFrames[mConvertedBodyFrames.Count - 1];
             TotalRecordingTime = vLast.Timestamp - vFirst.Timestamp;
-            ConversionCompleted = true;  
+            ConversionCompleted = true;
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
                 var vProgressBar = DisablingProgressBar.Instance;
@@ -355,14 +349,14 @@ namespace Assets.Scripts.Frames_Pipeline
             {
                 vConvertedRecIdx = 0;
             }
-            else if (vConvertedRecIdx >= mConvertedFrames.Length)
+            else if (vConvertedRecIdx >= mConvertedBodyFrames.Count)
             {
-                vConvertedRecIdx = mConvertedFrames.Length - 1;
+                vConvertedRecIdx = mConvertedBodyFrames.Count - 1;
             }
 
             mFrameBuffer.Clear();
             mCurrentIdx = vConvertedRecIdx;
-            mFrameBuffer.Enqueue(mConvertedFrames[mCurrentIdx]);
+            mFrameBuffer.Enqueue(mConvertedBodyFrames[mCurrentIdx]);
         }
 
         /// <summary>
@@ -372,21 +366,21 @@ namespace Assets.Scripts.Frames_Pipeline
         /// <returns></returns>
         public BodyFrame GetBodyFrameAtIndex(int vIndex)
         {
-            if (mConvertedFrames.Length == 0)
+            if (mConvertedBodyFrames.Count == 0)
             {
                 return null;
             }
             if (vIndex <= 0)
             {
-                return mConvertedFrames[0];
+                return mConvertedBodyFrames[0];
             }
-            if (vIndex >= mConvertedFrames.Length)
+            if (vIndex >= mConvertedBodyFrames.Count)
             {
-                return mConvertedFrames[mConvertedFrames.Length - 1];
+                return mConvertedBodyFrames[mConvertedBodyFrames.Count - 1];
             }
             else
             {
-                return mConvertedFrames[vIndex];
+                return mConvertedBodyFrames[vIndex];
             }
         }
 

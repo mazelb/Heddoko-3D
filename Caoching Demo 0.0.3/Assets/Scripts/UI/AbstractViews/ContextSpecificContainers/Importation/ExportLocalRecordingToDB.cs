@@ -5,8 +5,7 @@
 * @date March 2016
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
-
-using System;
+ 
 using System.Collections.Generic;
 using Assets.Scripts.Communication.DatabaseConnectionPipe;
 using Assets.Scripts.UI.AbstractViews.SelectableGridList;

@@ -46,9 +46,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             mRecordingFetcher = new HeddokoDownloadFetcher(UserSessionManager.Instance);
             mRecordingFetcher.ErrorDownloadingExceptionHandler += ExceptionHandler;
         }
-
-
-
+        
         /// <summary>
         /// Update a list by ensuring it is handled by a unity thread
         /// </summary>
@@ -79,7 +77,7 @@ namespace Assets.Scripts.UI.RecordingLoading
 
         void OnApplicationQuit()
         {
-            throw new NotImplementedException("clear out threads before quitting");
+             
         }
 
 

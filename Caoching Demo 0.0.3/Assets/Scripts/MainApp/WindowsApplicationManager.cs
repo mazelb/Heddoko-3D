@@ -14,6 +14,7 @@ using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.UI.AbstractViews.Permissions;
 using Assets.Scripts.UI.RecordingLoading;
 using Assets.Scripts.UI.Settings;
+using Assets.Scripts.Utils;
 using HeddokoSDK;
 using HeddokoSDK.Models;
 using UnityEngine;
@@ -40,6 +41,12 @@ namespace Assets.Scripts.MainApp
         public RecordingPlayerView RecordingPlayer ;
         public ControlPanel ControlPanel;
         private UserProfileModel mCurrentProfileModel;
+
+        void Awake()
+        {
+            OutterThreadToUnityThreadIntermediary.Instance.Init();
+        }
+        
         /// <summary>
         /// Initializes the application with the user profile model passed in. 
         /// </summary>

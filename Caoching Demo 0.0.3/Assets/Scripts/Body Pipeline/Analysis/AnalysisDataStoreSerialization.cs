@@ -73,15 +73,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                     {
                         vSortedList.Add(vKvPair.Key);
                     }
-                    //foreach (var vFieldInfo in vKey)
-                    //{
-
-                    //    var vCustomAttribute = vFieldInfo.Key.GetCustomAttributes(typeof(AnalysisSerialization), true);
-                    //    foreach (var vAttri in vCustomAttribute)
-                    //    {
-                    //        vFileOut.Write(((AnalysisSerialization)vAttri).AttributeName + ",");
-                    //    }
-                    //}
+                  
                 } 
                 //sort it 
                 vSortedList.Sort((vX,vY)=> vAnalysisDataStore.AnaylsisDataStoreSettings.GetOrderOfAnalysisField(vX).CompareTo(

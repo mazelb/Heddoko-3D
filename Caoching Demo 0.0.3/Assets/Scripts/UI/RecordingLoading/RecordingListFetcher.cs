@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
@@ -15,14 +16,15 @@ namespace Assets.Scripts.UI.RecordingLoading
     /// </summary>
     public class RecordingListFetcher
     {
-
-         
         private List<RecordingListItem> mRecordingItems = new List<RecordingListItem>();
         private UserProfileModel mProfile;
-        public int ItemNumbersPerPage = 25;
+        public int ItemNumbersPerPage = 50;
         private int mSkipMultiplier = 0;
         public RecordingListUpdated RecordingListUpdatedHandler;
         private IUserProfileManager mManager;
+        private Thread mWorkerThread;
+        private bool mIsWorking;
+        private int mTimer = 10000;
         public RecordingListFetcher(IUserProfileManager vManager)
         {
             mManager = vManager;
@@ -32,8 +34,22 @@ namespace Assets.Scripts.UI.RecordingLoading
             get { return mRecordingItems; }
             set { mRecordingItems = value; }
         }
-        
 
+        void WorkingFunction()
+        {
+            while (mIsWorking)
+            {
+                try
+                {
+                    UpdateFetchedList();
+                }
+                catch (Exception vE)
+                {
+                     
+                }
+                Thread.Sleep(mTimer);
+            }
+        }
         /// <summary>
         /// Updates the fetched list
         /// </summary>
@@ -45,49 +61,60 @@ namespace Assets.Scripts.UI.RecordingLoading
                 Take = ItemNumbersPerPage,
                 Skip = mSkipMultiplier * ItemNumbersPerPage
             });
-            //Skip number of items in order to paginate properly.
-            mSkipMultiplier++;
-
-            if (vRecords.Collection.Count > 0)
+            if (vRecords != null)
             {
-                foreach (var vRecordedAsset in vRecords.Collection)
+                //Skip number of items in order to paginate properly.
+                mSkipMultiplier++;
+
+                if (vRecords.Collection.Count > 0)
                 {
-                    if (!string.IsNullOrEmpty(vRecordedAsset.Name) && vRecordedAsset.Type == AssetType.Record)
+                    foreach (var vRecordedAsset in vRecords.Collection)
                     {
-                        RecordingListItem vItem = new RecordingListItem();
-                        vItem.Name = vRecordedAsset.Name;
-                        //   vItem.Location.RelativePath = vRecordedAsset.Url;
-                        RecordingListItem.RecordingItemLocation vLoc = new RecordingListItem.RecordingItemLocation(vRecordedAsset.Url, RecordingListItem.LocationType.RemoteEndPoint);
-                        vItem.Location = vLoc;
-                        mRecordingItems.Add(vItem);
+                        if (!string.IsNullOrEmpty(vRecordedAsset.Name) && vRecordedAsset.Type == AssetType.Record)
+                        {
+                            RecordingListItem vItem = new RecordingListItem();
+                            vItem.Name = vRecordedAsset.Name;
+                            //   vItem.Location.RelativePath = vRecordedAsset.Url;
+                            RecordingListItem.RecordingItemLocation vLoc = new RecordingListItem.RecordingItemLocation(vRecordedAsset.Url, RecordingListItem.LocationType.RemoteEndPoint);
+                            vItem.Location = vLoc;
+                            mRecordingItems.Add(vItem);
+                        }
                     }
                 }
-            }
-            if (RecordingListUpdatedHandler != null)
-            {
-                RecordingListUpdatedHandler(mRecordingItems);
+                if (RecordingListUpdatedHandler != null)
+                {
+                    RecordingListUpdatedHandler(mRecordingItems);
+                }
             }
         }
 
-        public void UploadRecording(string vRelativePath, SynchronizableRecordingListController synchronizableRecordingListController)
+
+        /// <summary>
+        /// stops the work
+        /// </summary>
+        public void Stop()
         {
-            //verify the user passed in has a kit assigned to him
-            Kit vKit = mProfile.User.Kit;
-            if (vKit != null)
+            mIsWorking = false;
+            try
             {
-                Asset asset = mProfile.Client.Upload(new AssetRequest
-                {
-                    KitID = vKit.ID, //optional
-                    Type = AssetType.Record //required
-                },
-                    @vRelativePath);
+                mWorkerThread.Abort();
             }
-            else
-            {
-                //Throw or handle exception when a user doesn't have a kit assigned to him and try to upload a recording.
-                throw new NotImplementedException();
+            catch (Exception )
+            { 
 
             }
+           
+        }
+
+        /// <summary>
+        /// Start background worker
+        /// </summary>
+        public void Start()
+        {
+            mIsWorking = true;
+            mWorkerThread = new Thread(WorkingFunction);
+            mWorkerThread.Start();
+            
         }
     }
 }

@@ -7,8 +7,10 @@
 */
 
 using System;
+using System.Collections;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Communication.View;
+using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.AnaylsisRecording;
 using Assets.Scripts.UI.RecordingLoading;
 using UIWidgets;
 using UnityEngine;
@@ -16,31 +18,36 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.Settings
 {
-    
+
     /// <summary>
     /// Control Panel in a view
     /// </summary>
     public class ControlPanel : MonoBehaviour
     {
-         public ColorBlock SelectedColorBlock;
+        public ColorBlock SelectedColorBlock;
         public ColorBlock UnSelectedColorBlock;
         public Button LoadRecordingsButton;
-        public LiveConnectionButton LiveViewButton;
-        public Button BrainpackConnectionButton;
-        public SlideBlock BrainpackConnectionSlider;
-        public Button ResolutionSettingsButton;
-        public SlideBlock ResolutionSettingSlideBlock;
         public Button ExitApplicationButton;
         public Button RenameRecordingButton;
+        public Button BrainpackConnectionButton;
+        public Button ResolutionSettingsButton;
+        public LiveConnectionButton LiveViewButton;
+        public SlideBlock BrainpackConnectionSlider;
+        public SlideBlock ResolutionSettingSlideBlock;
+        public SegmentAnalysisRecordingController SegmentAnalysisRecordingController;
         public BrainpackConnectionController ConnectionController;
         public RecordingPlayerView RecordingPlayerView;
         public LiveSuitFeedView SuitFeedView;
         public RenameRecordingModule RenameRecordingModule;
-
+        public BodyControlPanel BodyControlPanel;
+        public CloudLocalStorageViewManager CloudLocalStorageViewManager;
         public void Awake()
         {
             ExitApplicationButton.onClick.AddListener(QuitApplication);
             RenameRecordingButton.onClick.AddListener(() => RenameRecordingModule.Toggle());
+            CloudLocalStorageViewManager.RecordingLoadingCompleteEvent +=
+                (vX) => SegmentAnalysisRecordingController.EnableControl();
+           
             RenameRecordingModule.Init(ConnectionController);
             LiveViewButton.Disable();
             LoadRecordingsButton.onClick.AddListener(() =>
@@ -48,7 +55,12 @@ namespace Assets.Scripts.UI.Settings
                 if (BrainpackConnectionSlider.IsOpen)
                 {
                     BrainpackConnectionSlider.Toggle();
+                    if (BodyControlPanel.PanelIsVisible())
+                    {
+                        BodyControlPanel.TogglePanel();
+                    }
                 }
+                CloudLocalStorageViewManager.Show();
                 if (!RecordingPlayerView.gameObject.activeInHierarchy)
                 {
                     SuitFeedView.Hide();
@@ -62,6 +74,7 @@ namespace Assets.Scripts.UI.Settings
                 {
                     ResolutionSettingSlideBlock.Toggle();
                 }
+                SegmentAnalysisRecordingController.DisableControl();
             });
             ResolutionSettingsButton.onClick.AddListener(() =>
             {
@@ -73,6 +86,7 @@ namespace Assets.Scripts.UI.Settings
                     }
                 }
                 ResolutionSettingSlideBlock.Toggle();
+                CloudLocalStorageViewManager.Hide();
             }
 
             );
@@ -98,6 +112,7 @@ namespace Assets.Scripts.UI.Settings
                 LiveViewButton.Button.colors = SelectedColorBlock;
                 LoadRecordingsButton.colors = UnSelectedColorBlock;
                 BrainpackConnectionButton.colors = UnSelectedColorBlock;
+                CloudLocalStorageViewManager.Hide();
 
             });
             BrainpackConnectionButton.onClick.AddListener(() =>
@@ -114,11 +129,19 @@ namespace Assets.Scripts.UI.Settings
                 {
                     ResolutionSettingSlideBlock.Toggle();
                 }
+                CloudLocalStorageViewManager.Hide();
             }
              );
             ConnectionController.ConnectedStateEvent += LiveViewButton.Enable;
             ConnectionController.DisconnectedStateEvent += LiveViewButton.Disable;
+            SegmentAnalysisRecordingController.DataCollectionEndedEvent +=
+                () => LoadRecordingsButton.interactable = true;
+            SegmentAnalysisRecordingController.DataCollectionStartedEvent +=
+                () => LoadRecordingsButton.interactable = false;
+
         }
+
+ 
 
 
         public void HideAll()

@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.ModalWindow;
+using Assets.Scripts.UI.RecordingLoading;
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.Utils;
 using UnityEngine;
@@ -27,10 +28,11 @@ namespace Assets.Scripts.Tests
     {
         public Rect mRect;
         private static SingleRecordingSelection sInstance;
-        private Action<BodyFramesRecordingBase> mRecordingLoadedCallback;
+     
         public StartLoading StartLoadingEvent;
         public FinishLoading FinishLoadingEvent;
         public static Action<BodyFrame[]> ReadProtoFileAction;
+        public RecordingLoader RecordingLoader;
         //Panel that will cover other ui elements, thereby dissallowing their controls
         public GameObject DisablerPanel;
 
@@ -62,7 +64,7 @@ namespace Assets.Scripts.Tests
             DisablerPanel.SetActive(true);
             if (vCallback != null)
             {
-                mRecordingLoadedCallback = vCallback;
+                 RecordingLoader.SetCallbackAction(vCallback);
             }
             var vPaths = new[] { "dat", "hsm" };
             //initialize the browser settings
@@ -82,12 +84,9 @@ namespace Assets.Scripts.Tests
         /// <param name="vCallback">on load completion, initiate callback.</param>
         public void LoadFile(string vPath ,Action<BodyFramesRecordingBase> vCallback)
         {
-            if (vCallback != null)
-            {
-                mRecordingLoadedCallback = vCallback;
-            }
-            SelectRecordingFile(vPath);
+            RecordingLoader.LoadFile(vPath,vCallback);
         }
+
         /// <summary>
         /// Callback, on file selection
         /// </summary>
@@ -109,43 +108,9 @@ namespace Assets.Scripts.Tests
             {
                 StartLoadingEvent();
             }
-            //Verify the file first, if it's a logindex.dat file, then throw an error
-            
-            ApplicationSettings.PreferedRecordingsFolder = vInfo.DirectoryName;
-            BodyRecordingsMgr.Instance.ScanRecordings(UniFileBrowser.use.filePath);
-            BodyRecordingsMgr.Instance.ReadRecordingFile(vRecordingSelected, BodyFramesRecordingCallback);
-        }
+         }
 
-        /// <summary>
-        /// once loading is completed, this callback is reached. Note: invokes the member callback.
-        /// </summary>
-        /// <param name="vRecording"></param>
-        private void BodyFramesRecordingCallback(BodyFramesRecordingBase vRecording)
-        {
-            if (mRecordingLoadedCallback != null)
-            {
-                if (!OutterThreadToUnityThreadIntermediary.InUnityThread())
-                {
-                    OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
-                    {
-                        if (FinishLoadingEvent != null)
-                        {
-                            FinishLoadingEvent();
-                        }
-                        mRecordingLoadedCallback.Invoke(vRecording);
-                    });
-                }
-                else
-                {
-                    if (FinishLoadingEvent != null)
-                    {
-                        FinishLoadingEvent();
-                    }
-                    mRecordingLoadedCallback.Invoke(vRecording);
-                }
-            }
-
-        }
+  
 
         /// <summary>
         /// Disables the disabler panel

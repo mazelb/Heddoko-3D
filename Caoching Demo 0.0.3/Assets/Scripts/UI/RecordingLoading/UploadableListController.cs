@@ -14,7 +14,6 @@ using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
 using Assets.Scripts.UI.RecordingLoading.View;
-using HeddokoSDK.Models;
 using UnityEngine;
  
 namespace Assets.Scripts.UI.RecordingLoading
@@ -23,22 +22,22 @@ namespace Assets.Scripts.UI.RecordingLoading
     {
         [SerializeField]
         private bool mScanSubDirectories;
-        private List<UploadableListItem> mUploadableList = new List<UploadableListItem>();
-        private List<RecordingListItem> vDownloadedItems = new List<RecordingListItem>();
+        private List<UploadableListItem> mUploadableList = new List<UploadableListItem>(); 
         public UploadableListSyncView UploadableListSyncView;
         private string mSelectedDirectory = "";
         private UserProfileModel mProfile;
-        private RecordingsUploader mUploader;
+        private RecordingUploader mUploader;
         public void StartDirectorySelection()
         {
             UniFileBrowser.use.OpenFolderWindow(false, SelectDirectory);
             UniFileBrowser.use.limitToInitialFolder = false;
             UniFileBrowser.use.showVolumes = true;
+ 
         }
 
         void Awake()
         {
-            mUploader = new RecordingsUploader(Profile);
+            mUploader = new RecordingUploader(Profile);
         }
         public void SelectDirectory(string vDir)
         {
@@ -67,7 +66,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         public void ScanDirectory(DirectoryInfo vInfo)
         {
             List<FileInfo> vInforinos = new List<FileInfo>();
-            FileDirectorySubScanner(vInfo, ref vInforinos);
+            GetFileInfoList(vInfo, ref vInforinos);
             FilterFileInfo(ref vInforinos);
             PopulateList(vInforinos);
         }
@@ -100,7 +99,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <param name="vRootDir">the root directory to begin search</param>
         /// <param name="vFileInfos">The referenced list of FileInfo to add to.</param>
         /// <returns></returns>
-        public List<FileInfo> FileDirectorySubScanner(DirectoryInfo vRootDir, ref List<FileInfo> vFileInfos)
+        public List<FileInfo> GetFileInfoList(DirectoryInfo vRootDir, ref List<FileInfo> vFileInfos)
         {
             var vDirectories = vRootDir.GetDirectories();
             if (vDirectories.Length == 0)
@@ -114,7 +113,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                 foreach (var vDirectoryInfo in vDirectories)
                 {
 
-                    return FileDirectorySubScanner(vDirectoryInfo, ref vFileInfos);
+                    return GetFileInfoList(vDirectoryInfo, ref vFileInfos);
                 }
             }
             return null;

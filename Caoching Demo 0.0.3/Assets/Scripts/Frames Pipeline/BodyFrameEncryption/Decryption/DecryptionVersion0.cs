@@ -59,9 +59,6 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameEncryption.Decryption
                 vStringOut = Guid.NewGuid() + "\r\n" + Guid.NewGuid() + "\r\n" + Guid.NewGuid() + "\r\n" + DateTime.Now.ToString("yyy-MM-ddTHH:mm:ff");
 
             }
-          
-            
-           
             try
             {
                 var vStartIndex = vLine == null ? 0 : vSize;
@@ -76,22 +73,20 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameEncryption.Decryption
                 {
                     byte vReadbyte = vByteArr[vIndex];
                     const byte vAdd = 0x80;
-                    vByteArr[vIndex] -= vAdd;
-                    // vStringOut += vTemp.ToString();\
-                    //vByteArr[i] = vTemp;
+                    vByteArr[vIndex] -= vAdd; 
                     if (StopDecryption)
                     {
                         return ""; 
-                    }
-                   // LoadingBoard.UpdateAnimation();
+                    } 
                 }
                 //strip away first 
                 vStringOut += System.Text.Encoding.Default.GetString(vByteArr);
            
             }
 
-            catch
+            catch (Exception vE)
             {
+                UnityEngine.Debug.Log("Error vE, index ");
                 //todo: place a error logger here
             }
 

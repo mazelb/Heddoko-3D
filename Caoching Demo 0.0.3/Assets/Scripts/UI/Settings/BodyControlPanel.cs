@@ -8,6 +8,7 @@
 
 using Assets.Scripts.Body_Pipeline.Analysis.Views;
 using Assets.Scripts.Communication.View.Table;
+using Assets.Scripts.UI.RecordingLoading;
 using UIWidgets;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,6 +34,7 @@ namespace Assets.Scripts.UI.Settings
         public AnaylsisTextContainer AnalysisTextContainer;
         public bool DisablePanelShowClicks = false;
         public AnalysisContainerToggle Toggler;
+        public CloudLocalStorageViewManager CloudLocalStorageViewManager;
         public Body Body
         {
             get { return mBody; }
@@ -46,6 +48,7 @@ namespace Assets.Scripts.UI.Settings
 
             TrunkButton.onClick.AddListener(() =>
             {
+                HideCloudLocalStorageViewManager();
                 TogglePanel();
                 AnalysisTextContainer.ChangeAnalysisView(AnaylsisTextContainer.CurrentAnalysisTextView.Trunk);
                 Toggler.OnSwitchToggle("Trunk");
@@ -54,6 +57,7 @@ namespace Assets.Scripts.UI.Settings
 
             ShoulderButton.onClick.AddListener(() =>
             {
+                HideCloudLocalStorageViewManager();
                 TogglePanel();
                 AnalysisTextContainer.ChangeAnalysisView(AnaylsisTextContainer.CurrentAnalysisTextView.Shoulders);
                 Toggler.OnSwitchToggle("Shoulders");
@@ -61,6 +65,7 @@ namespace Assets.Scripts.UI.Settings
 
             ElbowsButton.onClick.AddListener(() =>
             {
+                HideCloudLocalStorageViewManager();
                 TogglePanel();
                 AnalysisTextContainer.ChangeAnalysisView(AnaylsisTextContainer.CurrentAnalysisTextView.Elbows);
                 Toggler.OnSwitchToggle("Elbows");
@@ -68,6 +73,7 @@ namespace Assets.Scripts.UI.Settings
 
             HipsButton.onClick.AddListener(() =>
             {
+                HideCloudLocalStorageViewManager();
                 TogglePanel();
                 AnalysisTextContainer.ChangeAnalysisView(AnaylsisTextContainer.CurrentAnalysisTextView.Hips);
                 Toggler.OnSwitchToggle("Hips");
@@ -75,6 +81,7 @@ namespace Assets.Scripts.UI.Settings
 
             KneesButton.onClick.AddListener(() =>
             {
+                HideCloudLocalStorageViewManager();
                 TogglePanel();
                 AnalysisTextContainer.ChangeAnalysisView(AnaylsisTextContainer.CurrentAnalysisTextView.Knees);
                 Toggler.OnSwitchToggle("Knees");
@@ -86,7 +93,7 @@ namespace Assets.Scripts.UI.Settings
         /// <summary>
         /// Toggles the information panel
         /// </summary>
-        void TogglePanel()
+      public  void TogglePanel()
         {
             if (!BodyContentSlider.IsOpen && !DisablePanelShowClicks)
             {
@@ -94,11 +101,34 @@ namespace Assets.Scripts.UI.Settings
             }
         }
 
+        public void HideCloudLocalStorageViewManager()
+        {
+            CloudLocalStorageViewManager.Hide();
+        }
+
+        public bool PanelIsVisible()
+        {
+            return BodyContentSlider.IsOpen;
+        }
+
+        public void HidePanel()
+        {
+            if (BodyContentSlider.IsOpen)
+            {
+                BodyContentSlider.Toggle();
+            }
+        }
+
+        /// <summary>
+        /// Toggles the sensor panel
+        /// </summary>
         void ToggleSensorPanel()
         {
             BodyFrameSlider.Toggle();
             BodyFrameControl.IsPaused = BodyFrameSlider.IsOpen;
         }
+
+        
 
 
     }
