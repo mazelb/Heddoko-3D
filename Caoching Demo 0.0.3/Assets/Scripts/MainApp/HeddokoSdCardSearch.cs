@@ -89,8 +89,9 @@ namespace Assets.Scripts.MainApp
         /// <param name="vDriveInfo">the found drive</param>
         private void AssignDrive(DirectoryInfo vDriveInfo)
         {
+            UnityEngine.Debug.Log("assignerino ");
             mFoundDrive = vDriveInfo;
-            if (DriveFoundEvent != null)
+            if (DriveFoundEvent != null && mIsWorking)
             {
                 DriveFoundEvent(mFoundDrive);
             }
@@ -101,8 +102,9 @@ namespace Assets.Scripts.MainApp
         /// </summary>
         private void UnassignDrive()
         {
+            UnityEngine.Debug.Log("unassignerino ");
             mFoundDrive = null;
-            if (HeddokoDriveDisconnectedEvent != null)
+            if (HeddokoDriveDisconnectedEvent != null && mIsWorking)
             {
                 HeddokoDriveDisconnectedEvent();
             }

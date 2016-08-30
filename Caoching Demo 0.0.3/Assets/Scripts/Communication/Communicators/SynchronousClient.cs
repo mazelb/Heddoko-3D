@@ -304,6 +304,15 @@ namespace Assets.Scripts.Communication.Communicators
         public void Stop()
         {
             mIsworking = false;
+            try
+            {
+                mWorkerThread.Abort();
+            }
+            catch (Exception vE)
+            {
+                UnityEngine.Debug.Log("strat");
+                 
+            }
         }
 
 

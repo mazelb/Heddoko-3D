@@ -82,8 +82,6 @@ namespace Assets.Scripts.UI.RecordingLoading
                     vTemp.gameObject.GetComponent<NotifyWithButtonExtension>()
                         .RegisterCallbackAndRemovePreviousCallback(BeginUpload);
                     vTemp.Show(vMsg, 5f, sequenceType: NotifySequence.First);
-                    
-
                 }
             });
         }

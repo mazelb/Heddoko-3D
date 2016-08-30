@@ -10,6 +10,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using UnityEngine;
 
@@ -93,19 +94,35 @@ namespace Assets.Scripts.Utils
         /// <param name="vAction"></param>
         public static void QueueActionInUnity(Action vAction)
         {
-            Instance.Queue.Enqueue(vAction);
+            try
+            {
+                Instance.Queue.Enqueue(vAction);
+            }
+            catch (Exception vException)
+            {
+                Debug.Log(vException.StackTrace);
+            }
+          
         }
 
         public static void EnqueueOverwrittableActionInUnity(string vKey, Action vAction)
         {
-            if (Instance.mOverWrittableActionQueue.ContainsKey(vKey))
+            try
             {
-                Instance.mOverWrittableActionQueue[vKey] = vAction;
+                if (Instance.mOverWrittableActionQueue.ContainsKey(vKey))
+                {
+                    Instance.mOverWrittableActionQueue[vKey] = vAction;
+                }
+                else
+                {
+                    Instance.mOverWrittableActionQueue.Add(vKey, vAction);
+                }
             }
-            else
+            catch (Exception vException)
             {
-                Instance.mOverWrittableActionQueue.Add(vKey, vAction);
+                Debug.Log(vException.StackTrace);
             }
+           
         }
 
         void Update()

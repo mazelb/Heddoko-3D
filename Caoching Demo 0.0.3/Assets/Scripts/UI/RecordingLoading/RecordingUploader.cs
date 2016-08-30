@@ -42,7 +42,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                 UploadableListItem vUploadableItem = (UploadableListItem) vItem;
                 Asset vAsset = mProfile.Client.Upload(new AssetRequest()
                 {
-                    KitID = mProfile.User.Kit.ID,
+                    KitID = null,//mProfile.User.Kit.ID,
                     Type = AssetType.Record
                 }, vUploadableItem.RelativePath);
                 if (UploadCompleteEvent != null)

@@ -81,7 +81,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                         }
                     }
                 }
-                if (RecordingListUpdatedHandler != null)
+                if (RecordingListUpdatedHandler != null && mIsWorking)
                 {
                     RecordingListUpdatedHandler(mRecordingItems);
                 }

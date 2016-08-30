@@ -316,7 +316,17 @@ namespace Assets.Scripts.Communication
         public void Stop()
         {
             //while (mPriorityMessages.Count != 0) ;
+            UnityEngine.Debug.Log("Stopping sync client");
+
             mIsworking = false;
+            try
+            {
+                mWorkerThread.Abort();
+            }
+            catch (Exception)
+            {
+                UnityEngine.Debug.Log("aborting sync client");
+            }
         }
 
 

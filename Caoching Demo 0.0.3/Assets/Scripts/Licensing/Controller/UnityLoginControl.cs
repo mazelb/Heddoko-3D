@@ -21,7 +21,6 @@ using HeddokoSDK;
 using HeddokoSDK.Models;
 using UIWidgets;
 using UnityEngine;
-using UnityEngine.UI;
 
 // ReSharper disable DelegateSubtraction
 
@@ -188,8 +187,6 @@ namespace Assets.Scripts.Licensing.Controller
                 mClient.SetToken(vUser.Token);
                 if (vUser.IsOk)
                 {
-                    Debug.Log(vUser.Kit.ID);
-
                     UserProfileModel vProfileModel = new UserProfileModel()
                     {
                         User = vUser,
@@ -203,7 +200,7 @@ namespace Assets.Scripts.Licensing.Controller
                             () => LoginView.SetLoadingIconAsActive(false));
                     }
                 }
-            
+
 
             }
 
