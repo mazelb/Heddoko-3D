@@ -27,11 +27,7 @@ namespace Assets.Scripts.Frames_Pipeline
     public class RecordingPlaybackTask
     {
         public bool IsWorking;
-<<<<<<< HEAD
-        public static int StartConversionIndex=1;
-=======
         public static int StartConversionIndex = 6;
->>>>>>> feature_downloadUploadRecFiles
         public bool IsPaused { get; set; }
         public bool LoopPlaybackEnabled = true;
         private bool mIsRewinding;
@@ -316,34 +312,12 @@ namespace Assets.Scripts.Frames_Pipeline
             });
 
             ConversionCompleted = false;
-<<<<<<< HEAD
-            //first convert all the frames
-            mConvertedFrames = new BodyFrame[mCurrentRecording.RecordingRawFramesCount-StartConversionIndex];
-
-=======
             //first convert all the frames 
             mConvertedBodyFrames = new List<BodyFrame>();
->>>>>>> feature_downloadUploadRecFiles
             for (int i = StartConversionIndex, vConvertIndex = 0; i < mCurrentRecording.RecordingRawFramesCount; i++, vConvertIndex++)
             {
                 try
                 {
-<<<<<<< HEAD
-                    BodyFrame vFramereion =mConvertedFrames[vConvertIndex] = RawFrameConverter.ConvertRawFrame(mCurrentRecording.GetBodyRawFrameAt(i));
-                    string v = "afda";
-                }
-                catch (Exception vE)
-                {
-                    if (i != StartConversionIndex)
-                    {
-                        mConvertedFrames[i] = mConvertedFrames[i - 1];
-                    }
-                }
-
-            }
-            BodyFrame vFirst = mConvertedFrames[0];
-            BodyFrame vLast = mConvertedFrames[mConvertedFrames.Length - 1];
-=======
                     mConvertedBodyFrames.Add(RawFrameConverter.ConvertRawFrame(mCurrentRecording.GetBodyRawFrameAt(i))); 
                 }
                 catch (Exception vE)
@@ -354,7 +328,6 @@ namespace Assets.Scripts.Frames_Pipeline
             }
             BodyFrame vFirst = mConvertedBodyFrames[0];
             BodyFrame vLast = mConvertedBodyFrames[mConvertedBodyFrames.Count - 1];
->>>>>>> feature_downloadUploadRecFiles
             TotalRecordingTime = vLast.Timestamp - vFirst.Timestamp;
             ConversionCompleted = true;
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
