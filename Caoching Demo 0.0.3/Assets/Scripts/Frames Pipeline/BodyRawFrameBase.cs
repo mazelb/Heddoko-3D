@@ -12,7 +12,10 @@ namespace Assets.Scripts.Frames_Pipeline
     /// </summary>
     public abstract class BodyRawFrameBase
     {
-        
+        /// <summary>
+        /// The index of the raw frame
+        /// </summary>
+         public int Index { get; set; }
         //containing Recording GUID
         public string BodyRecordingGuid { get; set; }
 

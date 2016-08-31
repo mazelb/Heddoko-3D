@@ -63,6 +63,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             using (StreamWriter vFileOut = new StreamWriter(vPath))
             {
                 //write the header
+                vFileOut.Write("Frame Index,");
                 vFileOut.Write("Timestamp,");
                 List<FieldInfo>  vSortedList = new List<FieldInfo>();
                 foreach (var vAnalysisFieldDataStructures in vAnalysisDataStore.Storage.Values)
@@ -78,16 +79,17 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                    vAnalysisDataStore.AnaylsisDataStoreSettings.GetOrderOfAnalysisField(vY)));
                 foreach (var vFieldInfo in vSortedList)
                 {
-                    var vCustomAttribute = vFieldInfo.GetCustomAttributes(typeof(AnalysisSerialization), true);
-                    foreach (var vAttri in vCustomAttribute)
-                    {
-                        vFileOut.Write(((AnalysisSerialization)vAttri).AttributeName + ",");
-                    }
+                    var vItem =
+                        vAnalysisDataStore.AnaylsisDataStoreSettings.GetAnalysisSerializationItem(vFieldInfo.ToString());
+                    vFileOut.Write(vItem.AttributeName + ","); 
                 }
                 vFileOut.Write("\r\n");
                 //write the body
                 for (int i = 0; i<vAnalysisDataStore.SerializedList.Count; i++)
                 {
+                    //write frame index
+                    vFileOut.Write(vAnalysisDataStore.FrameIndices[i] + ",");
+                    //Write timestamp
                     vFileOut.Write(vAnalysisDataStore.TimeStamps[i] + ",");
                     var vSerializedList = vAnalysisDataStore.SerializedList[i];
                     foreach (var vItem in vSortedList)

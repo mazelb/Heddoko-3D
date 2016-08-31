@@ -9,10 +9,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics; 
-using Assets.Scripts.Body_Data.View;
-using Assets.Scripts.Body_Data.View.Anaylsis;
-using Assets.Scripts.Body_Pipeline.Analysis;
-using Assets.Scripts.Body_Pipeline.Analysis.Settings;
+using Assets.Scripts.Body_Data.View; 
+using Assets.Scripts.Body_Pipeline.Analysis; 
 using Assets.Scripts.UI.Loading;
 using Assets.Scripts.UI.RecordingLoading;
 using UnityEngine;
@@ -75,7 +73,7 @@ namespace Assets.Scripts.Tests
             for (int i = 0; i < ConvertedFrame.Length; i++)
             {
                 // yield return null;
-                mDataStore.AddNewTimestamp(ConvertedFrame[i]);
+                mDataStore.Update(ConvertedFrame[i]);
 
                 mBody.UpdateBody(ConvertedFrame[i]);
                  if (i == 0)

@@ -93,7 +93,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
         /// <param name="vBodyFrame"></param>
         private void CollectTimeStampData(BodyFrame vBodyFrame)
         {
-            mDataStore.AddNewTimestamp(vBodyFrame);
+            mDataStore.Update(vBodyFrame);
         }
 
 

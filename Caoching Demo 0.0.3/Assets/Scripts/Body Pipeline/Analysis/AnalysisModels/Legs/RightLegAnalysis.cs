@@ -143,7 +143,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
                 }
             }
 
-            RightKneeFlexion = vAngleKneeFlexionNew;
+            RightKneeFlexion = vAngleKneeFlexionNew * GetSign("System.Single RightKneeFlexion");
 
             //calculate the Knee Rotation angle (angles between axis projection in XZ plane)
             float vAngleKneeRotationNew = 180 - Mathf.Abs(180 - KneeTransform.rotation.eulerAngles.y);
@@ -208,16 +208,16 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
             float vAngularVelocityHipAbductionNew = Mathf.Abs(vAngleHipAbductionNew - Mathf.Abs(RightHipAbduction)) / vDeltaTime;
             AngularAccelerationHipAbduction = Mathf.Abs(vAngularVelocityHipAbductionNew - AngularVelocityHipAbduction) / vDeltaTime;
             AngularVelocityHipAbduction = vAngularVelocityHipAbductionNew;
-            RightHipAbduction = vAngleHipAbductionNew;
+            RightHipAbduction = vAngleHipAbductionNew* GetSign("System.Single SignedRightHipAbductionAngle");
             float vAbdSign = Mathf.Sign(Vector3.Dot(vAbdLHS, vAbductionCrossPrdct));
-            SignedRightHipAbductionAngle = vAbdSign * RightHipAbduction;
+            SignedRightHipAbductionAngle = vAbdSign * RightHipAbduction * GetSign("System.Single SignedRightHipAbductionAngle");
 
             //calculate the Hip Rotation angle (angles between axis projection in XZ plane) 
             float vAngleHipRotationNew = 180 - Mathf.Abs(180 - ThighTransform.rotation.eulerAngles.y);
             float vAngularVelocityRHipRotationNew = Mathf.Abs(vAngleHipRotationNew - Mathf.Abs(SignedRightHipRotation)) / vDeltaTime;
             AngularAccelerationHipRotation = Mathf.Abs(vAngularVelocityRHipRotationNew - AngularVelocityHipRotation) / vDeltaTime;
             AngularVelocityHipRotation = vAngularVelocityRHipRotationNew;
-            SignedRightHipRotation = vAngleHipRotationNew;
+            SignedRightHipRotation = vAngleHipRotationNew * GetSign("System.Single SignedRightHipRotation");
             //*/
 
             //Calculate Leg height 

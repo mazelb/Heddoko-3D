@@ -1,0 +1,87 @@
+{
+  "System.Single SignedAngleTorsoLateral": {
+    "AttributeName": "Trffffaunk LatBend R/L",
+    "Order": 16,
+    "IsSignNegative": false
+  },
+  "System.Single SignedAngleTorsoRotation": {
+    "AttributeName": "Trunk Rot R/L",
+    "Order": 1,
+    "IsSignNegative": false
+  },
+  "System.Single SignedTorsoFlexion": {
+    "AttributeName": "Trunk F/E",
+    "Order": 5,
+    "IsSignNegative": false
+  },
+  "System.Single RightElbowFlexionAngle": {
+    "AttributeName": "RElbow F/E",
+    "Order": 3,
+    "IsSignNegative": false
+  },
+  "System.Single RightShoulderFlexionSignedAngle": {
+    "AttributeName": "RShould F/E",
+    "Order": 4,
+    "IsSignNegative": false
+  },
+  "System.Single RightShoulderVerticalAbductionSignedAngle": {
+    "AttributeName": "RShould Add/Abd",
+    "Order": 5,
+    "IsSignNegative": false
+  },
+  "System.Single LeftElbowFlexionAngle": {
+    "AttributeName": "LElbow F/E",
+    "Order": 15,
+    "IsSignNegative": false
+  },
+  "System.Single LeftShoulderFlexionSignedAngle": {
+    "AttributeName": "LShould F/E",
+    "Order": 7,
+    "IsSignNegative": false
+  },
+  "System.Single LeftShoulderVerticalAbductionSignedAngle": {
+    "AttributeName": "LShould Add/Abd",
+    "Order": 8,
+    "IsSignNegative": false
+  },
+  "System.Single RightKneeFlexion": {
+    "AttributeName": "RKnee F/E",
+    "Order": 9,
+    "IsSignNegative": false
+  },
+  "System.Single SignedRightHipAbductionAngle": {
+    "AttributeName": "RHip F/E",
+    "Order": 10,
+    "IsSignNegative": false
+  },
+  "System.Single RightHipAbduction": {
+    "AttributeName": "RHip Add/Abd",
+    "Order": 11,
+    "IsSignNegative": false
+  },
+  "System.Single SignedRightHipRotation": {
+    "AttributeName": "RHip Int/Ext Rot",
+    "Order": 12,
+    "IsSignNegative": false
+  },
+  "System.Single LeftKneeFlexion": {
+    "AttributeName": "LKnee F/E",
+    "Order": 13,
+    "IsSignNegative": false
+  },
+  "System.Single LeftSignedHipFlexionAngle": {
+    "AttributeName": "The thing between the bob and the thinger",
+    "Order": 14,
+    "IsSignNegative": false
+  },
+  "System.Single LeftSignedHipAbductionAngle": {
+    "AttributeName": "thinger",
+    "Order": 2,
+    "IsSignNegative": false
+  },
+  "System.Single LeftHipRotationAngle": {
+    "AttributeName": "Bob",
+    "Order": 0,
+    "IsSignNegative": false
+  }
+}

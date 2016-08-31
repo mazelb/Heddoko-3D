@@ -146,9 +146,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <param name="vKey"></param>
         /// <param name="vValue"></param>
         /// <returns></returns>
-        internal static int GetSign(string vKey, int vValue)
+        internal static int GetSign(string vKey)
         {
-            return SignMap[vKey];
+            if (SignMap.ContainsKey(vKey))
+            {
+                return SignMap[vKey];
+            }
+            return 1;
         }
     }
 }

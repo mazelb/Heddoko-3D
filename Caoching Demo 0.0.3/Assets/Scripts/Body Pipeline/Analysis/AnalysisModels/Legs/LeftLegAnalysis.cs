@@ -142,8 +142,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
                 }
             }
 
-            LeftKneeFlexion = vAngleKneeFlexionNew;
-
+            LeftKneeFlexion = vAngleKneeFlexionNew * GetSign("System.Single LeftKneeFlexion");
             //calculate the Knee Rotation angle (angles between axis projection in XZ plane)
             float vAngleKneeRotationNew = 180 - Mathf.Abs(180 - KneeTransform.rotation.eulerAngles.y);
             float vAngularVelocityKneeRotationNew = Mathf.Abs(vAngleKneeRotationNew - Mathf.Abs(AngleKneeRotation)) / vDeltaTime;
@@ -178,7 +177,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             AngleHipFlexion = vAngleHipFlexionNew;
           
             vFlexSign = Mathf.Sign(Vector3.Dot(vFlexLHS, vFlexCrossPrdct));
-            LeftSignedHipFlexionAngle = vFlexSign * AngleHipFlexion;
+            LeftSignedHipFlexionAngle = vFlexSign * AngleHipFlexion * GetSign("System.Single LeftSignedHipFlexionAngle");
 
 
             //calculate the Hip Abduction angle (angles between axis projection in XY plane)
@@ -206,14 +205,14 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             AngularVelocityHipAbduction = vAngularVelocityHipAbductionNew;
             AngleHipAbduction = vAngleHipAbductionNew;
             float vAbdSign = Mathf.Sign(Vector3.Dot( vAbductionCrossPrdct, vAbdLHS));
-            LeftSignedHipAbductionAngle = vAbdSign * AngleHipAbduction;
+            LeftSignedHipAbductionAngle = vAbdSign * AngleHipAbduction * GetSign("System.Single LeftSignedHipAbductionAngle");
 
             //calculate the Hip Rotation angle (angles between axis projection in XZ plane) 
             float vAngleHipRotationNew = 180 - Mathf.Abs(180 - ThighTransform.rotation.eulerAngles.y);
             float vAngularVelocityRHipRotationNew = Mathf.Abs(vAngleHipRotationNew - Mathf.Abs(LeftHipRotationAngle)) / vDeltaTime;
             AngularAccelerationHipRotation = Mathf.Abs(vAngularVelocityRHipRotationNew - AngularVelocityHipRotation) / vDeltaTime;
             AngularVelocityHipRotation = vAngularVelocityRHipRotationNew;
-            LeftHipRotationAngle = vAngleHipRotationNew;
+            LeftHipRotationAngle = vAngleHipRotationNew * GetSign("System.Single LeftHipRotationAngle");
             //*/
 
             //Calculate Leg height 

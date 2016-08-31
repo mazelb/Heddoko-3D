@@ -307,7 +307,7 @@ namespace Assets.Scripts.Communication.DatabaseConnectionPipe.DatabaseConnection
                         while (vDataReader.Read())
                         {
                             vTemp = vDataReader.GetString(0);
-                            BodyRawFrame vRawFrame = new BodyRawFrame();
+                            BodyRawFrame vRawFrame = new BodyRawFrame(0);
                             vRawFrame.BodyRecordingGuid = vRecordingId;
                             vRawFrame.BodyGuid = vBodyGuid;
                             vRawFrame.SuitGuid = vSuitGuid;

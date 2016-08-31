@@ -30,6 +30,10 @@ public class BodyFrame
     [JsonProperty]
     private float mTimeStamp;
 
+    /// <summary>
+    /// Index of the item
+    /// </summary>
+    public int Index;
     [JsonIgnore]
     internal Dictionary<BodyStructureMap.SensorPositions, Vect4> FrameData
     {
@@ -88,9 +92,9 @@ public class BodyFrame
         }
         return vOutput;
     }
-    public BodyFrame()
+    public BodyFrame( int vIndex)
     {
-
+        Index = vIndex;
     }
 
     private static Dictionary<int, int> sErrorCount;
@@ -169,7 +173,7 @@ public class BodyFrame
         //at this index we check if we actually hold data for the lower spine. If we do, then we continue, otherwise, we clear and the stretch data is gathered. 
         int vCheckIndex = 19;
         bool vFinishLoop = false;
-        BodyFrame vBodyFrame = new BodyFrame();
+        BodyFrame vBodyFrame = new BodyFrame(rawData.Index);
         vBodyFrame.Timestamp = vTimestamp;
 
         //placeholder data to be used in the dictionary until it gets populated by the following loop
@@ -249,7 +253,7 @@ public class BodyFrame
         //at this index we check if we actually hold data for the lower spine. If we do, then we continue, otherwise, we clear and the stretch data is gathered. 
         int vCheckIndex = 19;
         bool vFinishLoop = false;
-        BodyFrame vBodyFrame = new BodyFrame();
+        BodyFrame vBodyFrame = new BodyFrame(-1);
 
         //placeholder data to be used in the dictionary until it gets populated by the following loop
         Vect4 vPlaceholderV3 = new Vect4();//Vector3.zero); 
@@ -312,7 +316,7 @@ public class BodyFrame
     /// <returns></returns>
     public static BodyFrame CreateBodyFrame(Vect4[] vBodyFrameData)
     {
-        BodyFrame vBodyFrame = new BodyFrame();
+        BodyFrame vBodyFrame = new BodyFrame(-1);
         vBodyFrame.FrameData.Add(BodyStructureMap.SensorPositions.SP_LowerSpine, new Vect4());//(Vector3.zero));
         for (int i = 0; i < vBodyFrameData.Length; i++)
         {

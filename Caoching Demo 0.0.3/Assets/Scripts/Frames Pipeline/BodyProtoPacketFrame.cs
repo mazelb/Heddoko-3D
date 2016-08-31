@@ -20,9 +20,10 @@ namespace Assets.Scripts.Frames_Pipeline
         //A protobuf defined packet
         public Packet Packet;
 
-        public BodyProtoPacketFrame(Packet vPacket)
+        public BodyProtoPacketFrame(Packet vPacket, int vIndex)
         {
             Packet = vPacket;
+            this.Index = vIndex;
         }
  
     }

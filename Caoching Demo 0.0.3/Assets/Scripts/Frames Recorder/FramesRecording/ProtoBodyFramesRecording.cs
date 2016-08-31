@@ -87,7 +87,7 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
                         vStream.Write(vReader.RawProtopackets[i].Payload, 1, vReader.RawProtopackets[i].PayloadSize - 1);
                         vStream.Seek(0, SeekOrigin.Begin);
                         Packet vPacket = Serializer.Deserialize<Packet>(vStream);
-                        ProtobuffPackets.Add(new BodyProtoPacketFrame(vPacket));
+                        ProtobuffPackets.Add(new BodyProtoPacketFrame(vPacket, i));
                         vStream.SetLength(0);
                     }
                 }

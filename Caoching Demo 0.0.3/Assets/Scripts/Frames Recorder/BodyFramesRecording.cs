@@ -139,7 +139,7 @@ public class BodyFramesRecording
             //Get the data line by line and add them as frames 
             for (uint i = (sNumberOfUUIDs); i < vRecordingLines.Length; i++)
             {
-                BodyRawFrame vTempRaw = new BodyRawFrame();
+                BodyRawFrame vTempRaw = new BodyRawFrame((int) (i -sNumberOfUUIDs));
                 // vTempRaw.IsDecoded = !FromDatFile;
                 vTempRaw.BodyRecordingGuid = BodyRecordingGuid;
                 vTempRaw.BodyGuid = BodyGuid;

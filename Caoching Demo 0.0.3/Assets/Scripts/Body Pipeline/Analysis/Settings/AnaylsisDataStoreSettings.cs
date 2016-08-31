@@ -36,26 +36,32 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
                     var vCustomAttrList = vField.GetCustomAttributes(typeof(AnalysisSerialization), true);
                     foreach (var vAttri in vCustomAttrList)
                     {
-
-                        var vAnalysisSerializedData = (AnalysisSerialization)vAttri;
-                        //int vOrder = ((AnalysisSerialization) vAttri).Order;
+                        var vAnalysisSerializedData = (AnalysisSerialization)vAttri; 
                         mSerializedAnalyisFieldOrderMap.Add(vField, vAnalysisSerializedData);
                         //store the fields into a map
-                        mFieldMapping.Add(vField.Name, vField);
+                        mFieldMapping.Add(vField.ToString(), vField);
                     }
                 }
             }
+            SetAttributesFromFile();
         }
 
+        public void SaveAttributeToFile( )
+        {
+            var vPath = ApplicationSettings.AttributeFileOrderingPath;
+            JsonUtilities.ConvertObjectToJson(vPath, mSerializedAnalyisFieldOrderMap);
+
+        }
         /// <summary>
         /// Tries to set the attributes from a file
         /// </summary>
         public void SetAttributesFromFile()
         {
             var vPath = ApplicationSettings.AttributeFileOrderingPath;
+
             if (!System.IO.File.Exists(vPath))
             {
-                JsonUtilities.ConvertObjectToJson(vPath, mFieldMapping);
+                SaveAttributeToFile();
             }
             else
             {
@@ -69,19 +75,28 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
                         string vName = vAnalysisSerialization.Key;
                         int vSign = vIsNeg ? -1 : 1;
                         SegmentAnalysis.SetSign(vName, vSign);
-                        if (mFieldMapping.ContainsKey(vAnalysisSerialization.Key))
+                        if (mFieldMapping.ContainsKey(vName))
                         {
-                            mSerializedAnalyisFieldOrderMap[mFieldMapping[vAnalysisSerialization.Key]] =
-                                vAnalysisSerialization.Value;
+                            var vAnalysisAttr = vAnalysisSerialization.Value;
+                            mSerializedAnalyisFieldOrderMap[mFieldMapping[vName]] = vAnalysisAttr; 
                         }
                     }
                 }
                 catch (Exception vE)
                 {
-                   // JsonUtilities.ConvertObjectToJson(vPath, mSerializedAnalyisFieldOrderMap);
+                   UnityEngine.Debug.Log(vE.Message); 
                 }
             }
 
+        }
+
+         public AnalysisSerialization GetAnalysisSerializationItem(string vKey)
+        {
+            if (!mFieldMapping.ContainsKey(vKey))
+            {
+                return null;
+            }
+             return mSerializedAnalyisFieldOrderMap[mFieldMapping[vKey]];
         }
         //if (!System.IO.File.Exists(vPath))
         //{

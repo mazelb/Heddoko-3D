@@ -5,7 +5,7 @@
 // * @date 08 2016
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
- 
+
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.AnaylsisRecording;
 using UnityEngine;
 
@@ -17,7 +17,7 @@ namespace Assets.Scripts.Tests
     public class TestingAnalysisOrderingChange : MonoBehaviour
     {
         public SegmentAnalysisRecordingController SegmentAnalysisRecordingController;
-    
+
         public void PrintOrder()
         {
             var vDataStore = SegmentAnalysisRecordingController.mDataStore;
