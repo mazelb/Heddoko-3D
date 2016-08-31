@@ -9,7 +9,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection; 
+using System.Reflection;
+using Assets.Scripts.UI.Settings;
+using Assets.Scripts.Utils;
 
 namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
 {
@@ -40,6 +42,75 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
                 }
             }
         }
+
+        /// <summary>
+        /// Tries to set the attributes from a file
+        /// </summary>
+        public  void SetAttributesFromFile()
+        {
+          var vPath=   ApplicationSettings.AttributeFileOrderingPath;
+            if (!System.IO.File.Exists(vPath))
+            {
+                List<FieldInfo> vPreserialized = new List<FieldInfo>();
+                foreach (var vKeyValuePair in mStoredAnalysisFields)
+                {
+                    foreach (var vField in vKeyValuePair.Value)
+                    {
+                        var vCustomAttrList = vField.GetCustomAttributes(typeof(AnalysisSerialization), true);
+                        foreach (var vAttri in vCustomAttrList)
+                        {
+                            var vItem = (AnalysisSerialization) vAttri;
+                            vPreserialized.Add(item:vItem);
+                        }
+                    }
+                }
+                JsonUtilities.ConvertObjectToJson(vPath,vPreserialized);
+                //Create a list for the first time based on the default settings 
+            }
+            else
+            {
+                 
+            }
+        }
+
+
+        /// <summary>
+        /// Sets the analysis's field info order
+        /// </summary>
+        /// <param name="vInfo">the analysis field to set</param>
+        /// <param name="vValue">its corresponding order value</param>
+        public void SetAnalysisFieldOrder(FieldInfo vInfo, int vValue)
+        { 
+            if (mSerializedAnalyisFieldOrderMap.ContainsKey(vInfo))
+            {
+                mSerializedAnalyisFieldOrderMap[vInfo] = vValue;
+            } 
+         
+        }
+
+        /// <summary>
+        /// Get a list of order fields
+        /// </summary>
+        /// <returns></returns>
+        public List<FieldInfo> GetOrderedFieldList()
+        {
+            List<KeyValuePair<FieldInfo, int>> vKeyValuePairs = mSerializedAnalyisFieldOrderMap.ToList();
+            vKeyValuePairs.Sort(
+                delegate(KeyValuePair<FieldInfo, int> vPair1,
+                    KeyValuePair<FieldInfo, int> vPair2)
+                {
+                    return vPair1.Value.CompareTo(vPair2.Value);
+                }
+                
+                );
+            List<FieldInfo> vReturn  = new List<FieldInfo>();
+            foreach (var vKeyValuePair in vKeyValuePairs)
+            {
+                vReturn.Add(vKeyValuePair.Key);
+            }
+            return vReturn;
+        }
+
 
         /// <summary>
         /// Returns the order of the analysis field. If not found, then -1 is returned. 

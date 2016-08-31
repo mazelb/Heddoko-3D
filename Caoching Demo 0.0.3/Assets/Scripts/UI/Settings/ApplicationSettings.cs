@@ -9,9 +9,9 @@
 
 
 using System;
-using System.IO; 
+using System.IO;
 using Assets.Scripts.Utils.DatabaseAccess;
-using UnityEngine; 
+using UnityEngine;
 
 namespace Assets.Scripts.UI.Settings
 {
@@ -24,6 +24,7 @@ namespace Assets.Scripts.UI.Settings
         private static string sPreferedConnName;
         private static int sResWidth;
         private static int sResHeight;
+        private static string sAnalysisAttributeSettingsFile;
         private static bool sAppLaunchedSafely;
         private static string sCacheFolderPath;
         //set it to -1 to  force a registry check
@@ -72,7 +73,7 @@ namespace Assets.Scripts.UI.Settings
                     if (string.IsNullOrEmpty(vVal))
                     {
                         //set the default to the current executable's directory + cache
-                        vVal = Application.dataPath+ Path.DirectorySeparatorChar+"RecCache";
+                        vVal = Application.dataPath + Path.DirectorySeparatorChar + "RecCache";
                         if (!Directory.Exists(vVal))
                         {
                             Directory.CreateDirectory(vVal);
@@ -164,6 +165,27 @@ namespace Assets.Scripts.UI.Settings
 
                 return vLocalDbPath;
             }
+        }
+
+        public static string AttributeFileOrderingPath
+        {
+            get
+            {
+                string vVal = PlayerPrefs.GetString("AnalysisSettings");
+                if (string.IsNullOrEmpty(vVal))
+                {
+                    //set the default to the current executable's directory + cache
+                    vVal = Application.dataPath + Path.DirectorySeparatorChar + "AnalysisSettings";
+                    if (!Directory.Exists(vVal))
+                    {
+                        Directory.CreateDirectory(vVal);
+                    }
+                    PlayerPrefs.SetString("AnalysisSettings", vVal);
+                }
+                sAnalysisAttributeSettingsFile = vVal;
+                return sAnalysisAttributeSettingsFile + ".txt";
+            }
+            
         }
     }
 }

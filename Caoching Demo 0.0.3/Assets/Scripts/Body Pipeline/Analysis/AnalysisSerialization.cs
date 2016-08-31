@@ -16,5 +16,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         public string AttributeName { get; set; }
 
         public int Order { get; set; }
+         
     }
 }

@@ -22,7 +22,7 @@ namespace Assets.Scripts.Utils
     public class OutterThreadToUnityThreadIntermediary : MonoBehaviour
     {
         private static OutterThreadToUnityThreadIntermediary sInstance;
-        private Queue<Action> Queue = new Queue<Action>();
+        private Queue<Action> mQueue = new Queue<Action>();
         private Thread mUnityThread;
 
         /// <summary>
@@ -96,13 +96,16 @@ namespace Assets.Scripts.Utils
         {
             try
             {
-                Instance.Queue.Enqueue(vAction);
+                Instance.mQueue.Enqueue(vAction);
             }
             catch (Exception vException)
             {
-                Debug.Log(vException.StackTrace);
+                Delegate[] vActions = vAction.GetInvocationList();
+                foreach (Delegate vDel in vActions)
+                {
+                    Debug.Log(vDel.Method.ReflectedType.FullName + "." + vDel.Method.Name);
+                }
             }
-          
         }
 
         public static void EnqueueOverwrittableActionInUnity(string vKey, Action vAction)
@@ -130,18 +133,18 @@ namespace Assets.Scripts.Utils
             if (mOverWrittableActionQueue.Count > 0)
             {
                 List<string> vKeys = new List<string>(mOverWrittableActionQueue.Keys);
-                for (int i = 0; i < vKeys.Count; i++)
+                for (int vI = 0; vI < vKeys.Count; vI++)
                 {
                     lock (mOverWrittableActionQueue)
                     {
-                        mOverWrittableActionQueue[vKeys[i]].Invoke();
-                        mOverWrittableActionQueue.Remove(vKeys[i]);
+                        mOverWrittableActionQueue[vKeys[vI]].Invoke();
+                        mOverWrittableActionQueue.Remove(vKeys[vI]);
                     }
                 }
             }
-            if (Queue.Count > 0)
+            if (mQueue.Count > 0)
             {
-                Action vAction = Queue.Dequeue();
+                Action vAction = mQueue.Dequeue();
                 if (vAction != null)
                 {
                     vAction.Invoke();
