@@ -38,8 +38,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         {
             if (mRightArmAnalysis != null && mLeftArmAnalysis != null)
             {
-                RightFlexionText.text = FeedbackAngleToString(mRightArmAnalysis.AngleElbowFlexion);
-                LeftFlexionText.text = FeedbackAngleToString(mLeftArmAnalysis.AngleElbowFlexion);
+                RightFlexionText.text = FeedbackAngleToString(mRightArmAnalysis.RightElbowFlexionAngle);
+                LeftFlexionText.text = FeedbackAngleToString(mLeftArmAnalysis.LeftElbowFlexionAngle);
             }
         }
 

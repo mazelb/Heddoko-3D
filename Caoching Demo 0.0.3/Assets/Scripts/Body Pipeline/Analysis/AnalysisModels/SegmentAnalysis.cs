@@ -7,6 +7,7 @@
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.Body_Pipeline.Analysis
@@ -18,6 +19,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
     [Serializable]
     public abstract class SegmentAnalysis
     {
+        internal static Dictionary<string, int> SignMap = new Dictionary<string, int>();
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float DeltaTime;
         internal BodyStructureMap.SegmentTypes SegmentType;
@@ -98,6 +100,55 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             float angle360 = (signed_angle + 180) % 360;
 
             return angle360;
+        }
+
+        /// <summary>
+        /// Set the sign 
+        /// </summary>
+        /// <param name="vKey"></param>
+        /// <param name="vValue"></param>
+        public static void SetSign(string vKey, int vValue)
+        {
+            int vSign = Math.Sign(vValue);
+            if (SignMap.ContainsKey(vKey))
+            {
+                SignMap[vKey] = vSign;
+            }
+            else
+            {
+                AddSign(vKey,vValue);
+            }
+        }
+
+        /// <summary>
+        /// Adds a sign
+        /// </summary>
+        /// <param name="vKey"></param>
+        /// <param name="vValue"></param>
+        public static void AddSign(string vKey, int vValue)
+        {
+            int vSign = Math.Sign(vValue);
+            if (!SignMap.ContainsKey(vKey))
+            {
+                SignMap.Add(vKey,vValue);
+                SignMap[vKey] = vSign;
+            }
+            else
+            {
+                SetSign(vKey,vValue);
+            }
+        }
+
+
+        /// <summary>
+        /// Gets the sign from the given key
+        /// </summary>
+        /// <param name="vKey"></param>
+        /// <param name="vValue"></param>
+        /// <returns></returns>
+        internal static int GetSign(string vKey, int vValue)
+        {
+            return SignMap[vKey];
         }
     }
 }

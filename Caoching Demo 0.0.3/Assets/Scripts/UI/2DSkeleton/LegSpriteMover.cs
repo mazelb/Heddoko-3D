@@ -75,7 +75,7 @@ namespace Assets.Scripts.UI._2DSkeleton
                       vCurrentBody.AnalysisSegments[BodyStructureMap.SegmentTypes.SegmentType_RightLeg] as
                           RightLegAnalysis;
                 vHipAngle = RightHipMulti * vRightLegAnalysis.AngleHipFlexion;
-                vKneeAngle = RightKneeMultiplier * vRightLegAnalysis.AngleKneeFlexion;
+                vKneeAngle = RightKneeMultiplier * vRightLegAnalysis.RightKneeFlexion;
                 vKneeAngle = Mathf.Abs(vKneeAngle);
                 vHipAngle = Mathf.Abs(vHipAngle);
                 vHipMotorRot.z = vHipAngle;
@@ -89,7 +89,7 @@ namespace Assets.Scripts.UI._2DSkeleton
                          LeftLegAnalysis;
                 vHipAngle = LeftLegHipMulti * vLeftLegAnalysis.AngleHipFlexion;
                 vHipAngle = Mathf.Abs(vHipAngle);
-                vKneeAngle = LeftLegKneeMultiplier * vLeftLegAnalysis.AngleKneeFlexion;
+                vKneeAngle = LeftLegKneeMultiplier * vLeftLegAnalysis.LeftKneeFlexion;
                 vKneeAngle = Mathf.Abs(vKneeAngle);
                 vHipMotorRot.z = vHipAngle;
                 vKneeJointRot.z = vKneeAngle;

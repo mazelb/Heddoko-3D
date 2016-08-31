@@ -22,8 +22,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
     {
         private Dictionary<SegmentAnalysis, List<FieldInfo>> mStoredAnalysisFields;
         private List<SegmentAnalysis> mAnalsisSegmentTemplate;
-        private Dictionary<FieldInfo, int> mSerializedAnalyisFieldOrderMap = new Dictionary<FieldInfo, int>();
-
+        private Dictionary<FieldInfo, AnalysisSerialization> mSerializedAnalyisFieldOrderMap = new Dictionary<FieldInfo, AnalysisSerialization>();
+        private Dictionary<string, FieldInfo> mFieldMapping = new Dictionary<string, FieldInfo>();
         public AnaylsisDataStoreSettings(List<SegmentAnalysis> vAnalsisSegments)
         {
             mStoredAnalysisFields = new Dictionary<SegmentAnalysis, List<FieldInfo>>();
@@ -33,11 +33,15 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
             {
                 foreach (var vField in vKeyValuePair.Value)
                 {
-                    var vCustomAttrList= vField.GetCustomAttributes(typeof(AnalysisSerialization), true);
+                    var vCustomAttrList = vField.GetCustomAttributes(typeof(AnalysisSerialization), true);
                     foreach (var vAttri in vCustomAttrList)
                     {
-                        int vOrder = ((AnalysisSerialization) vAttri).Order;
-                        mSerializedAnalyisFieldOrderMap.Add(vField, vOrder);
+
+                        var vAnalysisSerializedData = (AnalysisSerialization)vAttri;
+                        //int vOrder = ((AnalysisSerialization) vAttri).Order;
+                        mSerializedAnalyisFieldOrderMap.Add(vField, vAnalysisSerializedData);
+                        //store the fields into a map
+                        mFieldMapping.Add(vField.Name, vField);
                     }
                 }
             }
@@ -46,32 +50,62 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
         /// <summary>
         /// Tries to set the attributes from a file
         /// </summary>
-        public  void SetAttributesFromFile()
+        public void SetAttributesFromFile()
         {
-          var vPath=   ApplicationSettings.AttributeFileOrderingPath;
+            var vPath = ApplicationSettings.AttributeFileOrderingPath;
             if (!System.IO.File.Exists(vPath))
             {
-                List<FieldInfo> vPreserialized = new List<FieldInfo>();
-                foreach (var vKeyValuePair in mStoredAnalysisFields)
-                {
-                    foreach (var vField in vKeyValuePair.Value)
-                    {
-                        var vCustomAttrList = vField.GetCustomAttributes(typeof(AnalysisSerialization), true);
-                        foreach (var vAttri in vCustomAttrList)
-                        {
-                            var vItem = (AnalysisSerialization) vAttri;
-                            vPreserialized.Add(item:vItem);
-                        }
-                    }
-                }
-                JsonUtilities.ConvertObjectToJson(vPath,vPreserialized);
-                //Create a list for the first time based on the default settings 
+                JsonUtilities.ConvertObjectToJson(vPath, mFieldMapping);
             }
             else
             {
-                 
+                try
+                {
+                    var vVal = JsonUtilities.JsonFileToObject<Dictionary<string, AnalysisSerialization>>(vPath);
+                    foreach (var vAnalysisSerialization in vVal)
+                    {
+                        var vSegmentAnalysis = vAnalysisSerialization.Value;
+                        bool vIsNeg = vSegmentAnalysis.IsSignNegative;
+                        string vName = vAnalysisSerialization.Key;
+                        int vSign = vIsNeg ? -1 : 1;
+                        SegmentAnalysis.SetSign(vName, vSign);
+                        if (mFieldMapping.ContainsKey(vAnalysisSerialization.Key))
+                        {
+                            mSerializedAnalyisFieldOrderMap[mFieldMapping[vAnalysisSerialization.Key]] =
+                                vAnalysisSerialization.Value;
+                        }
+                    }
+                }
+                catch (Exception vE)
+                {
+                   // JsonUtilities.ConvertObjectToJson(vPath, mSerializedAnalyisFieldOrderMap);
+                }
             }
+
         }
+        //if (!System.IO.File.Exists(vPath))
+        //{
+        //    List<FieldInfo> vPreserialized = new List<FieldInfo>();
+        //    foreach (var vKeyValuePair in mStoredAnalysisFields)
+        //    {
+        //        foreach (var vField in vKeyValuePair.Value)
+        //        {
+        //            var vCustomAttrList = vField.GetCustomAttributes(typeof(AnalysisSerialization), true);
+        //            foreach (var vAttri in vCustomAttrList)
+        //            {
+        //                var vItem = (AnalysisSerialization) vAttri;
+        //                vPreserialized.Add(item:vItem);
+        //            }
+        //        }
+        //    }
+
+        //Create a list for the first time based on the default settings 
+
+        //else
+        //{
+
+        //}
+
 
 
         /// <summary>
@@ -79,13 +113,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
         /// </summary>
         /// <param name="vInfo">the analysis field to set</param>
         /// <param name="vValue">its corresponding order value</param>
-        public void SetAnalysisFieldOrder(FieldInfo vInfo, int vValue)
-        { 
+        public void SetAnalysisFieldOrder(FieldInfo vInfo, AnalysisSerialization vValue)
+        {
             if (mSerializedAnalyisFieldOrderMap.ContainsKey(vInfo))
             {
                 mSerializedAnalyisFieldOrderMap[vInfo] = vValue;
-            } 
-         
+            }
+
         }
 
         /// <summary>
@@ -94,16 +128,16 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
         /// <returns></returns>
         public List<FieldInfo> GetOrderedFieldList()
         {
-            List<KeyValuePair<FieldInfo, int>> vKeyValuePairs = mSerializedAnalyisFieldOrderMap.ToList();
+            List<KeyValuePair<FieldInfo, AnalysisSerialization>> vKeyValuePairs = mSerializedAnalyisFieldOrderMap.ToList();
             vKeyValuePairs.Sort(
-                delegate(KeyValuePair<FieldInfo, int> vPair1,
-                    KeyValuePair<FieldInfo, int> vPair2)
+                delegate (KeyValuePair<FieldInfo, AnalysisSerialization> vPair1,
+                    KeyValuePair<FieldInfo, AnalysisSerialization> vPair2)
                 {
                     return vPair1.Value.CompareTo(vPair2.Value);
                 }
-                
+
                 );
-            List<FieldInfo> vReturn  = new List<FieldInfo>();
+            List<FieldInfo> vReturn = new List<FieldInfo>();
             foreach (var vKeyValuePair in vKeyValuePairs)
             {
                 vReturn.Add(vKeyValuePair.Key);
@@ -122,7 +156,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
             int vResult = -1;
             if (mSerializedAnalyisFieldOrderMap.ContainsKey(vInfo))
             {
-                vResult = mSerializedAnalyisFieldOrderMap[vInfo];
+                vResult = mSerializedAnalyisFieldOrderMap[vInfo].Order;
             }
             return vResult;
         }
@@ -222,10 +256,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
             List<FieldInfo> vFieldTypes = new List<FieldInfo>();
             foreach (var vField in vFields)
             {
-                var vCustomAttribute = vField.GetCustomAttributes(typeof (AnalysisSerialization), true);
+                var vCustomAttribute = vField.GetCustomAttributes(typeof(AnalysisSerialization), true);
                 foreach (var vAttri in vCustomAttribute)
                 {
-                    if (((AnalysisSerialization) vAttri).IgnoreAttribute)
+                    if (((AnalysisSerialization)vAttri).IgnoreAttribute)
                     {
                         continue;
                     }
@@ -235,5 +269,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
             //store it
             vDictionary.Add(vKey, vFieldTypes);
         }
+
+
+
     }
 }
