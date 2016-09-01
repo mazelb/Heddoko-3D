@@ -37,7 +37,7 @@ namespace Assets.Scripts.UI.Metrics
                             {
                                 if (
                                     Mathf.Abs(
-                                        RenderedBody.AssociatedBodyView.AssociatedBody.LeftLegAnalysis.AngleKneeFlexion) >
+                                        RenderedBody.AssociatedBodyView.AssociatedBody.LeftLegAnalysis.LeftKneeFlexion) >
                                     80)
                                 {
                                     RenderingPlane.sprite = Straining;

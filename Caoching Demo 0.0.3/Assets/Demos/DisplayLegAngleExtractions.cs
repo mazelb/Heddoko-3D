@@ -35,8 +35,8 @@ namespace Assets.Demos
                             LeftLegAnalysis;
                     vText += "Left Hip Flexion / Extension: " + vLeftLegAnalysis.AngleHipFlexion + "\n";
                     vText += "Left Hip Abduction/Adduction: " + vLeftLegAnalysis.AngleHipAbduction + "\n";
-                    vText += "Left Hip Internal/External Rotation: " + vLeftLegAnalysis.AngleHipRotation + "\n";
-                    vText += "Knee Flexion/Extension: " + vLeftLegAnalysis.AngleKneeFlexion + "\n";
+                    vText += "Left Hip Internal/External Rotation: " + vLeftLegAnalysis.LeftHipRotationAngle + "\n";
+                    vText += "Knee Flexion/Extension: " + vLeftLegAnalysis.LeftKneeFlexion + "\n";
                     vText += "Tibial Internal/External Rotation: " + vLeftLegAnalysis.AngleKneeRotation + "\n";
                    
                 }
@@ -48,9 +48,9 @@ namespace Assets.Demos
 
 
                     vText += "Right Hip Flexion/Extension: " + vRightLegAnalysis.AngleHipFlexion + "\n";
-                    vText += "Right Hip Abduction/Adduction: " + vRightLegAnalysis.AngleHipAbduction + "\n";
-                    vText += "Right Hip Internal/External Rotation: " + vRightLegAnalysis.AngleHipRotation + "\n";
-                    vText += "Knee Flexion/Extension: " + vRightLegAnalysis.AngleKneeFlexion + "\n";
+                    vText += "Right Hip Abduction/Adduction: " + vRightLegAnalysis.RightHipAbduction + "\n";
+                    vText += "Right Hip Internal/External Rotation: " + vRightLegAnalysis.SignedRightHipRotation + "\n";
+                    vText += "Knee Flexion/Extension: " + vRightLegAnalysis.RightKneeFlexion + "\n";
                     vText += "Tibial Internal/External Rotation: " + vRightLegAnalysis.AngleKneeRotation + "\n";
                         
                 }

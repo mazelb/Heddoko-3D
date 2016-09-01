@@ -89,4 +89,3 @@ E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.P
 E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.csproj.GenerateResource.Cache
 E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.exe
 E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.pdb
-E:\Code\Heddoko3D\BrainpackService\BrainpackService\obj\Debug\BrainpackService.csprojResolveAssemblyReference.cache

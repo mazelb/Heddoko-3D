@@ -7,11 +7,9 @@
 */
 
 using System;
-using System.Collections.Generic;
-using System.IO;
+using System.Collections.Generic; 
 using System.Linq;
-using System.Reflection;
-using System.Text;
+using System.Reflection; 
 using Assets.Scripts.Body_Pipeline.Analysis.Settings;
 using UnityEngine;
 
@@ -24,6 +22,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
     {
         private Dictionary<SegmentAnalysis, Dictionary<FieldInfo, AnalysisFieldDataStructure>> mStorage = new Dictionary<SegmentAnalysis, Dictionary<FieldInfo, AnalysisFieldDataStructure>>();
         public List<Dictionary<FieldInfo, string>> SerializedList = new List<Dictionary<FieldInfo, string>>();
+        private List<int> mFrameIndices = new List<int>();
         private List<float> mTimeStamps = new List<float>();
         internal AnaylsisDataStoreSettings AnaylsisDataStoreSettings;
         public AnalysisDataStoreSerialization mSerialization;
@@ -37,7 +36,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// </summary>
         public AnalysisDataStore(List<SegmentAnalysis> vAnalysisSegments)
         {
-
             AnaylsisDataStoreSettings = new AnaylsisDataStoreSettings(vAnalysisSegments);
             mSerialization = new AnalysisDataStoreSerialization(this);
             foreach (var vKvPairing in AnaylsisDataStoreSettings.StoredAnalysisFields)
@@ -60,6 +58,12 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             set { mStorage = value; }
             get { return mStorage; }
         }
+
+        public List<int> FrameIndices
+        {
+            set { mFrameIndices = value; }
+            get { return mFrameIndices; }
+        } 
 
         public List<float> TimeStamps
         {
@@ -111,9 +115,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// Adds a new timestamp from the given body frame
         /// </summary>
         /// <param name="vFrame"></param>
-        public void AddNewTimestamp(BodyFrame vFrame)
+        public void Update(BodyFrame vFrame)
         {
             mTimeStamps.Add(vFrame.Timestamp);
+            mFrameIndices.Add(vFrame.Index);
         }
 
         /// <summary>
@@ -187,6 +192,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             }
             SerializedList.Clear();
             mTimeStamps.Clear();
+            mFrameIndices.Clear();
             mCounter = 0;
             mSubCount = 0;
 

@@ -53,6 +53,10 @@ namespace Assets.Scripts.Frames_Pipeline
             }
         }
 
+        public BodyRawFrame(int vIndex)
+        {
+            this.Index = vIndex;
+        }
 
     }
 }

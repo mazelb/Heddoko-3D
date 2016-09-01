@@ -38,8 +38,8 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
         {
             if (mRightLegAnalysis != null && mLeftLegAnalysis != null)
             {
-                RightKneeFlexionText.text = FeedbackAngleToString(mRightLegAnalysis.AngleKneeFlexion);
-                LeftKneeFlexionText.text = FeedbackAngleToString(mLeftLegAnalysis.AngleKneeFlexion);
+                RightKneeFlexionText.text = FeedbackAngleToString(mRightLegAnalysis.RightKneeFlexion);
+                LeftKneeFlexionText.text = FeedbackAngleToString(mLeftLegAnalysis.LeftKneeFlexion);
             }
             else
             {

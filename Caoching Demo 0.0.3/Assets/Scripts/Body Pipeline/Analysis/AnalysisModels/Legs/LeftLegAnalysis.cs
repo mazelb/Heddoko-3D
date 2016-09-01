@@ -19,7 +19,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
     {
         //Knee Angles
         [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LKnee F/E", Order = 16)]
-        public float AngleKneeFlexion;
+        public float LeftKneeFlexion;
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleKneeRotation;
 
@@ -30,13 +30,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
         [AnalysisSerialization(IgnoreAttribute = true)]
         public bool UseGlobalReference = false;
         [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip F/E", Order = 8)]
-        public float SignedAngleHipFlexion;
+        public float LeftSignedHipFlexionAngle;
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float AngleHipAbduction;
         [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip Add/Abd", Order = 10)]
-        public float SignedAngleHipAbduction;
+        public float LeftSignedHipAbductionAngle;
         [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip Int/Ext Rot", Order = 12)]
-        public float AngleHipRotation;
+        public float LeftHipRotationAngle;
         
         //Accelerations and velocities
         [AnalysisSerialization(IgnoreAttribute = true)]
@@ -119,7 +119,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
 
             //calculate the Knee Flexion angle (angles between axis projection in YZ plane)
             float vAngleKneeFlexionNew = Vector3.Angle(Vector3.ProjectOnPlane(vThighAxisUp, vThighAxisRight), Vector3.ProjectOnPlane(vKneeAxisUp, vThighAxisRight));
-            float vAngularVelocityKneeFlexionNew = Mathf.Abs(vAngleKneeFlexionNew - AngleKneeFlexion) / vDeltaTime;
+            float vAngularVelocityKneeFlexionNew = Mathf.Abs(vAngleKneeFlexionNew - LeftKneeFlexion) / vDeltaTime;
             AngularAccelerationKneeFlexion = Mathf.Abs(vAngularVelocityKneeFlexionNew - AngularVelocityKneeFlexion) / vDeltaTime;
             AngularVelocityKneeFlexion = vAngularVelocityKneeFlexionNew;
 
@@ -128,7 +128,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             {
                 if (Math.Abs(vAngleKneeFlexionNew) > 15)
                 {
-                    AngleSum += Math.Abs(vAngleKneeFlexionNew - AngleKneeFlexion);
+                    AngleSum += Math.Abs(vAngleKneeFlexionNew - LeftKneeFlexion);
                 }
                 else
                 {
@@ -142,8 +142,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
                 }
             }
 
-            AngleKneeFlexion = vAngleKneeFlexionNew;
-
+            LeftKneeFlexion = vAngleKneeFlexionNew * GetSign("System.Single LeftKneeFlexion");
             //calculate the Knee Rotation angle (angles between axis projection in XZ plane)
             float vAngleKneeRotationNew = 180 - Mathf.Abs(180 - KneeTransform.rotation.eulerAngles.y);
             float vAngularVelocityKneeRotationNew = Mathf.Abs(vAngleKneeRotationNew - Mathf.Abs(AngleKneeRotation)) / vDeltaTime;
@@ -178,7 +177,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             AngleHipFlexion = vAngleHipFlexionNew;
           
             vFlexSign = Mathf.Sign(Vector3.Dot(vFlexLHS, vFlexCrossPrdct));
-            SignedAngleHipFlexion = vFlexSign * AngleHipFlexion;
+            LeftSignedHipFlexionAngle = vFlexSign * AngleHipFlexion * GetSign("System.Single LeftSignedHipFlexionAngle");
 
 
             //calculate the Hip Abduction angle (angles between axis projection in XY plane)
@@ -206,14 +205,14 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             AngularVelocityHipAbduction = vAngularVelocityHipAbductionNew;
             AngleHipAbduction = vAngleHipAbductionNew;
             float vAbdSign = Mathf.Sign(Vector3.Dot( vAbductionCrossPrdct, vAbdLHS));
-            SignedAngleHipAbduction = vAbdSign * AngleHipAbduction;
+            LeftSignedHipAbductionAngle = vAbdSign * AngleHipAbduction * GetSign("System.Single LeftSignedHipAbductionAngle");
 
             //calculate the Hip Rotation angle (angles between axis projection in XZ plane) 
             float vAngleHipRotationNew = 180 - Mathf.Abs(180 - ThighTransform.rotation.eulerAngles.y);
-            float vAngularVelocityRHipRotationNew = Mathf.Abs(vAngleHipRotationNew - Mathf.Abs(AngleHipRotation)) / vDeltaTime;
+            float vAngularVelocityRHipRotationNew = Mathf.Abs(vAngleHipRotationNew - Mathf.Abs(LeftHipRotationAngle)) / vDeltaTime;
             AngularAccelerationHipRotation = Mathf.Abs(vAngularVelocityRHipRotationNew - AngularVelocityHipRotation) / vDeltaTime;
             AngularVelocityHipRotation = vAngularVelocityRHipRotationNew;
-            AngleHipRotation = vAngleHipRotationNew;
+            LeftHipRotationAngle = vAngleHipRotationNew * GetSign("System.Single LeftHipRotationAngle");
             //*/
 
             //Calculate Leg height 

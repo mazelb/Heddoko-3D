@@ -71,7 +71,7 @@ namespace Assets.Scripts.UI.Metrics
                    // vTruncatedVal = Math.Truncate(vLeftLegAnalysis.AngleLeftHipRotation * 100) / 100;
                    // vText += "Left Hip Internal/External Rotation: " + string.Format("{0:N2}", vTruncatedVal) + "\n" + "\n";
 
-                    vTruncatedVal = Math.Truncate(vLeftLegAnalysis.AngleKneeFlexion * 100) / 100;
+                    vTruncatedVal = Math.Truncate(vLeftLegAnalysis.LeftKneeFlexion * 100) / 100;
                     vText += "Left Knee Flexion/Extension: " + string.Format("{0:N2}", vTruncatedVal*-1.0) + "\n" + "\n";
 
                     vTruncatedVal = Math.Truncate(vLeftLegAnalysis.AngleKneeRotation * 100) / 100;
@@ -130,10 +130,10 @@ namespace Assets.Scripts.UI.Metrics
                 /*    vTruncatedVal = Math.Truncate(vRightLegAnalysis.AngleRightHipRotation * 100) / 100;
                     vText += "Right Hip Internal/External Rotation: " + string.Format("{0:N2}", vTruncatedVal) + "\n" + "\n";*/
 
-                    vTruncatedVal = Math.Truncate(vRightLegAnalysis.AngleKneeFlexion * 100) / 100;
+                    vTruncatedVal = Math.Truncate(vRightLegAnalysis.RightKneeFlexion * 100) / 100;
                     vText += "Right Knee Flexion/Extension: " + string.Format("{0:N2}", vTruncatedVal * -1.0) + "\n" + "\n";
 
-                   /* vTruncatedVal = Math.Truncate(vRightLegAnalysis.AngleKneeFlexion * 100) / 100;
+                   /* vTruncatedVal = Math.Truncate(vRightLegAnalysis.LeftKneeFlexion * 100) / 100;
                     vText += "Right Tibial Internal/External Rotation: " + string.Format("{0:N2}", vTruncatedVal) + "\n" + "\n";*/
 
                     vTruncatedVal = Math.Truncate(vRightLegAnalysis.AngularVelocityKneeFlexion * 100) / 100;
@@ -173,7 +173,7 @@ namespace Assets.Scripts.UI.Metrics
                     // vTruncatedVal = Math.Truncate(vLeftLegAnalysis.AngleLeftHipRotation * 100) / 100;
                     // vText += "Left Hip Internal/External Rotation: " + string.Format("{0:N2}", vTruncatedVal) + "\n" + "\n";
 
-                    vTruncatedVal = Math.Truncate(vLeftLegAnalysis.AngleKneeFlexion * 100) / 100;
+                    vTruncatedVal = Math.Truncate(vLeftLegAnalysis.LeftKneeFlexion * 100) / 100;
                     vText += "Left Knee Flexion/Extension: " + string.Format("{0:N2}", vTruncatedVal * -1.0) + "\n" + "\n";
 
                  /*   vTruncatedVal = Math.Truncate(vLeftLegAnalysis.AngleKneeRotation * 100) / 100;

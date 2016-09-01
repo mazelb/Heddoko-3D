@@ -76,9 +76,9 @@ namespace Assets.Demos
                     CurrentBody.AnalysisSegments[BodyStructureMap.SegmentTypes.SegmentType_RightLeg] as
                         RightLegAnalysis;
                 mVText += "Right Hip Flexion / Extension: " + vRightLegAnalysis.AngleHipFlexion + "\n";
-                mVText += "Right Hip Abduction/Adduction: " + vRightLegAnalysis.AngleHipAbduction+ "\n";
-                mVText += "Right Hip Internal/External Rotation: " + vRightLegAnalysis.AngleHipRotation+ "\n";
-                mVText += "Right Knee Flexion/Extension: " + vRightLegAnalysis.AngleKneeFlexion + "\n";
+                mVText += "Right Hip Abduction/Adduction: " + vRightLegAnalysis.RightHipAbduction+ "\n";
+                mVText += "Right Hip Internal/External Rotation: " + vRightLegAnalysis.SignedRightHipRotation+ "\n";
+                mVText += "Right Knee Flexion/Extension: " + vRightLegAnalysis.RightKneeFlexion + "\n";
                 mVText += "Right Tibial Internal/External Rotation: " + vRightLegAnalysis.AngleKneeRotation + "\n";
 
             }
@@ -97,8 +97,8 @@ namespace Assets.Demos
                         LeftLegAnalysis;
                 mVText += "Left Hip Flexion / Extension: " + vLeftLegAnalysis.AngleHipFlexion + "\n";
                 mVText += "Left Hip Abduction/Adduction: " + vLeftLegAnalysis.AngleHipAbduction + "\n";
-                mVText += "Left Hip Internal/External Rotation: " + vLeftLegAnalysis.AngleHipRotation + "\n";
-                mVText += "Left Knee Flexion/Extension: " + vLeftLegAnalysis.AngleKneeFlexion + "\n";
+                mVText += "Left Hip Internal/External Rotation: " + vLeftLegAnalysis.LeftHipRotationAngle + "\n";
+                mVText += "Left Knee Flexion/Extension: " + vLeftLegAnalysis.LeftKneeFlexion + "\n";
                 mVText += "Left Tibial Internal/External Rotation: " + vLeftLegAnalysis.AngleKneeRotation + "\n";
             }
         }
@@ -115,7 +115,7 @@ namespace Assets.Demos
                 mVText += "Right Shoulder Abduction/Adduction Vertical: " + vRightArmAnalysis.AngleShoulderVertAbduction + "\n";
                 mVText += "Right Shoulder Abduction/Adduction Horizontal: " + vRightArmAnalysis.AngleShoulderHorAbduction + "\n";
                 mVText += "Right Shoulder Internal/External Rotation: " + vRightArmAnalysis.AngleShoulderRotation + "\n";
-                mVText += "Right Elbow Flexion/Extension: " + vRightArmAnalysis.AngleElbowFlexion + "\n";
+                mVText += "Right Elbow Flexion/Extension: " + vRightArmAnalysis.RightElbowFlexionAngle + "\n";
                 mVText += "Right Forearm Supination/Pronation: " + vRightArmAnalysis.AngleElbowPronation + "\n";
 
             }
@@ -134,7 +134,7 @@ namespace Assets.Demos
                 mVText += "Left Shoulder Abduction/Adduction Vertical: " + vLeftArmAnalysis.AngleShoulderVertAbduction + "\n";
                 mVText += "Left Shoulder Abduction/Adduction Horizontal: " + vLeftArmAnalysis.AngleShoulderHorAbduction + "\n";
                 mVText += "Left Shoulder Internal/External Rotation: " + vLeftArmAnalysis.AngleShoulderRotation + "\n";
-                mVText += "Left Elbow Flexion/Extension: " + vLeftArmAnalysis.AngleElbowFlexion + "\n";
+                mVText += "Left Elbow Flexion/Extension: " + vLeftArmAnalysis.LeftElbowFlexionAngle + "\n";
                 mVText += "Left Forearm Supination/Pronation: " + vLeftArmAnalysis.AngleElbowPronation + "\n";
             }
         }

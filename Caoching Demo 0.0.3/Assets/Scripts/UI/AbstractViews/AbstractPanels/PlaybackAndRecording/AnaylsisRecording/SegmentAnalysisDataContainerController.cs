@@ -73,7 +73,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
                 {
 
                     yield return null;
-                    vDataStore.AnalysisSectionModel.DataStore.AddNewTimestamp(ConvertedFrames[i]);
+                    vDataStore.AnalysisSectionModel.DataStore.Update(ConvertedFrames[i]);
                     mPlaceholderBody.UpdateBody(ConvertedFrames[i]);
                     if (vStart)
                     {

@@ -144,7 +144,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
             //at this index we check if we actually hold data for the lower spine. If we do, then we continue, otherwise, we clear and the stretch data is gathered. 
             int vCheckIndex = 19;
             bool vFinishLoop = false;
-            BodyFrame vBodyFrame = new BodyFrame();
+            BodyFrame vBodyFrame = new BodyFrame(rawData.Index);
             vBodyFrame.Timestamp = vTimestamp;
 
             //placeholder data to be used in the dictionary until it gets populated by the following loop
@@ -222,7 +222,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
         /// <returns></returns>
         public static BodyFrame CreateBodyFrame(BodyFrame.Vect4[] vBodyFrameData)
         {
-            BodyFrame vBodyFrame = new BodyFrame();
+            BodyFrame vBodyFrame = new BodyFrame(-1);
             vBodyFrame.FrameData.Add(BodyStructureMap.SensorPositions.SP_LowerSpine, new BodyFrame.Vect4());// Vector3.zero);
             for (int i = 0; i < vBodyFrameData.Length; i++)
             {
@@ -297,7 +297,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
             //at this index we check if we actually hold data for the lower spine. If we do, then we continue, otherwise, we clear and the stretch data is gathered. 
             int vCheckIndex = 19;
             bool vFinishLoop = false;
-            BodyFrame vBodyFrame = new BodyFrame();
+            BodyFrame vBodyFrame = new BodyFrame(-1);
 
             //placeholder data to be used in the dictionary until it gets populated by the following loop
             BodyFrame.Vect4 vPlaceholderV3 = new BodyFrame.Vect4();// Vector3.zero;

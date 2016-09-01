@@ -29,7 +29,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
         public Button ExportDataButton;
         public Text ExportDataButtonText;
         public Body BodyModel;
-        private AnalysisDataStore mDataStore;
+        internal AnalysisDataStore mDataStore;
         public RecordingPlayerView RecordingPlayerView;
         public event  DataCollectionStarted DataCollectionStartedEvent;
         public event DataCollectionEnded DataCollectionEndedEvent;
@@ -93,7 +93,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
         /// <param name="vBodyFrame"></param>
         private void CollectTimeStampData(BodyFrame vBodyFrame)
         {
-            mDataStore.AddNewTimestamp(vBodyFrame);
+            mDataStore.Update(vBodyFrame);
         }
 
 
