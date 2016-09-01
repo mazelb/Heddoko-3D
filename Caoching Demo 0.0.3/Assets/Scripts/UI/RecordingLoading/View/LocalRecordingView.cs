@@ -85,8 +85,16 @@ namespace Assets.Scripts.UI.RecordingLoading.View
             UniFileBrowser.use.allowWindowResize = false;
             UniFileBrowser.use.allowMultiSelect = false;
             UniFileBrowser.use.OpenFileWindow(SelectRecordingFile);
+            UniFileBrowser.use.ErrorHandler -= ErrorHandler;
+            UniFileBrowser.use.ErrorHandler += ErrorHandler;
             UniFileBrowser.use.allowWindowClose = false;
             UniFileBrowser.use.ShowCancelButton = false;
+        }
+
+        private void ErrorHandler(string vError)
+        {
+            UniFileBrowser.use.enabled = false;
+            ModalWindow.ModalPanel.SingleChoice("ERROR", vError, () => { UniFileBrowser.use.enabled = true; });
         }
         /// <summary>
         /// callback on a recording file that was selected
