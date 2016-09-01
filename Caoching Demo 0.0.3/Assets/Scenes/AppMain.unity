@@ -26299,13 +26299,13 @@ MonoBehaviour:
     BodyType: 0
     LeftArmAnalysis:
       DeltaTime: 0
-      AngleElbowFlexion: 0
-      SignedShoulderFlexion: 0
+      LeftElbowFlexionAngle: 0
+      LeftShoulderFlexionSignedAngle: 0
       SignedAngleElbowFlexion: 0
       AngleElbowPronation: 0
       AngleShoulderFlexion: 0
       AngleShoulderVertAbduction: 0
-      SignedShoulderVerticalAbduction: 0
+      LeftShoulderVerticalAbductionSignedAngle: 0
       AngleShoulderHorAbduction: 0
       AngleShoulderRotation: 0
       AngularVelocityElbowFlexion: 0
@@ -26323,13 +26323,13 @@ MonoBehaviour:
       AngularAccelerationShoulderRotation: 0
     RightArmAnalysis:
       DeltaTime: 0
-      AngleElbowFlexion: 0
+      RightElbowFlexionAngle: 0
       SignedAngleElbowFlexion: 0
       AngleElbowPronation: 0
       AngleShoulderFlexion: 0
-      SignedShoulderFlexion: 0
+      RightShoulderFlexionSignedAngle: 0
       AngleShoulderVertAbduction: 0
-      SignedShoulderVerticalAbduction: 0
+      RightShoulderVerticalAbductionSignedAngle: 0
       AngleShoulderHorAbduction: 0
       AngleShoulderRotation: 0
       AngleShoulderReference: 0
@@ -26353,14 +26353,14 @@ MonoBehaviour:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      AngleKneeFlexion: 0
+      LeftKneeFlexion: 0
       AngleKneeRotation: 0
       AngleHipFlexion: 0
       UseGlobalReference: 0
-      SignedAngleHipFlexion: 0
+      LeftSignedHipFlexionAngle: 0
       AngleHipAbduction: 0
-      SignedAngleHipAbduction: 0
-      AngleHipRotation: 0
+      LeftSignedHipAbductionAngle: 0
+      LeftHipRotationAngle: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -26378,14 +26378,14 @@ MonoBehaviour:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      AngleKneeFlexion: 0
+      RightKneeFlexion: 0
       AngleKneeRotation: 0
       UseGlobalReference: 0
       AngleHipFlexion: 0
-      SignedAngleHipAbduction: 0
+      SignedRightHipAbductionAngle: 0
       SignedAngleHipFlexion: 0
-      AngleHipAbduction: 0
-      AngleHipRotation: 0
+      RightHipAbduction: 0
+      SignedRightHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -29746,7 +29746,7 @@ RectTransform:
   m_RootOrder: 3
   m_AnchorMin: {x: 0.7093023, y: 0.7933884}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -857.47675, y: -157.14874}
+  m_AnchoredPosition: {x: -634.0466, y: -120.57852}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1277785188
@@ -30427,13 +30427,13 @@ MonoBehaviour:
     BodyType: 0
     LeftArmAnalysis:
       DeltaTime: 0
-      AngleElbowFlexion: 0
-      SignedShoulderFlexion: 0
+      LeftElbowFlexionAngle: 0
+      LeftShoulderFlexionSignedAngle: 0
       SignedAngleElbowFlexion: 0
       AngleElbowPronation: 0
       AngleShoulderFlexion: 0
       AngleShoulderVertAbduction: 0
-      SignedShoulderVerticalAbduction: 0
+      LeftShoulderVerticalAbductionSignedAngle: 0
       AngleShoulderHorAbduction: 0
       AngleShoulderRotation: 0
       AngularVelocityElbowFlexion: 0
@@ -30451,13 +30451,13 @@ MonoBehaviour:
       AngularAccelerationShoulderRotation: 0
     RightArmAnalysis:
       DeltaTime: 0
-      AngleElbowFlexion: 0
+      RightElbowFlexionAngle: 0
       SignedAngleElbowFlexion: 0
       AngleElbowPronation: 0
       AngleShoulderFlexion: 0
-      SignedShoulderFlexion: 0
+      RightShoulderFlexionSignedAngle: 0
       AngleShoulderVertAbduction: 0
-      SignedShoulderVerticalAbduction: 0
+      RightShoulderVerticalAbductionSignedAngle: 0
       AngleShoulderHorAbduction: 0
       AngleShoulderRotation: 0
       AngleShoulderReference: 0
@@ -30481,14 +30481,14 @@ MonoBehaviour:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      AngleKneeFlexion: 0
+      LeftKneeFlexion: 0
       AngleKneeRotation: 0
       AngleHipFlexion: 0
       UseGlobalReference: 0
-      SignedAngleHipFlexion: 0
+      LeftSignedHipFlexionAngle: 0
       AngleHipAbduction: 0
-      SignedAngleHipAbduction: 0
-      AngleHipRotation: 0
+      LeftSignedHipAbductionAngle: 0
+      LeftHipRotationAngle: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -30506,14 +30506,14 @@ MonoBehaviour:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      AngleKneeFlexion: 0
+      RightKneeFlexion: 0
       AngleKneeRotation: 0
       UseGlobalReference: 0
       AngleHipFlexion: 0
-      SignedAngleHipAbduction: 0
+      SignedRightHipAbductionAngle: 0
       SignedAngleHipFlexion: 0
-      AngleHipAbduction: 0
-      AngleHipRotation: 0
+      RightHipAbduction: 0
+      SignedRightHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -32308,7 +32308,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000030517578}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 20.6}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1360788882
@@ -34676,7 +34676,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.0000076293945}
+  m_AnchoredPosition: {x: 0, y: -0.000015258789}
   m_SizeDelta: {x: 0, y: 20.6}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1441013632
@@ -37991,13 +37991,13 @@ MonoBehaviour:
     BodyType: 0
     LeftArmAnalysis:
       DeltaTime: 0
-      AngleElbowFlexion: 0
-      SignedShoulderFlexion: 0
+      LeftElbowFlexionAngle: 0
+      LeftShoulderFlexionSignedAngle: 0
       SignedAngleElbowFlexion: 0
       AngleElbowPronation: 0
       AngleShoulderFlexion: 0
       AngleShoulderVertAbduction: 0
-      SignedShoulderVerticalAbduction: 0
+      LeftShoulderVerticalAbductionSignedAngle: 0
       AngleShoulderHorAbduction: 0
       AngleShoulderRotation: 0
       AngularVelocityElbowFlexion: 0
@@ -38015,13 +38015,13 @@ MonoBehaviour:
       AngularAccelerationShoulderRotation: 0
     RightArmAnalysis:
       DeltaTime: 0
-      AngleElbowFlexion: 0
+      RightElbowFlexionAngle: 0
       SignedAngleElbowFlexion: 0
       AngleElbowPronation: 0
       AngleShoulderFlexion: 0
-      SignedShoulderFlexion: 0
+      RightShoulderFlexionSignedAngle: 0
       AngleShoulderVertAbduction: 0
-      SignedShoulderVerticalAbduction: 0
+      RightShoulderVerticalAbductionSignedAngle: 0
       AngleShoulderHorAbduction: 0
       AngleShoulderRotation: 0
       AngleShoulderReference: 0
@@ -38045,14 +38045,14 @@ MonoBehaviour:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      AngleKneeFlexion: 0
+      LeftKneeFlexion: 0
       AngleKneeRotation: 0
       AngleHipFlexion: 0
       UseGlobalReference: 0
-      SignedAngleHipFlexion: 0
+      LeftSignedHipFlexionAngle: 0
       AngleHipAbduction: 0
-      SignedAngleHipAbduction: 0
-      AngleHipRotation: 0
+      LeftSignedHipAbductionAngle: 0
+      LeftHipRotationAngle: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -38070,14 +38070,14 @@ MonoBehaviour:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      AngleKneeFlexion: 0
+      RightKneeFlexion: 0
       AngleKneeRotation: 0
       UseGlobalReference: 0
       AngleHipFlexion: 0
-      SignedAngleHipAbduction: 0
+      SignedRightHipAbductionAngle: 0
       SignedAngleHipFlexion: 0
-      AngleHipAbduction: 0
-      AngleHipRotation: 0
+      RightHipAbduction: 0
+      SignedRightHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -41587,7 +41587,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0.7093023, y: 0.7933884}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -857.47675, y: -10}
+  m_AnchoredPosition: {x: -634.0466, y: -10}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1682346561
@@ -47733,13 +47733,13 @@ MonoBehaviour:
     BodyType: 0
     LeftArmAnalysis:
       DeltaTime: 0
-      AngleElbowFlexion: 0
-      SignedShoulderFlexion: 0
+      LeftElbowFlexionAngle: 0
+      LeftShoulderFlexionSignedAngle: 0
       SignedAngleElbowFlexion: 0
       AngleElbowPronation: 0
       AngleShoulderFlexion: 0
       AngleShoulderVertAbduction: 0
-      SignedShoulderVerticalAbduction: 0
+      LeftShoulderVerticalAbductionSignedAngle: 0
       AngleShoulderHorAbduction: 0
       AngleShoulderRotation: 0
       AngularVelocityElbowFlexion: 0
@@ -47757,13 +47757,13 @@ MonoBehaviour:
       AngularAccelerationShoulderRotation: 0
     RightArmAnalysis:
       DeltaTime: 0
-      AngleElbowFlexion: 0
+      RightElbowFlexionAngle: 0
       SignedAngleElbowFlexion: 0
       AngleElbowPronation: 0
       AngleShoulderFlexion: 0
-      SignedShoulderFlexion: 0
+      RightShoulderFlexionSignedAngle: 0
       AngleShoulderVertAbduction: 0
-      SignedShoulderVerticalAbduction: 0
+      RightShoulderVerticalAbductionSignedAngle: 0
       AngleShoulderHorAbduction: 0
       AngleShoulderRotation: 0
       AngleShoulderReference: 0
@@ -47787,14 +47787,14 @@ MonoBehaviour:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      AngleKneeFlexion: 0
+      LeftKneeFlexion: 0
       AngleKneeRotation: 0
       AngleHipFlexion: 0
       UseGlobalReference: 0
-      SignedAngleHipFlexion: 0
+      LeftSignedHipFlexionAngle: 0
       AngleHipAbduction: 0
-      SignedAngleHipAbduction: 0
-      AngleHipRotation: 0
+      LeftSignedHipAbductionAngle: 0
+      LeftHipRotationAngle: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -47812,14 +47812,14 @@ MonoBehaviour:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      AngleKneeFlexion: 0
+      RightKneeFlexion: 0
       AngleKneeRotation: 0
       UseGlobalReference: 0
       AngleHipFlexion: 0
-      SignedAngleHipAbduction: 0
+      SignedRightHipAbductionAngle: 0
       SignedAngleHipFlexion: 0
-      AngleHipAbduction: 0
-      AngleHipRotation: 0
+      RightHipAbduction: 0
+      SignedRightHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -47862,13 +47862,13 @@ MonoBehaviour:
     BodyType: 0
     LeftArmAnalysis:
       DeltaTime: 0
-      AngleElbowFlexion: 0
-      SignedShoulderFlexion: 0
+      LeftElbowFlexionAngle: 0
+      LeftShoulderFlexionSignedAngle: 0
       SignedAngleElbowFlexion: 0
       AngleElbowPronation: 0
       AngleShoulderFlexion: 0
       AngleShoulderVertAbduction: 0
-      SignedShoulderVerticalAbduction: 0
+      LeftShoulderVerticalAbductionSignedAngle: 0
       AngleShoulderHorAbduction: 0
       AngleShoulderRotation: 0
       AngularVelocityElbowFlexion: 0
@@ -47886,13 +47886,13 @@ MonoBehaviour:
       AngularAccelerationShoulderRotation: 0
     RightArmAnalysis:
       DeltaTime: 0
-      AngleElbowFlexion: 0
+      RightElbowFlexionAngle: 0
       SignedAngleElbowFlexion: 0
       AngleElbowPronation: 0
       AngleShoulderFlexion: 0
-      SignedShoulderFlexion: 0
+      RightShoulderFlexionSignedAngle: 0
       AngleShoulderVertAbduction: 0
-      SignedShoulderVerticalAbduction: 0
+      RightShoulderVerticalAbductionSignedAngle: 0
       AngleShoulderHorAbduction: 0
       AngleShoulderRotation: 0
       AngleShoulderReference: 0
@@ -47916,14 +47916,14 @@ MonoBehaviour:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      AngleKneeFlexion: 0
+      LeftKneeFlexion: 0
       AngleKneeRotation: 0
       AngleHipFlexion: 0
       UseGlobalReference: 0
-      SignedAngleHipFlexion: 0
+      LeftSignedHipFlexionAngle: 0
       AngleHipAbduction: 0
-      SignedAngleHipAbduction: 0
-      AngleHipRotation: 0
+      LeftSignedHipAbductionAngle: 0
+      LeftHipRotationAngle: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -47941,14 +47941,14 @@ MonoBehaviour:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      AngleKneeFlexion: 0
+      RightKneeFlexion: 0
       AngleKneeRotation: 0
       UseGlobalReference: 0
       AngleHipFlexion: 0
-      SignedAngleHipAbduction: 0
+      SignedRightHipAbductionAngle: 0
       SignedAngleHipFlexion: 0
-      AngleHipAbduction: 0
-      AngleHipRotation: 0
+      RightHipAbduction: 0
+      SignedRightHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -51906,13 +51906,13 @@ MonoBehaviour:
     BodyType: 0
     LeftArmAnalysis:
       DeltaTime: 0
-      AngleElbowFlexion: 0
-      SignedShoulderFlexion: 0
+      LeftElbowFlexionAngle: 0
+      LeftShoulderFlexionSignedAngle: 0
       SignedAngleElbowFlexion: 0
       AngleElbowPronation: 0
       AngleShoulderFlexion: 0
       AngleShoulderVertAbduction: 0
-      SignedShoulderVerticalAbduction: 0
+      LeftShoulderVerticalAbductionSignedAngle: 0
       AngleShoulderHorAbduction: 0
       AngleShoulderRotation: 0
       AngularVelocityElbowFlexion: 0
@@ -51930,13 +51930,13 @@ MonoBehaviour:
       AngularAccelerationShoulderRotation: 0
     RightArmAnalysis:
       DeltaTime: 0
-      AngleElbowFlexion: 0
+      RightElbowFlexionAngle: 0
       SignedAngleElbowFlexion: 0
       AngleElbowPronation: 0
       AngleShoulderFlexion: 0
-      SignedShoulderFlexion: 0
+      RightShoulderFlexionSignedAngle: 0
       AngleShoulderVertAbduction: 0
-      SignedShoulderVerticalAbduction: 0
+      RightShoulderVerticalAbductionSignedAngle: 0
       AngleShoulderHorAbduction: 0
       AngleShoulderRotation: 0
       AngleShoulderReference: 0
@@ -51960,14 +51960,14 @@ MonoBehaviour:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      AngleKneeFlexion: 0
+      LeftKneeFlexion: 0
       AngleKneeRotation: 0
       AngleHipFlexion: 0
       UseGlobalReference: 0
-      SignedAngleHipFlexion: 0
+      LeftSignedHipFlexionAngle: 0
       AngleHipAbduction: 0
-      SignedAngleHipAbduction: 0
-      AngleHipRotation: 0
+      LeftSignedHipAbductionAngle: 0
+      LeftHipRotationAngle: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
@@ -51985,14 +51985,14 @@ MonoBehaviour:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      AngleKneeFlexion: 0
+      RightKneeFlexion: 0
       AngleKneeRotation: 0
       UseGlobalReference: 0
       AngleHipFlexion: 0
-      SignedAngleHipAbduction: 0
+      SignedRightHipAbductionAngle: 0
       SignedAngleHipFlexion: 0
-      AngleHipAbduction: 0
-      AngleHipRotation: 0
+      RightHipAbduction: 0
+      SignedRightHipRotation: 0
       AngularVelocityKneeFlexion: 0
       AngularAccelerationKneeFlexion: 0
       AngularVelocityKneeRotation: 0
