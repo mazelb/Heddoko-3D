@@ -6,7 +6,9 @@
 * @date March 2016
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
+#if !CDRIN_BODY_SEGMENTS
 
+#if SEGMENTS_DEBUG_SIM || SEGMENTS_DEBUG
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +22,7 @@ using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Torso; 
 //using System.Diagnostics;
 using System.IO;
-
+#endif
 
 
 /// <summary>
@@ -2436,4 +2438,4 @@ public partial class BodySegment
 #endif
 
 }
-
+#endif // !CDRIN_BODY_SEGMENT

@@ -6,19 +6,22 @@
 * @date October 2015
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
+#if !CDRIN_BODY_SEGMENTS
 
-using UnityEngine;
-using System.Collections.Generic;
-using System.Linq;
-using Assets.Scripts.Body_Data.view; 
+#if !SEGMENTS_DEBUG && !SEGMENTS_DEBUG_SIM
 using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Data.CalibrationData;
+using Assets.Scripts.Body_Data.view;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Body_Pipeline.Analysis;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Torso;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+#endif
 
 /// <summary>
 /// BodySegment class: represents one abstracted reprensentation of a body segment.
@@ -1071,3 +1074,5 @@ public partial class BodySegment
 
 #endif
 }
+
+#endif // !CDRIN_BODY_SEGMENT
