@@ -98,29 +98,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
             }
              return mSerializedAnalyisFieldOrderMap[mFieldMapping[vKey]];
         }
-        //if (!System.IO.File.Exists(vPath))
-        //{
-        //    List<FieldInfo> vPreserialized = new List<FieldInfo>();
-        //    foreach (var vKeyValuePair in mStoredAnalysisFields)
-        //    {
-        //        foreach (var vField in vKeyValuePair.Value)
-        //        {
-        //            var vCustomAttrList = vField.GetCustomAttributes(typeof(AnalysisSerialization), true);
-        //            foreach (var vAttri in vCustomAttrList)
-        //            {
-        //                var vItem = (AnalysisSerialization) vAttri;
-        //                vPreserialized.Add(item:vItem);
-        //            }
-        //        }
-        //    }
-
-        //Create a list for the first time based on the default settings 
-
-        //else
-        //{
-
-        //}
-
+        
 
 
         /// <summary>

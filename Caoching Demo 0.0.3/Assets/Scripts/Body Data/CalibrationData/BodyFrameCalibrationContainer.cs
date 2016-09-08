@@ -20,7 +20,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
         private float mTime;
         private bool mFirstUpdateLoop = true;
         private bool mHasEnteredFinalPose;
-        private CalibrationType mCurrentPos = CalibrationType.Invalid;
+        private CalibrationType mCurrentPos = CalibrationType.NULL;
         public event CompletedCollectionEvent CollectionCompletedNotification;
         /// <summary>
         /// Cette structure de donnees nous permet de retirer des points de mouvement  contigues de nature equivalent
@@ -90,7 +90,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
                 }
                 else
                 {
-                    mCurrentPos = CalibrationType.Invalid;
+                    mCurrentPos = CalibrationType.NULL;
                 }
             }
         }
@@ -164,7 +164,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
         {
             bool vHasPassedTime = false;
             CalibrationType vPrevCalibrationType = vType - 1;
-            if (vType != CalibrationType.Invalid && vPrevCalibrationType != CalibrationType.Invalid)
+            if (vType != CalibrationType.NULL && vPrevCalibrationType != CalibrationType.NULL)
             {
                 vHasPassedTime = CurrentTime >= GlobalCalibrationSettings.CalibrationTimestamps[vPrevCalibrationType] && CurrentTime <= GlobalCalibrationSettings.CalibrationTimestamps[vType];
             }

@@ -429,7 +429,11 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlaybackSpeedModifierSubControl.UpdateCurrentPlaybackSpeed(1f);
         }
 
-
+        void BodyFrameUpdateHandler(BodyFrame vFrame)
+        {
+            RecordingProgressSliderSubControl.UpdateCurrentTime(vFrame.Index);
+            RecordingIndexValue.SetIndexValue(vFrame.Index);
+        }
 
 
 
@@ -448,11 +452,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                         UpdateRecording(mBody.MBodyFrameThread.PlaybackTask);
                     }
 
-                    if (CurrentState != PlaybackState.Pause && CurrentState != PlaybackState.Null)
-                    {
-                        RecordingProgressSliderSubControl.UpdateCurrentTime(mPlaybackTask.GetCurrentPlaybackIndex);
-                        RecordingIndexValue.SetIndexValue(mPlaybackTask.GetCurrentPlaybackIndex);
-                    }
+                    
 
                 }
 
@@ -510,13 +510,16 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             if (mBody != null)
             {
                 mBody.StopThread();
+                mBody.View.BodyFrameUpdatedEvent -= BodyFrameUpdateHandler;
             }
             mBody = vBody;
+            mBody.View.BodyFrameUpdatedEvent += BodyFrameUpdateHandler;
             mIsNewRecording = true;
             if (BodyUpdatedEvent != null)
             {
                 BodyUpdatedEvent(vBody);
             }
+            
         }
 
         /// <summary>
@@ -618,8 +621,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlaybackSpeedModifierSubControl.PlaybackSpeedSlider.value = 1;
             PlayPauseSubControls.ReleaseResources();
             RecordingForwardSubControl.ReleaseResources();
-            RecordingRewindSubControl.ReleaseResources();
-           // CurrentRecordingInfo.text = "";
+            RecordingRewindSubControl.ReleaseResources(); 
         }
 
         /// <summary>

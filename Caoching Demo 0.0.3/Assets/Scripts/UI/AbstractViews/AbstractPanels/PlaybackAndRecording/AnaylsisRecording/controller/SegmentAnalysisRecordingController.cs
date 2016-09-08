@@ -6,11 +6,13 @@
 * Copyright Heddoko(TM) 2016,  all rights reserved
 */
 
- 
+
 using System.Linq;
+using System.Collections.Generic;
+using Assets.Scripts.Body_Data.CalibrationData.TposeSelection;
 using Assets.Scripts.Body_Pipeline.Analysis;
 using Assets.Scripts.UI.AbstractViews.Permissions;
-using Assets.Scripts.UI.RecordingLoading; 
+using Assets.Scripts.UI.RecordingLoading;
 using HeddokoSDK.Models;
 using UIWidgets;
 using UnityEngine;
@@ -31,13 +33,16 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
         public Body BodyModel;
         internal AnalysisDataStore mDataStore;
         public RecordingPlayerView RecordingPlayerView;
-        public event  DataCollectionStarted DataCollectionStartedEvent;
+        public event DataCollectionStarted DataCollectionStartedEvent;
         public event DataCollectionEnded DataCollectionEndedEvent;
         public GameObject DisablingPanel;
+        public Dictionary<int, CalibrationSetIndexStructure> CalibIndxList = new Dictionary<int, CalibrationSetIndexStructure>();
+        public SliderMaskContainerController SliderMaskContainerController;
         public void Awake()
         {
             ExportDataButton.onClick.AddListener(OnStart);
             ExportDataButtonText.text = "COLLECT ANALYTICS";
+
 
         }
 
@@ -60,9 +65,12 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             {
                 DataCollectionStartedEvent();
             }
+           
             BodyModel = RecordingPlayerView.CurrBody;
+            
             //register listeners
             RecordingPlayerView.PbControlPanel.FinalFramePositionEvent += OnEnd;
+            BodyModel.View.BodyFrameResetInitializedEvent += SliderMaskContainerController.TPoseRequestedHandler;
             //if the recording has been changed, finish data collection
             RecordingPlayerView.PbControlPanel.NewRecordingSelectedEvent += OnEnd;
             BodyModel.View.BodyFrameUpdatedEvent += CollectTimeStampData;
@@ -77,13 +85,13 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             {
                 mDataStore = new AnalysisDataStore(vSegmentList);
             }
-            
 
+            mDataStore.SetNumberOfIndices(RecordingPlayerView.PbControlPanel.PlaybackTask.RawFramesCount);
             foreach (var vSegmentAnalysis in vSegmentList)
             {
                 vSegmentAnalysis.AddAnalysisCompletionListener(mDataStore.UpdateSegmentFieldInfo);
             }
-
+            CalibIndxList.Clear();
             Notify.Template("fade").Show("Analysis collection has started", 5f, sequenceType: NotifySequence.First);
         }
 
@@ -106,6 +114,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             BodyModel.View.BodyFrameUpdatedEvent -= CollectTimeStampData;
             RecordingPlayerView.PbControlPanel.FinalFramePositionEvent -= OnEnd;
             RecordingPlayerView.PbControlPanel.NewRecordingSelectedEvent -= OnEnd;
+            BodyModel.View.BodyFrameResetInitializedEvent -= SliderMaskContainerController.TPoseRequestedHandler;
             ExportDataButton.onClick.RemoveAllListeners();
             ExportDataButton.onClick.AddListener(OnStart);
             ExportDataButtonText.text = "COLLECT ANALYTICS";
@@ -114,7 +123,9 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             {
                 vSegmentAnalysis.RemoveAnalysisCompletionListener(mDataStore.UpdateSegmentFieldInfo);
             }
+            mDataStore.PoseSelectionList = SliderMaskContainerController.PoseSelectionList;
             LaunchSaveFileWindow();
+            SliderMaskContainerController.Clear();
         }
 
         /// <summary>
@@ -125,7 +136,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
 
             DisablingPanel.SetActive(true);
             //initialize the browser settings
-            UniFileBrowser.use.SetFileExtensions(new [] { "csv"});
+            UniFileBrowser.use.SetFileExtensions(new[] { "csv" });
             UniFileBrowser.use.useDeleteButton = false;
             UniFileBrowser.use.allowMultiSelect = false;
             UniFileBrowser.use.showVolumes = true;
@@ -159,14 +170,14 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
         /// <param name="vArg0"></param>
         private void SaveFile(string vArg0)
         {
-            AnalysisDataStoreSerialization.WriteFile(mDataStore,vArg0+".csv"); 
+            AnalysisDataStoreSerialization.WriteFile(mDataStore, vArg0 + ".csv");
 
             mDataStore.Clear();
             if (DataCollectionEndedEvent != null)
             {
                 DataCollectionEndedEvent();
             }
-            Notify.Template("fade").Show("File has been saved to "+ vArg0 + ".csv", 5f, sequenceType: NotifySequence.First);
+            Notify.Template("fade").Show("File has been saved to " + vArg0 + ".csv", 5f, sequenceType: NotifySequence.First);
             DisablingPanel.SetActive(false);
         }
     }

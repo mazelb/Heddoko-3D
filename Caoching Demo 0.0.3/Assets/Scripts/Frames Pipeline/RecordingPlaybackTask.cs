@@ -12,6 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
+using Assets.Scripts.UI;
 using Assets.Scripts.UI.Loading;
 using Assets.Scripts.Utils;
 using HeddokoLib.body_pipeline;
@@ -40,8 +41,8 @@ namespace Assets.Scripts.Frames_Pipeline
         private int mFinalFramePos { get; set; }
 
         private float mTotalRecordingTime;
-        private List<BodyFrame> mConvertedBodyFrames; 
-    //    private BodyFrame[] mConvertedFrames;
+        private List<BodyFrame> mConvertedBodyFrames;
+        //    private BodyFrame[] mConvertedFrames;
 
         private float mPlaybackSpeed = 1f;
 
@@ -181,15 +182,23 @@ namespace Assets.Scripts.Frames_Pipeline
             get { return mCurrentRecording; }
         }
 
-     //   public BodyFrame[] ConvertedFrames
-   //     {
-    //        get { return mConvertedFrames; }
-    //    }
+        //   public BodyFrame[] ConvertedFrames
+        //     {
+        //        get { return mConvertedFrames; }
+        //    }
 
         public List<BodyFrame> ConvertedFrames
         {
-            get {return mConvertedBodyFrames; }
-        } 
+            get { return mConvertedBodyFrames; }
+        }
+
+        public int RawFramesCount
+        {
+            get
+            {
+                return mCurrentRecording.RecordingRawFramesCount;
+            }
+        }
 
         public RecordingPlaybackTask(BodyFramesRecordingBase vRecording, BodyFrameBuffer vBuffer)
         {
@@ -248,7 +257,7 @@ namespace Assets.Scripts.Frames_Pipeline
                         {
                             FinalFramePositionReachedEvent();
                         }
-                       
+
                         //check if looping is enabled, set vCurrPos to first postion
                         if (LoopPlaybackEnabled)
                         {
@@ -280,7 +289,7 @@ namespace Assets.Scripts.Frames_Pipeline
                     {
                         vPreviousIndex = 0;
                     }
-                    vPrevTimeStamp = ConvertedFrames[vPreviousIndex].Timestamp;//vCurrBodyFrame.Timestamp;
+                    vPrevTimeStamp = ConvertedFrames[vPreviousIndex].Timestamp;
                     vRecDeltatime = Math.Abs(vCurrBodyFrame.Timestamp - vPrevTimeStamp);
                     int vSleepTime = (int)((vRecDeltatime / Math.Abs(PlaybackSpeed)) * 1000);
                     Thread.Sleep(vSleepTime);
@@ -318,7 +327,7 @@ namespace Assets.Scripts.Frames_Pipeline
             {
                 try
                 {
-                    mConvertedBodyFrames.Add(RawFrameConverter.ConvertRawFrame(mCurrentRecording.GetBodyRawFrameAt(i))); 
+                    mConvertedBodyFrames.Add(RawFrameConverter.ConvertRawFrame(mCurrentRecording.GetBodyRawFrameAt(i)));
                 }
                 catch (Exception vE)
                 {

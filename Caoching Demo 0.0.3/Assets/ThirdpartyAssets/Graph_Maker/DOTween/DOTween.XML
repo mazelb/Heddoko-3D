@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <doc>
     <assembly>
         <name>DOTween</name>
@@ -1977,13 +1977,13 @@
             Has no effect with tweens that are inside Sequences</summary>
             <param name="newEndValue">The new end value</param>
             <param name="newDuration">If bigger than 0 applies it as the new tween duration</param>
-            <param name="snapStartValue">If TRUE the start value will become the current target's value, otherwise it will stay the same</param>
+            <param name="snapStartValue">If TRUE the start value will become the current target's vNewPos, otherwise it will stay the same</param>
         </member>
         <member name="M:DG.Tweening.Tweener.ChangeEndValue(System.Object,System.Boolean)">
             <summary>Changes the end value of a tween and rewinds it (without pausing it).
             Has no effect with tweens that are inside Sequences</summary>
             <param name="newEndValue">The new end value</param>
-            <param name="snapStartValue">If TRUE the start value will become the current target's value, otherwise it will stay the same</param>
+            <param name="snapStartValue">If TRUE the start value will become the current target's vNewPos, otherwise it will stay the same</param>
         </member>
         <member name="M:DG.Tweening.Tweener.ChangeValues(System.Object,System.Object,System.Single)">
             <summary>Changes the start and end value of a tween and rewinds it (without pausing it).
@@ -2044,7 +2044,7 @@
             <summary>Fires the given callback after the given time.</summary>
             <param name="delay">Callback delay</param>
             <param name="callback">Callback to fire when the delay has expired</param>
-            <param name="ignoreTimeScale">If TRUE (default) ignores Unity's timeScale</param>
+            <param name="ignoreTimeMoveLeftEdge">If TRUE (default) ignores Unity's timeScale</param>
         </member>
         <member name="T:DG.Tweening.Core.Easing.EaseCurve">
             <summary>

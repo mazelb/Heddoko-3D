@@ -48,6 +48,7 @@
     <Compile Include="adt\PriorityQueue.cs" />
     <Compile Include="adt\WriterReaderQueue.cs" />
     <Compile Include="body pipeline\ImuFrame.cs" />
+    <Compile Include="bodyData\analysis\Calibration.cs" />
     <Compile Include="genericPatterns\IListenable.cs" />
     <Compile Include="genericPatterns\IReleasableResource.cs" />
     <Compile Include="genericPatterns\Pool.cs" />

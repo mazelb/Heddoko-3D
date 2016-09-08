@@ -64,6 +64,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             {
                 //write the header
                 vFileOut.Write("Frame Index,");
+                vFileOut.Write("TPose Value,");
+                // vFileOut.Write("Calibration Type");
                 vFileOut.Write("Timestamp,");
                 List<FieldInfo>  vSortedList = new List<FieldInfo>();
                 foreach (var vAnalysisFieldDataStructures in vAnalysisDataStore.Storage.Values)
@@ -88,7 +90,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                 for (int i = 0; i<vAnalysisDataStore.SerializedList.Count; i++)
                 {
                     //write frame index
-                    vFileOut.Write(vAnalysisDataStore.FrameIndices[i] + ",");
+                    var vFrameIndex = vAnalysisDataStore.FrameIndices[i];
+                    vFileOut.Write(vFrameIndex + ",");
+                    //write tpose value at the given frame index
+                    vFileOut.Write(vAnalysisDataStore.PoseSelectionIndicies[vFrameIndex] +",");
                     //Write timestamp
                     vFileOut.Write(vAnalysisDataStore.TimeStamps[i] + ",");
                     var vSerializedList = vAnalysisDataStore.SerializedList[i];

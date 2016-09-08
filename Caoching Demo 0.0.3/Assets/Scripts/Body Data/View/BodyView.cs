@@ -8,21 +8,20 @@
 
 using UnityEngine;
 using System.Collections.Generic;
-using Assets.Scripts.Body_Data.view;
-using Assets.Scripts.Body_Data.View.Anaylsis;
 using Assets.Scripts.Utils.DebugContext;
-
-
 
 namespace Assets.Scripts.Body_Data.view
 {
+    public delegate void BodyFrameUpdated(BodyFrame vNewFrame);
+
+    public delegate void BodyFrameResetInitialized(BodyFrame vBodyFrame);
     /// <summary>
     /// BodyView class: Contains the view for a body and allows the body to fetch data from a pipeline fed buffer on a frame by frame basis
     /// </summary>
     public class BodyView : MonoBehaviour
     {
-        public delegate void BodyFrameUpdated(BodyFrame vNewFrame);
         public event BodyFrameUpdated BodyFrameUpdatedEvent;
+        public event BodyFrameResetInitialized BodyFrameResetInitializedEvent;
         //private BodyFrameBuffer mBuffer;
         private BodyFrameBuffer mBuffer;
         [SerializeField]
@@ -108,7 +107,10 @@ namespace Assets.Scripts.Body_Data.view
                 {
                     vTempBodyFrame = vBodyFrame;
                 }
-
+                if (BodyFrameResetInitializedEvent != null)
+                {
+                    BodyFrameResetInitializedEvent(vTempBodyFrame); 
+                }
                 AssociatedBody.SetInitialFrame(vTempBodyFrame);
                 UpdateViewTracking(vTempBodyFrame);
             }
