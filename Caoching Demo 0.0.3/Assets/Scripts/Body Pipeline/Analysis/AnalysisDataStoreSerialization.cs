@@ -1,15 +1,15 @@
-﻿ /**
- * @file AnalysisDataStoreSerialization.cs
- * @brief Contains the AnalysisDataStoreSerialization
- * @author Mohammed Haider( mohammed@heddoko.com)
- * @date  June 2016
- * Copyright Heddoko(TM) 2016,  all rights reserved
- */
+﻿/**
+* @file AnalysisDataStoreSerialization.cs
+* @brief Contains the AnalysisDataStoreSerialization
+* @author Mohammed Haider( mohammed@heddoko.com)
+* @date  June 2016
+* Copyright Heddoko(TM) 2016,  all rights reserved
+*/
 
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection; 
+using System.Reflection;
 using UnityEngine;
 
 namespace Assets.Scripts.Body_Pipeline.Analysis
@@ -26,11 +26,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         {
             get
             {
-                string vPath="";
+                string vPath = "";
                 if (string.IsNullOrEmpty(sPath))
                 {
                     string vTodaysDate = DateTime.Now.ToString("hh-mm-ss-ff");
-                     vPath = Application.persistentDataPath;
+                    vPath = Application.persistentDataPath;
                     vPath += Path.DirectorySeparatorChar + vTodaysDate + ".csv";
                 }
                 return vPath;
@@ -42,11 +42,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             mDataStore = vDataStore;
         }
 
-       
+
         /// <summary>
         /// Writes the data store to a csv file
         /// </summary>
-         public static void WriteFile(AnalysisDataStore vAnalysisDataStore)
+        public static void WriteFile(AnalysisDataStore vAnalysisDataStore)
         {
             WriteFile(vAnalysisDataStore, GetSerializationStorePath);
         }
@@ -56,7 +56,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// </summary>
         /// <param name="vAnalysisDataStore">the data store to serialize</param>
         /// <param name="vPath">the path to save to </param>
-        public static void WriteFile (AnalysisDataStore vAnalysisDataStore,string vPath)
+        public static void WriteFile(AnalysisDataStore vAnalysisDataStore, string vPath)
         {
             //prepare the data store to serialize data
             vAnalysisDataStore.PrepareDataStore();
@@ -65,59 +65,96 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                 //write the header
                 vFileOut.Write("Frame Index,");
                 vFileOut.Write("TPose Value,");
-                // vFileOut.Write("Calibration Type");
                 vFileOut.Write("Timestamp,");
-                List<FieldInfo>  vSortedList = new List<FieldInfo>();
+                List<FieldInfo> vSortedList = new List<FieldInfo>();
                 foreach (var vAnalysisFieldDataStructures in vAnalysisDataStore.Storage.Values)
                 {
                     foreach (var vKvPair in vAnalysisFieldDataStructures)
                     {
                         vSortedList.Add(vKvPair.Key);
                     }
-                  
-                } 
+
+                }
                 //sort it 
-                vSortedList.Sort((vX,vY)=> vAnalysisDataStore.AnaylsisDataStoreSettings.GetOrderOfAnalysisField(vX).CompareTo(
+                vSortedList.Sort((vX, vY) => vAnalysisDataStore.AnaylsisDataStoreSettings.GetOrderOfAnalysisField(vX).CompareTo(
                    vAnalysisDataStore.AnaylsisDataStoreSettings.GetOrderOfAnalysisField(vY)));
                 foreach (var vFieldInfo in vSortedList)
                 {
                     var vItem =
                         vAnalysisDataStore.AnaylsisDataStoreSettings.GetAnalysisSerializationItem(vFieldInfo.ToString());
-                    vFileOut.Write(vItem.AttributeName + ","); 
+                    vFileOut.Write(vItem.AttributeName + ",");
                 }
                 vFileOut.Write("\r\n");
                 //write the body
-                for (int i = 0; i<vAnalysisDataStore.SerializedList.Count; i++)
+                for (int i = 0; i < vAnalysisDataStore.SerializedList.Count; i++)
                 {
                     //write frame index
                     var vFrameIndex = vAnalysisDataStore.FrameIndices[i];
                     vFileOut.Write(vFrameIndex + ",");
                     //write tpose value at the given frame index
-                    vFileOut.Write(vAnalysisDataStore.PoseSelectionIndicies[vFrameIndex] +",");
+                    vFileOut.Write(vAnalysisDataStore.PoseSelectionIndicies[vFrameIndex] + ",");
                     //Write timestamp
                     vFileOut.Write(vAnalysisDataStore.TimeStamps[i] + ",");
                     var vSerializedList = vAnalysisDataStore.SerializedList[i];
                     foreach (var vItem in vSortedList)
                     {
-                        if((vSerializedList.ContainsKey(vItem)))
+                        if ((vSerializedList.ContainsKey(vItem)))
                         {
                             var vSerializedItem = vSerializedList[vItem];
                             vFileOut.Write(vSerializedList[vItem] + ",");
                         }
                         else
                         {
-                            Debug.Log("already have key "+ vItem);
+                            Debug.Log("already have key " + vItem);
                         }
-                        
+
                     }
                     vFileOut.Write("\r\n");
                 }
-                
+
             }
+
+            // associated raw data output
+            if (vPath.Contains(".csv"))
+            {
+                int vIndex = vPath.IndexOf(".csv");
+                vPath = vPath.Remove(vIndex, 4);
+            }
+            var vFileInfo = new FileInfo(vPath);
+            if (vFileInfo != null)
+            {
+              
+                var vRawDataPath = vFileInfo.Directory.ToString() + Path.DirectorySeparatorChar + vFileInfo.Name + "RawData.csv";
+                using (StreamWriter vFileWriter = new StreamWriter(vRawDataPath))
+                {
+                    vFileWriter.Write("Frame Index,");
+
+                    //get first frame of raw data and enumerate its orientation components
+                    var vRawData = vAnalysisDataStore.BodyFrames;
+                    var vFirstRaw = vRawData[0];
+                    for (int i = 0; i < vFirstRaw.FrameData.Count; i++)
+                    { 
+                        vFileWriter.Write(i + "x,");
+                        vFileWriter.Write(i + "y,");
+                        vFileWriter.Write(i + "z,");
+                        vFileWriter.Write(i + "w,");
+                    }
+                    vFileWriter.Write("\r\n");
+                    for (int i = 0; i < vRawData.Count; i++)
+                    {
+                        vFileWriter.Write(vRawData[i].Index + ",");
+                        vFileWriter.Write(vRawData[i].ToCSVNoTSNoKeyIncluded());
+                        vFileWriter.Write("\r\n");
+                    }
+
+                }
+            }
+
+
         }
 
-  
 
-       
+
+
     }
 }

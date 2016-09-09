@@ -37,7 +37,13 @@ namespace Assets.Scripts.Frames_Pipeline
         private int mCurrentIdx;
         private int mFirstPos = 0;
         internal event FinalFramePositionReached FinalFramePositionReachedEvent;
-
+        /// <summary>
+        /// Depending if the current state is rewinding or going forward, then the 
+        /// the index iterator changes the local position of the converted frame data
+        /// </summary>
+        private int mIteratorAdder = 1;
+        private List<BodyFrame> vFrames;
+        private BodyFrameBuffer bodyFrameBuffer;
         private int mFinalFramePos { get; set; }
 
         private float mTotalRecordingTime;
@@ -53,13 +59,7 @@ namespace Assets.Scripts.Frames_Pipeline
         /// </summary>
         public bool ConversionCompleted { get; private set; }
 
-        /// <summary>
-        /// Depending if the current state is rewinding or going forward, then the 
-        /// the index iterator changes the local position of the converted frame data
-        /// </summary>
-        private int mIteratorAdder = 1;
-        private List<BodyFrame> vFrames;
-        private BodyFrameBuffer bodyFrameBuffer;
+      
 
         public float PlaybackSpeed
         {
@@ -100,8 +100,6 @@ namespace Assets.Scripts.Frames_Pipeline
                     mFinalFramePos = ConvertedFrames.Count - 1;
                     IteratorAdder = 1;
                 }
-
-
             }
         }
 

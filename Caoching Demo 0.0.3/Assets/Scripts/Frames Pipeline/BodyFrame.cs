@@ -92,6 +92,22 @@ public class BodyFrame
         }
         return vOutput;
     }
+
+   /// <summary>
+   /// To a csv string without the timestamp or key included. Default seperator is ','
+   /// </summary>
+   /// <param name="vSeperator"></param>
+   /// <returns></returns>
+
+    public string ToCSVNoTSNoKeyIncluded(string vSeperator = ",")
+    {
+        string vOutput = "";
+        foreach (KeyValuePair<BodyStructureMap.SensorPositions, Vect4> vPair in FrameData)
+        {
+            vOutput +=  vPair.Value.x + vSeperator + vPair.Value.y + vSeperator + vPair.Value.z + vSeperator + vPair.Value.w + vSeperator;
+        }
+        return vOutput;
+    }
     public BodyFrame( int vIndex)
     {
         Index = vIndex;

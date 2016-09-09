@@ -17655,6 +17655,7 @@ MonoBehaviour:
   - {fileID: 109601350}
   - {fileID: 570543143}
   - {fileID: 667098664}
+  SliderMaskContainerController: {fileID: 2090096978}
   Escapables:
   - {fileID: 2064524570}
   - {fileID: 290831611}
@@ -29746,7 +29747,7 @@ RectTransform:
   m_RootOrder: 3
   m_AnchorMin: {x: 0.7093023, y: 0.7933884}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -837.6163, y: -153.84296}
+  m_AnchoredPosition: {x: -645.3953, y: -122.43802}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1277785188
@@ -31621,8 +31622,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 890272456}
   m_HandleRect: {fileID: 890272455}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.99999994
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -32308,7 +32309,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000015258789}
+  m_AnchoredPosition: {x: 0, y: 0.000015258789}
   m_SizeDelta: {x: 0, y: 20.6}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1360788882
@@ -37882,19 +37883,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 128.5
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: -9.3
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 14.6
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_AnchorMin.x
@@ -37902,7 +37903,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_AnchorMax.x
@@ -37910,7 +37911,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_Pivot.x
@@ -41587,7 +41588,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0.7093023, y: 0.7933884}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -837.6163, y: -10}
+  m_AnchoredPosition: {x: -645.3953, y: -10}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1682346561
@@ -50017,7 +50018,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 708447077}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999999
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

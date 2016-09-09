@@ -23,18 +23,24 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
     {
         private Dictionary<SegmentAnalysis, Dictionary<FieldInfo, AnalysisFieldDataStructure>> mStorage = new Dictionary<SegmentAnalysis, Dictionary<FieldInfo, AnalysisFieldDataStructure>>();
         //Keep track of the body frames
-        
+
         public List<Dictionary<FieldInfo, string>> SerializedList = new List<Dictionary<FieldInfo, string>>();
         private List<int> mFrameIndices = new List<int>();
         private List<float> mTimeStamps = new List<float>();
         private int[] mPoseSelectionIndicies;
         private int mFrameCount = -1;
+        private List<BodyFrame> mBodyFrames = new List<BodyFrame>();
         internal AnaylsisDataStoreSettings AnaylsisDataStoreSettings;
         public AnalysisDataStoreSerialization Serialization;
         private int mFieldInfoCount;
         private int mCounter;
         private int mSubCount = 0;
         public bool Ignore { get; set; }
+
+        public List<BodyFrame> BodyFrames
+        {
+            get { return mBodyFrames; }
+        }
 
         /// <summary>
         /// Constructor accepting a list of analysis segment, using reflection, sifts through fields with AnalysisAttributes marked as do not ignore.  
@@ -158,8 +164,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <param name="vFrame"></param>
         public void Update(BodyFrame vFrame)
         {
-             mTimeStamps.Add(vFrame.Timestamp);
-         
+            mTimeStamps.Add(vFrame.Timestamp);
+            mBodyFrames.Add(vFrame);
             mFrameIndices.Add(vFrame.Index);
         }
 
@@ -235,6 +241,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             SerializedList.Clear();
             mTimeStamps.Clear();
             mFrameIndices.Clear();
+            mBodyFrames.Clear();
             mCounter = 0;
             mSubCount = 0;
         }
@@ -258,5 +265,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         {
             mFrameCount = vRawFramesCount;
         }
+
+
+
     }
 }
