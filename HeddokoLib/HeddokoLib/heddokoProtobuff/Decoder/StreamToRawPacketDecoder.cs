@@ -1,6 +1,6 @@
 ﻿/**
-* @file ProtoStreamDecoder.cs
-* @brief Contains the ProtoStreamDecoder class
+* @file StreamToRawPacketDecoder.cs
+* @brief Contains the StreamToRawPacketDecoder class
 * @author Mohammed Haider( mohammed@heddoko.com)
 * @date June 2016
 * Copyright Heddoko(TM) 2016,  all rights reserved
@@ -16,27 +16,42 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
 
 
     /// <summary>
-    /// A Stream Decoder,taking in a binary stream, and places the resulting raw packet to a blocking outputbuffer 
+    /// A Stream Decoder,taking in a binary stream, and places the resulting raw packet to an outputbuffer. Uses a ReaderWriterLock to guarantee threadsafety for underlying stream. 
     /// </summary>
-    public class ProtoStreamDecoder
+    public class StreamToRawPacketDecoder
     {
+        private ReaderWriterLock mLock = new ReaderWriterLock();
         private Stream mStream;
         private volatile bool mIsWorking = false;
         private int mBufferSize = 1024;
-        // private WriterReaderQueue<RawPacket> mQueue = new WriterReaderQueue<RawPacket>(50);
         private CircularQueue<RawPacket> mQueue = new CircularQueue<RawPacket>(1024, false);
+
+        protected Stream Stream
+        {
+            get
+            {
+                mLock.AcquireWriterLock(250);
+                return mStream;
+            }
+            set
+            {
+                mLock.AcquireWriterLock(250);
+                mStream = value;
+            }
+
+        }
         /// <summary>
         /// Default constructor: takes in a stream T
         /// </summary>
         /// <exception cref="NullReferenceException">Throws a null reference exception if the passed in buffer is null</exception>
         /// <param name="vStream"></param>
-        public ProtoStreamDecoder(Stream vStream)
+        public StreamToRawPacketDecoder(Stream vStream)
         {
             if (vStream == null)
             {
                 throw new NullReferenceException("A non-null stream is required.");
             }
-            mStream = vStream;
+            Stream = vStream;
         }
 
         /// <summary>
@@ -45,7 +60,7 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
         /// <exception cref="NullReferenceException">Throws a null reference exception if the passed in buffer is null</exception>
         /// <param name="vStream"></param>
         /// <param name="vInputBufferSize"></param>
-        public ProtoStreamDecoder(Stream vStream, int vInputBufferSize) : this(vStream)
+        public StreamToRawPacketDecoder(Stream vStream, int vInputBufferSize) : this(vStream)
         {
             OutputBuffer = new CircularQueue<RawPacket>(1024, false);
             mBufferSize = vInputBufferSize;
@@ -57,7 +72,7 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
         /// <param name="vStream"></param>
         /// <param name="vInputBufferSize"></param>
         /// <param name="vOutputBufferSize"></param>
-        public ProtoStreamDecoder(Stream vStream, int vInputBufferSize, int vOutputBufferSize)
+        public StreamToRawPacketDecoder(Stream vStream, int vInputBufferSize, int vOutputBufferSize)
             : this(vStream, vInputBufferSize)
         {
             OutputBuffer = new CircularQueue<RawPacket>(vOutputBufferSize, false);
@@ -97,7 +112,7 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
             //if the previous worker is still working, raise an exception
             if (mIsWorking)
             {
-                throw new Exception("The current ProtoStreamDecoder object is still working.");
+                throw new Exception("The current StreamToRawPacketDecoder object is still working.");
             }
             mIsWorking = true;
             ThreadPool.QueueUserWorkItem(WorkerFunc, vStreamCompletionAction);
@@ -145,20 +160,20 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
             return vPacketList;
         }
         /// <summary>
-        /// The working function whose duty is to decode a binary stream into a protobuf packet. 
+        /// The working function whose duty is to decode a binary stream into a protobuf packet. Places packets on the output buffer 
         /// </summary> 
         /// <param name="vState"></param>
         private void WorkerFunc(Object vState)
         {
             byte[] vByteArrayBuffer = new byte[BufferSize];
             RawPacket vPacket = new RawPacket();
-            while (mStream.CanRead)
+            while (Stream.CanRead)
             {
                 if (OutputBuffer.IsFull())
                 {
                     continue;
                 }
-                int vNumberOfByteRead = mStream.Read(vByteArrayBuffer, 0, BufferSize);
+                int vNumberOfByteRead = Stream.Read(vByteArrayBuffer, 0, BufferSize);
                 if (vNumberOfByteRead == 0)
                 {
                     break;
@@ -193,7 +208,7 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
 
         public void Dispose()
         {
-            mStream.Close();
+            Stream.Close();
             mIsWorking = false;
         }
 
