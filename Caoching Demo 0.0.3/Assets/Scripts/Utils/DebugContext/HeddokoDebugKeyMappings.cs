@@ -51,5 +51,6 @@ namespace Assets.Scripts.Utils.DebugContext
         public static KeyCode IsAdjustingArms = KeyCode.Semicolon;
         public static KeyCode IsCalibrating = KeyCode.RightWindows;
         public static KeyCode SettingsButton = KeyCode.Escape;
+		public static KeyCode GBodyFrameUsingQuaternion = KeyCode.G;
   }
 }
