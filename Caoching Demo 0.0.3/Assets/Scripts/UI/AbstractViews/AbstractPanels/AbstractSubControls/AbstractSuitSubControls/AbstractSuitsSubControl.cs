@@ -23,7 +23,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.Abs
         
        public virtual void OnEnable()
         {
-          
             //Listen to the AbstractSuitConnect OnConnect, OnDisconnect and OnStatusUpdate events
             SuitConnection.OnSuitStateUpdate += OnStatusUpdate;
             SuitConnection.ConnectedStateEvent += OnConnection;

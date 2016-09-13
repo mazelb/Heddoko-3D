@@ -32,7 +32,7 @@ namespace Assets.Scripts.Frames_Recorder.FramesReader
         {
             FilePath = vFilePath;
             FileStream vInputStream = File.OpenRead(vFilePath);
-            RawProtopackets = ProtoStreamDecoder.StartPacketizingFromFileStream(vInputStream, 4096);
+            RawProtopackets = StreamToRawPacketDecoder.StartPacketizingFromFileStream(vInputStream, 4096);
             return RawProtopackets.Count;
         }
 

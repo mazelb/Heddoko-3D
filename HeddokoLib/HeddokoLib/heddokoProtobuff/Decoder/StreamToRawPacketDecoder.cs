@@ -20,22 +20,19 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
     /// </summary>
     public class StreamToRawPacketDecoder
     {
-        private ReaderWriterLock mLock = new ReaderWriterLock();
         private Stream mStream;
         private volatile bool mIsWorking = false;
         private int mBufferSize = 1024;
         private CircularQueue<RawPacket> mQueue = new CircularQueue<RawPacket>(1024, false);
 
-        protected Stream Stream
+        public Stream Stream
         {
             get
             {
-                mLock.AcquireWriterLock(250);
                 return mStream;
             }
             set
             {
-                mLock.AcquireWriterLock(250);
                 mStream = value;
             }
 
@@ -132,7 +129,7 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
             RawPacket vPacket = new RawPacket();
             while (vStream.CanRead)
             {
-                 
+
                 int vNumberOfByteRead = vStream.Read(vByteArrayBuffer, 0, vBufferSize);
                 if (vNumberOfByteRead == 0)
                 {
@@ -196,7 +193,7 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
                 }
 
             }
-            var vCallbackAction = (Action)vState;
+            Action vCallbackAction = (Action)vState;
             if (vCallbackAction != null)
             {
                 vCallbackAction.Invoke();
@@ -205,6 +202,10 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
             Dispose();
         }
 
+        public void ProcessPacket(byte[] vArray)
+        {
+            
+        }
 
         public void Dispose()
         {

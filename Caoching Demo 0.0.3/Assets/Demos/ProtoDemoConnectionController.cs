@@ -54,11 +54,7 @@ namespace Assets.Demos
                             DisconnectedStateEvent();
                         }
                     }
-
-
                 }
-
-
             }
         }
 

@@ -11,7 +11,7 @@
     <AssemblyName>HeddokoLib</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -55,7 +55,7 @@
     <Compile Include="heddokoProtobuff\Decoder\BrainpackCommandEnum.cs" />
     <Compile Include="heddokoProtobuff\Decoder\ProtobuffDispatchRouter.cs" />
     <Compile Include="heddokoProtobuff\Decoder\ProtoFrameDispatcher.cs" />
-    <Compile Include="heddokoProtobuff\Decoder\ProtoStreamDecoder.cs" />
+    <Compile Include="heddokoProtobuff\Decoder\StreamToRawPacketDecoder.cs" />
     <Compile Include="heddokoProtobuff\Decoder\RawPacket.cs" />
     <Compile Include="heddokoProtobuff\packet\heddokoPacket.cs" />
     <Compile Include="heddokoProtobuff\packet\RawPacket.cs" />

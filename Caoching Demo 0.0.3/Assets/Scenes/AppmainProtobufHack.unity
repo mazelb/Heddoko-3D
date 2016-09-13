@@ -11637,7 +11637,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 123166, guid: 1a283e1b36debd243bb82aa668dbd2bf, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22461660, guid: 1a283e1b36debd243bb82aa668dbd2bf, type: 2}
       propertyPath: m_AnchoredPosition.x
@@ -12465,7 +12465,7 @@ MonoBehaviour:
   ApplicationRoot: {fileID: 1716404034}
   EventSystem: {fileID: 2102495836}
   RecordingPlayer: {fileID: 1103780630}
-  ControlPanel: {fileID: 779078133}
+  ControlPanel: {fileID: 0}
 --- !u!1 &527198126
 GameObject:
   m_ObjectHideFlags: 0
@@ -18442,7 +18442,7 @@ GameObject:
   - 114: {fileID: 779078136}
   - 114: {fileID: 779078135}
   - 114: {fileID: 779078134}
-  - 114: {fileID: 779078133}
+  - 114: {fileID: 779078138}
   m_Layer: 5
   m_Name: Left Control Panel
   m_TagString: Untagged
@@ -18476,46 +18476,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -0.0000038146973}
   m_SizeDelta: {x: 0, y: 0.000015258789}
   m_Pivot: {x: 0, y: 0.5}
---- !u!114 &779078133
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 779078131}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e08ed9c018c35a34bbf6ee0a08ae1bfa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SelectedColorBlock:
-    m_NormalColor: {r: 0, g: 0.6745098, b: 0.827451, a: 1}
-    m_HighlightedColor: {r: 0, g: 0.6745098, b: 0.827451, a: 1}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 0.591}
-    m_DisabledColor: {r: 0, g: 0, b: 0, a: 0}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.2
-  UnSelectedColorBlock:
-    m_NormalColor: {r: 0, g: 0, b: 0, a: 0}
-    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 1}
-    m_PressedColor: {r: 1, g: 1, b: 1, a: 0.709}
-    m_DisabledColor: {r: 1, g: 1, b: 1, a: 0}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.2
-  LoadRecordingsButton: {fileID: 409676876}
-  ExitApplicationButton: {fileID: 2068682906}
-  RenameRecordingButton: {fileID: 603529641}
-  BrainpackConnectionButton: {fileID: 1321457690}
-  ResolutionSettingsButton: {fileID: 890146223}
-  LiveViewButton: {fileID: 892415413}
-  BrainpackConnectionSlider: {fileID: 2100874791}
-  ResolutionSettingSlideBlock: {fileID: 1528181431}
-  SegmentAnalysisRecordingController: {fileID: 2090096977}
-  ConnectionController: {fileID: 750031983}
-  RecordingPlayerView: {fileID: 1103780630}
-  SuitFeedView: {fileID: 1585398391}
-  RenameRecordingModule: {fileID: 1664453322}
-  BodyControlPanel: {fileID: 415361737}
-  CloudLocalStorageViewManager: {fileID: 480663381}
 --- !u!114 &779078134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18587,6 +18547,44 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 779078131}
+--- !u!114 &779078138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 779078131}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16f1191282b6dea4d892ed8ae010485e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SelectedColorBlock:
+    m_NormalColor: {r: 0, g: 0.6745098, b: 0.82745105, a: 0}
+    m_HighlightedColor: {r: 0, g: 0.6745098, b: 0.82745105, a: 0}
+    m_PressedColor: {r: 0.8745099, g: 0.8745099, b: 0.8745099, a: 0}
+    m_DisabledColor: {r: 0, g: 0, b: 0, a: 0}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.2
+  UnSelectedColorBlock:
+    m_NormalColor: {r: 0, g: 0, b: 0, a: 0}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 0}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 0}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0
+  LoadRecordingsButton: {fileID: 409676876}
+  ExitApplicationButton: {fileID: 2068682906}
+  RenameRecordingButton: {fileID: 603529641}
+  BrainpackConnectionButton: {fileID: 890146223}
+  ResolutionSettingsButton: {fileID: 890146223}
+  LiveViewButton: {fileID: 892415413}
+  BrainpackConnectionSlider: {fileID: 2100874791}
+  ResolutionSettingSlideBlock: {fileID: 1528181431}
+  SegmentAnalysisRecordingController: {fileID: 2090096977}
+  RecordingPlayerView: {fileID: 1103780630}
+  SuitFeedView: {fileID: 1585398391}
+  BodyControlPanel: {fileID: 415361737}
+  CloudLocalStorageViewManager: {fileID: 480663381}
 --- !u!1 &780657525
 GameObject:
   m_ObjectHideFlags: 0
@@ -29931,7 +29929,7 @@ RectTransform:
   m_RootOrder: 3
   m_AnchorMin: {x: 0.7093023, y: 0.7933884}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -837.6163, y: -153.84293}
+  m_AnchoredPosition: {x: -837.6163, y: -153.84296}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1277785188
@@ -32493,7 +32491,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.000015258789}
   m_SizeDelta: {x: 0, y: 20.6}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1360788882
@@ -34861,7 +34859,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.0000076293945}
   m_SizeDelta: {x: 0, y: 20.6}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1441013632
@@ -38166,7 +38164,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1585398389}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8ed5e87345571a499afb9449cebe91c, type: 3}
+  m_Script: {fileID: 11500000, guid: bddf5788ce1b57b4ca3108ab818fa544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   NextView: {fileID: 0}
