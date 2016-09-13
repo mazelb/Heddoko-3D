@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System;
 using System.Runtime.Serialization;
 using Assets.Scripts.Frames_Pipeline;
+using heddoko;
 using HeddokoLib.heddokoProtobuff;
 using HeddokoLib.utils;
 using Newtonsoft.Json;
@@ -157,17 +158,7 @@ public class BodyFrame
             vVect.z = vDataFrame.quat_z_roll;
             vVect.w = vDataFrame.quat_w;
             FrameData.Add(vSensorId, vVect);
-
-            //if (FrameData.ContainsKey(vSensorId))
-            //{
-            //    CountError(i);
-            //}
-            //else
-            //{
-            //    FrameData.Add(vSensorId, vVect);
-            //}
         }
-        
     }
     /**
     * ConvertRawFrame(BodyRawFrame rawData)

@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.IO;
 using Assets.Scripts.Frames_Pipeline;
 using Assets.Scripts.Frames_Recorder.FramesReader;
+using heddoko;
 using HeddokoLib.heddokoProtobuff;
 using ProtoBuf;
 using Debug = UnityEngine.Debug;
@@ -22,6 +23,7 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
     {
 
         public List<BodyProtoPacketFrame> ProtobuffPackets = new List<BodyProtoPacketFrame>();
+
         /// <summary>
         /// Sets the unique identifiers
         /// </summary>
@@ -95,25 +97,7 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
                 {
                     Debug.Log(vE.Message);
                 }
-            }
-            //foreach (var vRawProtopacket in vReader.RawProtopackets)
-            //{
-            //    try
-            //    {
-            //        if (vRawProtopacket.Payload[0] == 0x04)
-            //        {
-            //            vStream.Write(vRawProtopacket.Payload, 1, vRawProtopacket.PayloadSize - 1);
-            //            vStream.Seek(0, SeekOrigin.Begin);
-            //            Packet vPacket = Serializer.Deserialize<Packet>(vStream);
-            //            ProtobuffPackets.Add(new BodyProtoPacketFrame(vPacket));
-            //        }
-            //    }
-            //    catch (Exception vE)
-            //    {
-            //        Debug.Log(vE.Message);
-            //    }
-               
-            //}
+            } 
             vStopwatch.Stop();
             Debug.Log("completed after "+(vStopwatch.ElapsedMilliseconds/1000 )+ " seconds");
         }

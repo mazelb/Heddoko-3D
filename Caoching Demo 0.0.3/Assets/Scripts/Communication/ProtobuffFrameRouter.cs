@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using heddoko;
 using HeddokoLib.adt;
 using HeddokoLib.heddokoProtobuff;
 using HeddokoLib.heddokoProtobuff.Decoder;
@@ -45,21 +46,7 @@ namespace Assets.Scripts.Communication
             mOutBoundBuffer = vOutterBuffer;
             mProtDispatchRouter = new ProtobuffDispatchRouter();
             mProtDispatchRouter.Init();
-            mProtDispatchRouter.Add(PacketType.DataFrame, EnqueueDataFrame);
-            //initialize the static list of sensor positions if it is null. 
-            //if (sSensorPositionList == null)
-            //{
-            //    sSensorPositionList = new Dictionary<int, BodyStructureMap.SensorPositions>();
-            //    sSensorPositionList.Add(0, BodyStructureMap.SensorPositions.SP_UpperSpine);
-            //    sSensorPositionList.Add(1, BodyStructureMap.SensorPositions.SP_RightUpperArm);
-            //    sSensorPositionList.Add(2, BodyStructureMap.SensorPositions.SP_RightForeArm);
-            //    sSensorPositionList.Add(3, BodyStructureMap.SensorPositions.SP_LeftUpperArm);
-            //    sSensorPositionList.Add(4, BodyStructureMap.SensorPositions.SP_LeftForeArm);
-            //    sSensorPositionList.Add(5, BodyStructureMap.SensorPositions.SP_RightThigh);
-            //    sSensorPositionList.Add(6, BodyStructureMap.SensorPositions.SP_RightCalf);
-            //    sSensorPositionList.Add(7, BodyStructureMap.SensorPositions.SP_LeftThigh);
-            //    sSensorPositionList.Add(8, BodyStructureMap.SensorPositions.SP_LeftCalf);
-            //}
+            mProtDispatchRouter.Add(PacketType.DataFrame, EnqueueDataFrame); 
         }
 
         /// <summary>
