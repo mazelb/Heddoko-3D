@@ -7,7 +7,8 @@
 // */
 
 using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using heddoko;
 
 namespace HeddokoLib.heddokoProtobuff.Decoder
 {

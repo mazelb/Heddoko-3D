@@ -1,18 +1,19 @@
 ﻿// /**
 // * @file ProtobuffRouter.cs
-// * @brief Contains the 
+// * @brief Contains the ProtobuffDispatchRouter class
 // * @author Mohammed Haider( mohammed@heddoko.com)
 // * @date June 2016
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
 
 using System;
+using heddoko;
 using HeddokoLib.adt;
 
 namespace HeddokoLib.heddokoProtobuff.Decoder
 {
     /// <summary>
-    /// A protobuf file dispatch router
+    /// A protobuf dispatching router. receives protbufs and dispatches events according to the message type. 
     /// </summary>
     public class ProtobuffDispatchRouter
     {
