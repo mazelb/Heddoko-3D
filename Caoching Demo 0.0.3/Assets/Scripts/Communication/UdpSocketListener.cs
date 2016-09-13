@@ -33,8 +33,7 @@ namespace Assets.Scripts.Communication
         private ReaderWriterLock mLocker = new ReaderWriterLock();
         private object mLockObj = new object();
         private StreamToRawPacketDecoder mDecoder;
-        private MemoryStream mStream = new MemoryStream();
-        private UdpClient mUdpClient;
+         private UdpClient mUdpClient;
 
         /// <summary>
         /// Pass in a default port number, an inbound queue and an outbound queue
@@ -45,7 +44,7 @@ namespace Assets.Scripts.Communication
         public UdpSocketListener(int vPortNumber = 6669)
         {
             Port = vPortNumber;
-            mDecoder = new StreamToRawPacketDecoder(mStream);
+            mDecoder = new StreamToRawPacketDecoder(new MemoryStream());
             RawPacketBuffer = mDecoder.OutputBuffer;
             BodyFrameBuffer vBodyframebuffer = new BodyFrameBuffer(256);
             FrameRouter = new ProtobuffFrameRouter(RawPacketBuffer, vBodyframebuffer);
@@ -71,19 +70,7 @@ namespace Assets.Scripts.Communication
             }
         }
 
-        public MemoryStream MemStream
-        {
-            get
-            {
-                mLocker.AcquireWriterLock(250);
-                return mStream;
-            }
-            set
-            {
-                mLocker.AcquireWriterLock(250);
-                mStream = value;
-            }
-        }
+     
 
         public void Start()
         {
@@ -130,7 +117,6 @@ namespace Assets.Scripts.Communication
                     mPacketProcessed = false;
                     mDecoder.Stream = vStream;
                     mDecoder.StartPacketizeStream(ActionCompleted, ExceptionHandler);
-
                 }
             }
             catch (Exception vE)
