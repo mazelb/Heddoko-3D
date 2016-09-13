@@ -53,7 +53,7 @@
     <Compile Include="genericPatterns\IReleasableResource.cs" />
     <Compile Include="genericPatterns\Pool.cs" />
     <Compile Include="heddokoProtobuff\Decoder\BrainpackCommandEnum.cs" />
-    <Compile Include="heddokoProtobuff\Decoder\ProtobuffRouter.cs" />
+    <Compile Include="heddokoProtobuff\Decoder\ProtobuffDispatchRouter.cs" />
     <Compile Include="heddokoProtobuff\Decoder\ProtoFrameDispatcher.cs" />
     <Compile Include="heddokoProtobuff\Decoder\ProtoStreamDecoder.cs" />
     <Compile Include="heddokoProtobuff\Decoder\RawPacket.cs" />
