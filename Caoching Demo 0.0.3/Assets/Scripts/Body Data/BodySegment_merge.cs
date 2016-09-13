@@ -350,7 +350,7 @@ public partial class BodySegment
 	/// MapTorsoSegment: Performs mapping on the torso subsegment from the available sensor data.
 	/// </summary>
 	/// <param name="vTransformatricies">transformation matrices mapped to sensor positions.</param>
-	internal void MapTorsoSegment(Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vTransformatricies)
+	internal void MapTorsoSegment(Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> aTransformatricies)
 	{
 		TorsoAnalysis vTorsoAnalysis = (TorsoAnalysis)mCurrentAnalysisSegment;
 
@@ -368,8 +368,8 @@ public partial class BodySegment
 		vLULSubSegment = vLeftLegSegment.BodySubSegmentsDictionary.FirstOrDefault(x => x.Key == (int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh).Value;
 
 		////////////////////////////////////////////////////////  Mapping /////////////////////////////////////////////////////////////////////
-		BodyFrame.Vect4 vTorsoInitRawQuat = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler;
-		BodyFrame.Vect4 vTorsoCurRawQuat = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].CurrRawEuler;// * 180f / Mathf.PI;
+		BodyFrame.Vect4 vTorsoInitRawQuat = aTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler;
+		BodyFrame.Vect4 vTorsoCurRawQuat = aTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].CurrRawEuler;// * 180f / Mathf.PI;
 
 		Quaternion vTorsoQuat = Quaternion.identity;
 		Quaternion vHipQuat = Quaternion.identity;
@@ -383,8 +383,8 @@ public partial class BodySegment
 		}
 
 		if (!GBodyFrameUsingQuaternion)
-		{
 #endif
+		{
 			Vector3 vTorsoInitialRawEuler = new Vector3(vTorsoInitRawQuat.x, vTorsoInitRawQuat.y, vTorsoInitRawQuat.z) * 180f / Mathf.PI;//vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler * 180f / Mathf.PI;
 			Vector3 vTorsoCurrentRawEuler = new Vector3(vTorsoCurRawQuat.x, vTorsoCurRawQuat.y, vTorsoCurRawQuat.z) * 180f / Mathf.PI;
 			//Upper torso
@@ -434,10 +434,8 @@ public partial class BodySegment
 				vTorsoQuat = Quaternion.Inverse(vHipQuat) * vTorsoQuatY * vTorsoQuatX * vTorsoQuatZ;
 			}
 
-			//Apply results
-#if !SEGMENTS_DEBUG && !SEGMENTS_DEBUG_SIM
 		}
-#endif
+		//Apply results
 		vUSSubsegment.UpdateSubsegmentOrientation(vTorsoQuat, 0, true);
 		vLSSubsegment.UpdateSubsegmentOrientation(vHipQuat, 3, true);
 
