@@ -59,14 +59,10 @@ namespace Assets.Scripts.UI.RecordingLoading.View
         }
 
         IEnumerator ShowAfterThreeFrames()
-        {
-            // UniFileBrowser.use.enabled = false; 
-            yield return new WaitForEndOfFrame();
-            yield return new WaitForEndOfFrame();
+        { 
             yield return new WaitForEndOfFrame();
             UniFileBrowser.use.enabled = true;
             SetTransform();
-
         }
 
         private void SetTransform()

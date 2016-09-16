@@ -16,7 +16,7 @@ using HeddokoLib.heddokoProtobuff.Decoder;
 using ProtoBuf;
 using UnityEngine;
 using Random = UnityEngine.Random;
-
+ 
 namespace Assets.Scripts.Communication
 {
     /// <summary>
@@ -169,7 +169,15 @@ namespace Assets.Scripts.Communication
             if (mIsWorking)
             {
                 mIsWorking = false;
-                mThread.Join();
+                // mThread.Join();
+                try
+                {
+                    mThread.Abort();
+                }
+                catch (Exception)
+                {
+                    
+                 }
             }
         }
         /// <summary>

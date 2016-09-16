@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Communication.View;
+using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.AnaylsisRecording;
 using Assets.Scripts.UI.RecordingLoading;
 using UIWidgets;
@@ -41,6 +42,7 @@ namespace Assets.Scripts.UI.Settings
         public RenameRecordingModule RenameRecordingModule;
         public BodyControlPanel BodyControlPanel;
         public CloudLocalStorageViewManager CloudLocalStorageViewManager;
+        public WindowsApplicationManager AppManager;
         public void Awake()
         {
             ExitApplicationButton.onClick.AddListener(QuitApplication);
@@ -88,7 +90,7 @@ namespace Assets.Scripts.UI.Settings
                 ResolutionSettingSlideBlock.Toggle();
                 CloudLocalStorageViewManager.Hide();
             }
-
+           
             );
             LiveViewButton.Button.onClick.AddListener(() =>
             {
@@ -138,11 +140,39 @@ namespace Assets.Scripts.UI.Settings
                 () => LoadRecordingsButton.interactable = true;
             SegmentAnalysisRecordingController.DataCollectionStartedEvent +=
                 () => LoadRecordingsButton.interactable = false;
-
+            AppManager.OnLogoutEvent += OnLogout;
+            AppManager.OnLoginEvent += InitComponents;
         }
 
- 
+        public void InitComponents()
+        {
+            CloudLocalStorageViewManager.InitializeComponents();
+        }
 
+        void OnLogout()
+        {
+            CloudLocalStorageViewManager.Clear();
+            CloudLocalStorageViewManager.Hide();
+            RecordingPlayerView.Hide();
+            SuitFeedView.Hide();
+            RenameRecordingModule.Hide();
+            if (BrainpackConnectionSlider.IsOpen)
+            {
+                BrainpackConnectionSlider.Toggle();
+            }
+            if (ResolutionSettingSlideBlock.IsOpen)
+            {
+                ResolutionSettingSlideBlock.Toggle();
+            }
+            if (BodyControlPanel.PanelIsVisible())
+            {
+                BodyControlPanel.HidePanel();
+            }
+            if (BrainpackConnectionController.Instance.ConnectionState == BrainpackConnectionState.Connected)
+            {
+                BrainpackConnectionController.Instance.DisconnectBrainpack();
+            }
+        }
 
         public void HideAll()
         {

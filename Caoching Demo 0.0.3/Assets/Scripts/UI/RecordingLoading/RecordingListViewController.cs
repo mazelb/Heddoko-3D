@@ -17,6 +17,7 @@ using Assets.Scripts.UI.RecordingLoading.View;
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.Utils;
 using HeddokoSDK.Models;
+using UIWidgets;
 using UnityEngine;
 
 namespace Assets.Scripts.UI.RecordingLoading
@@ -24,7 +25,7 @@ namespace Assets.Scripts.UI.RecordingLoading
     public delegate void RecordingReady(RecordingListItem vItem);
     public class RecordingListViewController : MonoBehaviour
     {
-
+        public Camera Cam;
         public event RecordingReady RecordingToBePlayedEvent;
         public GameObject DisablingPanel;
         public RecordingListSyncView View;
@@ -39,20 +40,31 @@ namespace Assets.Scripts.UI.RecordingLoading
         private RecordingListFetcher mListFetcher;
         private HeddokoDownloadFetcher mRecordingFetcher;
         private List<RecordingListItem> mRecordingItems = new List<RecordingListItem>();
+        public ScrollRectEvents ScrollRectEvents;
 
         private float mFetchCounter = 12f;
         private float mFetchTime = 12f;
         void Start()
         {
-            //on awake, register onclick to selectable items in the recording list sync view 
-            View.OnClickAction += DoubleClickCheck;
-            mListFetcher = new RecordingListFetcher(UserSessionManager.Instance);
-            mListFetcher.RecordingListUpdatedHandler += LoadDataThroughUnityThread;
-            mRecordingFetcher = new HeddokoDownloadFetcher(UserSessionManager.Instance);
-            mRecordingFetcher.ErrorDownloadingExceptionHandler += ExceptionHandler;
-            mListFetcher.Start();
+            
         }
- 
+
+        public void Init()
+        {
+            View.OnClickAction +=  DoubleClickCheck;
+            if (mListFetcher == null)
+            {
+                mListFetcher = new RecordingListFetcher(UserSessionManager.Instance);
+                mListFetcher.RecordingListUpdatedHandler += LoadDataThroughUnityThread;
+               
+            }
+            mListFetcher.Start();
+            if (mRecordingFetcher == null)
+            {
+                mRecordingFetcher = new HeddokoDownloadFetcher(UserSessionManager.Instance);
+                mRecordingFetcher.ErrorDownloadingExceptionHandler += ExceptionHandler;
+            }
+        }
 
         private void ExceptionHandler(Exception vE)
         {
@@ -77,7 +89,11 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         private void DoubleClickCheck()
         {
-            mClickCount++;
+            if (!Cam.isActiveAndEnabled)
+            {
+                return;
+            }
+                mClickCount++;
             int vNewSelectedItem = View.SelectedIndex;
             if (vNewSelectedItem != -1)
             {
@@ -94,19 +110,22 @@ namespace Assets.Scripts.UI.RecordingLoading
 
         private void Update()
         {
-            if (mClickCount >= 1)
+            if (Cam.gameObject.activeInHierarchy)
             {
-                mTimer += Time.deltaTime;
-                if (mTimer > mDoubleClickTimer)
+                if (mClickCount >= 1)
                 {
-                    mTimer = 0;
-                    mClickCount = 0;
+                    mTimer += Time.deltaTime;
+                    if (mTimer > mDoubleClickTimer)
+                    {
+                        mTimer = 0;
+                        mClickCount = 0;
+                    }
                 }
             }
 
         }
 
-     
+
         /// <summary>
         /// A double click action
         /// </summary>
@@ -114,7 +133,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         private void DoubleClickAction(int vItemIndex)
         {
             var vItem = View.GetRecordingItem(vItemIndex);
-            ProcessRecording(ref vItem);
+            ProcessRecording(ref vItem); 
         }
 
         /// <summary>
@@ -122,8 +141,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         /// <param name="vItem"></param>
         public void ProcessRecording(ref RecordingListItem vItem)
-        {
-
+        { 
             //Check if the item exists in the cache already. else proceed to download it. 
             if (vItem.Location.LocationType == RecordingListItem.LocationType.CachedLocal)
             {
@@ -158,13 +176,14 @@ namespace Assets.Scripts.UI.RecordingLoading
                     vStructure.DownloadLocation = vCachePath + Path.DirectorySeparatorChar + vItem.Name;
                     vStructure.Item = vItem;
                     vItem.Location.LocationType = RecordingListItem.LocationType.DownloadingAndUnavailable;
-                    View.LoadData(mRecordingItems);
+                    View.LoadData(mRecordingItems); 
                     mRecordingFetcher.DownloadCompletedHandler += DownloadCompletedCallback;
                     ThreadPool.QueueUserWorkItem(mRecordingFetcher.FetchData, vStructure);
                 }
             }
         }
 
+        private int count;
         /// <summary>
         /// Callback on when a download has been completed
         /// </summary>
@@ -172,6 +191,9 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <param name="vItem"></param>
         private void DownloadCompletedCallback(BaseModel vHedAsset, ref RecordingListItem vItem)
         {
+            //remove the callback
+            mRecordingFetcher.DownloadCompletedHandler -= DownloadCompletedCallback;
+            Debug.Log("Downloading item "+ vItem.Name + " item count" +count++);
             RecordingListItem vNonRefItem = vItem;
             Action vAction = () => UpdateList(vHedAsset, ref vNonRefItem);
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vAction);
@@ -200,5 +222,22 @@ namespace Assets.Scripts.UI.RecordingLoading
             mListFetcher.Stop();
         }
 
+        /// <summary>
+        /// Clear data
+        /// </summary>
+        public void Clear()
+        {
+            mListFetcher.Stop();
+            View.Clear();
+            mListFetcher.Clear();
+            View.OnClickAction -= DoubleClickCheck;
+        }
+
+        public void ResetDownloadList()
+        {
+            mListFetcher.Start();
+            Clear();
+
+        }
     }
 }

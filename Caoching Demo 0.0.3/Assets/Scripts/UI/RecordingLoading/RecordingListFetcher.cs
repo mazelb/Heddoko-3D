@@ -4,7 +4,6 @@ using System.Threading;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
-using HeddokoSDK;
 using HeddokoSDK.Models;
 
 namespace Assets.Scripts.UI.RecordingLoading
@@ -16,23 +15,19 @@ namespace Assets.Scripts.UI.RecordingLoading
     /// </summary>
     public class RecordingListFetcher
     {
-        private List<RecordingListItem> mRecordingItems = new List<RecordingListItem>();
+        //  private List<RecordingListItem> mRecordingItems = new List<RecordingListItem>();
         private UserProfileModel mProfile;
-        public int ItemNumbersPerPage = 50;
+        public int ItemNumbersPerPage = 500;
         private int mSkipMultiplier = 0;
         public RecordingListUpdated RecordingListUpdatedHandler;
         private IUserProfileManager mManager;
-        private Thread mWorkerThread;
+       private Thread mWorkerThread;
         private bool mIsWorking;
         private int mTimer = 10000;
+
         public RecordingListFetcher(IUserProfileManager vManager)
         {
             mManager = vManager;
-        }
-        public List<RecordingListItem> RecordingItems
-        {
-            get { return mRecordingItems; }
-            set { mRecordingItems = value; }
         }
 
         void WorkingFunction()
@@ -41,31 +36,72 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 try
                 {
-                    UpdateFetchedList();
+                    RequestFetchList();
                 }
                 catch (Exception vE)
                 {
-                     
+
                 }
                 Thread.Sleep(mTimer);
             }
         }
+
+
         /// <summary>
-        /// Updates the fetched list
+        /// Helper function with thread pools
         /// </summary>
-        public void UpdateFetchedList()
+        /// <param name="vItem"></param>
+        public void RequestFetchList(object vItem)
         {
+            RequestFetchList();
+        }
+        /// <summary>
+        /// Sends a request to fetch list
+        /// </summary>
+        public void RequestFetchList()
+        {
+            int vCount = 0;
+            if (mManager.UserProfile.User.RoleType == UserRoleType.Analyst)
+            {
+                var vList = mManager.UserProfile.UserList;
+
+                for (int i = 0; i < vList.TotalCount; i++)
+                {
+                    var vUser = vList.Collection[i];
+                    int vTempCount = UpdateList(vUser);
+                    if (vTempCount != 0)
+                    {
+                        vCount = vTempCount;
+                    }
+                }
+            }
+            else
+            {
+                vCount = UpdateList(mManager.UserProfile.User);
+            }
+            if (vCount > 0)
+            {
+                mSkipMultiplier++;
+            }
+        }
+
+        /// <summary>
+        /// Fetches a list and triggers an update
+        /// </summary>
+        /// <param name="vUser">the users whos recording list needs to be requested</param>
+        /// <returns>the total number of recordings that the fetched list retrieved</returns>
+        private int UpdateList(User vUser)
+        {
+            int vTotalCount = 0;
             ListCollection<Asset> vRecords = mManager.UserProfile.Client.AssetsCollection(new AssetListRequest()
             {
-                UserID = mManager.UserProfile.User.ID,//optional
+                UserID = vUser.ID,
                 Take = ItemNumbersPerPage,
                 Skip = mSkipMultiplier * ItemNumbersPerPage
             });
             if (vRecords != null)
             {
-                //Skip number of items in order to paginate properly.
-                mSkipMultiplier++;
-
+                List<RecordingListItem> vRecordingItems = new List<RecordingListItem>();
                 if (vRecords.Collection.Count > 0)
                 {
                     foreach (var vRecordedAsset in vRecords.Collection)
@@ -74,20 +110,23 @@ namespace Assets.Scripts.UI.RecordingLoading
                         {
                             RecordingListItem vItem = new RecordingListItem();
                             vItem.Name = vRecordedAsset.Name;
-                            //   vItem.Location.RelativePath = vRecordedAsset.Url;
-                            RecordingListItem.RecordingItemLocation vLoc = new RecordingListItem.RecordingItemLocation(vRecordedAsset.Url, RecordingListItem.LocationType.RemoteEndPoint);
+                            RecordingListItem.RecordingItemLocation vLoc =
+                                new RecordingListItem.RecordingItemLocation(vRecordedAsset.Url,
+                                    RecordingListItem.LocationType.RemoteEndPoint);
                             vItem.Location = vLoc;
-                            mRecordingItems.Add(vItem);
+                            vItem.User = vUser;
+                            vRecordingItems.Add(vItem);
                         }
                     }
                 }
                 if (RecordingListUpdatedHandler != null && mIsWorking)
                 {
-                    RecordingListUpdatedHandler(mRecordingItems);
+                    RecordingListUpdatedHandler(vRecordingItems);
                 }
+                vTotalCount = vRecordingItems.Count;
             }
+            return vTotalCount;
         }
-
 
         /// <summary>
         /// stops the work
@@ -99,11 +138,11 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 mWorkerThread.Abort();
             }
-            catch (Exception )
-            { 
+            catch (Exception)
+            {
 
             }
-           
+
         }
 
         /// <summary>
@@ -112,9 +151,14 @@ namespace Assets.Scripts.UI.RecordingLoading
         public void Start()
         {
             mIsWorking = true;
-            mWorkerThread = new Thread(WorkingFunction);
+             mWorkerThread = new Thread(WorkingFunction);
             mWorkerThread.Start();
-            
+
+        }
+
+        public void Clear()
+        {
+            mSkipMultiplier = 0;
         }
     }
 }

@@ -21,7 +21,6 @@ namespace Assets.Scripts.UI
         public SlideBlock CurrSlideBlock;
         public Toggle VSyncToggle;
  
- 
         void Awake()
         {
             CurrSlideBlock = GetComponent<SlideBlock>();

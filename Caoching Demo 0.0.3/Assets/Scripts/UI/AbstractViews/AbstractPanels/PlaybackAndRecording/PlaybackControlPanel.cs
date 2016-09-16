@@ -524,8 +524,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// </summary>
         /// <param name="vNewCsvBodyFramesRecording"></param>
         public void NewRecordingSelected(BodyFramesRecordingBase vNewCsvBodyFramesRecording)
-        {
-            Debug.Log("Recording selected");
+        { 
             if (mBody != null && vNewCsvBodyFramesRecording != null)
             {
                 mBody.StopThread();

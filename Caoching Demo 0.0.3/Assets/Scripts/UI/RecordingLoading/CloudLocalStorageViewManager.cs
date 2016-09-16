@@ -126,5 +126,18 @@ namespace Assets.Scripts.UI.RecordingLoading
             yield return new WaitForSeconds(0.15f);
                 LocalRecordingView.Show();
         }
+
+        /// <summary>
+        /// Clear connent
+        /// </summary>
+        public void Clear()
+        {
+            RecordingListViewController.Clear();
+        }
+
+        public void InitializeComponents()
+        {
+            RecordingListViewController.Init();
+        }
     }
 }

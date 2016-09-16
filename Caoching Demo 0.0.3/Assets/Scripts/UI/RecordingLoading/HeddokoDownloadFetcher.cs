@@ -36,7 +36,8 @@ namespace Assets.Scripts.UI.RecordingLoading
             try
             {
                 DataFetchingStructure vStructure = (DataFetchingStructure)vCallbackStruct;
-                vHedAsset = mProfileManager.UserProfile.Client.DownloadFile(vStructure.Item.Location.RelativePath, vStructure.DownloadLocation); 
+                vHedAsset = mProfileManager.UserProfile.Client.DownloadFile(vStructure.Item.Location.RelativePath, vStructure.DownloadLocation);
+                 
                 if (DownloadCompletedHandler != null)
                 {
                     DownloadCompletedHandler(vHedAsset, ref vStructure.Item);

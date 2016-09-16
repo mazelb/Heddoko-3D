@@ -193,6 +193,16 @@ namespace Assets.Scripts.Licensing.Controller
                         LicenseInfo = vLicense,
                         Client = mClient
                     };
+                    //if user is a analyst
+                    if (vUser.RoleType == UserRoleType.Analyst)
+                    {
+                        ListCollection<User> vUsers = mClient.UsersCollection(new ListRequest()
+                        {
+                            Take = 1000,
+                            Skip = 0
+                        });
+                        vProfileModel.UserList = vUsers;
+                    }
                     if (LoginSuccessEvent != null)
                     {
                         OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginSuccessEvent(vProfileModel));
