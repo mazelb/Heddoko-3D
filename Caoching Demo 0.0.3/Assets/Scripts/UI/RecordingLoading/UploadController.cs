@@ -31,12 +31,31 @@ namespace Assets.Scripts.UI.RecordingLoading
             mCardContentUploadController = new SdCardContentUploadController(UserSessionManager.Instance.UserProfile);
             mCardContentUploadController.DriveFoundEvent += DriveFoundHandler;
             mCardContentUploadController.ContentsCompletedUploadEvent += ContentsCompletedUploadingEvent;
+            mCardContentUploadController.SingleUploadEndEvent += x =>
+            {
+               OutterThreadToUnityThreadIntermediary.QueueActionInUnity(RecordingListViewController.ResetDownloadList);
+            };
+
             mCardContentUploadController.FoundFileListEvent += FoundFileListHandler;
             mCardContentUploadController.ProblemUploadingContentEvent += ProblemUploadEventHandler;
             mCardContentUploadController.DriveDisconnectedEvent += DriveDisconnectedHandler;
             mCardContentUploadController.UploadingStartEvent += UploadingItemStarted;
         }
 
+        void OnApplicationQuit()
+        {
+            mCardContentUploadController.DriveFoundEvent -= DriveFoundHandler;
+            mCardContentUploadController.ContentsCompletedUploadEvent -= ContentsCompletedUploadingEvent;
+            mCardContentUploadController.SingleUploadEndEvent -= x =>
+            {
+                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(RecordingListViewController.ResetDownloadList);
+            };
+
+            mCardContentUploadController.FoundFileListEvent -= FoundFileListHandler;
+            mCardContentUploadController.ProblemUploadingContentEvent -= ProblemUploadEventHandler;
+            mCardContentUploadController.DriveDisconnectedEvent -= DriveDisconnectedHandler;
+            mCardContentUploadController.UploadingStartEvent -= UploadingItemStarted;
+        }
         public void BeginUpload()
         {
             Notify.Template("fade").Show("Beginning upload process, please ensure SD card is inserted and secured in place", 5f, sequenceType: NotifySequence.First);
@@ -105,7 +124,6 @@ namespace Assets.Scripts.UI.RecordingLoading
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
                 Notify.Template("fade").Show("Upload complete", 15f, sequenceType: NotifySequence.First);
-                RecordingListViewController.ResetDownloadList();
             });
 
 

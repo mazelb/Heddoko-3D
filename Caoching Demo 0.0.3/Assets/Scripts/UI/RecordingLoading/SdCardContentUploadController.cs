@@ -109,10 +109,13 @@ namespace Assets.Scripts.UI.RecordingLoading
         private void SingleRecordingCompletionHandler(UploadableListItem vItem)
         {
             mUploadRecordingStatus.SucessfullyUploadedRecordings.Add(vItem);
+            if (SingleUploadEndEvent != null)
+            {
+                SingleUploadEndEvent(vItem);
+            }
             try
             {
-                File.Delete(vItem.RelativePath);
-                UnityEngine.Debug.Log("Deleted file "+ vItem.FileName);
+                File.Delete(vItem.RelativePath); 
             }
             catch (Exception vE)
             {

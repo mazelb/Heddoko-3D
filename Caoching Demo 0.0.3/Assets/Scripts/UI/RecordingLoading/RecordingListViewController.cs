@@ -7,6 +7,7 @@
 // */
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -181,9 +182,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                     ThreadPool.QueueUserWorkItem(mRecordingFetcher.FetchData, vStructure);
                 }
             }
-        }
-
-        private int count;
+        } 
         /// <summary>
         /// Callback on when a download has been completed
         /// </summary>
@@ -192,8 +191,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         private void DownloadCompletedCallback(BaseModel vHedAsset, ref RecordingListItem vItem)
         {
             //remove the callback
-            mRecordingFetcher.DownloadCompletedHandler -= DownloadCompletedCallback;
-            Debug.Log("Downloading item "+ vItem.Name + " item count" +count++);
+            mRecordingFetcher.DownloadCompletedHandler -= DownloadCompletedCallback; 
             RecordingListItem vNonRefItem = vItem;
             Action vAction = () => UpdateList(vHedAsset, ref vNonRefItem);
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vAction);
@@ -235,9 +233,16 @@ namespace Assets.Scripts.UI.RecordingLoading
 
         public void ResetDownloadList()
         {
-            mListFetcher.Start();
-            Clear();
+            StartCoroutine(WaitOneSecondThenDownload());
+            Debug.Log("reset download list");
+        }
 
+        private IEnumerator WaitOneSecondThenDownload()
+        {
+            yield return new WaitForSeconds(1f);
+            Clear();
+            mListFetcher.Start();
+            View.OnClickAction += DoubleClickCheck;
         }
     }
 }

@@ -36,6 +36,15 @@ namespace Assets.Scripts.UI.Settings
         {
             get
             {
+                if (string.IsNullOrEmpty(sPreferedRecordingsFolder))
+                {
+                    DirectoryInfo vDirectoryInfo = new DirectoryInfo(Application.dataPath);
+                    if (Directory.Exists(vDirectoryInfo.Name))
+                    {
+                        sPreferedRecordingsFolder = vDirectoryInfo.Parent.ToString() + Path.DirectorySeparatorChar + "DemoRecordings";
+                        Directory.CreateDirectory(sPreferedRecordingsFolder);
+                    }
+                }
                 return sPreferedRecordingsFolder;
             }
             set
@@ -43,8 +52,12 @@ namespace Assets.Scripts.UI.Settings
                 if (string.IsNullOrEmpty(value))
                 {
                     DirectoryInfo vDirectoryInfo = new DirectoryInfo(Application.dataPath);
-                    sPreferedRecordingsFolder = vDirectoryInfo.Parent + "\\DemoRecordings";
-                    value = sPreferedRecordingsFolder;
+                    if (Directory.Exists(vDirectoryInfo.Name))
+                    {
+                        sPreferedRecordingsFolder = vDirectoryInfo.Parent.ToString() + Path.DirectorySeparatorChar + "DemoRecordings";
+                        Directory.CreateDirectory(sPreferedRecordingsFolder);
+                        value = sPreferedRecordingsFolder;
+                    }
                 }
 
                 //make sure that this folder exists. else set it to the default application folder
