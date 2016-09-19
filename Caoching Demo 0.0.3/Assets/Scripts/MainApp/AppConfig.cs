@@ -3,7 +3,7 @@ public static class AppConfig
     ///<summary>
     ///The application version
     ///</summary>
-    private static string sVersion = 1.0.17.0;
+    private static string sVersion = 1.0.18.0;
     public static string Version
     {
         get
