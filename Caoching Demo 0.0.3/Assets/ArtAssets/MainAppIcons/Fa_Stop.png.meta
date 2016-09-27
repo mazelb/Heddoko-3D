@@ -1,10 +1,9 @@
 fileFormatVersion: 2
-guid: f71950da10446234ea7171794dcacec3
-timeCreated: 1464969442
+guid: 44d6395ead510af4b9fd67ab0dee3838
+timeCreated: 1474989826
 licenseType: Pro
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: Fa_Stop_0
+  fileIDToRecycleName: {}
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -30,7 +29,7 @@ TextureImporter:
   textureFormat: -1
   maxTextureSize: 2048
   textureSettings:
-    filterMode: -1
+    filterMode: 2
     aniso: 16
     mipBias: -1
     wrapMode: 1
@@ -39,48 +38,18 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 9
-  spritePivot: {x: 0.4, y: 0.5}
-  spriteBorder: {x: 0, y: 27, z: 104, w: 39}
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spritePixelsToUnits: 100
   alphaIsTransparency: 1
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites:
-    - name: Fa_Stop_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 27
-        width: 360
-        height: 362
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline:
-      - - {x: 180, y: 166}
-        - {x: 179, y: 167}
-        - {x: 179, y: 170}
-        - {x: 178, y: 173}
-        - {x: 171, y: 179}
-        - {x: 167, y: 180}
-        - {x: 166, y: 181}
-        - {x: -169, y: 181}
-        - {x: -170, y: 180}
-        - {x: -174, y: 179}
-        - {x: -180, y: 174}
-        - {x: -180, y: -173}
-        - {x: -173, y: -180}
-        - {x: -171, y: -180}
-        - {x: -170, y: -181}
-        - {x: 167, y: -181}
-        - {x: 170, y: -180}
-        - {x: 176, y: -176}
-        - {x: 180, y: -167}
+    sprites: []
     outline: []
   spritePackingTag: 
   userData: 
