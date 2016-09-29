@@ -82,30 +82,16 @@ namespace Assets.Scripts.UI.Settings
                 if (string.IsNullOrEmpty(sCacheFolderPath))
                 {
                     //check player prefs
-                    string vVal = PlayerPrefs.GetString("RecCache");
-                    if (string.IsNullOrEmpty(vVal))
+                    string vVal = Application.persistentDataPath + Path.DirectorySeparatorChar + "RecCache";
+                    if (!Directory.Exists(vVal))
                     {
-                        //set the default to the current executable's directory + cache
-                        vVal = Application.dataPath + Path.DirectorySeparatorChar + "RecCache";
-                        if (!Directory.Exists(vVal))
-                        {
-                            Directory.CreateDirectory(vVal);
-                        }
-                        PlayerPrefs.SetString("RecCache", vVal);
+                        Directory.CreateDirectory(vVal);
                     }
                     sCacheFolderPath = vVal;
                 }
                 return sCacheFolderPath;
             }
-            set
-            {
-                if (value == null)
-                {
-                    throw new NullReferenceException("The cached folder's cannot be an empty string");
-                }
-                sCacheFolderPath = value;
-                PlayerPrefs.SetString("RecCache", sCacheFolderPath);
-            }
+            
         }
 
         /// <summary>
@@ -198,7 +184,7 @@ namespace Assets.Scripts.UI.Settings
                 sAnalysisAttributeSettingsFile = vVal;
                 return sAnalysisAttributeSettingsFile + ".txt";
             }
-            
+
         }
     }
 }

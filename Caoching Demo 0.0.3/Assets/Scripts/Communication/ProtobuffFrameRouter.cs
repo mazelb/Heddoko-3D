@@ -5,7 +5,8 @@
 * @date June 2016
 * Copyright Heddoko(TM) 2016,  all rights reserved
 */
- 
+
+using System;
 using System.IO;
 using System.Threading;
 using heddoko;
