@@ -13,15 +13,16 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.RecordingLoading.View
 {
-    public class SingleRecordingListItemComponent:ListViewItem, IResizableItem
+    public class SingleRecordingListItemComponent : ListViewItem, IResizableItem
     {
-        public Text NameRow; 
+        public Text NameRow;
+        public Text UserRow;
         public SingleRecListItemButtons ButtonContainer;
         private GameObject[] mObjectsToResize;
         void Awake()
         {
             base.Awake();
-            mObjectsToResize = new[] {NameRow.gameObject, ButtonContainer.gameObject}; 
+            mObjectsToResize = new[] { NameRow.gameObject, ButtonContainer.gameObject };
         }
 
         /// <summary>
@@ -39,7 +40,15 @@ namespace Assets.Scripts.UI.RecordingLoading.View
         public void SetData(RecordingListItem vItem)
         {
             NameRow.text = vItem.Name;
-            ButtonContainer.SetData(vItem); 
+            ButtonContainer.SetData(vItem);
+            if (vItem.User != null)
+            {
+                UserRow.text = vItem.User.Name;
+            }
+            else
+            {
+                UserRow.text = "";
+            }
         }
 
 

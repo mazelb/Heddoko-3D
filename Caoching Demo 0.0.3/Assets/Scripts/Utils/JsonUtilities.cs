@@ -57,7 +57,6 @@ namespace Assets.Scripts.Utils
 
                 });
 
-
             return vJsonString;//vStringBuilder.ToString();
 
         }

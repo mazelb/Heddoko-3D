@@ -7,11 +7,11 @@
 // */
 
 
-using System; 
+using System;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.UI.RecordingLoading.Model;
 using HeddokoSDK.Models;
- 
+
 namespace Assets.Scripts.UI.RecordingLoading
 {
     public delegate void UploadComplete(UploadableListItem vItem);
@@ -39,15 +39,29 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             try
             {
-                UploadableListItem vUploadableItem = (UploadableListItem) vItem;
+                UploadableListItem vUploadableItem = (UploadableListItem)vItem;
                 Asset vAsset = mProfile.Client.Upload(new AssetRequest()
-                {
-                    KitID = null,//mProfile.User.Kit.ID,
+                { 
+                    Serial = vUploadableItem.BrainpackSerialNumber,
                     Type = AssetType.Record
                 }, vUploadableItem.RelativePath);
-                if (UploadCompleteEvent != null)
+                if (vAsset.IsOk)
                 {
-                    UploadCompleteEvent(vUploadableItem);
+                    if (UploadCompleteEvent != null)
+                    {
+                        UploadCompleteEvent(vUploadableItem);
+                    }
+                }
+                else
+                {
+                    ErrorCollection vCollection =vAsset.Errors;
+                    ErrorUploadEventArgs vObj = new ErrorUploadEventArgs()
+                    {
+                        Object = (UploadableListItem)vItem,
+                        ExceptionArgs = null,
+                        ErrorCollection =  vCollection
+                    };
+                    InvokeErrorEvent(vObj);
                 }
             }
             catch (Exception vE)
@@ -56,13 +70,25 @@ namespace Assets.Scripts.UI.RecordingLoading
                 {
                     ErrorUploadEventArgs vObj = new ErrorUploadEventArgs()
                     {
-                        Object = vItem,
+                        Object = (UploadableListItem)vItem,
                         ExceptionArgs = vE
                     };
                     UploadErrorEvent(vObj);
                 }
             }
-         }
+        }
+
+        /// <summary>
+        /// Invokes error events
+        /// </summary>
+        /// <param name="vArgs"></param>
+        void InvokeErrorEvent(ErrorUploadEventArgs vArgs )
+        {
+            if (UploadErrorEvent != null)
+            {
+                UploadErrorEvent(vArgs);
+            }
+        }
     }
 
     /// <summary>
@@ -70,7 +96,8 @@ namespace Assets.Scripts.UI.RecordingLoading
     /// </summary>
     public class ErrorUploadEventArgs
     {
-        public object Object;
+        public UploadableListItem Object;
+        public ErrorCollection ErrorCollection;
         public Exception ExceptionArgs;
     }
 }

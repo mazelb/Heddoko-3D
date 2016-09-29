@@ -18,7 +18,7 @@ using Assets.Scripts.UI.RecordingLoading.Model;
 namespace Assets.Scripts.UI.RecordingLoading
 {
     public delegate void ContentsCompletedUpload();
-    public delegate void ProblemUploadingContent(List<UploadableListItem> vItems);
+    public delegate void ProblemUploadingContent(ErrorUploadEventArgs vArgs);
 
     public delegate void SingleUploadingStartEvent(UploadableListItem vItem);
 
@@ -98,7 +98,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             UploadableListItem vItem = vArgs.Object as UploadableListItem;
             if (vItem != null)
             {
-                    mUploadRecordingStatus.ProblematicRecordings.Add(vItem, vArgs.ExceptionArgs);
+               mUploadRecordingStatus.ProblematicUploads =vArgs;
             }
         }
 
@@ -109,10 +109,13 @@ namespace Assets.Scripts.UI.RecordingLoading
         private void SingleRecordingCompletionHandler(UploadableListItem vItem)
         {
             mUploadRecordingStatus.SucessfullyUploadedRecordings.Add(vItem);
+            if (SingleUploadEndEvent != null)
+            {
+                SingleUploadEndEvent(vItem);
+            }
             try
             {
-                File.Delete(vItem.RelativePath);
-                UnityEngine.Debug.Log("Deleted file "+ vItem.FileName);
+                File.Delete(vItem.RelativePath); 
             }
             catch (Exception vE)
             {
@@ -191,9 +194,9 @@ namespace Assets.Scripts.UI.RecordingLoading
                  
             }
             //On completion handle errors and succesful  uploads
-            if (mUploadRecordingStatus.ProblematicRecordings.Count > 0)
+            if (mUploadRecordingStatus.ProblematicUploads != null && mUploadRecordingStatus.ProblematicUploads.ErrorCollection.Errors.Count > 0)
             {
-                ProblemUploadingContentEvent(mUploadRecordingStatus.ProblematicRecordings.Keys.ToList());
+                ProblemUploadingContentEvent(mUploadRecordingStatus.ProblematicUploads);
             }
             else
             {
@@ -234,7 +237,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <summary>
         /// a list of recordings who have had problems uploading
         /// </summary>
-        public Dictionary<UploadableListItem, Exception> ProblematicRecordings = new Dictionary<UploadableListItem, Exception>();
+        public ErrorUploadEventArgs  ProblematicUploads; 
         public List<UploadableListItem> SucessfullyUploadedRecordings = new List<UploadableListItem>();
     }
 }

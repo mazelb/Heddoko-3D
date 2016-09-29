@@ -20,11 +20,11 @@ namespace Assets.Scripts.UI.RecordingLoading.View
     public class RecordingListSyncView : ListViewCustom<SingleRecordingListItemComponent, RecordingListItem>
     {
 
+        public UnityAction OnClickAction;
         void Awake()
         {
             base.Start();
         }
-        public UnityAction OnClickAction;
         /// <summary>
         /// Load data into the list
         /// </summary>
@@ -32,7 +32,7 @@ namespace Assets.Scripts.UI.RecordingLoading.View
         public void LoadData(List<RecordingListItem> vSingleRecItemList)
         {
             DataSource.BeginUpdate();
-            DataSource.Clear();
+           // DataSource.Clear();
             for (int i = 0; i < vSingleRecItemList.Count; i++)
             {
                 Add(vSingleRecItemList[i]);

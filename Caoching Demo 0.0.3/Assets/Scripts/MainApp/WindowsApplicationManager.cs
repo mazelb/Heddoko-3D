@@ -22,6 +22,9 @@ using UnityEngine.EventSystems;
 
 namespace Assets.Scripts.MainApp
 {
+    public delegate void OnLogout();
+
+    public delegate void OnLogin();
     /// <summary>
     /// The application manager in a windows environment
     /// </summary>
@@ -32,6 +35,8 @@ namespace Assets.Scripts.MainApp
         /// </summary>
         public GameObject[] DisableWorkerRoleObjects;
 
+        public event OnLogin OnLoginEvent;
+        public event OnLogout OnLogoutEvent;
         public GameObject LoginViewRoot;
         public GameObject ApplicationRoot;
         /// <summary>
@@ -68,6 +73,10 @@ namespace Assets.Scripts.MainApp
             }
             StartCoroutine(FlipEventSystemStates());
             UserSessionManager.Instance.UserProfile = mCurrentProfileModel;
+            if (OnLoginEvent != null)
+            {
+                OnLoginEvent();
+            }
         }
  
         /// <summary>
@@ -96,6 +105,10 @@ namespace Assets.Scripts.MainApp
             foreach (var vDisableWorkerRoleObject in DisableWorkerRoleObjects)
             {
                 vDisableWorkerRoleObject.gameObject.SetActive(true);
+            }
+            if (OnLogoutEvent != null)
+            {
+                OnLogoutEvent();
             }
         }
 

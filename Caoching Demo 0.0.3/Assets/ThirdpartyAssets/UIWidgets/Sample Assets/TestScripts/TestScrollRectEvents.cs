@@ -73,12 +73,14 @@ namespace UIWidgetsSamples {
 
 		public void Refresh()
 		{
+            Debug.Log("refreshing");
 			StartCoroutine(LoadData(0));
 		}
 
 		public void LoadMore()
 		{
-			StartCoroutine(LoadData(data.Count));
+            Debug.Log("LoadMore");
+            StartCoroutine(LoadData(data.Count));
 		}
 
 		void OnDestroy()

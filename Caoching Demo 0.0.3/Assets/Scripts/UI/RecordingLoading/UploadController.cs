@@ -11,8 +11,10 @@ using System.IO;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
 using Assets.Scripts.Utils;
+using Assets.Scripts.Utils.DebugContext.logging;
 using UIWidgets;
 using UnityEngine;
+using LogType = Assets.Scripts.Utils.DebugContext.logging.LogType;
 
 namespace Assets.Scripts.UI.RecordingLoading
 {
@@ -22,18 +24,38 @@ namespace Assets.Scripts.UI.RecordingLoading
     public class UploadController : MonoBehaviour
     {
         private SdCardContentUploadController mCardContentUploadController;
+        public RecordingListViewController RecordingListViewController;
 
         void Start()
         {
             mCardContentUploadController = new SdCardContentUploadController(UserSessionManager.Instance.UserProfile);
             mCardContentUploadController.DriveFoundEvent += DriveFoundHandler;
             mCardContentUploadController.ContentsCompletedUploadEvent += ContentsCompletedUploadingEvent;
+            mCardContentUploadController.SingleUploadEndEvent += x =>
+            {
+               OutterThreadToUnityThreadIntermediary.QueueActionInUnity(RecordingListViewController.ResetDownloadList);
+            };
+
             mCardContentUploadController.FoundFileListEvent += FoundFileListHandler;
             mCardContentUploadController.ProblemUploadingContentEvent += ProblemUploadEventHandler;
             mCardContentUploadController.DriveDisconnectedEvent += DriveDisconnectedHandler;
             mCardContentUploadController.UploadingStartEvent += UploadingItemStarted;
         }
 
+        void OnApplicationQuit()
+        {
+            mCardContentUploadController.DriveFoundEvent -= DriveFoundHandler;
+            mCardContentUploadController.ContentsCompletedUploadEvent -= ContentsCompletedUploadingEvent;
+            mCardContentUploadController.SingleUploadEndEvent -= x =>
+            {
+                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(RecordingListViewController.ResetDownloadList);
+            };
+
+            mCardContentUploadController.FoundFileListEvent -= FoundFileListHandler;
+            mCardContentUploadController.ProblemUploadingContentEvent -= ProblemUploadEventHandler;
+            mCardContentUploadController.DriveDisconnectedEvent -= DriveDisconnectedHandler;
+            mCardContentUploadController.UploadingStartEvent -= UploadingItemStarted;
+        }
         public void BeginUpload()
         {
             Notify.Template("fade").Show("Beginning upload process, please ensure SD card is inserted and secured in place", 5f, sequenceType: NotifySequence.First);
@@ -53,9 +75,20 @@ namespace Assets.Scripts.UI.RecordingLoading
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => Debug.Log("started uploading " + vItem.FileName));
 
         }
-        private void ProblemUploadEventHandler(List<UploadableListItem> vVitems)
+        private void ProblemUploadEventHandler(ErrorUploadEventArgs vItem)
         {
-            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => Debug.Log("There was a problem uploading " + vVitems.Count));
+            //append to log file
+            for (int i = 0; i < vItem.ErrorCollection.Errors.Count; i++)
+            {
+                string vMsg = "Error Uploading: ";
+                if (vItem.Object != null)
+                {
+                    vMsg += vItem.Object.FileName;
+                }
+                vMsg += " ERROR CODE "+ vItem.ErrorCollection.Errors[i].Code + " ERROR MSG "+ vItem.ErrorCollection.Errors[i].Message;
+                DebugLogger.Instance.LogMessage(LogType.Uploading, vMsg);
+            }
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => Notify.Template("fade").Show("There was an issue uploading one or more recording files. For more details please see log file " + DebugLogger.Instance.GetLogPath(LogType.Uploading),customHideDelay:15f));
         }
 
         /// <summary>
@@ -81,7 +114,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                     var vTemp = Notify.Template("SyncNotification");
                     vTemp.gameObject.GetComponent<NotifyWithButtonExtension>()
                         .RegisterCallbackAndRemovePreviousCallback(BeginUpload);
-                    vTemp.Show(vMsg, 5f, sequenceType: NotifySequence.First);
+                    vTemp.Show(vMsg, 30f, sequenceType: NotifySequence.First);
                 }
             });
         }
@@ -89,8 +122,11 @@ namespace Assets.Scripts.UI.RecordingLoading
         private void ContentsCompletedUploadingEvent()
         {
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
+            {
+                Notify.Template("fade").Show("Upload complete", 15f, sequenceType: NotifySequence.First);
+            });
 
-                    Notify.Template("fade").Show("Upload complete", 15f, sequenceType: NotifySequence.First));
+
 
         }
 

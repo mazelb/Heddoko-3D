@@ -7,6 +7,7 @@
 // */
 
 using System;
+using HeddokoSDK.Models;
 
 namespace Assets.Scripts.UI.RecordingLoading.Model
 {
@@ -24,7 +25,10 @@ namespace Assets.Scripts.UI.RecordingLoading.Model
         /// </summary>
         public string Name { get; set; }
  
-
+        /// <summary>
+        /// Who created the recording?
+        /// </summary>
+        public User User { get; set; }
         /// <summary>
         /// Public getter, internal setter property: the location of the item
         /// </summary>

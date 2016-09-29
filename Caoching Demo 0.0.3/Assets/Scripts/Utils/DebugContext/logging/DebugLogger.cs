@@ -49,6 +49,7 @@ namespace Assets.Scripts.Utils.DebugContext.logging
                 return sInstance;
             }
         }
+ 
         public void LogMessage(LogType vType, string vMsg)
         {
             try
@@ -199,6 +200,14 @@ namespace Assets.Scripts.Utils.DebugContext.logging
                 }
                 return false;
             });
+            sSettingsRegistry.Add(LogType.Downloading, () =>
+            {
+                return true;
+            } );
+            sSettingsRegistry.Add(LogType.Uploading, () =>
+            {
+                return true;
+            });
 
         }
 
@@ -225,6 +234,9 @@ namespace Assets.Scripts.Utils.DebugContext.logging
             mLogTypeToLogpathType.Add(LogType.FrameRenderingFinish, OutputLogPath.MappingLog);
             mLogTypeToLogpathType.Add(LogType.BodyFrameThreadStart, OutputLogPath.MappingLog);
             mLogTypeToLogpathType.Add(LogType.BodyFrameThreadEnd, OutputLogPath.MappingLog);
+            mLogTypeToLogpathType.Add(LogType.Uploading, OutputLogPath.ApplicationLog);
+            mLogTypeToLogpathType.Add(LogType.Downloading, OutputLogPath.ApplicationLog);
+
         }
 
         public void Start()
@@ -254,13 +266,20 @@ namespace Assets.Scripts.Utils.DebugContext.logging
             }
         }
 
+        public string GetLogPath(LogType vType)
+        {
+            string vLogType = mLogTypeToLogpathType[vType].ToString();
+            string vTodaysDate = DateTime.Now.ToString("yy-MM-dd");
+            string vCurrentFilePath = mLogDirPath + "\\" + vLogType + vTodaysDate;
+            return vCurrentFilePath;
+        }
         private void WriteFile(Log vLog)
         {
             try
             {
                 string vLogType = mLogTypeToLogpathType[vLog.LogType].ToString();
+                string vCurrentFilePath = GetLogPath(vLog.LogType) + ".csv";
                 string vTodaysDate = DateTime.Now.ToString("yy-MM-dd");
-                string vCurrentFilePath = mLogDirPath + "\\" + vLogType + vTodaysDate + ".csv";
                 //check if log directory exists first, create it
                 if (!Directory.Exists(mLogDirPath))
                 {
@@ -324,7 +343,9 @@ namespace Assets.Scripts.Utils.DebugContext.logging
         SegmentUpdateStart,
         SegmentUpdateFinish,
         BodyFrameThreadEnd,
-        BodyFrameThreadStart
+        BodyFrameThreadStart,
+        Uploading,
+        Downloading
     }
 
     public enum OutputLogPath

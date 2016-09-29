@@ -36,7 +36,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         private List<RecordingListItem> mRecordingItems = new List<RecordingListItem>();
         private RecordingListFetcher mListFetcher;
         private HeddokoDownloadFetcher mRecordingFetcher;
-        public int ItemNumbersPerPage = 25;
+        public int ItemNumbersPerPage = 1000;
         private int mSkipMultiplier = 0;
 
         void Awake()
@@ -55,20 +55,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             OutterThreadToUnityThreadIntermediary.EnqueueOverwrittableActionInUnity("LoadDownloadedRecordingsList", () => RecordingListSyncView.LoadData(vList));
         }
-        /// <summary>
-        /// Updates the recording list of items that belong to a user
-        /// </summary>
-        public void UpdateList()
-        {
-            mListFetcher.UpdateFetchedList();
-            if (mListFetcher.RecordingItems.Count > 0)
-            {
-                mRecordingItems = mListFetcher.RecordingItems;
-                RecordingListSyncView.LoadData(mRecordingItems);
-            }
-
-        }
-
+ 
 
         public void ReleaseResources()
         {
@@ -168,5 +155,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             Debug.Log(vE.Message);
         }
+
+       
     }
 }
