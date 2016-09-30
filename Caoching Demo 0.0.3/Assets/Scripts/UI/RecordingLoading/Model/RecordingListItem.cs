@@ -16,6 +16,10 @@ namespace Assets.Scripts.UI.RecordingLoading.Model
     /// </summary>
     public class RecordingListItem
     {
+        public RecordingListItem()
+        {
+            
+        }
         /// <summary>
         /// marked as nullable.
         /// </summary>
@@ -44,7 +48,7 @@ namespace Assets.Scripts.UI.RecordingLoading.Model
         /// </summary>
         public DateTime CreationDate { get; internal set; }
 
-
+        public AssetType AssetType { get; internal set; }
         /// <summary>
         /// Public getter, internal setter property: Uploaded date of the item
         /// </summary>

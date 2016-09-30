@@ -110,6 +110,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                         {
                             RecordingListItem vItem = new RecordingListItem();
                             vItem.Name = vRecordedAsset.Name;
+                            vItem.AssetType = AssetType.Record;
                             RecordingListItem.RecordingItemLocation vLoc =
                                 new RecordingListItem.RecordingItemLocation(vRecordedAsset.Url,
                                     RecordingListItem.LocationType.RemoteEndPoint);

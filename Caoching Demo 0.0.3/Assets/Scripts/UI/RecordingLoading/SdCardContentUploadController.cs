@@ -15,7 +15,7 @@ using System.Threading;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
-using HeddokoSDK.Models;
+using HeddokoSDK.Models; 
 
 namespace Assets.Scripts.UI.RecordingLoading
 {
@@ -48,7 +48,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         private object mLockObject = new object();
         private Thread mWorker;
         private List<FileInfo> mFoundRecordingsList = new List<FileInfo>();
-        
+
         public UploadableListItem BrainpackLogFileItem;
         /// <summary>
         /// Is the current thread worker working?
@@ -83,13 +83,13 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <param name="vProfileModel"></param>
         public SdCardContentUploadController(UserProfileModel vProfileModel)
         {
-            mForbiddenFileList = new List<string> { "logIndex.dat" , "settings.dat" };
+            mForbiddenFileList = new List<string> { "logIndex.dat", "settings.dat" };
             mUserProfileModel = vProfileModel;
             mSearcher = new HeddokoSdCardSearcher();
             mSearcher.DriveFoundEvent += FoundSdCardEventHandler;
             mSearcher.Start();
             mUploader = new AssetUploader(mUserProfileModel);
-            mUploader.UploadCompleteEvent += SingleRecordingCompletionHandler;
+            mUploader.UploadCompleteEvent += UploadCompletionHandler;
             mUploader.UploadErrorEvent += SingleRecordingErrorHandler;
         }
 
@@ -107,10 +107,28 @@ namespace Assets.Scripts.UI.RecordingLoading
         }
 
         /// <summary>
-        /// A single recording completion handler
+        /// upload completion handler
         /// </summary>
         /// <param name="vItem"></param>
-        private void SingleRecordingCompletionHandler(UploadableListItem vItem)
+        private void UploadCompletionHandler(UploadableListItem vItem)
+        {
+            switch (vItem.AssetType)
+            {
+                case AssetType.Log:
+                    BrainpackLogFileUploadHandler();
+                    break;
+                case AssetType.Record:
+                    RecordingUploadHander(vItem);
+                    break;
+            }
+
+        }
+
+        /// <summary>
+        /// A handler on successful recording upload
+        /// </summary>
+        /// <param name="vItem"></param>
+        void RecordingUploadHander(UploadableListItem vItem)
         {
             mUploadRecordingStatus.SucessfullyUploadedRecordings.Add(vItem);
             if (SingleUploadEndEvent != null)
@@ -125,8 +143,38 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 UnityEngine.Debug.Log(vE);
             }
+
         }
 
+        /// <summary>
+        /// Handler for succesful file upload handler.      
+        /// </summary>
+        void BrainpackLogFileUploadHandler( )
+        {
+            //delete file
+            FileInfo vBpLogFileItem = new FileInfo(BrainpackLogFileItem.RelativePath);
+            var vBackupDirPath = vBpLogFileItem.DirectoryName + Path.DirectorySeparatorChar + "Backup";
+            if (!Directory.Exists(vBackupDirPath))
+            {
+                Directory.CreateDirectory(vBackupDirPath);
+            }
+
+            var vFileName = vBpLogFileItem.Name;
+            int vIndex = 0;
+            while (true)
+            {
+                if (File.Exists(vBackupDirPath + Path.DirectorySeparatorChar + vFileName + vIndex))
+                {
+                    vIndex++;
+                    continue;
+                }
+
+                vBpLogFileItem.CopyTo(vBackupDirPath + Path.DirectorySeparatorChar + vFileName + vIndex);
+                vBpLogFileItem.Delete();
+                break;
+            }
+
+        }
 
         /// <summary>
         /// Starts a worker and begins to search for recordings from the sd card.
@@ -200,7 +248,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                 }
 
                 UploadBrainpackLogData();
-             
+
             }
 
             //On completion handle errors and succesful  uploads
@@ -227,33 +275,11 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             if (BrainpackLogFileItem != null)
             {
-
                 mUploader.UploadSingleItem(BrainpackLogFileItem);
-                //delete file
-                FileInfo vBpLogFileItem = new FileInfo(BrainpackLogFileItem.RelativePath);
-                var vBackupDirPath = vBpLogFileItem.DirectoryName + Path.DirectorySeparatorChar + "Backup";
-                if (!Directory.Exists(vBackupDirPath))
-                {
-                    Directory.CreateDirectory(vBackupDirPath);
-                }
-
-                var vFileName = vBpLogFileItem.Name;
-                int vIndex = 0;
-                while (true)
-                {
-                    if (File.Exists(vBackupDirPath + Path.DirectorySeparatorChar + vFileName + vIndex))
-                    {
-                        vIndex++;
-                        continue;
-                    }
-
-                    vBpLogFileItem.CopyTo(vBackupDirPath + Path.DirectorySeparatorChar + vFileName + vIndex);
-                    vBpLogFileItem.Delete();
-                    break;
-                }
-
             }
         }
+
+
         /// <summary>
         /// Handler that handles SD card found events
         /// </summary>
@@ -292,6 +318,18 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <param name="vDrive"></param>
         private void UpdateBrainpackLogInfo(DirectoryInfo vDrive)
         {
+            //get brainpack serial number
+            string vBpSerial = mSearcher.GetSerialNumFromSdCard();
+            if (vBpSerial != null)
+            {
+                BrainpackLogFileItem = new UploadableListItem()
+                {
+                    FileName = "sysHdk.bin",
+                    RelativePath = vDrive.Name + Path.DirectorySeparatorChar + "sysHdk.bin",
+                    BrainpackSerialNumber = vBpSerial,
+                    AssetType = AssetType.Log
+                };
+            }
             var vFiles = vDrive.GetFiles();
             var vLogFile = vFiles.First(vX => vX.Name.Contains("sysHdk.bin"));
             if (vLogFile != null)
@@ -311,17 +349,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                         }
                     }
                 }
-                if (vBrainpackSerial != null)
-                {
-                    BrainpackLogFileItem = new UploadableListItem()
-                    {
-                        FileName = "sysHdk.bin",
-                        RelativePath = vDrive.Name + Path.DirectorySeparatorChar + "sysHdk.bin",
-                        BrainpackSerialNumber = vBrainpackSerial,
-                        AssetType = AssetType.Log
-                    };
-
-                }
+                
             }
         }
     }

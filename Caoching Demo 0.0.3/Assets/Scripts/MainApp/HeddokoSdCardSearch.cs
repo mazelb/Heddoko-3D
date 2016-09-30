@@ -8,8 +8,9 @@
 
 using System;
 using System.IO;
-using System.Threading;
-using UnityEngine;
+using System.Threading; 
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Assets.Scripts.MainApp
 {
@@ -17,14 +18,39 @@ namespace Assets.Scripts.MainApp
 
     public delegate void HeddokoDriveDisconnected();
     /// <summary>
-    /// Searches for sd cards with "HEDDOKO" in their names, triggering events on found or disconnected
+    /// Searches for sd cards with based on their file hierarchy, triggering events on found or disconnected
     /// </summary>
     public class HeddokoSdCardSearcher
     {
         public event HeddokoDriveFound DriveFoundEvent;
         public event HeddokoDriveDisconnected HeddokoDriveDisconnectedEvent;
-        private DirectoryInfo mFoundDrive;
+         
+        private BrainpackSdCardStruct mHeddokoSdCardStruct = new BrainpackSdCardStruct();
         private Thread mWorkerThread;
+        private object mLockObject= new object();
+        private bool mSdCardIsConnected;
+
+        /// <summary>
+        /// is the sd card current connected?
+        /// </summary>
+        public bool SdCardIsConnected
+        {
+            get
+            {
+                lock (mLockObject)
+                {
+                    return mSdCardIsConnected;
+                }
+            }
+           private set
+            {
+                lock (mLockObject)
+                {
+                      mSdCardIsConnected =value;
+                }
+            }
+
+        }
         private bool mIsWorking;
         public HeddokoSdCardSearcher()
         {
@@ -33,7 +59,7 @@ namespace Assets.Scripts.MainApp
 
         public DirectoryInfo FoundDrive
         {
-            get { return mFoundDrive; }
+            get { return mHeddokoSdCardStruct.DirectoryInfo; }
         }
 
         /// <summary>
@@ -50,11 +76,12 @@ namespace Assets.Scripts.MainApp
                     Thread.Sleep(100);
                     vDriveInfo = Directory.GetLogicalDrives();
                     var vDir = SearchForDriveLabel(vDriveInfo);
-                    if (mFoundDrive == null)
+                    if (mHeddokoSdCardStruct.DirectoryInfo == null)
                     {
                         if (vDir !=null)
                         {
-                            AssignDrive(vDir); 
+                            AssignDrive(vDir);
+                            GetSerialNumFromSdCard();
                         }
                     }
 
@@ -62,12 +89,13 @@ namespace Assets.Scripts.MainApp
                     {
                         try
                         {
-                            var vDirectoryInfo = new DirectoryInfo(mFoundDrive.Name);
+                            var vDirectoryInfo = new DirectoryInfo(mHeddokoSdCardStruct.DirectoryInfo.Name);
                             var vFiles = vDirectoryInfo.GetFiles();
                         }
                         catch (DirectoryNotFoundException)
                         {
                             UnassignDrive();
+                            mHeddokoSdCardStruct.BrainpackSerialNumber = null;
                         }
                     }
 
@@ -76,7 +104,7 @@ namespace Assets.Scripts.MainApp
             catch (Exception vE)
             {
                 string vMes = vE.Message;
-                 Debug.Log("exception! "+ vMes);
+                 UnityEngine.Debug.Log("exception! "+ vMes);
             }
         }
 
@@ -85,11 +113,12 @@ namespace Assets.Scripts.MainApp
         /// </summary>
         /// <param name="vDriveInfo">the found drive</param>
         private void AssignDrive(DirectoryInfo vDriveInfo)
-        { 
-            mFoundDrive = vDriveInfo;
+        {
+            SdCardIsConnected = true;
+            mHeddokoSdCardStruct.DirectoryInfo = vDriveInfo;
             if (DriveFoundEvent != null && mIsWorking)
             {
-                DriveFoundEvent(mFoundDrive);
+                DriveFoundEvent(mHeddokoSdCardStruct.DirectoryInfo);
             }
         }
 
@@ -99,7 +128,8 @@ namespace Assets.Scripts.MainApp
         private void UnassignDrive()
         {
             UnityEngine.Debug.Log("unassignerino ");
-            mFoundDrive = null;
+            SdCardIsConnected = false;
+            mHeddokoSdCardStruct.DirectoryInfo = null;
             if (HeddokoDriveDisconnectedEvent != null && mIsWorking)
             {
                 HeddokoDriveDisconnectedEvent();
@@ -128,6 +158,7 @@ namespace Assets.Scripts.MainApp
                 }
                 catch (IOException vE)
                 {
+                    UnityEngine.Debug.Log(vE);
                     continue;
                 }
             } 
@@ -150,9 +181,46 @@ namespace Assets.Scripts.MainApp
             mIsWorking = false;
         }
 
+        /// <summary>
+        /// Returns the brainpack serial number found on the sd card
+        /// </summary>
+        /// <returns></returns>
+        public string GetSerialNumFromSdCard()
+        {
+            if (mHeddokoSdCardStruct.BrainpackSerialNumber == null)
+            {
+                var vFiles = mHeddokoSdCardStruct.DirectoryInfo.GetFiles();
+                var vLogFile = vFiles.First(vX => vX.Name.Contains("sysHdk.bin"));
+                string vBrainpackSerial = null;
+                if (vLogFile != null)
+                {
+                    //get brainpack name
+                    using (StreamReader vSr = new StreamReader(mHeddokoSdCardStruct.DirectoryInfo.Name + Path.DirectorySeparatorChar + "sysHdk.bin"))
+                    {
+                        string vLine;
+                        while ((vLine = vSr.ReadLine()) != null)
+                        {
+                            var vMatch = Regex.Match(vLine, @"S\\d\\d\\d\\d\\d_");
+                            if (vMatch.Index >= 0)
+                            {
+                                vBrainpackSerial = vLine.Substring(vMatch.Index, 6);
+                                break;
+                            }
+                        }
+                    }
+                }
+                mHeddokoSdCardStruct.BrainpackSerialNumber =  vBrainpackSerial;
+            }
+            return mHeddokoSdCardStruct.BrainpackSerialNumber;
+        }
+         
+        private struct BrainpackSdCardStruct
+        {
+            public DirectoryInfo DirectoryInfo;
+            public string BrainpackSerialNumber;
 
-
-
-
+        }
     }
+
+   
 }
