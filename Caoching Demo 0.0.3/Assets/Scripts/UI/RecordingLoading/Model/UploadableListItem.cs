@@ -7,6 +7,7 @@
 // */
 
 using System;
+using HeddokoSDK.Models;
 
 namespace Assets.Scripts.UI.RecordingLoading.Model
 {
@@ -16,6 +17,9 @@ namespace Assets.Scripts.UI.RecordingLoading.Model
         public string RelativePath;
         public bool IsNew;
         private string mBrainpackSerialNumber = "";
+        public AssetType AssetType;
+
+       
         public string BrainpackSerialNumber
         {
             get
@@ -28,6 +32,7 @@ namespace Assets.Scripts.UI.RecordingLoading.Model
                 }
                 return mBrainpackSerialNumber;
             }
+            set { mBrainpackSerialNumber = value; }
         }
     }
 }

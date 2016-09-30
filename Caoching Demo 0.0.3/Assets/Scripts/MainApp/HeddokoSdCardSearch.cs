@@ -67,8 +67,7 @@ namespace Assets.Scripts.MainApp
                         }
                         catch (DirectoryNotFoundException)
                         {
-
-                           UnassignDrive();
+                            UnassignDrive();
                         }
                     }
 
@@ -79,8 +78,6 @@ namespace Assets.Scripts.MainApp
                 string vMes = vE.Message;
                  Debug.Log("exception! "+ vMes);
             }
-           
-
         }
 
         /// <summary>
@@ -88,8 +85,7 @@ namespace Assets.Scripts.MainApp
         /// </summary>
         /// <param name="vDriveInfo">the found drive</param>
         private void AssignDrive(DirectoryInfo vDriveInfo)
-        {
-            UnityEngine.Debug.Log("assignerino ");
+        { 
             mFoundDrive = vDriveInfo;
             if (DriveFoundEvent != null && mIsWorking)
             {

@@ -183,6 +183,12 @@ namespace Assets.Scripts.UI.Settings
         private void QuitApplication()
         {
             Application.Quit();
+          
+        }
+
+        void OnApplicationQuit()
+        {
+            OnLogout();
         }
     }
 }

@@ -65,7 +65,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 var vList = mManager.UserProfile.UserList;
 
-                for (int i = 0; i < vList.TotalCount; i++)
+                for (int i = 0; i < vList.TotalCount && mIsWorking; i++)
                 {
                     var vUser = vList.Collection[i];
                     int vTempCount = UpdateList(vUser);

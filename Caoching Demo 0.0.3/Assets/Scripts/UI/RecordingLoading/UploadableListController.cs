@@ -14,6 +14,7 @@ using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
 using Assets.Scripts.UI.RecordingLoading.View;
+using HeddokoSDK.Models;
 using UnityEngine;
  
 namespace Assets.Scripts.UI.RecordingLoading
@@ -26,7 +27,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         public UploadableListSyncView UploadableListSyncView;
         private string mSelectedDirectory = "";
         private UserProfileModel mProfile;
-        private RecordingUploader mUploader;
+        private AssetUploader mUploader;
         public void StartDirectorySelection()
         {
             UniFileBrowser.use.OpenFolderWindow(false, SelectDirectory);
@@ -37,7 +38,7 @@ namespace Assets.Scripts.UI.RecordingLoading
 
         void Awake()
         {
-            mUploader = new RecordingUploader(Profile);
+            mUploader = new AssetUploader(Profile);
         }
         public void SelectDirectory(string vDir)
         {
@@ -132,7 +133,8 @@ namespace Assets.Scripts.UI.RecordingLoading
                 {
                     FileName = vFileInfo.Name,
                     RelativePath = vFileInfo.FullName,
-                    IsNew = true
+                    IsNew = true,
+                    AssetType = AssetType.Record
                 }
                     );
             }
@@ -158,7 +160,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <param name="vItem"></param>
         void UploadSingleRecording(UploadableListItem vItem)
         {
-            ThreadPool.QueueUserWorkItem(mUploader.UploadSingleRecording, vItem);
+            ThreadPool.QueueUserWorkItem(mUploader.UploadSingleItem, vItem);
         }
 
         public List<FileInfo> SimpleScan(DirectoryInfo vInfo)

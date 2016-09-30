@@ -20,7 +20,7 @@ using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Torso; 
 //using System.Diagnostics;
 using System.IO;
-
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 
 
 /// <summary>

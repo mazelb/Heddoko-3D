@@ -59,8 +59,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         public void BeginUpload()
         {
             Notify.Template("fade").Show("Beginning upload process, please ensure SD card is inserted and secured in place", 5f, sequenceType: NotifySequence.First);
-
-            mCardContentUploadController.StartRecordingsUpload();
+            mCardContentUploadController.StartContentUpload();
         }
         /// <summary>
         /// Handles events when the detected heddoko device has been disconnected

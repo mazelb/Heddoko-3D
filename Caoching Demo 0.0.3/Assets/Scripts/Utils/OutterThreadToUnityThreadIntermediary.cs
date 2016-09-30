@@ -148,7 +148,6 @@ namespace Assets.Scripts.Utils
                 if (vAction != null)
                 {
                     vAction.Invoke();
-
                 }
                 else
                 {

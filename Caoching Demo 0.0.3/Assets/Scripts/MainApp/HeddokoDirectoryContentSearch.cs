@@ -30,14 +30,14 @@ namespace Assets.Scripts.MainApp
         private string mSearchPattern;
         private List<FileInfo> mFoundFiles = new List<FileInfo>();
         public event FoundFileList FoundFileListEvent;
-         
+
         /// <summary>
         /// Paramaterized constructor, accepting a directory info, a search pattern and a list of forbidden files to avoid including the final search result list
         /// </summary>
         /// <param name="vDirInfo">The location of the sd card</param>
         /// <param name="vSearchPattern">the search pattern.<seealso cref="https://msdn.microsoft.com/en-us/library/wz42302f(v=vs.110).aspx"/> </param>
         /// <param name="vForbiddenList"></param>
-        public HeddokoDirectoryContentSearch(DirectoryInfo vDirInfo ,string vSearchPattern, List<string> vForbiddenList = null)
+        public HeddokoDirectoryContentSearch(DirectoryInfo vDirInfo, string vSearchPattern, List<string> vForbiddenList = null)
         {
             if (vDirInfo == null)
             {
@@ -53,9 +53,9 @@ namespace Assets.Scripts.MainApp
             {
                 mForbiddenFiles = vForbiddenList;
             }
-           
+
             mSearchPattern = vSearchPattern;
-            
+
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Assets.Scripts.MainApp
         /// <param name="vFileInfos"></param>
         public void FilterFileInfo(ref List<FileInfo> vFileInfos)
         {
-              vFileInfos.RemoveAll(vX => mForbiddenFiles.Contains(vX.Name));
+            vFileInfos.RemoveAll(vX => mForbiddenFiles.Contains(vX.Name));
         }
 
         /// <summary>
@@ -90,23 +90,31 @@ namespace Assets.Scripts.MainApp
         {
             var vDirectories = vRootDir.GetDirectories().ToList();
             vDirectories.RemoveAll(vDir => vDir.Name.Equals("System Volume Information"));
-            var vFileInfos  = new List<FileInfo>();
-            if (vDirectories.Count == 0)
+            var vFileInfos = new List<FileInfo>();
+           
+            foreach (var vDirectoryInfo in vDirectories)
             {
-                vFileInfos.AddRange(SimpleScan(vRootDir));
-                return vFileInfos;
+                vFileInfos.AddRange(GetFileInfoList(vDirectoryInfo));
             }
-            else
-            {
-
-                foreach (var vDirectoryInfo in vDirectories)
-                {
-                   vFileInfos.AddRange(GetFileInfoList(vDirectoryInfo));
-                }
-            }
+             vFileInfos.AddRange(SimpleScan(vRootDir));
             return vFileInfos;
+            //if (vDirectories.Count == 0)
+            //{
+            //    vFileInfos.AddRange(SimpleScan(vRootDir));
+            //    return vFileInfos;
+            //}
+            //else
+            //{
+
+            //    foreach (var vDirectoryInfo in vDirectories)
+            //    {
+            //       vFileInfos.AddRange(GetFileInfoList(vDirectoryInfo));
+            //    }
+            //}
+
+
         }
- 
+
         /// <summary>
         /// does a simple scan on the directory and returns a list of all files within the search pattern defined in the class
         /// </summary>
@@ -114,11 +122,11 @@ namespace Assets.Scripts.MainApp
         /// <returns></returns>
         public List<FileInfo> SimpleScan(DirectoryInfo vInfo)
         {
-            var vFiles = vInfo.GetFiles(mSearchPattern).ToList(); 
+            var vFiles = vInfo.GetFiles(mSearchPattern).ToList();
             return vFiles;
         }
- 
+
     }
 
-    
+
 }

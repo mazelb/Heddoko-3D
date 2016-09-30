@@ -10,10 +10,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
+using HeddokoSDK.Models;
 
 namespace Assets.Scripts.UI.RecordingLoading
 {
@@ -35,16 +37,19 @@ namespace Assets.Scripts.UI.RecordingLoading
         public event SingleUploadingStartEvent UploadingStartEvent;
         public event SingleUploadingCompleted SingleUploadEndEvent;
         public event FoundFileList FoundFileListEvent;
+        // ReSharper disable once PrivateFieldCanBeConvertedToLocalVariable
         private UserProfileModel mUserProfileModel;
-        private RecordingUploader mUploader;
+        private AssetUploader mUploader;
         private HeddokoDirectoryContentSearch mHeddokoDirectoryContentSearch;
         private HeddokoSdCardSearcher mSearcher;
-        private List<string> vForbiddenFileList = new List<string>();
+        private List<string> mForbiddenFileList;
         private UploadRecordingStatus mUploadRecordingStatus;
         private bool mIsWorking;
         private object mLockObject = new object();
         private Thread mWorker;
         private List<FileInfo> mFoundRecordingsList = new List<FileInfo>();
+        
+        public UploadableListItem BrainpackLogFileItem;
         /// <summary>
         /// Is the current thread worker working?
         /// </summary>
@@ -78,13 +83,12 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <param name="vProfileModel"></param>
         public SdCardContentUploadController(UserProfileModel vProfileModel)
         {
-            vForbiddenFileList = new List<string>();
-            vForbiddenFileList.Add("logIndex.dat");
+            mForbiddenFileList = new List<string> { "logIndex.dat" , "settings.dat" };
             mUserProfileModel = vProfileModel;
             mSearcher = new HeddokoSdCardSearcher();
             mSearcher.DriveFoundEvent += FoundSdCardEventHandler;
             mSearcher.Start();
-            mUploader = new RecordingUploader(mUserProfileModel);
+            mUploader = new AssetUploader(mUserProfileModel);
             mUploader.UploadCompleteEvent += SingleRecordingCompletionHandler;
             mUploader.UploadErrorEvent += SingleRecordingErrorHandler;
         }
@@ -95,10 +99,10 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <param name="vArgs"></param>
         private void SingleRecordingErrorHandler(ErrorUploadEventArgs vArgs)
         {
-            UploadableListItem vItem = vArgs.Object as UploadableListItem;
+            UploadableListItem vItem = vArgs.Object;
             if (vItem != null)
             {
-               mUploadRecordingStatus.ProblematicUploads =vArgs;
+                mUploadRecordingStatus.ProblematicUploads = vArgs;
             }
         }
 
@@ -115,11 +119,11 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
             try
             {
-                File.Delete(vItem.RelativePath); 
+                File.Delete(vItem.RelativePath);
             }
             catch (Exception vE)
             {
-                 
+                UnityEngine.Debug.Log(vE);
             }
         }
 
@@ -137,7 +141,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             //reinitialize mUploadRecordingStatus
             mUploadRecordingStatus = new UploadRecordingStatus();
             //instantiate a new Directory Content searcher
-            mHeddokoDirectoryContentSearch = new HeddokoDirectoryContentSearch(mSearcher.FoundDrive, "*.dat", vForbiddenFileList);
+            mHeddokoDirectoryContentSearch = new HeddokoDirectoryContentSearch(mSearcher.FoundDrive, "*.dat", mForbiddenFileList);
             mHeddokoDirectoryContentSearch.FoundFileListEvent += FoundRecordingsEventHandler;
             mHeddokoDirectoryContentSearch.Search();
         }
@@ -158,19 +162,20 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <summary>
         /// Begins the recordings upload from the list of found recordings. Non blocking.
         /// </summary>
-        public void StartRecordingsUpload()
+        public void StartContentUpload()
         {
             mIsWorking = false;
-            mWorker = new Thread(CurrentListOfFoundListOfRecordings);
+            mWorker = new Thread(UploadFoundContent);
             mWorker.Start();
         }
 
         /// <summary>
         /// uploads the current list of found recordings items, a blocking operation
         /// </summary>
-        public void CurrentListOfFoundListOfRecordings()
+        public void UploadFoundContent()
         {
             mIsWorking = true;
+            //upload recordings
             if (mFoundRecordingsList.Count != 0)
             {
                 for (int vI = 0; vI < mFoundRecordingsList.Count; vI++)
@@ -181,22 +186,30 @@ namespace Assets.Scripts.UI.RecordingLoading
                         break;
                     }
                     var vUploadItem = new UploadableListItem();
+                    vUploadItem.AssetType = AssetType.Record;
                     vUploadItem.RelativePath = vRecItem.FullName;
                     vUploadItem.FileName = vRecItem.Name;
                     vUploadItem.IsNew = true;
+                    vUploadItem.BrainpackSerialNumber = BrainpackLogFileItem.BrainpackSerialNumber;
 
                     if (UploadingStartEvent != null)
                     {
                         UploadingStartEvent(vUploadItem);
                     }
-                    mUploader.UploadSingleRecording(vUploadItem);
+                    mUploader.UploadSingleItem(vUploadItem);
                 }
-                 
+
+                UploadBrainpackLogData();
+             
             }
+
             //On completion handle errors and succesful  uploads
             if (mUploadRecordingStatus.ProblematicUploads != null && mUploadRecordingStatus.ProblematicUploads.ErrorCollection.Errors.Count > 0)
             {
-                ProblemUploadingContentEvent(mUploadRecordingStatus.ProblematicUploads);
+                if (ProblemUploadingContentEvent != null)
+                {
+                    ProblemUploadingContentEvent(mUploadRecordingStatus.ProblematicUploads);
+                }
             }
             else
             {
@@ -204,6 +217,41 @@ namespace Assets.Scripts.UI.RecordingLoading
                 {
                     ContentsCompletedUploadEvent();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Upload brainpack log data
+        /// </summary>
+        void UploadBrainpackLogData()
+        {
+            if (BrainpackLogFileItem != null)
+            {
+
+                mUploader.UploadSingleItem(BrainpackLogFileItem);
+                //delete file
+                FileInfo vBpLogFileItem = new FileInfo(BrainpackLogFileItem.RelativePath);
+                var vBackupDirPath = vBpLogFileItem.DirectoryName + Path.DirectorySeparatorChar + "Backup";
+                if (!Directory.Exists(vBackupDirPath))
+                {
+                    Directory.CreateDirectory(vBackupDirPath);
+                }
+
+                var vFileName = vBpLogFileItem.Name;
+                int vIndex = 0;
+                while (true)
+                {
+                    if (File.Exists(vBackupDirPath + Path.DirectorySeparatorChar + vFileName + vIndex))
+                    {
+                        vIndex++;
+                        continue;
+                    }
+
+                    vBpLogFileItem.CopyTo(vBackupDirPath + Path.DirectorySeparatorChar + vFileName + vIndex);
+                    vBpLogFileItem.Delete();
+                    break;
+                }
+
             }
         }
         /// <summary>
@@ -216,8 +264,8 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 DriveFoundEvent(vDriveInfo);
             }
+            UpdateBrainpackLogInfo(vDriveInfo);
             StartRecordingsSearch();
-
         }
 
         /// <summary>
@@ -229,6 +277,53 @@ namespace Assets.Scripts.UI.RecordingLoading
             IsWorking = false;
         }
 
+        protected virtual void OnDriveDisconnectedEvent()
+        {
+            var vHandler = DriveDisconnectedEvent;
+            if (vHandler != null)
+            {
+                vHandler();
+            }
+        }
+
+        /// <summary>
+        /// Update BrainpackLogFile information
+        /// </summary>
+        /// <param name="vDrive"></param>
+        private void UpdateBrainpackLogInfo(DirectoryInfo vDrive)
+        {
+            var vFiles = vDrive.GetFiles();
+            var vLogFile = vFiles.First(vX => vX.Name.Contains("sysHdk.bin"));
+            if (vLogFile != null)
+            {
+                //get brainpack name
+                string vBrainpackSerial = null;
+                using (StreamReader vSr = new StreamReader(vDrive.Name + Path.DirectorySeparatorChar + "sysHdk.bin"))
+                {
+                    string vLine;
+                    while ((vLine = vSr.ReadLine()) != null)
+                    {
+                        var vMatch = Regex.Match(vLine, @"S\\d\\d\\d\\d\\d_");
+                        if (vMatch.Index >= 0)
+                        {
+                            vBrainpackSerial = vLine.Substring(vMatch.Index, 6);
+                            break;
+                        }
+                    }
+                }
+                if (vBrainpackSerial != null)
+                {
+                    BrainpackLogFileItem = new UploadableListItem()
+                    {
+                        FileName = "sysHdk.bin",
+                        RelativePath = vDrive.Name + Path.DirectorySeparatorChar + "sysHdk.bin",
+                        BrainpackSerialNumber = vBrainpackSerial,
+                        AssetType = AssetType.Log
+                    };
+
+                }
+            }
+        }
     }
 
 
@@ -237,7 +332,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <summary>
         /// a list of recordings who have had problems uploading
         /// </summary>
-        public ErrorUploadEventArgs  ProblematicUploads; 
+        public ErrorUploadEventArgs ProblematicUploads;
         public List<UploadableListItem> SucessfullyUploadedRecordings = new List<UploadableListItem>();
     }
 }

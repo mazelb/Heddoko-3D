@@ -1,6 +1,6 @@
 ﻿// /**
-// * @file RecordingUploader.cs
-// * @brief Contains the RecordingUploader class
+// * @file AssetUploader.cs
+// * @brief Contains the AssetUploader class
 // * @author Mohammed Haider( mohammed@heddoko.com) 
 // * @date August 2016
 // * Copyright Heddoko(TM) 2016,  all rights reserved
@@ -20,13 +20,13 @@ namespace Assets.Scripts.UI.RecordingLoading
     /// <summary>
     /// A Single recording uploader 
     /// </summary>
-    public class RecordingUploader
+    public class AssetUploader
     {
         public event UploadComplete UploadCompleteEvent;
         public event ErrorInUploading UploadErrorEvent;
         private UserProfileModel mProfile;
 
-        public RecordingUploader(UserProfileModel vProfile)
+        public AssetUploader(UserProfileModel vProfile)
         {
             mProfile = vProfile;
         }
@@ -35,7 +35,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// Blocking operation: will upload a single recording and invoke an event on completion
         /// </summary>
         /// <param name="vItem"></param>
-        public void UploadSingleRecording(object vItem)
+        public void UploadSingleItem(object vItem)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                 Asset vAsset = mProfile.Client.Upload(new AssetRequest()
                 { 
                     Serial = vUploadableItem.BrainpackSerialNumber,
-                    Type = AssetType.Record
+                    Type = vUploadableItem.AssetType
                 }, vUploadableItem.RelativePath);
                 if (vAsset.IsOk)
                 {

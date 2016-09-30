@@ -225,10 +225,16 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         public void Clear()
         {
-            mListFetcher.Stop();
-            View.Clear();
-            mListFetcher.Clear();
-            View.OnClickAction -= DoubleClickCheck;
+            if (mListFetcher != null)
+            {
+                mListFetcher.Stop();
+                mListFetcher.Clear();
+            }
+            if (View != null)
+            {
+                View.Clear();
+                View.OnClickAction -= DoubleClickCheck;
+            }
         }
 
         public void ResetDownloadList()
