@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7fb8241a0c3d064f88101a0ab7b239c, type: 3}
+  m_Name: EnUSBinder.binder
+  m_EditorClassIdentifier: 
+  Path: C:/Users/MohammedHaider/AppData/LocalLow/Heddoko/Heddoko Desktop/EnUSBinder.binder
+  ParsedContent: "{\n\t\"mContainer\": {\n\t\t\"En-Us\": {\n\t\t\t\"StringContainer\":
+    {\n\t\t\t\t\"DownloadCompleteMsg\": {\n\t\t\t\t\t\"SingularForm\": \"Download
+    has been completed\",\n\t\t\t\t\t\"PluralForm\": \"All downloads have been completed\"\n\t\t\t\t},\n\t\t\t\t\"Greet\":
+    {\n\t\t\t\t\t\"SingularForm\": null,\n\t\t\t\t\t\"PluralForm\": \"Hello\"\n\t\t\t\t},\n\t\t\t\t\"NewRecordingFoundMsg\":
+    {\n\t\t\t\t\t\"SingularForm\": \"A new recording has been found on the Heddoko
+    SD card\",\n\t\t\t\t\t\"PluralForm\": \"New recordings have been found on the
+    SD card\"\n\t\t\t\t},\n\t\t\t\t\"UploadCompleteMsg\": {\n\t\t\t\t\t\"SingularForm\":
+    \"Your upload has been finished\",\n\t\t\t\t\t\"PluralForm\": \"All uploads have
+    finished\"\n\t\t\t\t},\n\t\t\t\t\"BrainpackServiceMsgTimedOut\": {\n\t\t\t\t\t\"SingularForm\":
+    \"Connection to the brainpack service timed out. You can try to connect again
+    or restart the brainpack service\",\n\t\t\t\t\t\"PluralForm\": null\n\t\t\t\t},\n\t\t\t\t\"BannedAccountMsg\":
+    {\n\t\t\t\t\t\"SingularForm\": \"This account has been banned.\",\n\t\t\t\t\t\"PluralForm\":
+    null\n\t\t\t\t},\n\t\t\t\t\"InactiveAccountMsg\": {\n\t\t\t\t\t\"SingularForm\":
+    \"This account is not active. Please contact your license administrator for further
+    support.\",\n\t\t\t\t\t\"PluralForm\": null\n\t\t\t\t},\n\t\t\t\t\"InactiveLicenseMsg\":
+    {\n\t\t\t\t\t\"SingularForm\": \"The provided license is inactive. Please contact
+    your license administator for further support.\",\n\t\t\t\t\t\"PluralForm\": null\n\t\t\t\t},\n\t\t\t\t\"ExpiredLicenseMsg\":
+    {\n\t\t\t\t\t\"SingularForm\": \"The provided license has expired. Please contact
+    your license administator for further support.\",\n\t\t\t\t\t\"PluralForm\": null\n\t\t\t\t},\r\n\t\t\t\t\"DeletedLicenseMsg\":
+    {\r\n\t\t\t\t\t\"SingularForm\": \"We could not find a license associated with
+    your account. Please contact your license administator for further support.\",\r\n\t\t\t\t\t\"PluralForm\":
+    null\r\n\t\t\t\t},\r\n\t\t\t\t\"AnalysisCollectionMsg\": {\r\n\t\t\t\t\t\"SingularForm\":
+    \"Analysis collection has started.\",\r\n\t\t\t\t\t\"PluralForm\": null\r\n\t\t\t\t},\r\n\t\t\t\t\"AnalysisSaveMsg\":
+    {\r\n\t\t\t\t\t\"SingularForm\": \"File has been saved to \",\r\n\t\t\t\t\t\"PluralForm\":
+    null\r\n\t\t\t\t},\r\n\t\t\t\t\"NumberOfExportedItemsMsg\": {\r\n\t\t\t\t\t\"SingularForm\":
+    \" movement have been exported.\",\r\n\t\t\t\t\t\"PluralForm\": \" movements have
+    been exported.\"\r\n\t\t\t\t},\r\n\t\t\t\t\"NoItemsWereExportedMsg\": {\r\n\t\t\t\t\t\"SingularForm\":
+    \"No recordings have been exported.\",\r\n\t\t\t\t\t\"PluralForm\": null\r\n\t\t\t\t},\r\n\t\t\t\t\"NumberOfBatteryPacksFoundMsg\":
+    {\r\n\t\t\t\t\t\"SingularForm\": \"Total number of battery packs found: \",\r\n\t\t\t\t\t\"PluralForm\":
+    \"Total number of battery packs found: \"\r\n\t\t\t\t},\r\n\t\t\t\t\"NoBatteryPacksFoundMsg\":
+    {\r\n\t\t\t\t\t\"SingularForm\": \"Could not locate any Battery packs. Please
+    try again. \",\r\n\t\t\t\t\t\"PluralForm\": \"Could not locate any Battery packs.
+    Please try again. \"\r\n\t\t\t\t},\r\n\t\t\t\t\"BeginUploadProcessMsg\": {\r\n\t\t\t\t\t\"SingularForm\":
+    \"Could not locate any Battery packs. Please try again. \",\r\n\t\t\t\t\t\"PluralForm\":
+    \"Could not locate any Battery packs. Please try again. \"\r\n\t\t\t\t},\r\n\t\t\t\t\"DisconnectedSDCardWithLogMsg\":
+    {\r\n\t\t\t\t\t\"SingularForm\": \"Heddoko SD card has been disconnected\",\r\n\t\t\t\t\t\"PluralForm\":
+    \"Heddoko SD card has been disconnected\"\r\n\t\t\t\t},\r\n\t\t\t\t\"IssueUploadingRecordingsMsg\":
+    {\r\n\t\t\t\t\t\"SingularForm\": \" There was an issue uploading one or more recording
+    files. For more details please see log file:  \",\r\n\t\t\t\t\t\"PluralForm\":
+    \"There was an issue uploading one or more recording files. For more details please
+    see log file:  \"\r\n\t\t\t\t},\r\n\t\t\t\t\"NewRecFoundSyncBeginMsg\": {\r\n\t\t\t\t\t\"SingularForm\":
+    \"A new recording was found on the SD card. Click the Upload button to begin uploading\",\r\n\t\t\t\t\t\"PluralForm\":
+    \"New recordings were found on the SD card. Click the Upload button to begin uploading\"\r\n\t\t\t\t},\r\n\t\t\t\t\"LoginFailureMsg\":
+    {\r\n\t\t\t\t\t\"SingularForm\": \"LOGIN FAILED\",\r\n\t\t\t\t\t\"PluralForm\":
+    null\r\n\t\t\t\t},\r\n\t\t\t\t\"TopLabelLogindexOpeningErrMsg\": {\r\n\t\t\t\t\t\"SingularForm\":
+    \"CANNOTOPENALOGINDEXFILE\",\r\n\t\t\t\t\t\"PluralForm\": null\r\n\t\t\t\t},\r\n\t\t\t\t\"LogindexOpeningErrMsg\":
+    {\r\n\t\t\t\t\t\"SingularForm\": \"Unfortunately, this file is not a recording
+    file. Typical recordings are longer and start with SXXXX, where the X represents
+    a number. Would you like to try again?\",\r\n\t\t\t\t\t\"PluralForm\": null\r\n\t\t\t\t},\r\n\t\t\t\t\"GenericError\"
+    : {\r\n\t\t\t\t\"SingularForm\": \"ERROR\",\r\n\t\t\t\t\t\"PluralForm\": null\r\n\t\t\t\t},\r\n\t\t\t\t\"ReportErrorCodeMsg\"
+    : {\r\n\t\t\t\t\"SingularForm\": \"Please contact support and inform them of error:
+    \",\r\n\t\t\t\t\t\"PluralForm\": null\r\n\t\t\t\t},\r\n\t\t\t\t\"InvalidUnPwMsg\"
+    : {\r\n\t\t\t\t\"SingularForm\": \"Invalid user name and/or password.\",\r\n\t\t\t\t\t\"PluralForm\":
+    null\r\n\t\t\t\t},\r\n\t\t\t\t\"IssueAccessingAcountGenericMsg\" : {\r\n\t\t\t\t\"SingularForm\":
+    \"There was an issue accessing your account. The following reason was given \",\r\n\t\t\t\t\t\"PluralForm\":
+    \"There was an issue accessing your account. The following reasons were provided
+    :\"\r\n\t\t\t\t},\r\n\t\t\t\t\"AckErrorMsg\" : {\r\n\t\t\t\t\"SingularForm\":
+    \"Click \\\"Yes\\\" to launch your browser and log into Heddoko for further details.
+    \ \",\r\n\t\t\t\t\t\"PluralForm\":  null\r\n\t\t\t\t},\r\n\t\t\t\t\"NoInternetConnectionMsg\"
+    : {\r\n\t\t\t\t\"SingularForm\": \" connection to the internet could not be established.
+    Try again by clicking on the submit button.  \",\r\n\t\t\t\t\t\"PluralForm\":
+    \ null\r\n\t\t\t\t},\r\n\t\t\t\t\r\n\t\t\t\t\r\n\t\t\t\t\r\n\t\t\t\t\n\t\t\t}\n\t\t}\n\t}\n}"

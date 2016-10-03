@@ -7,6 +7,7 @@
 // */
 
 using System.Collections;
+using Assets.Scripts.Localization;
 using UnityEngine;
 
 namespace Assets.Scripts.UI.RecordingLoading.View
@@ -90,7 +91,8 @@ namespace Assets.Scripts.UI.RecordingLoading.View
         private void ErrorHandler(string vError)
         {
             UniFileBrowser.use.enabled = false;
-            ModalWindow.ModalPanel.SingleChoice("ERROR", vError, () => { UniFileBrowser.use.enabled = true; });
+            string vErr = LocalizationBinderContainer.GetString(KeyMessage.GenericError );
+            ModalWindow.ModalPanel.SingleChoice(vErr, vError, () => { UniFileBrowser.use.enabled = true; });
         }
         /// <summary>
         /// callback on a recording file that was selected

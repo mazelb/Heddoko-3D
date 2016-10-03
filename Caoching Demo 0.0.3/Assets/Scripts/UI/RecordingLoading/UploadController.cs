@@ -8,6 +8,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using Assets.Scripts.Localization;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
 using Assets.Scripts.Utils;
@@ -58,7 +59,8 @@ namespace Assets.Scripts.UI.RecordingLoading
         }
         public void BeginUpload()
         {
-            Notify.Template("fade").Show("Beginning upload process, please ensure SD card is inserted and secured in place", 5f, sequenceType: NotifySequence.First);
+            var vMsg = LocalizationBinderContainer.GetString(KeyMessage.BeginUploadProcessMsg);
+            Notify.Template("fade").Show(vMsg, 5f, sequenceType: NotifySequence.First);
             mCardContentUploadController.StartContentUpload();
         }
         /// <summary>
@@ -66,7 +68,8 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         private void DriveDisconnectedHandler()
         {
-            Notify.Template("fade").Show("Heddoko SD card has been disconnected", 5f, sequenceType: NotifySequence.First);
+            var vMsg = LocalizationBinderContainer.GetString(KeyMessage.DisconnectedSDCardWithLogMsg);
+            Notify.Template("fade").Show(vMsg, 5f, sequenceType: NotifySequence.First); 
         }
 
         void UploadingItemStarted(UploadableListItem vItem)
@@ -87,7 +90,8 @@ namespace Assets.Scripts.UI.RecordingLoading
                 vMsg += " ERROR CODE "+ vItem.ErrorCollection.Errors[i].Code + " ERROR MSG "+ vItem.ErrorCollection.Errors[i].Message;
                 DebugLogger.Instance.LogMessage(LogType.Uploading, vMsg);
             }
-            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => Notify.Template("fade").Show("There was an issue uploading one or more recording files. For more details please see log file " + DebugLogger.Instance.GetLogPath(LogType.Uploading),customHideDelay:15f));
+            string vErrMsg = LocalizationBinderContainer.GetString(KeyMessage.IssueUploadingRecordingsMsg) + DebugLogger.Instance.GetLogPath(LogType.Uploading);
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => Notify.Template("fade").Show(vErrMsg, customHideDelay:15f));
         }
 
         /// <summary>
@@ -100,16 +104,10 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
              
                 int vCount = vFileInfos.Count;
+
                 if (vCount > 0)
                 {
-                    string vRecString = "recording";
-                    if (vCount == 1)
-                    {
-                        vRecString = "recordings";
-                    }
-
-                    var vMsg = "New " + vRecString + " on the SD file were found. Click the Sync button to start uploading";
-                   // Notify.Template("SyncNotification").Show(vMsg, 5f, sequenceType: NotifySequence.First);
+                    string vMsg = LocalizationBinderContainer.GetString(KeyMessage.NewRecFoundSyncBeginMsg, vCount > 1)  ; 
                     var vTemp = Notify.Template("SyncNotification");
                     vTemp.gameObject.GetComponent<NotifyWithButtonExtension>()
                         .RegisterCallbackAndRemovePreviousCallback(BeginUpload);
@@ -122,7 +120,8 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
-                Notify.Template("fade").Show("Upload complete", 15f, sequenceType: NotifySequence.First);
+                string vMsg = LocalizationBinderContainer.GetString(KeyMessage.UploadCompleteMsg) ;
+                Notify.Template("fade").Show(vMsg, 15f, sequenceType: NotifySequence.First);
             });
 
 

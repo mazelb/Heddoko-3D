@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using Assets.Scripts.Communication.Communicators;
 using Assets.Scripts.Communication.View;
 using Assets.Scripts.Interfaces;
+using Assets.Scripts.Localization;
 using Assets.Scripts.UI.Loading;
 using Assets.Scripts.UI.MainMenu.View;
 using HeddokoLib.networking;
@@ -578,8 +579,8 @@ namespace Assets.Scripts.Communication.Controller
         public override void TimeoutHandler()
         {
             DisablingProgressBar.Instance.StopAnimation();
-            var vMsg =
-                "Connection to the brainpack service timedout. You can try to connect again or restart the brainpack service";
+            var vMsg = LocalizationBinderContainer.GetString(KeyMessage.BrainpackServiceMsgTimedOut);
+             //   "Connection to the brainpack service timedout. You can try to connect again or restart the brainpack service";
             Notify.Template("fade")
                  .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First);
             Reset();

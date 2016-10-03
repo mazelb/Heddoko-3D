@@ -11,6 +11,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Assets.Scripts.Body_Data.CalibrationData.TposeSelection;
 using Assets.Scripts.Body_Pipeline.Analysis;
+using Assets.Scripts.Localization;
 using Assets.Scripts.UI.AbstractViews.Permissions;
 using Assets.Scripts.UI.RecordingLoading;
 using HeddokoSDK.Models;
@@ -92,7 +93,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
                 vSegmentAnalysis.AddAnalysisCompletionListener(mDataStore.UpdateSegmentFieldInfo);
             }
             CalibIndxList.Clear();
-            Notify.Template("fade").Show("Analysis collection has started", 5f, sequenceType: NotifySequence.First);
+            string vMsg = LocalizationBinderContainer.GetString(KeyMessage.AnalysisCollectionMsg);
+            Notify.Template("fade").Show(vMsg, 5f, sequenceType: NotifySequence.First);
         }
 
         /// <summary>
@@ -177,7 +179,9 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             {
                 DataCollectionEndedEvent();
             }
-            Notify.Template("fade").Show("File has been saved to " + vArg0 + ".csv", 5f, sequenceType: NotifySequence.First);
+            string vMsg = LocalizationBinderContainer.GetString(KeyMessage.AnalysisSaveMsg);
+
+            Notify.Template("fade").Show(vMsg  + vArg0 + ".csv", 5f, sequenceType: NotifySequence.First);
             DisablingPanel.SetActive(false);
         }
     }

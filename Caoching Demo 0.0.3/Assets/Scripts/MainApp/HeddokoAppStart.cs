@@ -139,15 +139,7 @@ namespace Assets.Scripts.MainApp
                 }
             }
         }
-
-        /// <summary>
-        /// The application wasn't started with the launcher. Display a message then quit the application
-        /// </summary>
-        private void AppNotLaunchedThroughLauncher()
-        {
-
-            ModalPanel.SingleChoice("","The application wasn't started with the Launcher. Press Ok to exit and try again. ", Application.Quit);
-        }
+ 
 
         void OnApplicationQuit()
         {

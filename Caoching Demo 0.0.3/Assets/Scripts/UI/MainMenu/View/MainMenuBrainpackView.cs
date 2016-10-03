@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Interfaces;
+using Assets.Scripts.Localization;
 using Assets.Scripts.UI.Loading;
 using Assets.Scripts.Utils.UnityUtilities;
 using HeddokoLib.networking;
@@ -113,9 +114,10 @@ namespace Assets.Scripts.UI.MainMenu.View
                 ConnectionController.BrainpackComPort = mDropdownItems[vKey];
 
                 var vMsg =
-                    "Found " + vObj.Count + " Battery pack";
-                //plural
-                vMsg += vObj.Count > 1 ? "s" : string.Empty;
+                    string.Format(
+                        LocalizationBinderContainer.GetString(KeyMessage.NumberOfBatteryPacksFoundMsg) + " {0}",
+                        vObj.Count); 
+                
                 Notify.Template("fade").Show(
                vMsg,
               customHideDelay: 3f,
@@ -124,10 +126,9 @@ namespace Assets.Scripts.UI.MainMenu.View
             }
             else
             {
-                var message =
-                    "Could not locate any Battery packs. Please try again.";
+                var vMsg = LocalizationBinderContainer.GetString(KeyMessage.NoBatteryPacksFoundMsg);
                 Notify.Template("fade").Show(
-                 message,
+                 vMsg,
                 customHideDelay: 4f,
                 hideAnimation: Notify.AnimationCollapse
             );

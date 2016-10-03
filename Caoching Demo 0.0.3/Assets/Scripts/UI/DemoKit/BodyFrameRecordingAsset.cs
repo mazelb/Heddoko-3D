@@ -33,16 +33,7 @@ namespace Assets.Scripts.UI.DemoKit
             Lines = vTempReader.GetRecordingLines(); 
          
         }
-
-        /// <summary>
-        /// callback performed after a recording file has been read
-        /// </summary>
-        /// <param name="vRecording">A recording and it's information</param>
-        private void RecordingAddCallback(BodyFramesRecording vRecording)
-        {
-         //   mFrameRecording = vRecording;
-
-        }
+ 
 
 
     }

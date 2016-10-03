@@ -9,6 +9,7 @@
 using System;
 using System.IO;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
+using Assets.Scripts.Localization;
 using Assets.Scripts.Tests;
 using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.UI.Settings;
@@ -50,9 +51,8 @@ namespace Assets.Scripts.UI.RecordingLoading
             FileInfo vInfo = new FileInfo(vRecordingRelativePath);
             if (vInfo.Name.Equals("logindex.dat", StringComparison.CurrentCultureIgnoreCase))
             {
-                string vTopLabel = "CANNOT OPEN A LOGINDEX FILE";
-                string vContent =
-                    "Unfortunately, this file is not a recording file. Typical recordings are longer and start with SXXXX, where the X represents a number. Would you like to try again?";
+                string vTopLabel = LocalizationBinderContainer.GetString(KeyMessage.TopLabelLogindexOpeningErrMsg);
+                string vContent = LocalizationBinderContainer.GetString(KeyMessage.LogindexOpeningErrMsg);
                 UnityAction vOnYes = () => { };
                 ModalPanel.SingleChoice(vTopLabel, vContent, vOnYes);
                 return;

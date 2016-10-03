@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading;
 using Assets.Scripts.Licensing.Authentication;
 using Assets.Scripts.Licensing.Model;
+using Assets.Scripts.Localization;
 using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.Utils;
 using HeddokoSDK;
@@ -149,7 +150,8 @@ namespace Assets.Scripts.Licensing.Controller
             if (vWww.error != null)
             {
                 //error: no internet connection
-                mLoginController.RaiseErrorEvent(LoginErrorType.NoNetworkConnectionFound, "A connection to the internet could not be established. Try again by clicking on the submit button");
+                string vMsg = LocalizationBinderContainer.GetString(KeyMessage.NoInternetConnectionMsg);
+                mLoginController.RaiseErrorEvent(LoginErrorType.NoNetworkConnectionFound, vMsg);
             }
             else
             {
@@ -175,7 +177,8 @@ namespace Assets.Scripts.Licensing.Controller
                 {
                     OutterThreadToUnityThreadIntermediary.QueueActionInUnity(EnableControls);
                     var vErrorMsg = FormatLoginNoOkError(vUser.Errors);
-                    Action vRaiseModalPanelAction = () => ModalPanel.Instance().Choice("LOGIN FAILED", vErrorMsg, () =>
+                    string vMsg = LocalizationBinderContainer.GetString(KeyMessage.LoginFailureMsg);
+                    Action vRaiseModalPanelAction = () => ModalPanel.Instance().Choice(vMsg, vErrorMsg, () =>
                    {
                        Application.OpenURL(mUrl);
                    }, () => { });
@@ -231,13 +234,14 @@ namespace Assets.Scripts.Licensing.Controller
                                         OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
                                             () =>
                                                 mLoginController.RaiseErrorEvent(LoginErrorType.HttpStatus404,
-                                                    "Please contact support and inform them of error 404"));
+                                                    LocalizationBinderContainer.GetString(KeyMessage.ReportErrorCodeMsg) +
+                                                    "404"));
                                         break;
                                     case HttpStatusCode.Unauthorized:
                                         OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
                                             () =>
                                                 mLoginController.RaiseErrorEvent(LoginErrorType.CannotAuthenticate,
-                                                    "Invalid user name and/or password."));
+                                                   LocalizationBinderContainer.GetString(KeyMessage.InvalidUnPwMsg)));
                                         vIsHandled = true;
                                         break;
                                     default:
@@ -245,8 +249,8 @@ namespace Assets.Scripts.Licensing.Controller
                                         OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
                                             () =>
                                                 mLoginController.RaiseErrorEvent(LoginErrorType.Other,
-                                                    "There was a problem trying to reach the server. Please report to support with error code " +
-                                                    vWebResponse.StatusCode));
+                                                    LocalizationBinderContainer.GetString(KeyMessage.ReportErrorCodeMsg) +
+                                                    " " + vWebResponse.StatusCode));
                                         break;
                                 }
                             }
@@ -255,7 +259,7 @@ namespace Assets.Scripts.Licensing.Controller
                                 OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
                                     () =>
                                         mLoginController.RaiseErrorEvent(LoginErrorType.Other,
-                                            "There was a problem trying to reach the server. Please report to support with error code " +
+                                            LocalizationBinderContainer.GetString(KeyMessage.ReportErrorCodeMsg) +
                                             vWebException));
                             }
                         }
@@ -313,14 +317,16 @@ namespace Assets.Scripts.Licensing.Controller
         {
             int vListCount = 1;
             StringBuilder vBuilder = new StringBuilder();
-            string vPlural = vErrors.Errors.Count > 1 ? "s were provided" : " was given";
-            vBuilder.Append("There was an issue accessing your account. The following reason" + vPlural + ":\n");
+            string vMsg = LocalizationBinderContainer.GetString(KeyMessage.IssueAccessingAcountGenericMsg,
+                vErrors.Errors.Count > 1);
+            vBuilder.Append(vMsg);
             foreach (var vError in vErrors.Errors)
             {
-                vBuilder.Append(vListCount + "." + vError.Message + "");
+                vBuilder.Append("\r\n"+vListCount + "." + vError.Message + "");
                 vListCount++;
             }
-            vBuilder.Append("\nClick \"Yes\" to launch your browser and log into Heddoko for further details. ");
+            string vYesMsg = LocalizationBinderContainer.GetString(KeyMessage.AckErrorMsg);
+            vBuilder.AppendLine(vYesMsg);
             return vBuilder.ToString();
         }
 
