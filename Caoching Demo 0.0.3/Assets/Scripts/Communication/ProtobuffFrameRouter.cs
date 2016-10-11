@@ -91,7 +91,7 @@ namespace Assets.Scripts.Communication
                     {
                         //reset the stream pointer, write and reset.
                         mMemoryStream.Seek(0, SeekOrigin.Begin);
-                        mMemoryStream.Write(vRawPacket.Payload, 1, vRawPacket.PayloadSize - 1);
+                        mMemoryStream.Write(vRawPacket.Payload, 1,(int) vRawPacket.PayloadSize - 1);
                         mMemoryStream.Seek(0, SeekOrigin.Begin);
                         Packet vProtoPacket = Serializer.Deserialize<Packet>(mMemoryStream); 
                         mProtDispatchRouter.Process(vProtoPacket.type, this, vProtoPacket);

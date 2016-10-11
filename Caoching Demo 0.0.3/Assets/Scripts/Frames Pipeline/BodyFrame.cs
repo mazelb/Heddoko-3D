@@ -34,7 +34,7 @@ public class BodyFrame
     /// <summary>
     /// Index of the item
     /// </summary>
-    public int Index;
+    public int Index { get; set; }
     [JsonIgnore]
     internal Dictionary<BodyStructureMap.SensorPositions, Vect4> FrameData
     {

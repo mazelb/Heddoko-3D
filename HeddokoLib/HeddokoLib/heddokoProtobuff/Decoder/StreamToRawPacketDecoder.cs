@@ -14,7 +14,7 @@ using HeddokoLib.adt;
 namespace HeddokoLib.heddokoProtobuff.Decoder
 {
 
-
+    public delegate void PacketizationCompleted();
     /// <summary>
     /// A Stream Decoder,taking in a binary stream, and places the resulting raw packet to an outputbuffer. Uses a ReaderWriterLock to guarantee threadsafety for underlying stream. 
     /// </summary>
@@ -24,7 +24,8 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
         private volatile bool mIsWorking = false;
         private int mBufferSize = 1024;
         private CircularQueue<RawPacket> mQueue = new CircularQueue<RawPacket>(1024, false);
-
+        private Queue<byte[]> vQueueByte= new Queue<byte[]>();
+        public PacketizationCompleted PacketizationCompletedEvent;
         public Stream Stream
         {
             get
@@ -115,7 +116,13 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
             ThreadPool.QueueUserWorkItem(WorkerFunc, vStreamCompletionAction);
         }
 
-
+        public void EnqueueByteData( byte[] vByteData)
+        {
+            lock (vQueueByte)
+            {
+                vQueueByte.Enqueue(vByteData);
+            }
+        }
         /// <summary>
         /// Returns a list of raw packets from a file stream
         /// </summary>
