@@ -7,6 +7,7 @@
 */
 
 using System;
+using System.IO;
 
 namespace HeddokoLib.heddokoProtobuff.Decoder
 {
@@ -20,7 +21,7 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
         const byte EscapedByteOffset = 0x10;
         const int MaxPacketSize = 2000;
         byte[] mPayload;
-        ushort mPayloadSize;
+        long mPayloadSize;
         bool mPacketComplete;
         bool mEscapeFlag;
         ushort mBytesReceived;
@@ -42,7 +43,7 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
         /// <summary>
         /// Total payload size
         /// </summary>
-        public ushort PayloadSize
+        public long PayloadSize
         {
             get
             {
@@ -114,7 +115,7 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
         public RawPacket(RawPacket vPacket)
         {
             mPayload = new byte[MaxPacketSize];
-            Buffer.BlockCopy(vPacket.mPayload, 0, Payload, 0, vPacket.PayloadSize);
+            Buffer.BlockCopy(vPacket.mPayload, 0, Payload, 0, (int)vPacket.PayloadSize);
             PayloadSize = vPacket.PayloadSize;
             mPacketComplete = false;
             mBytesReceived = 0;
@@ -150,7 +151,7 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
         {
             RawPacket vOther = (RawPacket)MemberwiseClone();
             vOther.Payload = Payload;
-            Buffer.BlockCopy(vOther.Payload, 0, Payload, 0, PayloadSize);
+            Buffer.BlockCopy(vOther.Payload, 0, Payload, 0, (int)PayloadSize);
             vOther.PayloadSize = PayloadSize;
             return vOther;
         }
@@ -262,15 +263,17 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
         /// </summary>
         /// <param name="vRawSize">sets the Rawsize of the given param</param>
         /// <returns></returns>
-        public byte[] GetRawPacketByteArray(out int vRawSize)
+        public byte[] GetRawPacketByteArray(out int vRawSize, MemoryStream vStream)
         {
+            PayloadSize = vStream.Length + 1;
             mRawPacketBytes[mRawPacketBytesIndex++] = StartByte;
             InsertByteToRawPacket((byte)(PayloadSize & 0x00ff));
             InsertByteToRawPacket((byte)((PayloadSize >> 8) & 0x00ff));
-
+            InsertByteToRawPacket(0x04);
+            vStream.Seek(0, SeekOrigin.Begin);
             for (int vI = 0; vI < PayloadSize; vI++)
             {
-                InsertByteToRawPacket(Payload[vI]);
+                InsertByteToRawPacket((byte)vStream.ReadByte());
             }
 
             vRawSize = mRawPacketBytesIndex;
