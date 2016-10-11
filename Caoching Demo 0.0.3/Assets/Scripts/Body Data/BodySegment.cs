@@ -24,7 +24,7 @@ using UnityEngine;
 #endif
 
 /// <summary>
-/// BodySegment class: represents one abstracted reprensentation of a body segment.
+/// BodySegment class: represents one abstracted representation of a body segment.
 /// </summary>
 public partial class BodySegment
 {

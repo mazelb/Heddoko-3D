@@ -8,7 +8,6 @@
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Permissions;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
@@ -103,6 +102,16 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 ParentPanel.ChangeState(PlaybackState.Pause);
             }
         }
+
+		public void OnDragMove()
+		{
+			if (IsInteractable)
+			{
+				int vPlaySliderValue = (int)PlaySlider.value;
+				ParentPanel.SetPlayPositionAt(vPlaySliderValue);
+				ParentPanel.ChangeState(PlaybackState.Pause);
+			}
+		}
 
         public void OnDragEnd()
         {

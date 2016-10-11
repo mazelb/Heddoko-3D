@@ -7,8 +7,6 @@
 */
 
 
-using System.Collections;
-using System.Collections.Generic;
 using Assets.Scripts.Frames_Pipeline;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
@@ -17,6 +15,8 @@ using Assets.Scripts.UI.AbstractViews.Layouts;
 using Assets.Scripts.UI.AbstractViews.Permissions;
 using Assets.Scripts.Utils;
 using HeddokoSDK.Models;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
@@ -206,7 +206,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                     break;
 
                 case PlaybackState.Play:
-                    mPlaybackTask.PlaybackSpeed = mPlaybackSettings.CurrForwardSpeed = 1f;
+                    mPlaybackTask.PlaybackSpeed = mPlaybackSettings.CurrForwardSpeed;// = 1f;
                     mPlaybackTask.IsPaused = false;
                     OnPlay();
                     break;
