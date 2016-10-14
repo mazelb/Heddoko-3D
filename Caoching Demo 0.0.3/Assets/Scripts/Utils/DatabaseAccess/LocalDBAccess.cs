@@ -36,6 +36,9 @@ namespace Assets.Scripts.Utils.DatabaseAccess
                 //check if the file exists first. 
                 string vFilePath = ApplicationSettings.LocalDbPath;
 
+                if (!Directory.Exists(vFilePath.Substring(0, vFilePath.LastIndexOf("/"))))
+                    Directory.CreateDirectory(vFilePath);
+
                 if (File.Exists(vFilePath))
                 {
                     mDbConnection = new SqliteConnection("URI=file:" + vFilePath);

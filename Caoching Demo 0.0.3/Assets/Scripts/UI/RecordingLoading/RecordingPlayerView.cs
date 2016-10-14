@@ -185,6 +185,27 @@ namespace Assets.Scripts.UI.RecordingLoading
             BodyFrameDataControl.SetBody(CurrBody);
             FrameGraphControl.SetBody(CurrBody);
             AnaylsisTextContainer.BodyToAnalyze = CurrBody;
+
+            Button[] vChildButtons = mPanelNodes[0].GetComponentsInChildren<Button>();
+
+            Button TPoseButton = null;
+            for (int i = 0; i < vChildButtons.Length; ++i)
+                if (vChildButtons[i].name.Contains("Tpose"))
+                {
+                    TPoseButton = vChildButtons[i];
+                    TPoseButton.onClick.RemoveAllListeners();
+                    TPoseButton.onClick.AddListener(() =>
+                    {
+                        if (CurrBody.InitialBodyFrame != null)
+                        {
+                            bool vPrev = BodySegment.IsUsingInterpolation;
+                            BodySegment.IsUsingInterpolation = false;
+                            CurrBody.View.ResetInitialFrame();
+                            BodySegment.IsUsingInterpolation = vPrev;
+                        }
+                    });
+                    break;
+                }
         }
 
         void Update()
