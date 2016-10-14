@@ -28,7 +28,7 @@ using UnityEngine;
 /// <summary>
 /// BodySegment class: represents one abstracted reprensentation of a body segment.
 /// </summary>
-public partial class BodySegment
+public class BodySegment
 {
 
 	public BodyFrameCalibrationContainer BodyFrameCalibrationContainer { get; internal set; }
@@ -60,9 +60,9 @@ public partial class BodySegment
 	static public bool IsProjectingYZ = false;
 	static public bool IsHipsEstimateForward = true;
 	static public bool IsHipsEstimateUp = false;
-	static public bool IsUsingInterpolation = false;// true;
+	static public bool IsUsingInterpolation =  true;
 	static public float InterpolationSpeed = 0.3f;
-	static public bool IsCalibrating = false;//true;
+	static public bool IsCalibrating = true;
 	//Extract the delta time of the frames
 	public float LastFrameTime = 0.0f;
 	public float CurrentFrameTime = 0.0f;
@@ -74,8 +74,8 @@ public partial class BodySegment
 	static public bool IsFusingSubSegments = false;
 	static public bool IsCalibrating = true;
 #else
-	static public bool IsAdjustingSegmentAxis = false;//true;
-	static public bool IsFusingSubSegments = false;//true;
+	static public bool IsAdjustingSegmentAxis = true;
+	static public bool IsFusingSubSegments = true;
 #endif
 
 	//Sensor data tuples
@@ -452,13 +452,13 @@ public partial class BodySegment
 	internal float EstimateHipsForwardAngle(Transform vLSTransform, Transform vUSTransform, Transform vRULTransform, Transform vLULTransform, Transform vRLLTransform, Transform vLLLTransform)
 	{
 		//Estimate Hips forward orientation
-		//Vector3 vGlobalVectorUp = Vector3.ProjectOnPlane(Vector3.up, vLSTransform.forward);
-		Vector3 vHipsForwardDirection = (Vector3.ProjectOnPlane(vUSTransform.forward, vLSTransform.up) + Vector3.ProjectOnPlane(vRULTransform.forward, vLSTransform.up) +
-										 Vector3.ProjectOnPlane(vLULTransform.forward, vLSTransform.up) + Vector3.ProjectOnPlane(vRLLTransform.forward, vLSTransform.up) +
-										 Vector3.ProjectOnPlane(vLLLTransform.forward, vLSTransform.up)) / 5;
+		Vector3 vGlobalVectorUp = Vector3.ProjectOnPlane(Vector3.up, vLSTransform.forward);
+		Vector3 vHipsForwardDirection = (Vector3.ProjectOnPlane(vUSTransform.forward, vGlobalVectorUp) + Vector3.ProjectOnPlane(vRULTransform.forward, vGlobalVectorUp) +
+										 Vector3.ProjectOnPlane(vLULTransform.forward, vGlobalVectorUp) + Vector3.ProjectOnPlane(vRLLTransform.forward, vGlobalVectorUp) +
+										 Vector3.ProjectOnPlane(vLLLTransform.forward, vGlobalVectorUp)) / 5;
 
-		//return SegmentAnalysis.GetSignedAngle(vHipsForwardDirection, Vector3.ProjectOnPlane(Vector3.forward, vLSTransform.up), vGlobalVectorUp);
-		return SegmentAnalysis.GetSignedAngle(vHipsForwardDirection, vLSTransform.forward, vLSTransform.up);
+		return SegmentAnalysis.GetSignedAngle(vHipsForwardDirection, Vector3.ProjectOnPlane(Vector3.forward, vLSTransform.up), vGlobalVectorUp);
+		//return SegmentAnalysis.GetSignedAngle(vHipsForwardDirection, vLSTransform.forward, vLSTransform.up);
 	}
 
 	internal float EstimateHipsUpAngle(Transform vLSTransform, Transform vUSTransform, Transform vRULTransform, Transform vLULTransform, Transform vRLLTransform, Transform vLLLTransform)
@@ -755,8 +755,13 @@ public partial class BodySegment
 		BodyFrame.Vect4 vTorsoCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler;
 #else
 		BodyFrame.Vect4 vLoArmCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightForeArm].CurrRawEuler;
+/*
 		BodyFrame.Vect4 vTorsoInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler;
 		BodyFrame.Vect4 vTorsoCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].CurrRawEuler;
+/*/
+		BodyFrame.Vect4 vTorsoInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightUpperArm].InitRawEuler;
+		BodyFrame.Vect4 vTorsoCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightUpperArm].CurrRawEuler;
+//*/
 #endif
 
 
@@ -909,19 +914,32 @@ public partial class BodySegment
 	{
 
 		//Upper arm
-		Quaternion vUpArmInitQuatX = Quaternion.Euler((aIsRight ? -1 : 1) * aUAInitEuler.y, 0, 0);
-		Quaternion vUpArmQuatX = Quaternion.Euler((aIsRight ? -1 : 1) * aUACurEuler.y, 0, 0);
-		vUpArmQuatX = Quaternion.Inverse(vUpArmInitQuatX) * vUpArmQuatX;
-
-		Quaternion vUpArmInitQuatY = Quaternion.Euler(0, (aIsRight ? -1:1 )* aUAInitEuler.z, 0);
-		Quaternion vUpArmQuatY = Quaternion.Euler(0, (aIsRight ? -1 : 1) * aUACurEuler.z, 0);
-		vUpArmQuatY = Quaternion.Inverse(vUpArmInitQuatY) * vUpArmQuatY;
+		//Quaternion vUpArmInitQuatY = Quaternion.Euler(0, 0, 0);
+		//Quaternion vUpArmQuatY = Quaternion.Euler(0, (aIsRight) ? 100 * Mathf.Sin(vCurrentAngle) : -100 * Mathf.Sin(vCurrentAngle), 0);
+		//vUpArmQuatY = Quaternion.Inverse(vUpArmInitQuatY) * vUpArmQuatY;
 		//vUpArmQuatY = Quaternion.Inverse(vUpArmQuatY);
 
-		Quaternion vUpArmInitQuatZ = Quaternion.Euler(0, 0, aUAInitEuler.x);
-		Quaternion vUpArmQuatZ = Quaternion.Euler(0, 0, aUACurEuler.x);
+#if SEGMENTS_DEBUG
+		Quaternion vUpArmInitQuatY = Quaternion.Euler(0,  aUAInitEuler.z, 0);
+#else
+		Quaternion vUpArmInitQuatY = Quaternion.Euler(0, aUAInitEuler.z, 0);
+#endif
+		Quaternion vUpArmQuatY = Quaternion.Euler(0, aUACurEuler.z, 0);
+		vUpArmQuatY = Quaternion.Inverse(vUpArmInitQuatY) * vUpArmQuatY;
+		vUpArmQuatY = Quaternion.Inverse(vUpArmQuatY);
+
+		Quaternion vUpArmInitQuatX = Quaternion.Euler(aUAInitEuler.x, 0, 0);
+		Quaternion vUpArmQuatX = Quaternion.Euler(aUACurEuler.x, 0, 0);
+		vUpArmQuatX = Quaternion.Inverse(vUpArmInitQuatX) * vUpArmQuatX;
+#if SEGMENTS_DEBUG
+		Quaternion vUpArmInitQuatZ = Quaternion.Euler(0, 0, aUAInitEuler.y);
+		Quaternion vUpArmQuatZ = Quaternion.Euler(0, 0, aUACurEuler.y);
+#else
+		Quaternion vUpArmInitQuatZ = Quaternion.Euler(0, 0, (aUAInitEuler.y));
+		Quaternion vUpArmQuatZ = Quaternion.Euler(0, 0, (aUACurEuler.y));
+#endif
 		vUpArmQuatZ = Quaternion.Inverse(vUpArmInitQuatZ) * vUpArmQuatZ;
-		//vUpArmQuatZ = Quaternion.Inverse(vUpArmQuatZ);
+		vUpArmQuatZ = Quaternion.Inverse(vUpArmQuatZ);
 
 #if SEGMENTS_DEBUG
 		if (aIsRight)
@@ -944,26 +962,36 @@ public partial class BodySegment
 		}
 #endif
 		//Lower arm
-		Quaternion vLoArmInitQuatX = Quaternion.Euler((aIsRight ? -1 : 1) * aLAInitEuler.y, 0, 0); // roll
-		Quaternion vLoArmQuatX = Quaternion.Euler((aIsRight ? -1 : 1) * aLACurEuler.y, 0, 0);
+		//Quaternion vLoArmInitQuatY = Quaternion.Euler(0, 0, 0);
+		//Quaternion vLoArmQuatY = Quaternion.Euler(0, (aIsRight) ? 100 * Mathf.Sin(vCurrentAngle) : -100 * Mathf.Sin(vCurrentAngle), 0);
+		//vLoArmQuatY = Quaternion.Inverse(vLoArmInitQuatY) * vLoArmQuatY;
+		//vLoArmQuatY = Quaternion.Inverse(vLoArmQuatY);
+#if SEGMENTS_DEBUG
+		Quaternion vLoArmInitQuatY = Quaternion.Euler(0, aLAInitEuler.z, 0);
+		Quaternion vLoArmQuatY = Quaternion.Euler(0, aLACurEuler.z, 0);
+#else
+		Quaternion vLoArmInitQuatY = Quaternion.Euler(0, (aLAInitEuler.z), 0);
+		Quaternion vLoArmQuatY = Quaternion.Euler(0, (aLACurEuler.z), 0);
+#endif
+		vLoArmQuatY = Quaternion.Inverse(vLoArmInitQuatY) * vLoArmQuatY;
+		vLoArmQuatY = Quaternion.Inverse(vLoArmQuatY);
+
+		Quaternion vLoArmInitQuatX = Quaternion.Euler(aLAInitEuler.x, 0, 0);
+		Quaternion vLoArmQuatX = Quaternion.Euler(aLACurEuler.x, 0, 0);
 		vLoArmQuatX = Quaternion.Inverse(vLoArmInitQuatX) * vLoArmQuatX;
 
-		Quaternion vLoArmInitQuatY = Quaternion.Euler(0, -aLAInitEuler.z, 0); //yaw
-		Quaternion vLoArmQuatY = Quaternion.Euler(0, -aLACurEuler.z, 0);
-		vLoArmQuatY = Quaternion.Inverse(vLoArmInitQuatY) * vLoArmQuatY;
-		//vLoArmQuatY = Quaternion.Inverse(vLoArmQuatY);
-
-		Quaternion vLoArmInitQuatZ = Quaternion.Euler(0, 0, (aIsRight ? 1 : -1) * aLAInitEuler.x); // pitch
-		Quaternion vLoArmQuatZ = Quaternion.Euler(0, 0, (aIsRight ? 1 : -1) * aLACurEuler.x);
+#if SEGMENTS_DEBUG
+		Quaternion vLoArmInitQuatZ = Quaternion.Euler(0, 0, aLAInitEuler.y);
+		Quaternion vLoArmQuatZ = Quaternion.Euler(0, 0, aLACurEuler.y );
+#else
+		Quaternion vLoArmInitQuatZ = Quaternion.Euler(0, 0, (aLAInitEuler.y));
+		Quaternion vLoArmQuatZ = Quaternion.Euler(0, 0, (aLACurEuler.y));
+#endif
 		vLoArmQuatZ = Quaternion.Inverse(vLoArmInitQuatZ) * vLoArmQuatZ;
-		//vLoArmQuatZ = Quaternion.Inverse(vLoArmQuatZ);
+		vLoArmQuatZ = Quaternion.Inverse(vLoArmQuatZ);
 
-		Quaternion vUpArmQuat = vUpArmQuatY * vUpArmQuatZ * vUpArmQuatX;
-		Quaternion vLoArmQuat = vLoArmQuatY * vLoArmQuatZ * vLoArmQuatX;
-
-
-
-
+		Quaternion vUpArmQuat = vUpArmQuatY * vUpArmQuatX * vUpArmQuatZ;
+		Quaternion vLoArmQuat = vLoArmQuatY * vLoArmQuatX * vLoArmQuatZ;
 #if SEGMENTS_DEBUG
 		if (aIsRight)
 		{
@@ -1044,7 +1072,7 @@ public partial class BodySegment
 
 #endif
 		//vCurrentAngle += 0.01f;
-		
+
 		//Get necessary Axis info
 		Vector3 vUAAxisUp, vUAAxisRight, vUAAxisForward;
 		Vector3 vLAAxisUp, vLAAxisRight, vLAAxisForward;
@@ -1481,7 +1509,7 @@ public partial class BodySegment
 			vLANewForward = Vector3.Cross(vLANewRight, vLANewUp);
 			vLoArmQuat = Quaternion.LookRotation(vLANewForward, vLANewUp);
 		}
-	
+
 #if SEGMENTS_DEBUG
 		vUAAxisUp = vUpArmQuat * Vector3.up;
 		vUAAxisRight = vUpArmQuat * Vector3.right;

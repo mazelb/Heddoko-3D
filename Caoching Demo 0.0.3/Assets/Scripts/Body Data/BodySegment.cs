@@ -6,7 +6,7 @@
 * @date October 2015
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
-#if !CDRIN_BODY_SEGMENTS
+#if !CDRIN_BODY_SEGMENTS && !CDRIN_BODY_SEGMENTS_ORI
 
 #if !SEGMENTS_DEBUG && !SEGMENTS_DEBUG_SIM
 using Assets.Scripts.Body_Data;

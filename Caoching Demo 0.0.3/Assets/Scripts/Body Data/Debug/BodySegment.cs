@@ -6,7 +6,7 @@
 * @date March 2016
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
-#if !CDRIN_BODY_SEGMENTS
+#if !CDRIN_BODY_SEGMENTS && !CDRIN_BODY_SEGMENTS_ORI
 
 #if SEGMENTS_DEBUG_SIM || SEGMENTS_DEBUG
 using UnityEngine;
