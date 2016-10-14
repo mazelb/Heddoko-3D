@@ -29,6 +29,7 @@ namespace Assets.Scripts.UI.Settings
         private static string sCacheFolderPath;
         //set it to -1 to  force a registry check
         private static int sCacheSize = 0;
+        private static int sTftpPortNum = 8845;
         /// <summary>
         /// provides and sets the the prefered recordings folder for the application
         /// </summary>
@@ -92,6 +93,15 @@ namespace Assets.Scripts.UI.Settings
                 return sCacheFolderPath;
             }
             
+        }
+
+        /// <summary>
+        /// Port property for the local tftp server 
+        /// </summary>
+        public static int TftpPort
+        {
+            get { return sTftpPortNum; }
+            set { sTftpPortNum = value; }
         }
 
         /// <summary>

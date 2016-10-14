@@ -6,27 +6,31 @@
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
 
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Assets.Scripts.Communication.Controller;
+using Assets.Scripts.UI.Settings;
 using heddoko;
-using HeddokoLib.heddokoProtobuff.Decoder;
+using HeddokoLib.heddokoProtobuff.Decoder; 
 using ProtoBuf;
 
 namespace Assets.Scripts.Communication.Communicators
 {
+ 
     /// <summary>
     /// A connection manager for the suit 
     /// </summary>
-    public class SuitConnectionManager
+    public class SuitConnectionManager 
     {
         private BLEConnection mBleConnection;
         private NetworkedSuitConnection mNetworkedSuitConnection;
         private ProtobuffDispatchRouter mDispatchRouter;
         private StreamToRawPacketDecoder mDecoder;
-
+        private FirmwareUpdateManager mFirmwareUpdater;
+        public OnSuitConnectionEvent NetworkSuitConnectionEstablishedEvent;
 
         private NetworkedSuitConnection SuitConnection
         {
@@ -36,6 +40,7 @@ namespace Assets.Scripts.Communication.Communicators
             }
         }
 
+     
         public bool IsConnectedToSuitViaNetwork
         {
             get { return SuitConnection.Connected; }
@@ -67,6 +72,7 @@ namespace Assets.Scripts.Communication.Communicators
         {
             mNetworkedSuitConnection = new NetworkedSuitConnection();
             mNetworkedSuitConnection.DataReceivedEvent += SuitDataReceivedHandler;
+            mNetworkedSuitConnection.SuitConnectionEvent += NetworkedSuitConnected;
             RegisterProtobufEvents();
         }
         /// <summary>
@@ -76,6 +82,14 @@ namespace Assets.Scripts.Communication.Communicators
         {
 
 
+        }
+
+        private void NetworkedSuitConnected()
+        {
+            if (NetworkSuitConnectionEstablishedEvent != null)
+            {
+                NetworkSuitConnectionEstablishedEvent();
+            }
         }
 
         /// <summary>
@@ -92,7 +106,7 @@ namespace Assets.Scripts.Communication.Communicators
         /// <summary>
         /// Begins the async file transfer process
         /// </summary>
-        public void UpdateFirmware(string vFilePath)
+        public void UpdateFirmware(string vFileName)
         {
             Packet vPacket = new Packet();
             var host = Dns.GetHostEntry(Dns.GetHostName());
@@ -102,27 +116,44 @@ namespace Assets.Scripts.Communication.Communicators
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
                     vCurrentEndPoint = ip.ToString();
+                    break;
                 }
             }
             vPacket.type = PacketType.UpdateFirmwareRequest;
             vPacket.firmwareUpdate = new FirmwareUpdate();
             vPacket.firmwareUpdate.fwEndpoint = new Endpoint();
             vPacket.firmwareUpdate.fwEndpoint.address = vCurrentEndPoint;
-            vPacket.firmwareUpdate.fwEndpoint.port = 8846;
-            vPacket.firmwareUpdate.fwFilename = vFilePath;
+            vPacket.firmwareUpdate.fwEndpoint.port = (uint)ApplicationSettings.TftpPort;
+            vPacket.firmwareUpdate.fwFilename = vFileName;
             MemoryStream vStream = new MemoryStream();
             Serializer.Serialize(vStream, vPacket);
             RawPacket vRawPacket = new RawPacket();
 
             int vRawSize;
             var vRawBytes = vRawPacket.GetRawPacketByteArray(out vRawSize, vStream);
-            //open up socket for firmware uploading
-            FirmwareUpdateManager mFirmwareUpdater = new FirmwareUpdateManager();
-            if (mFirmwareUpdater.Start(vFilePath))
+            //Start the firmware update manager before sending the request to update the firmware
+            if (mFirmwareUpdater == null)
             {
-                mNetworkedSuitConnection.Send(vRawBytes);
+                mFirmwareUpdater = new FirmwareUpdateManager("C:\\downl\\server", vCurrentEndPoint ,ApplicationSettings.TftpPort);
             }
+            mNetworkedSuitConnection.Send(vRawBytes);
+           
 
         }
+
+        public void CleanUp()
+        {
+            if (NetworkSuitConnectionEstablishedEvent != null)
+            {
+                SuitConnection.SuitConnectionEvent -= NetworkedSuitConnected;
+            }
+            if (mFirmwareUpdater != null)
+            {
+                mFirmwareUpdater.CleanUp();
+            }
+             
+        }
+
+         
     }
 }

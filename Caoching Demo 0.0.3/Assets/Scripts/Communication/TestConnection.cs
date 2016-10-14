@@ -19,7 +19,28 @@ namespace Assets.Scripts.Communication
         {
             SuitConnectionManager = new SuitConnectionManager();
             SuitConnectionManager.ConnectToSuit("127.0.0.1",8844);
-            SuitConnectionManager.UpdateFirmware("C:/firmware.bin");
+            SuitConnectionManager.NetworkSuitConnectionEstablishedEvent += UpdateFirmware;
+
+        }
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                SuitConnectionManager.UpdateFirmware("firmware.bin");
+
+
+            }
+        }
+
+        void UpdateFirmware()
+        {
+            
+        }
+        void OnApplicationQuit()
+
+        {
+            SuitConnectionManager.CleanUp();
         }
     }
 }

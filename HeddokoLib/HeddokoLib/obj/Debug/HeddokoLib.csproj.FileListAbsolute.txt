@@ -21,6 +21,6 @@ E:\Code\Heddoko-3D\HEDDOKO_Unity_test_v0.0.3\HeddokoLib\HeddokoLib\obj\Debug\Hed
 E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\bin\Debug\HeddokoLib.dll
 E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\bin\Debug\HeddokoLib.pdb
 E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\bin\Debug\protobuf-net.dll
+E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.csprojResolveAssemblyReference.cache
 E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.dll
 E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.pdb
-E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.csprojResolveAssemblyReference.cache

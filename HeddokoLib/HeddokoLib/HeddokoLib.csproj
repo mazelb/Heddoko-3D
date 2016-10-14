@@ -53,6 +53,7 @@
     <Compile Include="genericPatterns\IReleasableResource.cs" />
     <Compile Include="genericPatterns\Pool.cs" />
     <Compile Include="heddokoProtobuff\Decoder\BrainpackCommandEnum.cs" />
+    <Compile Include="heddokoProtobuff\Decoder\RawPacketDecoder.cs" />
     <Compile Include="heddokoProtobuff\Decoder\ProtobuffDispatchRouter.cs" />
     <Compile Include="heddokoProtobuff\Decoder\ProtoFrameDispatcher.cs" />
     <Compile Include="heddokoProtobuff\Decoder\StreamToRawPacketDecoder.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="networking\Command.cs" />
     <Compile Include="networking\HeddokoPacket.cs" />
     <Compile Include="networking\PacketSetting.cs" />
+    <Compile Include="networking\Tftp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="utils\ConversionTools.cs" />
     <Compile Include="adt\EventSet.cs" />

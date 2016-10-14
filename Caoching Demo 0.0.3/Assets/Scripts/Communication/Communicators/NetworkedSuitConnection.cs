@@ -14,14 +14,17 @@ using Assets.Scripts.Communication.Controller;
 namespace Assets.Scripts.Communication.Communicators
 {
     public delegate void OnSuitDataReceivedEvent(StateObject vObject, byte[] vData);
+
+    public delegate void OnSuitConnectionEvent();
     public class NetworkedSuitConnection : IDisposable
     {
 
         public event OnSuitDataReceivedEvent DataReceivedEvent;
+        public event OnSuitConnectionEvent SuitConnectionEvent;
         private object mLockIsConectedLock = new  object();
         private Socket mSocket;
         public int Port = 8845;
-   
+        
 
         /// <summary>
         /// Is the suit currently connected?
@@ -49,21 +52,13 @@ namespace Assets.Scripts.Communication.Communicators
           //  IPHostEntry vLocalHost = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
             try
             {
-                IPHostEntry vEndPointHostEntry = Dns.Resolve(vIpEndPoint);
-                IPAddress vIpAddress = vEndPointHostEntry.AddressList[0];
+                //IPHostEntry vEndPointHostEntry = Dns.Resolve(vIpEndPoint);
+                IPAddress vIpAddress = IPAddress.Parse("127.0.0.1");// vEndPointHostEntry.AddressList[0];
                 IPEndPoint vRemoteEp = new IPEndPoint(vIpAddress, vPortNum);
 
                 mSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 //begin to connect to the suit
-                mSocket.BeginConnect(vRemoteEp, new AsyncCallback(ConnectCallback), mSocket);
-                //  EndPoint vServerEndpoint = new IPEndPoint(vHostEntry.AddressList[0], vPortNum);
-                //  
-                // mSocket.Connect(vServerEndpoint);
-                //  StateObject vServerEndSocket = new StateObject();
-
-                // vServerEndSocket.Socket = mSocket.EndConnect(fda)
-                //mSocket.BeginReceive(vBuffer, 0, vBuffer.Length,
-                // SocketFlags.None, new AsyncCallback(ReceiveCallback), vIncomingConnection);
+                mSocket.BeginConnect(vRemoteEp, new AsyncCallback(ConnectCallback), mSocket); 
             }
             catch (ArgumentOutOfRangeException vException)
             {
@@ -96,12 +91,16 @@ namespace Assets.Scripts.Communication.Communicators
                 Socket vCurrentSocket = (Socket)vAr.AsyncState;
                 //setup current socket
                 vCurrentSocket.EndConnect(vAr);
+                if (SuitConnectionEvent != null)
+                {
+                    SuitConnectionEvent();
+                }
                 mSocket.BeginAccept(new AsyncCallback(AcceptCallback), mSocket);
             }
             catch (SocketException vSocketException)
             {
 
-                string vMsg = "Line: 104 Error occured starting listener, check inner exception" + vSocketException + " code " + vSocketException.ErrorCode;
+                string vMsg = "Line: 103 Error beggining accept, check inner exception" + vSocketException + " code " + vSocketException.ErrorCode;
                 string vInnerExceptionMsg = "";
                 if (vSocketException.InnerException != null)
                 {
@@ -176,6 +175,7 @@ namespace Assets.Scripts.Communication.Communicators
                 lock (mSocket)
                 {
                     mSocket.Send(vData, vData.Length, SocketFlags.None);
+                    
                 }
             }
             else
@@ -185,6 +185,10 @@ namespace Assets.Scripts.Communication.Communicators
             return true;
         }
 
+        private void SendCallbackBack(IAsyncResult vAr)
+        {
+            throw new NotImplementedException();
+        }
 
 
         private void ReceiveCallback(IAsyncResult vAr)
