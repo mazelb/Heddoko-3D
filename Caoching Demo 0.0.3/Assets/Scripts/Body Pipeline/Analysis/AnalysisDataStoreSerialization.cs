@@ -140,7 +140,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                         vFileWriter.Write(i + "w,");
                     }
                     vFileWriter.Write("\r\n");
-                    for (int i = 0; i < vRawData.Count; i++)
+                    for (int i = 0; i < vAnalysisDataStore.SerializedList.Count; i++)
                     {
                         vFileWriter.Write(vRawData[i].Index + ",");
                         vFileWriter.Write(vRawData[i].ToCSVNoTSNoKeyIncluded());
