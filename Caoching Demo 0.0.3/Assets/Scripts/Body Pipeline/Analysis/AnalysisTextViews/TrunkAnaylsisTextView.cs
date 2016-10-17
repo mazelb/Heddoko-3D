@@ -50,9 +50,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         {
             if (mTorsoAnalysis != null)
             {
-                LateralBendingAngle.text = FeedbackAngleToString(mTorsoAnalysis.AngleTorsoLateral);
-                InclinationAngle.text = FeedbackAngleToString(mTorsoAnalysis.AngleTorsoFlexion);
-                RotationAngle.text = FeedbackAngleToString( mTorsoAnalysis.AngleTorsoRotation);
+                LateralBendingAngle.text = FeedbackAngleToString(mTorsoAnalysis.SignedAngleTorsoLateral);
+                InclinationAngle.text = FeedbackAngleToString(mTorsoAnalysis.SignedTorsoFlexion);
+                RotationAngle.text =FeedbackAngleToString( mTorsoAnalysis.SignedAngleTorsoRotation);
             }
         }
 
