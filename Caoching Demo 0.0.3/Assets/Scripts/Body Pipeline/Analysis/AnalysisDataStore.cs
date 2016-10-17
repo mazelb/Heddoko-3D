@@ -27,9 +27,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         public List<Dictionary<FieldInfo, string>> SerializedList = new List<Dictionary<FieldInfo, string>>();
         private List<int> mFrameIndices = new List<int>();
         private List<float> mTimeStamps = new List<float>();
+                private List<BodyFrame> mBodyFrames = new List<BodyFrame>();
         private int[] mPoseSelectionIndicies;
         private int mFrameCount = -1;
-        private List<BodyFrame> mBodyFrames = new List<BodyFrame>();
+
         internal AnaylsisDataStoreSettings AnaylsisDataStoreSettings;
         public AnalysisDataStoreSerialization Serialization;
         private int mFieldInfoCount;
@@ -265,8 +266,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         {
             mFrameCount = vRawFramesCount;
         }
-
-
-
+        
     }
 }

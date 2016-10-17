@@ -72,6 +72,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             //register listeners
             RecordingPlayerView.PbControlPanel.FinalFramePositionEvent += OnEnd;
             BodyModel.View.BodyFrameResetInitializedEvent += SliderMaskContainerController.TPoseRequestedHandler;
+             
             //if the recording has been changed, finish data collection
             RecordingPlayerView.PbControlPanel.NewRecordingSelectedEvent += OnEnd;
             BodyModel.View.BodyFrameUpdatedEvent += CollectTimeStampData;
@@ -117,7 +118,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             RecordingPlayerView.PbControlPanel.FinalFramePositionEvent -= OnEnd;
             RecordingPlayerView.PbControlPanel.NewRecordingSelectedEvent -= OnEnd;
             BodyModel.View.BodyFrameResetInitializedEvent -= SliderMaskContainerController.TPoseRequestedHandler;
-            ExportDataButton.onClick.RemoveAllListeners();
+             ExportDataButton.onClick.RemoveAllListeners();
             ExportDataButton.onClick.AddListener(OnStart);
             ExportDataButtonText.text = "COLLECT ANALYTICS";
             var vSegmentList = BodyModel.AnalysisSegments.Values.ToList();
