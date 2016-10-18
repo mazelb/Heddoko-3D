@@ -161,6 +161,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             AngularAccelerationShoulderRotation = (vAngularVelocityShoulderRotationNew - AngularVelocityShoulderRotation) / DeltaTime;
             AngularVelocityShoulderRotation = vAngularVelocityShoulderRotationNew;
             AngleShoulderRotation = vAngleShoulderRotationNew;
+
+            //notify listeners that analysis on this component has been completed. 
             NotifyAnalysisCompletionListeners();
         }
 

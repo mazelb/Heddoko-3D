@@ -1,6 +1,6 @@
 {
   "System.Single SignedAngleTorsoLateral": {
-    "AttributeName": "Trffffaunk LatBend R/L",
+    "AttributeName": "trunk LatBend R/L",
     "Order": 16,
     "IsSignNegative": false
   },
@@ -10,7 +10,7 @@
     "IsSignNegative": false
   },
   "System.Single SignedTorsoFlexion": {
-    "AttributeName": "Trunk F/E",
+    "AttributeName": "Torso flexion ",
     "Order": 5,
     "IsSignNegative": false
   },
@@ -70,17 +70,17 @@
     "IsSignNegative": false
   },
   "System.Single LeftSignedHipFlexionAngle": {
-    "AttributeName": "The thing between the bob and the thinger",
+    "AttributeName": "left hip flexion",
     "Order": 14,
     "IsSignNegative": false
   },
   "System.Single LeftSignedHipAbductionAngle": {
-    "AttributeName": "thinger",
+    "AttributeName": "left hip abduction",
     "Order": 2,
     "IsSignNegative": false
   },
   "System.Single LeftHipRotationAngle": {
-    "AttributeName": "Bob",
+    "AttributeName": "left hip rotation",
     "Order": 0,
     "IsSignNegative": false
   }
