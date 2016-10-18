@@ -144,7 +144,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             AngularAccelerationShoulderVertAbduction = (vAngularVelocityShoulderVertAbductionNew - AngularVelocityShoulderVertAbduction) / DeltaTime;
             AngularVelocityShoulderVertAbduction = vAngularVelocityShoulderVertAbductionNew;
             AngleShoulderVertAbduction = vAngleShoulderVertAbductionNew;
-            Vector3 vVertAbductionCrossPrdct = Vector3.Cross(vTorsoAxisForward, vVerticalShoulderAbdProjection);
+            Vector3 vVertAbductionCrossPrdct = Vector3.Cross( vVerticalShoulderAbdProjection,vTorsoAxisForward);
             float vVertAbductionSign = Mathf.Sign(Vector3.Dot(-vTorsoAxisUp, vVertAbductionCrossPrdct));
             LeftShoulderVerticalAbductionSignedAngle = vVertAbductionSign * AngleShoulderVertAbduction * GetSign("System.Single LeftShoulderVerticalAbductionSignedAngle");
 

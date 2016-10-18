@@ -53,7 +53,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
                 RightShoulderFlexionText.text = FeedbackAngleToString(mRightArmAnalysis.RightShoulderFlexionSignedAngle);
                 RightShoulderAbductionText.text = FeedbackAngleToString(mRightArmAnalysis.RightShoulderVerticalAbductionSignedAngle);
                 LeftShoulderFlexionText.text = FeedbackAngleToString(mLeftArmAnalysis.LeftShoulderFlexionSignedAngle);
-                LeftShoulderAbductionText.text = FeedbackAngleToString(-1f * mLeftArmAnalysis.LeftShoulderVerticalAbductionSignedAngle);
+                LeftShoulderAbductionText.text = FeedbackAngleToString( mLeftArmAnalysis.LeftShoulderVerticalAbductionSignedAngle);
             }
         }
 

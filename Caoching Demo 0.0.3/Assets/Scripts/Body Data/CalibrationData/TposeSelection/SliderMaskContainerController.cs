@@ -7,6 +7,7 @@
 // */
 
 using System.Collections.Generic;
+using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.AnaylsisRecording.view;
 using Assets.Scripts.UI.RecordingLoading;
 using UnityEngine;
 using UnityEngine.UI;
@@ -23,6 +24,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.TposeSelection
         public Image Background;
         public TPoseSliderMask PoseSliderMaskPrefab;
         private List<TPoseSliderMask> mLiveList = new List<TPoseSliderMask>();
+        public TPoseList TPoseList;
         public RecordingPlayerView PlayerView;
         public Camera RenderingCam;
 

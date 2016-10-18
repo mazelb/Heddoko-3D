@@ -65,6 +65,9 @@ namespace Assets.Scripts.Localization
         InvalidUnPwMsg,
         IssueAccessingAcountGenericMsg,
         AckErrorMsg,
-        NoInternetConnectionMsg
+        NoInternetConnectionMsg,
+        RecordingFileLessThanSkippableFrames,
+        BadKitUpload1,
+        BadKitUpload2
     }
 }
