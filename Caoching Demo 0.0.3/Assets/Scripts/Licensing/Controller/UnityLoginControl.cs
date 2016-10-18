@@ -157,6 +157,7 @@ namespace Assets.Scripts.Licensing.Controller
             {
                 //No error: continue 
                 mConnectionThread = new Thread(() => SubmitLoginInfo(vModel));
+                mConnectionThread.IsBackground = true;
                 mConnectionThread.Start();
             }
         }

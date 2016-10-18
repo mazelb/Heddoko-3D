@@ -69,6 +69,7 @@ namespace Assets.Scripts.Communication
             StopIfWorking();
             mIsWorking = true;
             mThread = new Thread(WorkerFunc);
+            mThread.IsBackground = true;
             mThread.Start();
         }
 

@@ -39,6 +39,7 @@ namespace Assets.Scripts.Communication
         public SynchronousClient()
         {
             mWorkerThread = new Thread(ThreadWorker);
+            mWorkerThread.IsBackground = true;
             mIsworking = true;
             mWorkerThread.Start();
             string vLogMessage = "Synchronous Client instantiated, current timeout is set to " + sTimeout;

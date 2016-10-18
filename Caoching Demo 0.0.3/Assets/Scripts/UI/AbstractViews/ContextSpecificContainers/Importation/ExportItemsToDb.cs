@@ -258,6 +258,7 @@ namespace Assets.Scripts.UI.AbstractViews.ContextSpecificContainers.Importation
             CurrentFileProgress.Max = CurrentImportTask.MaxCount;
             mTotalExportedItems.Add(CurrentImportTask);
             Thread vNextThread = new Thread(() => Database.Connection.CreateRecording(vRecording, vCurrItemDescriptor, UpdateCurrentFileProgress));
+            vNextThread.IsBackground = true;
             TaggingManager.AttachTagSetToRecording(vCurrItemDescriptor.TagSet,vRecording);
             vNextThread.Start();
         }

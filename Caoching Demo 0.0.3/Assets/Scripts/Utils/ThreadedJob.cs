@@ -47,6 +47,7 @@ public class ThreadedJob
     public virtual void Start()
     {
         mThread = new System.Threading.Thread(Run);
+        mThread.IsBackground = true;
         mThread.Start();
     }
 
