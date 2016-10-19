@@ -81,7 +81,7 @@ MonoBehaviour:
     the case, please log into app.heddoko.com and verify that the current user has
     the correct kit assigned to them.\",\n\t\t\t\t\"PluralForm\":  null\n\t\t\t\t},\n\t\t\t\t\"RecordingFileLessThanSkippableFrames\":{\n\t\t\t\t\"SingularForm\":
     \"Cannot load recording file because there are not enough frames to analyze.Please
-    try a longer recording.\",\n\t\t\t\t\"PluralForm\":  null\n\t\t\t\t}\n\t\t\t\t\"CannotLoadRecording\"
+    try a longer recording.\",\n\t\t\t\t\"PluralForm\":  null\n\t\t\t\t},\n\t\t\t\t\"CannotLoadRecording\"
     : {\n\t\t\t\t\"SingularForm\": \"There was an issue loading this recording file.
     Please try another file or report this problem to support\",\n\t\t\t\t\"PluralForm\":
     \ null\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\t\n\t\t\t}\n\t\t}\n\t}\n}"
