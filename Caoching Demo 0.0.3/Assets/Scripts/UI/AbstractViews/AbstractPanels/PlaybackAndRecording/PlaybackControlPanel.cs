@@ -546,7 +546,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 {
                     ModalPanel.SingleChoice("ERROR", LocalizationBinderContainer.GetString(KeyMessage.RecordingFileLessThanSkippableFrames),
                       () => { });
-
                     ReleaseResources();
                     return;
                 }

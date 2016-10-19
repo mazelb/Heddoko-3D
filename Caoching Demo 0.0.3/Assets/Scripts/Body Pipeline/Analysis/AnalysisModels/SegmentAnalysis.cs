@@ -34,6 +34,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
 
 
         }
+ 
 
         /// <summary>
         /// Adds an analysis completed listener 
