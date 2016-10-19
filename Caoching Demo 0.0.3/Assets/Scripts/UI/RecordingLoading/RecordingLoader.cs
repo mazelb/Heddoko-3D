@@ -8,6 +8,8 @@
 
 using System;
 using System.IO;
+using Assets.Scripts.ErrorHandling;
+using Assets.Scripts.ErrorHandling.Model;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.Localization;
 using Assets.Scripts.Tests;
@@ -29,6 +31,12 @@ namespace Assets.Scripts.UI.RecordingLoading
         public void SetCallbackAction(Action<BodyFramesRecordingBase> vRecordingLoadedCallback)
         {
             mRecordingLoadedCallback = vRecordingLoadedCallback;
+        }
+ 
+
+        private void HandleErrorLoadingFile(BodyFramesRecordingBase vObj)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

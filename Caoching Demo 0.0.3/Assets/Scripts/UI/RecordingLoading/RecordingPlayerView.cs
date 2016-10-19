@@ -13,7 +13,11 @@ using Assets.Scripts.UI.AbstractViews.Layouts;
 using System.Collections.Generic;
 using Assets.Scripts.Body_Pipeline.Analysis.Views;
 using Assets.Scripts.Communication.View.Table;
+using Assets.Scripts.ErrorHandling;
+using Assets.Scripts.ErrorHandling.Model;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.Licensing.Model;
+using Assets.Scripts.Localization;
 using Assets.Scripts.Tests;
 using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
@@ -31,7 +35,7 @@ namespace Assets.Scripts.UI.RecordingLoading
     /// <summary>
     /// Single Player view
     /// </summary>
-    [UserRolePermission(new []{UserRoleType.Analyst})]
+    [UserRolePermission(new[] { UserRoleType.Analyst })]
     public class RecordingPlayerView : AbstractView
     {
         private LayoutType LayoutType = LayoutType.Single;
@@ -42,7 +46,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         private bool mIsInitialized = false;
         public Body CurrBody;
         public BodyFrameDataControl BodyFrameDataControl;
-        public BodyFrameGraphControl FrameGraphControl; 
+        public BodyFrameGraphControl FrameGraphControl;
         public AnaylsisTextContainer AnaylsisTextContainer;
         public event RecordingPlayerViewLayoutCreated RecordingPlayerViewLayoutCreatedEvent;
         public CloudLocalStorageViewManager CloudLocalStorageViewManager;
@@ -113,7 +117,26 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 RecordingPlayerViewLayoutCreatedEvent(this);
             }
+
+            //setup error handler
+            RecordingErrorHandlerManager.Instance.AddErrorHandler("ErrorParsing", new RecordingErrorHandler(HandleErrorLoadingFile));
+            RecordingErrorHandlerManager.Instance.AddErrorHandler("IssueLoading", new RecordingErrorHandler(HandleErrorLoadingFile));
+
         }
+
+        private void HandleErrorLoadingFile(BodyFramesRecordingBase vObj)
+        {
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
+                () =>
+                {
+                    PbControlPanel.ReleaseResources();
+                    LoadingBoard.StopLoadingAnimation();
+                    string vErr = LocalizationBinderContainer.GetString(KeyMessage.CannotLoadRecording);
+                    ModalWindow.ModalPanel.SingleChoice("ERROR", vErr, () => { });
+                }
+           );
+        }
+
 
         /// <summary>
         /// releases current resources

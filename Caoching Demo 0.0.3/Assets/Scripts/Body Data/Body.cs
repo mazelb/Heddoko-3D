@@ -19,7 +19,8 @@ using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Torso;
 using Assets.Scripts.Communication;
-using Assets.Scripts.Communication.Controller; 
+using Assets.Scripts.Communication.Controller;
+using Assets.Scripts.ErrorHandling;
 using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
 using Assets.Scripts.Frames_Recorder.FramesRecording; 
 
@@ -312,12 +313,33 @@ public class Body
         if (vBodyFrameRecording != null && vBodyFrameRecording.RecordingRawFramesCount > 0)
         {
             BodyFrame vBodyFrame = null;
-            vBodyFrame = RawFrameConverter.ConvertRawFrame(vBodyFrameRecording.GetBodyRawFrameAt(0));
 
-            //Setting the first frame as the initial frame
+            while (vBodyFrameRecording.RecordingRawFramesCount > 0)
+            {
+                try
+                {
+                    vBodyFrame = RawFrameConverter.ConvertRawFrame(vBodyFrameRecording.GetBodyRawFrameAt(0));
+                    break;
+                }
+                catch (IndexOutOfRangeException vE)
+                {
+                    vBodyFrameRecording.RemoveAt(0);
+                }
+                catch (FormatException vE)
+                {
+                    vBodyFrameRecording.RemoveAt(0);
+                }
+
+            }
+            if (vBodyFrameRecording.RecordingRawFramesCount == 0)
+            {
+                RecordingErrorHandlerManager.Instance.Notify("IssueLoading", vBodyFrameRecording);
+            }
+
+                //Setting the first frame as the initial frame
 
 
-            SetInitialFrame(vBodyFrame);
+                SetInitialFrame(vBodyFrame);
             BodyFrameBuffer vBuffer1 = new BodyFrameBuffer();
 
             // mBodyFrameThread = new BodyFrameThread(bodyFramesRec.RecordingRawFrames, vBuffer1);

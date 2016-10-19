@@ -81,12 +81,7 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
             //TODO:
         }
 
-        /**
-    * GetNextFrame()
-    * @param 
-    * @brief Adds a frame to the recording
-    * @return Returns the next frame from the Raw Frame Recordings
-    */
+
 
         /**
      * PopulateRecordingUUIDs()
@@ -164,30 +159,7 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
 
                 }
             }
-            //analyze statistics of a current recording
-
         }
-
-
-        //    //Send each line to a BodyFrameStream
-        //    //Each line start by sending Frame start "S"
-        //    //Send the frame data 
-        //    //Send Frame End: "E"
-
-        //private void TransmitAllFrames()
-        //{
-        //    foreach (string vFileLine in mFileLines)
-        //    {
-        //        //string[] vFrameData = vFileLine.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-        //    }
-
-        //    //Send each line to a BodyFrameStream
-        //    //Each line start by sending Frame start "S"
-        //    //Send the frame data 
-        //    //Send Frame End: "E"
-        //}
-
-
 
         public override int RecordingRawFramesCount
         {
@@ -216,6 +188,11 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
         {
             FromDatFile = vRecordingReaderbase.FilePath.EndsWith("dat");
             ExtractRawFramesData((CsvBodyRecordingReader)vRecordingReaderbase);
+        }
+
+        public override void RemoveAt(int vI)
+        {
+            RecordingRawFrames.RemoveAt(vI);
         }
     }
 

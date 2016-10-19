@@ -39,9 +39,9 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             LeftIndex.onValueChanged.RemoveAllListeners();
             TPoseIndex.onValueChanged.RemoveAllListeners();
             RightIndex.onValueChanged.RemoveAllListeners();
-            LeftIndex.text = vItem.PoseIndexLeft.ToString();
-            TPoseIndex.text = vItem.PoseIndex.ToString();
-            RightIndex.text = vItem.PoseIndexRight.ToString();
+           // LeftIndex.text = vItem.PoseIndexLeft.ToString();
+          //  TPoseIndex.text = vItem.PoseIndex.ToString();
+           // RightIndex.text = vItem.PoseIndexRight.ToString();
         }
     }
 }

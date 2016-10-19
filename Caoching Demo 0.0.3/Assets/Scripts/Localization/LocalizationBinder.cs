@@ -68,6 +68,7 @@ namespace Assets.Scripts.Localization
         NoInternetConnectionMsg,
         RecordingFileLessThanSkippableFrames,
         BadKitUpload1,
-        BadKitUpload2
+        BadKitUpload2,
+        CannotLoadRecording
     }
 }
