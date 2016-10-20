@@ -7,7 +7,7 @@
 */
 
 using Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews;
-using Assets.Scripts.Body_Pipeline.Analysis.Torso;
+using Assets.Scripts.Body_Pipeline.Analysis.Trunk;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +23,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         public Text InclinationAngle;
         public Text RotationAngle;
         [SerializeField]
-        private TorsoAnalysis mTorsoAnalysis;
+        private TrunkAnalysis mTorsoAnalysis;
 
 
         public override string LabelName
@@ -63,9 +63,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         {
             if (mTorsoAnalysis != null)
             {
-                LateralBendingAngle.text = FeedbackAngleToString(mTorsoAnalysis.SignedAngleTorsoLateral);
-                InclinationAngle.text = FeedbackAngleToString(mTorsoAnalysis.SignedTorsoFlexion);
-                RotationAngle.text = FeedbackAngleToString(mTorsoAnalysis.SignedAngleTorsoRotation);
+                LateralBendingAngle.text = FeedbackAngleToString(mTorsoAnalysis.SignedAngleTrunkLateral);
+                InclinationAngle.text = FeedbackAngleToString(mTorsoAnalysis.SignedTrunkFlexion);
+                RotationAngle.text = FeedbackAngleToString(mTorsoAnalysis.SignedAngleTrunkRotation);
             }
         }
 

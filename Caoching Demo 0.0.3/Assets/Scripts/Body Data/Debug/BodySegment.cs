@@ -17,7 +17,7 @@ using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Body_Pipeline.Analysis;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
-using Assets.Scripts.Body_Pipeline.Analysis.Torso; 
+using Assets.Scripts.Body_Pipeline.Analysis.Trunk; 
 //using System.Diagnostics;
 using System.IO;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;

@@ -17,7 +17,7 @@ using Assets.Scripts.Body_Pipeline.Analysis;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
-using Assets.Scripts.Body_Pipeline.Analysis.Torso;
+using Assets.Scripts.Body_Pipeline.Analysis.Trunk;
 using Assets.Scripts.Communication;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.ErrorHandling;
@@ -59,7 +59,7 @@ public class Body
     public RightArmAnalysis RightArmAnalysis;
     public LeftLegAnalysis LeftLegAnalysis;
     public RightLegAnalysis RightLegAnalysis;
-    public TorsoAnalysis TorsoAnalysis;
+    public TrunkAnalysis TorsoAnalysis;
 
     //view associated with this model
     private BodyView mView;
@@ -174,7 +174,7 @@ public class Body
     {
         //Get the list of segments from the bodystructuremap 
         List<BodyStructureMap.SegmentTypes> vSegmentList = BodyStructureMap.Instance.BodyToSegmentMap[vBodyType];
-        TorsoAnalysis vTorsoSegmentAnalysis = new TorsoAnalysis();
+        TrunkAnalysis vTorsoSegmentAnalysis = new TrunkAnalysis();
         vTorsoSegmentAnalysis.SegmentType = BodyStructureMap.SegmentTypes.SegmentType_Torso;
 
 
@@ -448,7 +448,7 @@ public class Body
         //get the list of segments of the speicfied vBody
         List<BodySegment> vListBodySegments = vBody.BodySegments;
 
-         for (int i = 0; i < vListBodySegments.Count; i++)
+        for (int i = 0; i < vListBodySegments.Count; i++)
         { 
             //of the current body segment, get the appropriate subsegments
             List<BodyStructureMap.SensorPositions> vSensPosList =
@@ -467,6 +467,7 @@ public class Body
                     vFilteredDictionary.Add(vSensPosList[j], vTrackedMatrices);
                 }
             }  
+
             vListBodySegments[i].UpdateSegment(vFilteredDictionary); 
         }
          

@@ -2,7 +2,7 @@
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
-using Assets.Scripts.Body_Pipeline.Analysis.Torso;
+using Assets.Scripts.Body_Pipeline.Analysis.Trunk;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -142,17 +142,12 @@ namespace Assets.Demos
         private void ShowTorsoInfo()
         {
             
-            TorsoAnalysis vTorsoAnalysis;
+            TrunkAnalysis vTorsoAnalysis;
             if (CurrentBody.AnalysisSegments.ContainsKey(BodyStructureMap.SegmentTypes.SegmentType_Torso))
             {
                 vTorsoAnalysis =
                     CurrentBody.AnalysisSegments[BodyStructureMap.SegmentTypes.SegmentType_Torso] as
-                        TorsoAnalysis;
-                mVText += "   Number of Turns :  " + vTorsoAnalysis.NumberOfTurns;
-                mVText += "   Turn Magnitude  :  " + vTorsoAnalysis.AngleIntegrationTurns;
-                mVText += "   Number of Turns :  " + vTorsoAnalysis.NumberOfTurns;
-                mVText += "   Number of Flips :  " + vTorsoAnalysis.NumberOfFlips;
-                mVText += "   Flip Magnitude :  " + vTorsoAnalysis.AngleIntegrationFlips;
+                        TrunkAnalysis;
             }
         }
 
