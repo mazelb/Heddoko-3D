@@ -77,11 +77,11 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
                     mPlaceholderBody.UpdateBody(ConvertedFrames[i]);
                     if (vStart)
                     {
-                        var vPreReset = BodySegment.IsUsingInterpolation;
-                        BodySegment.IsUsingInterpolation = false;
+                        var vPreReset = BodySegment.Flags.IsUsingInterpolation;
+                        BodySegment.Flags.IsUsingInterpolation = false;
                         mPlaceholderBody.View.ResetInitialFrame(ConvertedFrames[i]);
                         vStart = false;
-                        BodySegment.IsUsingInterpolation = true;
+                        BodySegment.Flags.IsUsingInterpolation = true;
                         continue;
                     }
                     Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic = Body.GetTracking(mPlaceholderBody);

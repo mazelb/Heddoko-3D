@@ -24,6 +24,7 @@ using Assets.Scripts.Utils;
 using HeddokoSDK.Models;
 using UnityEngine;
 using UnityEngine.UI;
+using Assets.Scripts.Utils.DebugContext;
 
 public delegate void RecordingPlayerViewLayoutCreated(RecordingPlayerView vView);
 namespace Assets.Scripts.UI.RecordingLoading
@@ -117,7 +118,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         public override void Hide()
         {
-            bool vIsLerp = BodySegment.IsUsingInterpolation;
+            bool vIsLerp = BodySegment.Flags.IsUsingInterpolation;
             if (mIsInitialized)
             {
                 foreach (var vPanelNodes in mPanelNodes)
@@ -132,20 +133,20 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
             try
             {
-                BodySegment.IsUsingInterpolation = false;
+                BodySegment.Flags.IsUsingInterpolation = false;
                 CurrBody.View.ResetInitialFrame();
             }
             catch
             {
 
             }
-            BodySegment.IsUsingInterpolation = vIsLerp;
+            BodySegment.Flags.IsUsingInterpolation = vIsLerp;
         }
 
         public override void Show()
         {
             gameObject.SetActive(true);
-            bool vIsLerp = BodySegment.IsUsingInterpolation;
+            bool vIsLerp = BodySegment.Flags.IsUsingInterpolation;
             if (CurrentLayout == null)
             {
                 CreateDefaultLayout();
@@ -157,14 +158,14 @@ namespace Assets.Scripts.UI.RecordingLoading
             SetContextualInfo();
             try
             {
-                BodySegment.IsUsingInterpolation = false;
+                BodySegment.Flags.IsUsingInterpolation = false;
                 CurrBody.View.ResetInitialFrame();
             }
             catch
             {
 
             }
-            BodySegment.IsUsingInterpolation = vIsLerp;
+            BodySegment.Flags.IsUsingInterpolation = vIsLerp;
         }
 
         /// <summary>
@@ -198,10 +199,10 @@ namespace Assets.Scripts.UI.RecordingLoading
                     {
                         if (CurrBody.InitialBodyFrame != null)
                         {
-                            bool vPrev = BodySegment.IsUsingInterpolation;
-                            BodySegment.IsUsingInterpolation = false;
+                            bool vPrev = BodySegment.Flags.IsUsingInterpolation;
+                            BodySegment.Flags.IsUsingInterpolation = false;
                             CurrBody.View.ResetInitialFrame();
-                            BodySegment.IsUsingInterpolation = vPrev;
+                            BodySegment.Flags.IsUsingInterpolation = vPrev;
                         }
                     });
                     break;
@@ -210,18 +211,32 @@ namespace Assets.Scripts.UI.RecordingLoading
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Home))
+            if (Input.GetKeyDown(HeddokoDebugKeyMappings.ResetFrame))
             {
                 try
                 {
-                    bool vPrev = BodySegment.IsUsingInterpolation;
-                    BodySegment.IsUsingInterpolation = false;
+                    bool vPrev = BodySegment.Flags.IsUsingInterpolation;
+                    BodySegment.Flags.IsUsingInterpolation = false;
                     CurrBody.View.ResetInitialFrame();
-                    BodySegment.IsUsingInterpolation = vPrev;
+                    BodySegment.Flags.IsUsingInterpolation = vPrev;
                 }
                 catch (Exception)
                 {
                 }
+            }
+            else if(Input.GetKeyDown(HeddokoDebugKeyMappings.IsCalibratingROM))
+            {
+                try
+                {
+                    BodyFlags vPrev = BodySegment.Flags.clone();
+                    BodySegment.Flags.IsCalibrating = true;
+                    CurrBody.View.ResetInitialFrame();
+                    BodySegment.Flags = vPrev;
+                }
+                catch (Exception)
+                {
+                }
+
             }
         }
 

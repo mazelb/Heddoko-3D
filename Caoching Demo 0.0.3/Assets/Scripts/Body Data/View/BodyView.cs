@@ -11,8 +11,7 @@ using System.Collections.Generic;
 using Assets.Scripts.Body_Data.view;
 using Assets.Scripts.Body_Data.View.Anaylsis;
 using Assets.Scripts.Utils.DebugContext;
-
-
+using System.Linq;
 
 namespace Assets.Scripts.Body_Data.view
 {
@@ -122,16 +121,18 @@ namespace Assets.Scripts.Body_Data.view
         {
             AssociatedBody.UpdateBody(vBodyFrame);
             Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic = Body.GetTracking(AssociatedBody);
-
-            if (vDic != null)
+            if(vBodyFrame != null)
             {
-                AssociatedBody.mBodyFrameCalibrationContainer.UpdateCalibrationContainer(vDic, vBodyFrame.Timestamp);
-                Body.ApplyTracking(AssociatedBody, vDic);
-            }
+                if (vDic != null)
+                {
+                    AssociatedBody.mBodyFrameCalibrationContainer.UpdateCalibrationContainer(vDic, vBodyFrame.Timestamp);
+                    Body.ApplyTracking(AssociatedBody, vDic);
+                }
 
-            if (BodyFrameUpdatedEvent != null && vBodyFrame != null)
-            {
-                BodyFrameUpdatedEvent(vBodyFrame);
+                if (BodyFrameUpdatedEvent != null /*&& vBodyFrame != null*/)
+                {
+                    BodyFrameUpdatedEvent(vBodyFrame);
+                }
             }
 
         }
@@ -165,6 +166,10 @@ namespace Assets.Scripts.Body_Data.view
         /// </summary>
         private void Update()
         {
+
+            System.Type type = typeof(BodyFlags);
+            System.Reflection.FieldInfo[] fieldInfos = type.GetFields();
+            var mButtonMappings = fieldInfos.ToDictionary(x => x.Name);
 
             if (StartUpdating)
             {

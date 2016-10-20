@@ -21,7 +21,7 @@ namespace Assets.Scripts.UI.DemoKit.android
         void Awake()
         {
             OutterThreadToUnityThreadIntermediary.Instance.Init();
-            BodySegment.IsTrackingHeight = false;
+            BodySegment.Flags.IsTrackingHeight = false;
             InitiliazePools(); 
         }
         /// <summary>

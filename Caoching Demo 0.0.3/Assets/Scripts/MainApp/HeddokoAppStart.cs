@@ -41,7 +41,7 @@ namespace Assets.Scripts.MainApp
         void Init()
         {
             OutterThreadToUnityThreadIntermediary.Instance.Init();
-            BodySegment.IsTrackingHeight = false;
+            BodySegment.Flags.IsTrackingHeight = false;
             mTaggingManager = new TaggingManager();
             InitiliazePools();
             InitializeDatabase();
@@ -51,7 +51,7 @@ namespace Assets.Scripts.MainApp
             QualitySettings.vSyncCount = 0;
             bool vAppSafelyLaunched; 
             HVector3.Vector3MathServiceProvider = new UVector3MathServiceProvider();
-            BodySegment.IsTrackingHeight = false;
+            BodySegment.Flags.IsTrackingHeight = false;
  
             if (!IsDemo)
             {

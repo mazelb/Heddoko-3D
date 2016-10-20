@@ -77,7 +77,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         public override void Show()
         {
             gameObject.SetActive(true);
-            bool vIsLerp = BodySegment.IsUsingInterpolation;
+            bool vIsLerp = BodySegment.Flags.IsUsingInterpolation;
             if (CurrentLayout == null)
             {
                 CreateDefaultLayout();
@@ -89,14 +89,14 @@ namespace Assets.Scripts.UI.RecordingLoading
             BrainpackBody.StreamFromBrainpack();
             try
             {
-                BodySegment.IsUsingInterpolation = false;
+                BodySegment.Flags.IsUsingInterpolation = false;
                 BrainpackBody.View.ResetInitialFrame();
             }
             catch
             {
 
             }
-            BodySegment.IsUsingInterpolation = vIsLerp;
+            BodySegment.Flags.IsUsingInterpolation = vIsLerp;
             SetContextualInfo();
 
             BpController.ConnectedStateEvent += SetRenameRecordingInteractibility;
@@ -124,10 +124,10 @@ namespace Assets.Scripts.UI.RecordingLoading
 
         public override void Hide()
         {
-            bool vIsLerp = BodySegment.IsUsingInterpolation;
+            bool vIsLerp = BodySegment.Flags.IsUsingInterpolation;
             try
             {
-                BodySegment.IsUsingInterpolation = false;
+                BodySegment.Flags.IsUsingInterpolation = false;
                 BrainpackBody.View.ResetInitialFrame(); 
             }
             catch
@@ -160,7 +160,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
 
             }
-            BodySegment.IsUsingInterpolation = vIsLerp;
+            BodySegment.Flags.IsUsingInterpolation = vIsLerp;
         }
 
         void SetRenameRecordingInteractibility()

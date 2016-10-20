@@ -457,6 +457,9 @@ public class Body
     public static Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> GetTracking(Body vBody)
     {
         Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic = new Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure>(9);
+        if (vBody.CurrentBodyFrame == null)
+            return vDic;
+
         List<BodyStructureMap.SensorPositions> vKeyList = new List<BodyStructureMap.SensorPositions>(vBody.CurrentBodyFrame.FrameData.Keys);
 
         for (int i = 0; i < vKeyList.Count; i++)

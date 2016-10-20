@@ -104,7 +104,7 @@ namespace Assets.Scripts.UI.DemoKit
 
             //one panel only to have a playback
             //the other to just render data but, set the arc's layer to be something completely different from another
-            BodySegment.IsTrackingHeight = false;
+            BodySegment.Flags.IsTrackingHeight = false;
             mPanelNodes[2].PanelSettings.Init(mMainControlPanel, true, DefaultBody);
             mPanelNodes[3].PanelSettings.Init(mLeftControlPanel, false, DefaultBody);
 

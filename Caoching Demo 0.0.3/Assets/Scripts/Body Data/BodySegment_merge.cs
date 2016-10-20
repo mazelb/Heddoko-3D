@@ -24,14 +24,74 @@ using System.Linq;
 using UnityEngine;
 
 
+public class BodyFlags
+{
+    public BodyFlags() { }
+	private BodyFlags(BodyFlags aBF)
+	{
+		IsTrackingHeight = aBF.IsTrackingHeight;
+		IsTrackingGait = aBF.IsTrackingGait;
+		IsTrackingHips = aBF.IsTrackingHips;
+		IsProjectingXZ = aBF.IsProjectingXZ;
+		IsProjectingXY = aBF.IsProjectingXY;
+		IsProjectingYZ = aBF.IsProjectingYZ;
+		IsHipsEstimateForward = aBF.IsHipsEstimateForward;
+		IsHipsEstimateUp = aBF.IsHipsEstimateUp;
+		IsUsingInterpolation = aBF.IsUsingInterpolation;
+		IsCalibrating = aBF.IsCalibrating;
+		IsAdjustingSegmentAxis = aBF.IsAdjustingSegmentAxis;
+		IsFusingSubSegments = aBF.IsFusingSubSegments;
+	}
+	
+	private BodyFlags(	bool aIsTrackingHeight, bool aIsTrackingGait, bool aIsTrackingHips,
+						bool aIsProjectingXZ, bool aIsProjectingXY, bool aIsProjectingYZ, 
+						bool aIsHipsEstimateForward, bool aIsHipsEstimateUp, bool aIsUsingInterpolation,
+						bool aIsCalibrating, bool aIsAdjustingSegmentAxis, bool aIsFusingSubSegments )
+	{
+		IsTrackingHeight = aIsTrackingHeight;
+		IsTrackingGait = aIsTrackingGait;
+		IsTrackingHips = aIsTrackingHips;
+		IsProjectingXZ = aIsProjectingXZ;
+		IsProjectingXY = aIsProjectingXY;
+		IsProjectingYZ = aIsProjectingYZ;
+		IsHipsEstimateForward = aIsHipsEstimateForward;
+		IsHipsEstimateUp = aIsHipsEstimateUp;
+		IsUsingInterpolation = aIsUsingInterpolation;
+		IsCalibrating = aIsCalibrating;
+		IsAdjustingSegmentAxis = aIsAdjustingSegmentAxis;
+		IsFusingSubSegments = aIsFusingSubSegments;
+	}
+
+	public bool IsTrackingHeight = true;
+    public bool IsTrackingGait = false;
+    public bool IsTrackingHips = false;
+    public bool IsProjectingXZ = false;
+    public bool IsProjectingXY = false;
+    public bool IsProjectingYZ = false;
+    public bool IsHipsEstimateForward = true;
+    public bool IsHipsEstimateUp = false;
+    public bool IsUsingInterpolation = true;
+    public bool IsCalibrating = true;
+    public bool IsAdjustingSegmentAxis = true;
+    public bool IsFusingSubSegments = true;
+
+    public BodyFlags clone()
+    {
+        return new BodyFlags(	IsTrackingHeight, IsTrackingGait, IsTrackingHips, 
+        						IsProjectingXZ, IsProjectingXY, IsProjectingYZ, 
+        						IsHipsEstimateForward, IsHipsEstimateUp, IsUsingInterpolation,
+        						IsCalibrating, IsAdjustingSegmentAxis, IsFusingSubSegments );
+    }
+}
+
 
 /// <summary>
 /// BodySegment class: represents one abstracted reprensentation of a body segment.
 /// </summary>
 public class BodySegment
 {
-
-	public BodyFrameCalibrationContainer BodyFrameCalibrationContainer { get; internal set; }
+    
+    public BodyFrameCalibrationContainer BodyFrameCalibrationContainer { get; internal set; }
 	//Segment Type 
 	public BodyStructureMap.SegmentTypes SegmentType;
 	public static bool GBodyFrameUsingQuaternion = false;
@@ -48,35 +108,38 @@ public class BodySegment
 #endif
 
 
-	//Is segment tracked (based on body type) 
-	public bool IsTracked = true;
-	public bool IsReseting = false;
-	public int ResetCounter = 0;
-	static public bool IsTrackingHeight = true;
-	static public bool IsTrackingGait = false;
-	static public bool IsTrackingHips = false;
-	static public bool IsProjectingXZ = false;
-	static public bool IsProjectingXY = false;
-	static public bool IsProjectingYZ = false;
-	static public bool IsHipsEstimateForward = true;
-	static public bool IsHipsEstimateUp = false;
-	static public bool IsUsingInterpolation =  true;
+    //Is segment tracked (based on body type) 
+    public bool IsTracked = true;
+    public bool IsReseting = false;
+    // 	static public bool Flags.IsTrackingHeight = true;
+    // 	static public bool Flags.IsTrackingGait = false;
+    // 	static public bool Flags.IsTrackingHips = false;
+    // 	static public bool Flags.IsProjectingXZ = false;
+    // 	static public bool Flags.IsProjectingXY = false;
+    // 	static public bool Flags.IsProjectingYZ = false;
+    // 	static public bool Flags.IsHipsEstimateForward = true;
+    // 	static public bool Flags.IsHipsEstimateUp = false;
+    // 	static public bool Flags.IsUsingInterpolation =  true;
+    // 	static public bool Flags.IsCalibrating = true;
+    // #if SEGMENTS_DEBUG
+    // 	static public bool Flags.IsAdjustingSegmentAxis = false;
+    // 	static public bool IsAdjustingArms;
+    // 	static public bool Flags.IsFusingSubSegments = false;
+    // 	static public bool Flags.IsCalibrating = true;
+    // #else
+    // 	static public bool Flags.IsAdjustingSegmentAxis = true;
+    // 	static public bool Flags.IsFusingSubSegments = true;
+    // #endif
+
+    static public BodyFlags Flags = new BodyFlags();
+
+
+    public int ResetCounter = 0;
 	static public float InterpolationSpeed = 0.3f;
-	static public bool IsCalibrating = true;
 	//Extract the delta time of the frames
 	public float LastFrameTime = 0.0f;
 	public float CurrentFrameTime = 0.0f;
 	public float DeltaTime = 0.0f;
-
-#if SEGMENTS_DEBUG
-	static public bool IsAdjustingSegmentAxis = false;
-	static public bool IsAdjustingArms;
-	static public bool IsFusingSubSegments = false;
-	static public bool IsCalibrating = true;
-#else
-	static public bool IsAdjustingSegmentAxis = true;
-	static public bool IsFusingSubSegments = true;
-#endif
 
 	//Sensor data tuples
 	private List<SensorTuple> SensorsTuple = new List<SensorTuple>();
@@ -283,11 +346,11 @@ public class BodySegment
 			svStandCounter++;
 
 			//Standing position
-			if(IsTrackingHeight)
+			if(Flags.IsTrackingHeight)
 			{
 				vDisplacement.y = mRightLegHeight;
 			}
-			if(IsTrackingHips)
+			if(Flags.IsTrackingHips)
 			{
 				//vDisplacement.x = mRightLegStride.x;
 				vDisplacement.z = -mRightLegStride.z;
@@ -301,11 +364,11 @@ public class BodySegment
 				svRightCounter++;
 
 				//Right leg height is taller = Standing on the right leg
-				if (IsTrackingHeight)
+				if (Flags.IsTrackingHeight)
 				{
 					vDisplacement.y = mRightLegHeight;
 				}
-				if (IsTrackingHips)
+				if (Flags.IsTrackingHips)
 				{
 					//vDisplacement.x = mRightLegStride.x;
 					vDisplacement.z = -mRightLegStride.z;
@@ -317,11 +380,11 @@ public class BodySegment
 				//Debug.Log("LEFT !!!!!!!!!!!! " + svLeftCounter);
 				svLeftCounter++;
 
-				if (IsTrackingHeight)
+				if (Flags.IsTrackingHeight)
 				{
 					vDisplacement.y = mLeftLegHeight;
 				}
-				if (IsTrackingHips)
+				if (Flags.IsTrackingHips)
 				{
 					//vDisplacement.x = mLeftLegStride.x;
 					vDisplacement.z = -mLeftLegStride.z;
@@ -409,21 +472,21 @@ public class BodySegment
 			float vForwardAngle = 0;
 			float vUpAngle = 0;
 
-			if (IsHipsEstimateForward)
+			if (Flags.IsHipsEstimateForward)
 			{
 				vForwardAngle = -EstimateHipsForwardAngle(vLSSubsegment.AssociatedView.SubsegmentTransform, vUSSubsegment.AssociatedView.SubsegmentTransform,
 														  vRULSubSegment.AssociatedView.SubsegmentTransform, vLULSubSegment.AssociatedView.SubsegmentTransform,
 														  vRLLSubsegment.AssociatedView.SubsegmentTransform, vLLLSubsegment.AssociatedView.SubsegmentTransform);
 			}
 
-			if (IsHipsEstimateUp)
+			if (Flags.IsHipsEstimateUp)
 			{
 				vUpAngle = EstimateHipsUpAngle(vLSSubsegment.AssociatedView.SubsegmentTransform, vUSSubsegment.AssociatedView.SubsegmentTransform,
 											   vRULSubSegment.AssociatedView.SubsegmentTransform, vLULSubSegment.AssociatedView.SubsegmentTransform,
 											   vRLLSubsegment.AssociatedView.SubsegmentTransform, vLLLSubsegment.AssociatedView.SubsegmentTransform);
 			}
 
-			if (IsUsingInterpolation)
+			if (Flags.IsUsingInterpolation)
 			{
 				vHipQuat = Quaternion.Slerp(vLSSubsegment.SubsegmentOrientation, Quaternion.Euler(vUpAngle, 0, 0) * Quaternion.Euler(0, vForwardAngle, 0), InterpolationSpeed);
 				vTorsoQuat = Quaternion.Slerp(vUSSubsegment.SubsegmentOrientation, Quaternion.Inverse(vHipQuat) * vTorsoQuatY * vTorsoQuatX * vTorsoQuatZ, InterpolationSpeed);
@@ -605,7 +668,7 @@ public class BodySegment
 		Quaternion vNewThighQuat = Quaternion.identity;
 		Quaternion vNewKneeQuat = Quaternion.identity;
 
-		if (IsUsingInterpolation)
+		if (Flags.IsUsingInterpolation)
 		{
 			vNewThighQuat = Quaternion.Slerp(vULSubsegment.SubsegmentOrientation, vThighQuat, InterpolationSpeed);
 			vNewKneeQuat = Quaternion.Slerp(vLLSubsegment.SubsegmentOrientation, vKneeQuat, InterpolationSpeed);
@@ -626,35 +689,84 @@ public class BodySegment
 	public void MapLegsOrientations(Vector3 vULInitEuler, Vector3 vULCurEuler, Vector3 vLLInitEuler, Vector3 vLLCurEuler,
 									BodySubSegment vULSubsegment, BodySubSegment vLLSubsegment, BodySubSegment vHipsSubsegment, bool vIsRight = true)
 	{
-		//Upper Leg
-		Quaternion vThighInitQuat = Quaternion.Euler(0, -vULInitEuler.z, 0);
-		Quaternion vThighQuatY = Quaternion.Euler(0, -vULCurEuler.z, 0);
-		vThighQuatY = Quaternion.Inverse(vThighInitQuat) * vThighQuatY;
+		Quaternion vThighQuat = Quaternion.identity;
+		Quaternion vKneeQuat =  Quaternion.identity;
 
-		vThighInitQuat = Quaternion.Euler(-vULInitEuler.x, 0, 0);
-		Quaternion vThighQuatX = Quaternion.Euler(-vULCurEuler.x, 0, 0);
-		vThighQuatX = Quaternion.Inverse(vThighInitQuat) * vThighQuatX;
+		if(Flags.IsFusingSubSegments)
+		{
+			//////////////////////////////////////////////////////////////////////////
+			// upper
+			//////////////////////////////////////////////////////////////////////////
+			// init frame
+			Quaternion vThighInitQuatX = Quaternion.Euler(0, -vULInitEuler.z, 0);
+			Quaternion vThighInitQuatY = Quaternion.Euler(-vULInitEuler.x, 0, 0);
+			Quaternion vThighInitQuatZ = Quaternion.Euler(0, 0, vULInitEuler.y);
+			Quaternion vThighInitQuat = vThighInitQuatY * vThighInitQuatX * vThighInitQuatZ;
+			Quaternion vThighInitInverse = Quaternion.Inverse(vThighInitQuat);
 
-		vThighInitQuat = Quaternion.Euler(0, 0, vULInitEuler.y);
-		Quaternion vThighQuatZ = Quaternion.Euler(0, 0, vULCurEuler.y);
-		vThighQuatZ = Quaternion.Inverse(vThighInitQuat) * vThighQuatZ;
+			// current frame
+			Quaternion vThighQuatY = Quaternion.Euler(0, -vULCurEuler.z, 0);
+			Quaternion vThighQuatX = Quaternion.Euler(-vULCurEuler.x, 0, 0);
+			Quaternion vThighQuatZ = Quaternion.Euler(0, 0, vULCurEuler.y);
 
-		//Lower leg
-		Quaternion vKneeInitQuat = Quaternion.Euler(0, -vLLInitEuler.z, 0);
-		Quaternion vKneeQuatY = Quaternion.Euler(0, -vLLCurEuler.z, 0);
-		vKneeQuatY = Quaternion.Inverse(vKneeInitQuat) * vKneeQuatY;
+			// computing
+			Quaternion vThighCurrentQuat = vThighQuatY * vThighQuatX * vThighQuatZ;
+			vThighQuat = vThighInitInverse * vThighCurrentQuat;
 
-		vKneeInitQuat = Quaternion.Euler(-vLLInitEuler.x, 0, 0);
-		Quaternion vKneeQuatX = Quaternion.Euler(-vLLCurEuler.x, 0, 0);
-		vKneeQuatX = Quaternion.Inverse(vKneeInitQuat) * vKneeQuatX;
 
-		vKneeInitQuat = Quaternion.Euler(0, 0, vLLInitEuler.y);
-		Quaternion vKneeQuatZ = Quaternion.Euler(0, 0, vLLCurEuler.y);
-		vKneeQuatZ = Quaternion.Inverse(vKneeInitQuat) * vKneeQuatZ;
+			//////////////////////////////////////////////////////////////////////////
+			// lower
+			//////////////////////////////////////////////////////////////////////////
+			// init frame
+			Quaternion vKneeInitQuatX = Quaternion.Euler(0, -vLLInitEuler.z, 0);
+			Quaternion vKneeInitQuatY = Quaternion.Euler(-vLLInitEuler.x, 0, 0);
+			Quaternion vKneeInitQuatZ = Quaternion.Euler(0, 0, vLLInitEuler.y);
+			Quaternion vKneeInitQuat = vKneeInitQuatY * vKneeInitQuatX * vKneeInitQuatZ;
+			Quaternion vKneeInitInverse = Quaternion.Inverse(vKneeInitQuat);
 
-		//Apply results
-		Quaternion vThighQuat = vThighQuatY * vThighQuatX * vThighQuatZ;
-		Quaternion vKneeQuat = vKneeQuatY * vKneeQuatX * vKneeQuatZ;
+			// current frame
+			Quaternion vKneeQuatY = Quaternion.Euler(0, -vLLCurEuler.z, 0);
+			Quaternion vKneeQuatX = Quaternion.Euler(-vLLCurEuler.x, 0, 0);
+			Quaternion vKneeQuatZ = Quaternion.Euler(0, 0, vLLCurEuler.y);
+
+			// computing
+			Quaternion vKneeCurrentQuat = vKneeQuatY * vKneeQuatX * vKneeQuatZ;
+			vKneeQuat = vKneeInitInverse * vKneeCurrentQuat;
+
+		}
+		else
+		{
+
+			//Upper Leg
+			Quaternion vThighInitQuat = Quaternion.Euler(0, -vULInitEuler.z, 0);
+			Quaternion vThighQuatY = Quaternion.Euler(0, -vULCurEuler.z, 0);
+			vThighQuatY = Quaternion.Inverse(vThighInitQuat) * vThighQuatY;
+
+			vThighInitQuat = Quaternion.Euler(-vULInitEuler.x, 0, 0);
+			Quaternion vThighQuatX = Quaternion.Euler(-vULCurEuler.x, 0, 0);
+			vThighQuatX = Quaternion.Inverse(vThighInitQuat) * vThighQuatX;
+
+			vThighInitQuat = Quaternion.Euler(0, 0, vULInitEuler.y);
+			Quaternion vThighQuatZ = Quaternion.Euler(0, 0, vULCurEuler.y);
+			vThighQuatZ = Quaternion.Inverse(vThighInitQuat) * vThighQuatZ;
+
+			//Lower leg
+			Quaternion vKneeInitQuat = Quaternion.Euler(0, -vLLInitEuler.z, 0);
+			Quaternion vKneeQuatY = Quaternion.Euler(0, -vLLCurEuler.z, 0);
+			vKneeQuatY = Quaternion.Inverse(vKneeInitQuat) * vKneeQuatY;
+
+			vKneeInitQuat = Quaternion.Euler(-vLLInitEuler.x, 0, 0);
+			Quaternion vKneeQuatX = Quaternion.Euler(-vLLCurEuler.x, 0, 0);
+			vKneeQuatX = Quaternion.Inverse(vKneeInitQuat) * vKneeQuatX;
+
+			vKneeInitQuat = Quaternion.Euler(0, 0, vLLInitEuler.y);
+			Quaternion vKneeQuatZ = Quaternion.Euler(0, 0, vLLCurEuler.y);
+			vKneeQuatZ = Quaternion.Inverse(vKneeInitQuat) * vKneeQuatZ;
+
+			//Apply results
+		   vThighQuat = vThighQuatY * vThighQuatX * vThighQuatZ;
+		   vKneeQuat = vKneeQuatY * vKneeQuatX * vKneeQuatZ;
+		}
 
 
 		//Get necessary Axis info
@@ -682,7 +794,7 @@ public class BodySegment
 			vNewRight1 = vULAxisRight;
 		}
 
-		//if (IsFusingSubSegments)
+		//if (Flags.IsFusingSubSegments)
 		//{
 		//    Vector3 vULAxisUpProjected = Vector3.ProjectOnPlane(vULAxisUp, vULAxisRight);
 		//    Vector3 vLLAxisUpProjected = Vector3.ProjectOnPlane(vULAxisUp, vULAxisRight);
@@ -699,9 +811,9 @@ public class BodySegment
 		Quaternion vNewThighQuat = Quaternion.identity;
 		Quaternion vNewKneeQuat = Quaternion.identity;
 
-		if (IsUsingInterpolation)
+		if (Flags.IsUsingInterpolation)
 		{
-			//if (IsAdjustingSegmentAxis)
+			//if (Flags.IsAdjustingSegmentAxis)
 			//{
 			//    vNewThighQuat = Quaternion.Slerp(vULSubsegment.SubsegmentOrientation, vThighQuat * vThighQuatY, InterpolationSpeed);
 			//    vNewKneeQuat = Quaternion.Slerp(vLLSubsegment.SubsegmentOrientation, vKneeQuat * vKneeQuatY, InterpolationSpeed);
@@ -714,7 +826,7 @@ public class BodySegment
 		}
 		else
 		{
-			//if (IsAdjustingSegmentAxis)
+			//if (Flags.IsAdjustingSegmentAxis)
 			//{
 			//    vNewThighQuat = vThighQuat * vThighQuatY;
 			//    vNewKneeQuat = vKneeQuat * vKneeQuatY;
@@ -809,7 +921,7 @@ public class BodySegment
 	/// <summary>
 	/// MapLeftArmSubsegment: Updates the left arm subsegment from the available sensor data.
 	/// </summary>
-	/// <param name="vTransformatricies">transformation matrices mapped to sensor positions.</param>
+	/// <param name="vTransformsi   Q1 =  Qy *Qx *Qz  et  Q2 =  Q-1z  *Q-1x *Q-1yatricies">transformation matrices mapped to sensor positions.</param>
 	internal void MapLeftArmSubsegment(Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vTransformatricies)
 	{
 		BodySubSegment vUASubsegment = BodySubSegmentsDictionary[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm];
@@ -888,7 +1000,7 @@ public class BodySegment
 		Quaternion vNewUpArmQuat = Quaternion.identity;
 		Quaternion vNewLoArmQuat = Quaternion.identity;
 
-		if (IsUsingInterpolation)
+		if (Flags.IsUsingInterpolation)
 		{
 			vNewUpArmQuat = Quaternion.Slerp(vUASubsegment.SubsegmentOrientation, vUpArmQuat, InterpolationSpeed);
 			vNewLoArmQuat = Quaternion.Slerp(vLASubsegment.SubsegmentOrientation, vLoArmQuat, InterpolationSpeed);
@@ -1103,11 +1215,11 @@ public class BodySegment
 			counterL++;
 		}
 
-		if (IsCalibrating)
+		if (Flags.IsCalibrating)
 		{
 			if (aIsRight)
 			{
-				if (IsCalibrating)
+				if (Flags.IsCalibrating)
 				{
 
 					// ------ UA R1------------ 
@@ -1260,7 +1372,7 @@ public class BodySegment
 
 		//    //Debug.Log("Zombie-before-R" + counterR + ";" + vLoArmQuat * Vector3.up + ";" + vLoArmQuat * Vector3.right + ";" + vUpArmQuat * Vector3.up + ";" + vUpArmQuat * Vector3.right);
 
-		//    if (IsCalibrating)
+		//    if (Flags.IsCalibrating)
 		//    {
 		//        if (counterR > 500) // apply calibration from now on// how??
 		//        {
@@ -1488,21 +1600,21 @@ public class BodySegment
 
 #endif
 
-		if (IsProjectingXY)
+		if (Flags.IsProjectingXY)
 		{
 			vLANewRight = Vector3.ProjectOnPlane(vLAAxisRight, vUAAxisForward);
 			vLANewUp = Vector3.Cross(vLAAxisForward, vLANewRight);
 			vLANewForward = Vector3.Cross(vLANewRight, vLANewUp);
 			vLoArmQuat = Quaternion.LookRotation(vLANewForward, vLANewUp);
 		}
-		else if(IsProjectingXZ)
+		else if(Flags.IsProjectingXZ)
 		{
 			vLANewRight = Vector3.ProjectOnPlane(vLAAxisRight, vUAAxisUp);
 			vLANewUp = Vector3.Cross(vLAAxisForward, vLANewRight);
 			vLANewForward = Vector3.Cross(vLANewRight, vLANewUp);
 			vLoArmQuat = Quaternion.LookRotation(vLANewForward, vLANewUp);
 		}
-		else if(IsProjectingYZ)
+		else if(Flags.IsProjectingYZ)
 		{
 			vLANewRight = Vector3.ProjectOnPlane(vLAAxisRight, vUAAxisRight);
 			vLANewUp = Vector3.Cross(vLAAxisForward, vLANewRight);
@@ -1519,7 +1631,7 @@ public class BodySegment
 		vLAAxisRight = vLoArmQuat * Vector3.right;
 		vLAAxisForward = vLoArmQuat * Vector3.forward;
 #endif
-		if (IsFusingSubSegments)
+		if (Flags.IsFusingSubSegments)
 		{
 			Vector3 vNewAxisUp = Vector3.up;
 			Vector3 vTempUp = Vector3.up;
@@ -1554,9 +1666,9 @@ public class BodySegment
 		Quaternion vNewUpArmQuat = Quaternion.identity;
 		Quaternion vNewLoArmQuat = Quaternion.identity;
 
-		if (IsUsingInterpolation)
+		if (Flags.IsUsingInterpolation)
 		{
-			if (IsAdjustingSegmentAxis)
+			if (Flags.IsAdjustingSegmentAxis)
 			{
 				vNewUpArmQuat = Quaternion.Slerp(aUASubsegment.SubsegmentOrientation, vUpArmQuat * Quaternion.Inverse(vUpArmQuatX), InterpolationSpeed);
 				vNewLoArmQuat = Quaternion.Slerp(aLASubsegment.SubsegmentOrientation, vLoArmQuat * Quaternion.Inverse(vLoArmQuatX), InterpolationSpeed);
@@ -1569,7 +1681,7 @@ public class BodySegment
 		}
 		else
 		{
-			if (IsAdjustingSegmentAxis)
+			if (Flags.IsAdjustingSegmentAxis)
 			{
 				vNewUpArmQuat = vUpArmQuat * Quaternion.Inverse(vUpArmQuatX);
 				vNewLoArmQuat = vLoArmQuat * Quaternion.Inverse(vLoArmQuatX);
@@ -1712,4 +1824,5 @@ public class BodySegment
 	}
 
 }
+
 #endif

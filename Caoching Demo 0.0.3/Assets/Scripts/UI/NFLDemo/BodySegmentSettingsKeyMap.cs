@@ -74,19 +74,19 @@ namespace Assets.Scripts.UI.NFLDemo
             }
             if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsHipsEstimateForward))
             {
-                BodySegment.IsHipsEstimateForward = !BodySegment.IsHipsEstimateForward;
+                BodySegment.Flags.IsHipsEstimateForward = !BodySegment.Flags.IsHipsEstimateForward;
             }
             if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsHipsEstimateUp))
             {
-                BodySegment.IsHipsEstimateUp = !BodySegment.IsHipsEstimateUp;
+                BodySegment.Flags.IsHipsEstimateUp = !BodySegment.Flags.IsHipsEstimateUp;
             }
             if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsTrackingHeight))
             {
-                BodySegment.IsTrackingHeight = !BodySegment.IsTrackingHeight;
+                BodySegment.Flags.IsTrackingHeight = !BodySegment.Flags.IsTrackingHeight;
             }
             if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsTrackingHips))
             {
-                BodySegment.IsTrackingHips = !BodySegment.IsTrackingHips;
+                BodySegment.Flags.IsTrackingHips = !BodySegment.Flags.IsTrackingHips;
             }
  
             if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsUsingInterpolation))
@@ -94,11 +94,11 @@ namespace Assets.Scripts.UI.NFLDemo
             if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsUsingInterpolationForBody))
  
             {
-                BodySegment.IsUsingInterpolation = !BodySegment.IsUsingInterpolation;
+                BodySegment.Flags.IsUsingInterpolation = !BodySegment.Flags.IsUsingInterpolation;
             }
             if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsAdjustingSegmentAxis))
             {
-                BodySegment.IsAdjustingSegmentAxis = !BodySegment.IsAdjustingSegmentAxis;
+                BodySegment.Flags.IsAdjustingSegmentAxis = !BodySegment.Flags.IsAdjustingSegmentAxis;
             }
  
             if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsFusingSubSegments))
@@ -106,7 +106,7 @@ namespace Assets.Scripts.UI.NFLDemo
             if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsUsingFusionForBody))
  
             {
-                BodySegment.IsFusingSubSegments = !BodySegment.IsFusingSubSegments;
+                BodySegment.Flags.IsFusingSubSegments = !BodySegment.Flags.IsFusingSubSegments;
             }
         }
 

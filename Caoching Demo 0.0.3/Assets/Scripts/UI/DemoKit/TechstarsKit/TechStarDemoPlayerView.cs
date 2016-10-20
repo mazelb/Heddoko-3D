@@ -48,7 +48,7 @@ namespace Assets.Scripts.UI.DemoKit.TechstarsKit
             
             //one panel only to have a playback
             //the other to just render data but, set the arc's layer to be something completely different from another
-            BodySegment.IsTrackingHeight = false;
+            BodySegment.Flags.IsTrackingHeight = false;
             mRootNode.PanelSettings.Init(mMainControlPanel, true, DefaultBody);
        
             mRootNode.PanelCamUpdated += CameraRenderedPairCreation;

@@ -34,11 +34,19 @@ namespace Assets.Demos
       
        public void Awake()
         {
+            Type type = typeof(BodyFlags);
+            FieldInfo[] fieldInfos = type.GetFields();
+            mButtonMappings = fieldInfos.ToDictionary(x => x.Name);
             //Get all the fields marked as public and static 
-            mButtonMappings =
-                typeof(BodySegment).GetFields(BindingFlags.Public | BindingFlags.Static)
-                    .Where(vf => vf.FieldType == typeof(bool))
-                    .ToDictionary(vf => vf.Name);
+            //mButtonMappings =
+            //    typeof(BodyFlags).GetFields()
+            //        //.Where(vf => vf.FieldType == typeof(bool))
+            //        .ToDictionary(vf => vf.Name);
+            //mButtonMappings = mButtonMappings.Concat(
+            //                    typeof(BodySegment).GetFields(BindingFlags.Public | BindingFlags.Static)
+            //                        .Where(vf => vf.FieldType == typeof(bool))
+            //                        .ToDictionary(vf => vf.Name)
+            //                    ).ToDictionary(vf => vf.Key, vf => vf.Value);
 
             var vKeybindings = typeof(HeddokoDebugKeyMappings).GetFields(BindingFlags.Public | BindingFlags.Static)
                 .Where(vf => vf.FieldType == typeof(KeyCode)).ToDictionary(vf => vf.Name);
@@ -62,13 +70,13 @@ namespace Assets.Demos
                     string vTextualInfo = SplitCamelCase(vKvPair.Key);
                     BodySegmentOptionButton vButtonBSegment = vButton.GetComponent<BodySegmentOptionButton>();
                     vButtonBSegment.TextualInfo.text = vTextualInfo;
+                    bool vVal = (bool)vKvPair.Value.GetValue(vKvPair.Value.IsStatic? null : BodySegment.Flags);
 
-                    bool vVal = (bool)vKvPair.Value.GetValue(null);
                     vButtonBSegment.OnOffText.text = ReturnOnOffFromBool((vVal));
 
                     KeyValuePair<string, FieldInfo> vNewKvPair = new KeyValuePair<string, FieldInfo>(vKvPair.Key, vKvPair.Value);
                     UnityAction vAction = () => SetValue(vNewKvPair, vButtonBSegment);
-                    KeyCode vKeyCode = (KeyCode)(vMappedDictionary[vKvPair.Key].GetValue(null));
+                    KeyCode vKeyCode = (KeyCode)(vMappedDictionary[vKvPair.Key].GetValue(vKvPair.Value.IsStatic ? null: BodySegment.Flags));
                     InputHandler.RegisterKeyboardAction(vKeyCode, vAction);
                     vButtonBSegment.AssociatedButton.onClick.AddListener(vAction);
                 }   
@@ -131,10 +139,11 @@ namespace Assets.Demos
 
         void SetValue(KeyValuePair<string, FieldInfo> vKvPair, BodySegmentOptionButton vButtonBSegment)
         {
-            bool vCurrVal = (bool)vKvPair.Value.GetValue(null);
+            bool vCurrVal = (bool)vKvPair.Value.GetValue(vKvPair.Value.IsStatic ? null: BodySegment.Flags);
+
             bool vNewVal = !vCurrVal;
             vButtonBSegment.OnOffText.text = ReturnOnOffFromBool(vNewVal);
-            vKvPair.Value.SetValue(null, vNewVal);
+            vKvPair.Value.SetValue(vKvPair.Value.IsStatic ? null : BodySegment.Flags, vNewVal);
         }
 
 

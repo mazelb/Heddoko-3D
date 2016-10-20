@@ -52,5 +52,6 @@ namespace Assets.Scripts.Utils.DebugContext
         public static KeyCode IsCalibrating = KeyCode.RightWindows;
         public static KeyCode SettingsButton = KeyCode.Escape;
 		public static KeyCode GBodyFrameUsingQuaternion = KeyCode.G;
+        public static KeyCode IsCalibratingROM = KeyCode.R;
   }
 }

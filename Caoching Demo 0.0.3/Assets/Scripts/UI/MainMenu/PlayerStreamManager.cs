@@ -379,10 +379,10 @@ namespace Assets.Scripts.UI.MainMenu
         /// </summary>
         public void ResetBody()
         {
-            bool vPreIntVal = BodySegment.IsUsingInterpolation;
-            BodySegment.IsUsingInterpolation = false;
+            bool vPreIntVal = BodySegment.Flags.IsUsingInterpolation;
+            BodySegment.Flags.IsUsingInterpolation = false;
             ResetInitialFrame();
-            BodySegment.IsUsingInterpolation = vPreIntVal;
+            BodySegment.Flags.IsUsingInterpolation = vPreIntVal;
             if (CurrentBodyInPlay != null)
             {
                 RightLegAnalysis vRightLegAnalysis =
