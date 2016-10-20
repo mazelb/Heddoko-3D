@@ -112,36 +112,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
             AngleTorsoRotation = vAngleTorsoRotationNew;
             SignedAngleTorsoRotation = Mathf.Sign(Vector3.Dot(HipGlobalTransform.forward, vCrossTorsoRotation)) * AngleTorsoRotation
                 * GetSign("System.Single SignedAngleTorsoRotation");
-            /*// Turn detection 
-            if (Math.Abs(vAngleTorsoRotationNew) < 3)
-            {
-                AngleIntegrationTurns = 0;
-            }
-            else
-            {
-                AngleIntegrationTurns += (vAngularVelocityTorsoRotationNew * vTimeDifference);
-            } 
-            if (Math.Abs(AngleIntegrationTurns) > 330)
-            { 
-                AngleIntegrationTurns = 0;
-                NumberOfTurns++; 
-            }
-
-            // Flip detection 
-            if (Math.Abs(vAngularVelocityTorsoFlexionNew) < 3)
-            {
-                AngleIntegrationFlips = 0;
-            }
-            else
-            {
-                AngleIntegrationFlips += (AngularVelocityTorsoFlexion * vTimeDifference);
-            }
-
-            if (Math.Abs(AngleIntegrationFlips) > 330)
-            { 
-                NumberOfFlips++;
-                AngleIntegrationFlips = 0; 
-            }//*/
 
             if (vTimeDifference != 0f)
             {
@@ -168,19 +138,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Torso
             AngularAccelerationTorsoRotation = (vAngularVelocityTorsoRotationNew - AngularVelocityTorsoRotation) / vDeltaTime;
             AngularVelocityTorsoRotation = vAngularVelocityTorsoRotationNew;
         }
-        /*Transform EstimateHipsOrientation()
-        {
-            // angle in [0,180]
-            float angle = Vector3.Angle(a,b);
-            float sign = Mathf.Sign(Vector3.Dot(n,Vector3.Cross(a,b)));
-
-            // angle in [-179,180]
-            float signed_angle = angle * sign;
-
-            // angle in [0,360] (not used but included here for completeness)
-            float angle360 =  (signed_angle + 180) % 360;
-
-            return angle360;    
-        }//*/
+        
     }
 }
