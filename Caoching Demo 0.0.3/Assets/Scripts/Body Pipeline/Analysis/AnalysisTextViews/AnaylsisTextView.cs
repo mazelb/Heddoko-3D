@@ -70,26 +70,12 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews
             get { return mBodyToAnalyze; }
             set
             {
-                if (mBodyToAnalyze != null)
-                {
-                    mBodyToAnalyze.View.BodyFrameUpdatedEvent -= BodyFrameUpdated;
-                }
                 mBodyToAnalyze = value;
-                if (mBodyToAnalyze != null)
-                {
-                    BodyUpdated();
-                }
-                if (mBodyToAnalyze != null)
-                {
-                    mBodyToAnalyze.View.BodyFrameUpdatedEvent += BodyFrameUpdated;
-                }
+                BodyUpdated();
             }
         }
 
         protected abstract void BodyUpdated();
-
-        protected abstract void BodyFrameUpdated(BodyFrame vFrame);
-
 
         protected abstract void ClearText();
 

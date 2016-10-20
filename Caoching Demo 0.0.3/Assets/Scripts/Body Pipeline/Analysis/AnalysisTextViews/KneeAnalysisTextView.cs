@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews;
+using Assets.Scripts.Body_Pipeline.Analysis;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using UnityEngine.UI;
@@ -17,35 +18,78 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
             get { return mLabelName; }
         }
 
-      
+
 
         protected override void BodyUpdated()
         {
             if (BodyToAnalyze == null)
             {
+                //Remove listeners
+                if (mRightLegAnalysis != null)
+                {
+                    mRightLegAnalysis.AnalysisCompletedEvent -= UpdateRightKneeTextView;
+                }
+                if (mLeftLegAnalysis != null)
+                {
+                    mLeftLegAnalysis.AnalysisCompletedEvent -= UpdateLeftKneeTextView;
+                }
                 mRightLegAnalysis = null;
                 mLeftLegAnalysis = null;
                 ClearText();
             }
+
+            //register listeners
             else
             {
+                //Remove listeners
+                if (mRightLegAnalysis != null)
+                {
+                    mRightLegAnalysis.AnalysisCompletedEvent -= UpdateRightKneeTextView;
+                }
+                if (mLeftLegAnalysis != null)
+                {
+                    mLeftLegAnalysis.AnalysisCompletedEvent -= UpdateLeftKneeTextView;
+                }
                 mRightLegAnalysis = BodyToAnalyze.RightLegAnalysis;
                 mLeftLegAnalysis = BodyToAnalyze.LeftLegAnalysis;
+                if (mRightLegAnalysis != null)
+                {
+                    mRightLegAnalysis.AnalysisCompletedEvent += UpdateRightKneeTextView;
+                }
+                if (mLeftLegAnalysis != null)
+                {
+                    mLeftLegAnalysis.AnalysisCompletedEvent += UpdateLeftKneeTextView;
+                }
             }
         }
 
-        protected override void BodyFrameUpdated(BodyFrame vFrame)
+
+        private void UpdateLeftKneeTextView(SegmentAnalysis vAnalysis)
         {
-            if (mRightLegAnalysis != null && mLeftLegAnalysis != null)
+            if (mLeftLegAnalysis != null)
+            {
+                LeftKneeFlexionText.text = FeedbackAngleToString(mLeftLegAnalysis.LeftKneeFlexion);
+            }
+
+            else
+            {
+                ClearText();
+            }
+        }
+
+        private void UpdateRightKneeTextView(SegmentAnalysis vAnalysis)
+        {
+            if (mRightLegAnalysis != null)
             {
                 RightKneeFlexionText.text = FeedbackAngleToString(mRightLegAnalysis.RightKneeFlexion);
-                LeftKneeFlexionText.text = FeedbackAngleToString(mLeftLegAnalysis.LeftKneeFlexion);
             }
             else
             {
                 ClearText();
             }
         }
+
+
 
         protected override void ClearText()
         {

@@ -133,17 +133,16 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             //calculate the Shoulder Flexion angle
             Vector3 vShoulderProjectionOntoTorsoRight = Vector3.ProjectOnPlane(vShoulderAxisRight, vTorsoAxisRight);
             float vAngleShoulderFlexionNew = Vector3.Angle(-vTorsoAxisUp, vShoulderProjectionOntoTorsoRight);
-            
+            AngleShoulderFlexion = vAngleShoulderFlexionNew;
             //set the the signed component
             Vector3 vFlexCrossPrdct = Vector3.Cross(vTorsoAxisRight, vShoulderProjectionOntoTorsoRight);
             float vFlexSign = Mathf.Sign(Vector3.Dot(-vTorsoAxisUp, vFlexCrossPrdct));
             RightShoulderFlexionSignedAngle = vFlexSign * AngleShoulderFlexion * GetSign("System.Single RightShoulderFlexionSignedAngle");
-
             //calculate the Shoulder Abduction Vertical angle
             Vector3 vVerticalShoulderAbdProjection = Vector3.ProjectOnPlane(vShoulderAxisRight, vTorsoAxisForward);
             float vAngleShoulderVertAbductionNew = Vector3.Angle(-vTorsoAxisUp, vVerticalShoulderAbdProjection);
 
-         
+  
             AngleShoulderVertAbduction = vAngleShoulderVertAbductionNew;
         
             Vector3 vVertAbductionCrossPrdct = Vector3.Cross(vTorsoAxisForward, vVerticalShoulderAbdProjection);
@@ -192,7 +191,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             float vAngularVelocityShoulderFlexionNew = (vAngleShoulderFlexionNew - Mathf.Abs(AngleShoulderFlexion)) / DeltaTime;
             AngularAccelerationShoulderFlexion = (vAngularVelocityShoulderFlexionNew - AngularVelocityShoulderFlexion) / DeltaTime;
             AngularVelocityShoulderFlexion = vAngularVelocityShoulderFlexionNew;
-            AngleShoulderFlexion = vAngleShoulderFlexionNew;
+          
 
             float vAngularVelocityElbowFlexionNew = (vAngleElbowFlexionNew - RightElbowFlexionAngle) / DeltaTime;
             AngularAccelerationElbowFlexion = (vAngularVelocityElbowFlexionNew - AngularVelocityElbowFlexion) / DeltaTime;

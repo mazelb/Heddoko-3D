@@ -37,22 +37,35 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         {
             if (BodyToAnalyze != null)
             {
+                //remove listeners
+                if (mTorsoAnalysis != null)
+                {
+                    mTorsoAnalysis.AnalysisCompletedEvent -= UpdateTrunkAnalysisTextView;
+                }
                 mTorsoAnalysis = BodyToAnalyze.TorsoAnalysis;
+                mTorsoAnalysis.AnalysisCompletedEvent += UpdateTrunkAnalysisTextView;
             }
             else
             {
+                //remove listeners
+                if (mTorsoAnalysis != null)
+                {
+                    mTorsoAnalysis.AnalysisCompletedEvent -= UpdateTrunkAnalysisTextView;
+                }
                 mTorsoAnalysis = null;
                 ClearText();
             }
+            
         }
 
-        protected override void BodyFrameUpdated(BodyFrame vFrame)
+
+        private void UpdateTrunkAnalysisTextView(SegmentAnalysis vTorso)
         {
             if (mTorsoAnalysis != null)
             {
                 LateralBendingAngle.text = FeedbackAngleToString(mTorsoAnalysis.SignedAngleTorsoLateral);
                 InclinationAngle.text = FeedbackAngleToString(mTorsoAnalysis.SignedTorsoFlexion);
-                RotationAngle.text =FeedbackAngleToString( mTorsoAnalysis.SignedAngleTorsoRotation);
+                RotationAngle.text = FeedbackAngleToString(mTorsoAnalysis.SignedAngleTorsoRotation);
             }
         }
 

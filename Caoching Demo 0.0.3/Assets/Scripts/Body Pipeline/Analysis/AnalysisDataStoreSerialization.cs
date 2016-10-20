@@ -92,7 +92,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                 //When a tpose is initiated, update tracking is called twice. This triggers a data collection event twice on the same frame
                 // the previous non tposed frame is marked for removal. 
                 int vPrevIndex = -1;
-                bool vPrevFrameFlaggedForRemoval =false;
+                bool vPrevFrameFlaggedForRemoval = false;
                 //write the body
                 for (int i = 0; i < vAnalysisDataStore.SerializedList.Count; i++)
                 {
@@ -105,7 +105,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                     }
 
                     vPrevIndex = vFrameIndex;
-                  //  vFileOut.Write(vFrameIndex + ",");
+                    //  vFileOut.Write(vFrameIndex + ",");
                     vOut.Append(vFrameIndex + ",");
                     //write tpose value at the given frame index,
                     // vFileOut.Write(vAnalysisDataStore.PoseSelectionIndicies[vFrameIndex] + ",");
@@ -129,13 +129,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                         }
 
                     }
-                    
-                   // vFileOut.Write(vOut.ToString()+"\r\n");
+
+                    // vFileOut.Write(vOut.ToString()+"\r\n");
                     vOut.AppendLine();
                     vToBeWritten.Add(vOut.ToString());
                     if (vPrevFrameFlaggedForRemoval)
                     {
-                        vToBeWritten.RemoveAt(vToBeWritten.Count-1);
+                       // vToBeWritten.RemoveAt(vToBeWritten.Count - 1);
                         vPrevFrameFlaggedForRemoval = false;
                     }
                 }
@@ -156,7 +156,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             var vFileInfo = new FileInfo(vPath);
             if (vFileInfo != null)
             {
-              
+
                 var vRawDataPath = vFileInfo.Directory.ToString() + Path.DirectorySeparatorChar + vFileInfo.Name + "RawData.csv";
                 using (StreamWriter vFileWriter = new StreamWriter(vRawDataPath))
                 {
@@ -166,7 +166,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                     var vRawData = vAnalysisDataStore.BodyFrames;
                     var vFirstRaw = vRawData[0];
                     for (int i = 0; i < vFirstRaw.FrameData.Count; i++)
-                    { 
+                    {
                         vFileWriter.Write(i + "x,");
                         vFileWriter.Write(i + "y,");
                         vFileWriter.Write(i + "z,");

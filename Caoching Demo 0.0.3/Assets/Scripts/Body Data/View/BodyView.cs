@@ -24,6 +24,7 @@ namespace Assets.Scripts.Body_Data.view
         public event BodyFrameResetInitialized BodyFrameResetInitializedEvent;
         //private BodyFrameBuffer mBuffer;
         private BodyFrameBuffer mBuffer;
+        public int CurrentIndex = 0;
         [SerializeField]
         private Body mAssociatedBody;
         private BodyFrame mCurreBodyFrame;
@@ -122,6 +123,10 @@ namespace Assets.Scripts.Body_Data.view
         /// <param name="vBodyFrame">the body frame to update to</param>
         public void UpdateViewTracking(BodyFrame vBodyFrame)
         {
+            if (BodyFrameUpdatedEvent != null)
+            {
+                BodyFrameUpdatedEvent(vBodyFrame);
+            }
             AssociatedBody.UpdateBody(vBodyFrame);
             Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic = Body.GetTracking(AssociatedBody);
 
@@ -131,10 +136,7 @@ namespace Assets.Scripts.Body_Data.view
                 Body.ApplyTracking(AssociatedBody, vDic);
             }
 
-            if (BodyFrameUpdatedEvent != null && vBodyFrame != null)
-            {
-                BodyFrameUpdatedEvent(vBodyFrame);
-            }
+           
 
         }
 
@@ -185,7 +187,8 @@ namespace Assets.Scripts.Body_Data.view
                             ResetInitialFrame(vBodyFrame);
                         }
                         UpdateViewTracking(vBodyFrame);
-
+                        CurrentIndex = vBodyFrame.Index;
+                       
                     }
 
                 }

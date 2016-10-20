@@ -13,7 +13,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         private RightArmAnalysis mRightArmAnalysis;
         private LeftArmAnalysis mLeftArmAnalysis;
         public Text RightFlexionText;
-        public Text LeftFlexionText; 
+        public Text LeftFlexionText;
 
         public override string LabelName
         {
@@ -22,6 +22,16 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
 
         protected override void BodyUpdated()
         {
+            //remove listeners
+            if (mRightArmAnalysis != null)
+            {
+                mRightArmAnalysis.AnalysisCompletedEvent -= UpdateRightArmTextView;
+            }
+
+            if (mLeftArmAnalysis != null)
+            {
+                mLeftArmAnalysis.AnalysisCompletedEvent -= UpdateLeftArmTextView;
+            }
             if (BodyToAnalyze == null)
             {
                 mRightArmAnalysis = null;
@@ -31,17 +41,45 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
             {
                 mRightArmAnalysis = BodyToAnalyze.RightArmAnalysis;
                 mLeftArmAnalysis = BodyToAnalyze.LeftArmAnalysis;
+                //register listeners
+                if (mRightArmAnalysis != null)
+                {
+                    mRightArmAnalysis.AnalysisCompletedEvent += UpdateRightArmTextView;
+                }
+
+                if (mLeftArmAnalysis != null)
+                {
+                    mLeftArmAnalysis.AnalysisCompletedEvent += UpdateLeftArmTextView;
+                }
             }
         }
 
-        protected override void BodyFrameUpdated(BodyFrame vFrame)
+        private void UpdateLeftArmTextView(SegmentAnalysis vAnalysis)
         {
-            if (mRightArmAnalysis != null && mLeftArmAnalysis != null)
+            if (mLeftArmAnalysis != null)
             {
-                RightFlexionText.text = FeedbackAngleToString(mRightArmAnalysis.RightElbowFlexionAngle);
                 LeftFlexionText.text = FeedbackAngleToString(mLeftArmAnalysis.LeftElbowFlexionAngle);
             }
+
+            else
+            {
+                ClearText();
+            }
         }
+
+        private void UpdateRightArmTextView(SegmentAnalysis vAnalysis)
+        {
+            if (mRightArmAnalysis != null)
+            {
+                RightFlexionText.text = FeedbackAngleToString(mRightArmAnalysis.RightElbowFlexionAngle);
+
+            }
+            else
+            {
+                ClearText();
+            }
+        }
+
 
         protected override void ClearText()
         {

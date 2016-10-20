@@ -24,7 +24,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         public Text RightShoulderFlexionText;
         public Text LeftShoulderFlexionText;
         public Text RightShoulderAbductionText;
-        public Text LeftShoulderAbductionText; 
+        public Text LeftShoulderAbductionText;
         public override string LabelName
         {
             get { return mLabelName; }
@@ -35,27 +35,69 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
 
             if (BodyToAnalyze != null)
             {
+                //remove listeners first
+                if (mLeftArmAnalysis != null)
+                {
+                    mLeftArmAnalysis.AnalysisCompletedEvent -= UpdateLeftShoulderTextView;
+                }
+                if (mRightArmAnalysis != null)
+                {
+                    mRightArmAnalysis.AnalysisCompletedEvent -= UpdateRightArmTextView;
+
+                }
+                //Register listeners
                 mLeftArmAnalysis = BodyToAnalyze.LeftArmAnalysis;
                 mRightArmAnalysis = BodyToAnalyze.RightArmAnalysis;
+                mLeftArmAnalysis.AnalysisCompletedEvent += UpdateLeftShoulderTextView;
+                mRightArmAnalysis.AnalysisCompletedEvent += UpdateRightArmTextView;
+
+
             }
             else
             {
+                //remove listeners first
+                if (mLeftArmAnalysis != null)
+                {
+                    mLeftArmAnalysis.AnalysisCompletedEvent -= UpdateLeftShoulderTextView;
+                }
+                if (mRightArmAnalysis != null)
+                {
+                    mRightArmAnalysis.AnalysisCompletedEvent -= UpdateRightArmTextView;
+
+                }
                 mRightArmAnalysis = null;
                 mLeftArmAnalysis = null;
                 ClearText();
             }
         }
 
-        protected override void BodyFrameUpdated(BodyFrame vFrame)
+        private void UpdateLeftShoulderTextView(SegmentAnalysis vAnalysis)
         {
-            if (mLeftArmAnalysis != null && mRightArmAnalysis != null)
+            if (mLeftArmAnalysis != null)
+            {
+                LeftShoulderFlexionText.text = FeedbackAngleToString(mLeftArmAnalysis.LeftShoulderFlexionSignedAngle);
+                LeftShoulderAbductionText.text = FeedbackAngleToString(mLeftArmAnalysis.LeftShoulderVerticalAbductionSignedAngle);
+            }
+
+            else
+            {
+                ClearText();
+            }
+        }
+
+        private void UpdateRightArmTextView(SegmentAnalysis vAnalysis)
+        {
+            if (mRightArmAnalysis != null)
             {
                 RightShoulderFlexionText.text = FeedbackAngleToString(mRightArmAnalysis.RightShoulderFlexionSignedAngle);
                 RightShoulderAbductionText.text = FeedbackAngleToString(mRightArmAnalysis.RightShoulderVerticalAbductionSignedAngle);
-                LeftShoulderFlexionText.text = FeedbackAngleToString(mLeftArmAnalysis.LeftShoulderFlexionSignedAngle);
-                LeftShoulderAbductionText.text = FeedbackAngleToString( mLeftArmAnalysis.LeftShoulderVerticalAbductionSignedAngle);
+            }
+            else
+            {
+                ClearText();
             }
         }
+
 
         /// <summary>
         /// Clears the text
@@ -66,7 +108,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
             LeftShoulderFlexionText.text = "";
             RightShoulderAbductionText.text = "";
             LeftShoulderAbductionText.text = "";
-         
+
         }
     }
 }

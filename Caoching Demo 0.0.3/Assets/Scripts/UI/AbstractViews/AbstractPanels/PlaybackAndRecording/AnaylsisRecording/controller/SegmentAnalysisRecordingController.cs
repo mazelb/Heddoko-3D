@@ -72,6 +72,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             //register listeners
             RecordingPlayerView.PbControlPanel.FinalFramePositionEvent += OnEnd;
             BodyModel.View.BodyFrameResetInitializedEvent += SliderMaskContainerController.TPoseRequestedHandler;
+           
              
             //if the recording has been changed, finish data collection
             RecordingPlayerView.PbControlPanel.NewRecordingSelectedEvent += OnEnd;
@@ -86,6 +87,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             if (mDataStore == null)
             {
                 mDataStore = new AnalysisDataStore(vSegmentList);
+                BodyModel.View.BodyFrameResetInitializedEvent += mDataStore.IgnorePreviousFrame;
             }
 
             mDataStore.SetNumberOfIndices(RecordingPlayerView.PbControlPanel.PlaybackTask.RawFramesCount);
@@ -118,7 +120,9 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             RecordingPlayerView.PbControlPanel.FinalFramePositionEvent -= OnEnd;
             RecordingPlayerView.PbControlPanel.NewRecordingSelectedEvent -= OnEnd;
             BodyModel.View.BodyFrameResetInitializedEvent -= SliderMaskContainerController.TPoseRequestedHandler;
-             ExportDataButton.onClick.RemoveAllListeners();
+            BodyModel.View.BodyFrameResetInitializedEvent -= mDataStore.IgnorePreviousFrame;
+
+            ExportDataButton.onClick.RemoveAllListeners();
             ExportDataButton.onClick.AddListener(OnStart);
             ExportDataButtonText.text = "COLLECT ANALYTICS";
             var vSegmentList = BodyModel.AnalysisSegments.Values.ToList();
