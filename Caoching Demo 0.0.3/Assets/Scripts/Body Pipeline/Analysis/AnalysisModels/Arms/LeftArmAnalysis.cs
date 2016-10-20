@@ -113,15 +113,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
 
             //calculate the Elbow Pronation angle
             float vAngleElbowPronationNew = 180 - Mathf.Abs(180 - LoArTransform.rotation.eulerAngles.x);
-
             AngleElbowPronation = vAngleElbowPronationNew;
 
             //calculate the Shoulder Flexion angle
             Vector3 vShoulderProjectionOntoTorsoRight = Vector3.ProjectOnPlane(-vShoulderAxisRight, vTorsoAxisRight);
-
             float vAngleShoulderFlexionNew = Vector3.Angle(-vTorsoAxisUp, vShoulderProjectionOntoTorsoRight);
-
             AngleShoulderFlexion = vAngleShoulderFlexionNew;
+
             //set the the signed component
             Vector3 vFlexCrossPrdct = Vector3.Cross(vTorsoAxisRight, vShoulderProjectionOntoTorsoRight);
             float vFlexSign = Mathf.Sign(Vector3.Dot(-vTorsoAxisUp, vFlexCrossPrdct));
@@ -130,7 +128,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             //calculate the Shoulder Abduction Vertical angle
             Vector3 vVerticalShoulderAbdProjection = Vector3.ProjectOnPlane(-vShoulderAxisRight, vTorsoAxisForward);
             float vAngleShoulderVertAbductionNew = Vector3.Angle(-vTorsoAxisUp, vVerticalShoulderAbdProjection);
-
             AngleShoulderVertAbduction = vAngleShoulderVertAbductionNew;
 
             Vector3 vVertAbductionCrossPrdct = Vector3.Cross(vVerticalShoulderAbdProjection, vTorsoAxisForward);
@@ -139,18 +136,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
 
             //calculate the Shoulder Abduction Horizontal angle
             float vAngleShoulderHorAbductionNew = Vector3.Angle(vTorsoAxisForward, Vector3.ProjectOnPlane(vShoulderAxisRight, vTorsoAxisUp));
-
-
-
             AngleShoulderHorAbduction = vAngleShoulderHorAbductionNew;
 
             //calculate the Shoulder Rotation angle
             float vAngleShoulderRotationNew = 180 - Mathf.Abs(180 - UpArTransform.rotation.eulerAngles.x);
-
-
-
             AngleShoulderRotation = vAngleShoulderRotationNew;
-
 
             if (DeltaTime != 0)
             {
@@ -158,6 +148,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
                     vAngleShoulderHorAbductionNew,
                     vAngleShoulderVertAbductionNew, vAngleShoulderFlexionNew, vAngleElbowPronationNew, DeltaTime);
             }
+            
             //notify listeners that analysis on this component has been completed. 
             NotifyAnalysisCompletionListeners();
         }

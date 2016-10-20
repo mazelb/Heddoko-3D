@@ -115,30 +115,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
 
             //calculate the Knee Flexion angle (angles between axis projection in YZ plane)
             float vAngleKneeFlexionNew = Vector3.Angle(Vector3.ProjectOnPlane(vThighAxisUp, vThighAxisRight), Vector3.ProjectOnPlane(vKneeAxisUp, vThighAxisRight));
-
-            //Squatts counting
-            if (mStartCountingSquats)
-            {
-                if (Math.Abs(vAngleKneeFlexionNew) > 15)
-                {
-                    AngleSum += Math.Abs(vAngleKneeFlexionNew - LeftKneeFlexion);
-                }
-                else
-                {
-                    AngleSum = 0;
-                }
-
-                if (Math.Abs(AngleSum) > 140)
-                {
-                    AngleSum = 0;
-                    NumberofSquats++;
-                }
-            }
-
             LeftKneeFlexion = vAngleKneeFlexionNew * GetSign("System.Single LeftKneeFlexion");
+
             //calculate the Knee Rotation angle (angles between axis projection in XZ plane)
             float vAngleKneeRotationNew = 180 - Mathf.Abs(180 - KneeTransform.rotation.eulerAngles.y);
-
             AngleKneeRotation = vAngleKneeRotationNew;
 
             //calculate the Hip Flexion angle (angles between axis projection in YZ plane)
@@ -146,6 +126,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             Vector3 vFlexCrossPrdct = Vector3.zero;
             Vector3 vFlexLHS = Vector3.zero;
             float vFlexSign = 0;
+
             if (UseGlobalReference)
             {
                 var vPlaneNormal = Vector3.ProjectOnPlane(vThighAxisUp, HipGlobalTransform.right);
@@ -162,17 +143,15 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
                 vFlexLHS = vLhsProjection;
             }
 
-
             AngleHipFlexion = vAngleHipFlexionNew;
-
             vFlexSign = Mathf.Sign(Vector3.Dot(vFlexLHS, vFlexCrossPrdct));
             LeftSignedHipFlexionAngle = vFlexSign * AngleHipFlexion * GetSign("System.Single LeftSignedHipFlexionAngle");
-
 
             //calculate the Hip Abduction angle (angles between axis projection in XY plane)
             float vAngleHipAbductionNew;
             Vector3 vAbductionCrossPrdct = Vector3.zero;
             Vector3 vAbdLHS = Vector3.zero;
+
             if (UseGlobalReference)
             {
                 var vPlaneNormal = Vector3.ProjectOnPlane(vThighAxisUp, HipGlobalTransform.forward);
@@ -196,7 +175,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             //calculate the Hip Rotation angle (angles between axis projection in XZ plane) 
             float vAngleHipRotationNew = 180 - Mathf.Abs(180 - ThighTransform.rotation.eulerAngles.y);
             LeftHipRotationAngle = vAngleHipRotationNew * GetSign("System.Single LeftHipRotationAngle");
-            //*/
 
             //Calculate Leg height 
             float vThighHeight = mInitThighHeight * Mathf.Abs(Vector3.Dot(vThighAxisUp, Vector3.up));
@@ -216,17 +194,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
                 VelocityAndAccelerationExtraction(vAngleKneeFlexionNew, vAngleHipRotationNew, vAngleHipAbductionNew,
                     vAngleHipFlexionNew, vAngleKneeRotationNew, mLastTimeCalled);
             }
-            NotifyLegAnalysisCompletion();
-            //float vDotProd = Vector3.Dot(vThighDirection, vTibiaDirection);
 
-            //if(vDotProd <= 0)
-            //{
-            //    LeftLegStride = Vector3.ProjectOnPlane((vThighStride * vThighDirection), Vector3.up) - Vector3.ProjectOnPlane((vTibiaStride * vTibiaDirection), Vector3.up);
-            //}
-            //else
-            //{
-            //    LeftLegStride = Vector3.ProjectOnPlane((vThighStride * vThighDirection), Vector3.up) + Vector3.ProjectOnPlane((vTibiaStride * vTibiaDirection), Vector3.up);
-            //}
+            //notify listeners that analysis on this component has been completed. 
+            NotifyLegAnalysisCompletion();
         }
 
         public void VelocityAndAccelerationExtraction(float vAngleKneeFlexionNew, float vAngleHipRotationNew, float vAngleHipAbductionNew,

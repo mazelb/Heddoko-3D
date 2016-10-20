@@ -111,31 +111,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
             //calculate the Knee Flexion angle (angles between axis projection in YZ plane)
             float vAngleKneeFlexionNew = Vector3.Angle(Vector3.ProjectOnPlane(vThighAxisUp, vThighAxisRight), Vector3.ProjectOnPlane(vKneeAxisUp, vThighAxisRight));
 
-
             //Signed angle adduction calculation
-
-
-
-
-            //Squatts counting
-            if (mStartCountingSquats)
-            {
-                if (Math.Abs(vAngleKneeFlexionNew) > 15)
-                {
-                    AngleSum += Math.Abs(vAngleKneeFlexionNew - RightKneeFlexion);
-                }
-                else
-                {
-                    AngleSum = 0;
-                }
-
-                if (Math.Abs(AngleSum) > 140)
-                {
-                    AngleSum = 0;
-                    NumberofSquats++;
-                }
-            }
-
             RightKneeFlexion = vAngleKneeFlexionNew * GetSign("System.Single RightKneeFlexion");
 
             //calculate the Knee Rotation angle (angles between axis projection in XZ plane)
@@ -148,6 +124,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
             Vector3 vFlexCrossPrdct = Vector3.zero;
             Vector3 vFlexLHS = Vector3.zero;
             float vFlexSign = 0;
+
             if (UseGlobalReference)
             {
                 var vPlaneNormal = Vector3.ProjectOnPlane(vThighAxisUp, HipGlobalTransform.right);
@@ -163,19 +140,18 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
                 vFlexCrossPrdct = Vector3.Cross(vTorsoAxisRight, vPlaneNormal);
                 vFlexLHS = vLhsProjection;
             }
+
             vFlexSign = Mathf.Sign(Vector3.Dot(vFlexLHS, vFlexCrossPrdct));
             SignedAngleHipFlexion = vFlexSign * AngleHipFlexion;
 
             //---------------------Signed hip angle calculation end------------------------------------//
-         
             AngleHipFlexion = vAngleHipFlexionNew;
-
-
 
             //calculate the Hip Abduction angle (angles between axis projection in XY plane)
             float vAngleHipAbductionNew;
             Vector3 vAbductionCrossPrdct = Vector3.zero;
             Vector3 vAbdLHS = Vector3.zero;
+
             if (UseGlobalReference)
             {
                 var vPlaneNormal = Vector3.ProjectOnPlane(vThighAxisUp, HipGlobalTransform.forward);
@@ -192,8 +168,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
                 vAngleHipAbductionNew = Vector3.Angle(vLhsProjection, vPlaneNormal);
             }
 
-         
-
             RightHipAbduction = vAngleHipAbductionNew * GetSign("System.Single SignedRightHipAbductionAngle");
             float vAbdSign = Mathf.Sign(Vector3.Dot(vAbdLHS, vAbductionCrossPrdct));
             SignedRightHipAbductionAngle = vAbdSign * RightHipAbduction * GetSign("System.Single SignedRightHipAbductionAngle");
@@ -201,7 +175,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
             //calculate the Hip Rotation angle (angles between axis projection in XZ plane) 
             float vAngleHipRotationNew = 180 - Mathf.Abs(180 - ThighTransform.rotation.eulerAngles.y);
             SignedRightHipRotation = vAngleHipRotationNew * GetSign("System.Single SignedRightHipRotation");
-            //*/
 
             //Calculate Leg height 
             float vThighHeight = mInitThighHeight * Mathf.Abs(Vector3.Dot(vThighAxisUp, Vector3.up));
@@ -210,23 +183,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
 
             float vThighStride = Mathf.Sqrt((mInitThighHeight * mInitThighHeight) - (vThighHeight * vThighHeight));
             float vTibiaStride = Mathf.Sqrt((mInitTibiaHeight * mInitTibiaHeight) - (vTibiaHeight * vTibiaHeight));
-            //Debug.Log(vTibiaStride);
 
             Vector3 vThighDirection = -vThighAxisUp.normalized;
             Vector3 vTibiaDirection = -vKneeAxisUp.normalized;
 
             RightLegStride = Vector3.ProjectOnPlane((vThighStride * vThighDirection), Vector3.up) + Vector3.ProjectOnPlane((vTibiaStride * vTibiaDirection), Vector3.up);
-
-            //float vDotProd = Vector3.Dot(vThighDirection, vTibiaDirection);
-
-            //if (vDotProd <= 0)
-            //{
-            //    RightLegStride = Vector3.ProjectOnPlane((vThighStride * vThighDirection), Vector3.up) - Vector3.ProjectOnPlane((vTibiaStride * vTibiaDirection), Vector3.up);
-            //}
-            //else
-            //{
-            //    RightLegStride = Vector3.ProjectOnPlane((vThighStride * vThighDirection), Vector3.up) + Vector3.ProjectOnPlane((vTibiaStride * vTibiaDirection), Vector3.up);
-            //}
 
             if (vDeltaTime > 0)
             {
@@ -234,6 +195,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
                     vAngleKneeRotationNew, vAngleHipFlexionNew, vDeltaTime);
 
             }
+
+            //notify listeners that analysis on this component has been completed. 
             NotifyLegAnalysisCompletion();
         }
 
