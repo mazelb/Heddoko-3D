@@ -142,7 +142,7 @@ namespace Assets.Scripts.UI.DemoKit.TechstarsKit
                 mTrunkRotation.EnableCalculation();
                 mTrunkRotation.DisableGraphics();
                 mTrunkFlexionExtension.EnableCalculation();
-                FlexionInfo.UpdateFlexionText(mBody.TorsoAnalysis.SignedTrunkFlexion);
+                FlexionInfo.UpdateFlexionText(mBody.TorsoAnalysis.TrunkFlexionSignedAngle);
             }
 
         }

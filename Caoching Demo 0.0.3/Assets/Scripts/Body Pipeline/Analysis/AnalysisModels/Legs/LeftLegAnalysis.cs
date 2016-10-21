@@ -18,55 +18,46 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
     public class LeftLegAnalysis : LegAnalysis
     {
         //Knee Angles
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LKnee F/E", Order = 16)]
-        public float LeftKneeFlexion;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngleKneeRotation;
+        public float LeftKneeFlexionAngle = 0;
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LKnee F/E", Order = 16)]
+        public float LeftKneeFlexionSignedAngle;
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LKnee Rot", Order = 13)]
+        public float LeftKneeRotationSignedAngle;
 
         //Hip Angles
-
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngleHipFlexion;
-        [AnalysisSerialization(IgnoreAttribute = true)]
-        public bool UseGlobalReference = false;
+        public float LeftHipFlexionAngle;
         [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip F/E", Order = 8)]
-        public float LeftSignedHipFlexionAngle;
+        public float LeftHipFlexionSignedAngle;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngleHipAbduction;
+        public float LeftHipAbductionAngle;
         [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip Add/Abd", Order = 10)]
-        public float LeftSignedHipAbductionAngle;
+        public float LeftHipAbductionSignedAngle;
         [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip Int/Ext Rot", Order = 12)]
-        public float LeftHipRotationAngle;
+        public float LeftHipRotationSignedAngle;
 
         //Accelerations and velocities
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularVelocityKneeFlexion = 0;
+        public float LeftKneeFlexionAngularVelocity = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularAccelerationKneeFlexion = 0;
+        public float LeftKneeFlexionAngularAcceleration = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularVelocityKneeRotation = 0;
+        public float LeftKneeRotationAngularVelocity = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularAccelerationKneeRotation = 0;
+        public float LeftKneeRotationAngularAcceleration = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularVelocityHipFlexion = 0;
+        public float LeftHipFlexionAngularVelocity = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularAccelerationHipFlexion = 0;
+        public float LeftHipFlexionAngularAcceleration = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularVelocityHipAbduction = 0;
+        public float LeftHipAbductionAngularVelocity = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularAccelerationHipAbduction = 0;
+        public float LeftHipAbductionAngularAcceleration = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularVelocityHipRotation = 0;
+        public float LeftHipRotationAngularVelocity = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularAccelerationHipRotation = 0;
-
-        //Squats Analytics
-        [AnalysisSerialization(IgnoreAttribute = true)]
-        public float NumberofSquats;
-        [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngleSum;
-        [AnalysisSerialization(IgnoreAttribute = true)]
-        private bool mStartCountingSquats = true;
+        public float LeftHipRotationAngularAcceleration = 0;
 
         //Detection of vertical Hip position
         [AnalysisSerialization(IgnoreAttribute = true)]
@@ -75,17 +66,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
         private float mInitThighHeight = 0.475f;
         [AnalysisSerialization(IgnoreAttribute = true)]
         private float mInitTibiaHeight = 0.475f;
-
-
-
-        /// <summary>
-        /// Listens to events where squats need to be counted
-        /// </summary>
-        /// <param name="vFlag"></param>
-        public void StartCountingSquats(bool vFlag)
-        {
-            mStartCountingSquats = vFlag;
-        }
 
         /// <summary>
         /// Extract angles from orientations for the right leg
@@ -113,68 +93,42 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             vKneeAxisRight = KneeTransform.right;
             vKneeAxisForward = KneeTransform.forward;
 
-            //calculate the Knee Flexion angle (angles between axis projection in YZ plane)
+            //calculate the Knee Flexion angle
             float vAngleKneeFlexionNew = Vector3.Angle(Vector3.ProjectOnPlane(vThighAxisUp, vThighAxisRight), Vector3.ProjectOnPlane(vKneeAxisUp, vThighAxisRight));
-            LeftKneeFlexion = vAngleKneeFlexionNew * GetSign("System.Single LeftKneeFlexion");
+            LeftKneeFlexionSignedAngle = vAngleKneeFlexionNew * GetSign("System.Single LeftKneeFlexion");
 
-            //calculate the Knee Rotation angle (angles between axis projection in XZ plane)
+            //calculate the Knee Rotation angle
             float vAngleKneeRotationNew = 180 - Mathf.Abs(180 - KneeTransform.rotation.eulerAngles.y);
-            AngleKneeRotation = vAngleKneeRotationNew;
+            LeftKneeRotationSignedAngle = vAngleKneeRotationNew;
 
-            //calculate the Hip Flexion angle (angles between axis projection in YZ plane)
+            //calculate the Hip Flexion angle
             float vAngleHipFlexionNew;
             Vector3 vFlexCrossPrdct = Vector3.zero;
             Vector3 vFlexLHS = Vector3.zero;
             float vFlexSign = 0;
-
-            if (UseGlobalReference)
-            {
-                var vPlaneNormal = Vector3.ProjectOnPlane(vThighAxisUp, HipGlobalTransform.right);
-                vAngleHipFlexionNew = Vector3.Angle(HipGlobalTransform.up, vPlaneNormal);
-                vFlexCrossPrdct = Vector3.Cross(HipGlobalTransform.right, vPlaneNormal);
-                vFlexLHS = HipGlobalTransform.up;
-            }
-            else
-            {
-                var vPlaneNormal = Vector3.ProjectOnPlane(vThighAxisUp, vTorsoAxisRight);
-                var vLhsProjection = Vector3.ProjectOnPlane(vTorsoAxisUp, vTorsoAxisRight);
-                vAngleHipFlexionNew = Vector3.Angle(vLhsProjection, vPlaneNormal);
-                vFlexCrossPrdct = Vector3.Cross(vTorsoAxisRight, vPlaneNormal);
-                vFlexLHS = vLhsProjection;
-            }
-
-            AngleHipFlexion = vAngleHipFlexionNew;
+            var vPlaneNormal = Vector3.ProjectOnPlane(vThighAxisUp, HipGlobalTransform.right);
+            vAngleHipFlexionNew = Vector3.Angle(HipGlobalTransform.up, vPlaneNormal);
+            vFlexCrossPrdct = Vector3.Cross(HipGlobalTransform.right, vPlaneNormal);
+            vFlexLHS = HipGlobalTransform.up;
+            LeftHipFlexionAngle = vAngleHipFlexionNew;
             vFlexSign = Mathf.Sign(Vector3.Dot(vFlexLHS, vFlexCrossPrdct));
-            LeftSignedHipFlexionAngle = vFlexSign * AngleHipFlexion * GetSign("System.Single LeftSignedHipFlexionAngle");
+            LeftHipFlexionSignedAngle = vFlexSign * LeftHipFlexionAngle * GetSign("System.Single LeftSignedHipFlexionAngle");
 
-            //calculate the Hip Abduction angle (angles between axis projection in XY plane)
+            //calculate the Hip Abduction angle
             float vAngleHipAbductionNew;
             Vector3 vAbductionCrossPrdct = Vector3.zero;
             Vector3 vAbdLHS = Vector3.zero;
-
-            if (UseGlobalReference)
-            {
-                var vPlaneNormal = Vector3.ProjectOnPlane(vThighAxisUp, HipGlobalTransform.forward);
-                vAngleHipAbductionNew = Vector3.Angle(HipGlobalTransform.up, vPlaneNormal);
-                vAbductionCrossPrdct = Vector3.Cross(HipGlobalTransform.forward, vPlaneNormal);
-                vAbdLHS = HipGlobalTransform.up;
-            }
-            else
-            {
-                var vPlaneNormal = Vector3.ProjectOnPlane(vThighAxisUp, vTorsoAxisForward);
-                var vLhsProjection = Vector3.ProjectOnPlane(vTorsoAxisUp, vTorsoAxisForward);
-                vAbductionCrossPrdct = Vector3.Cross(vTorsoAxisForward, vPlaneNormal);
-                vAbdLHS = vLhsProjection;
-                vAngleHipAbductionNew = Vector3.Angle(vLhsProjection, vPlaneNormal);
-            }
-
-            AngleHipAbduction = vAngleHipAbductionNew;
+            vPlaneNormal = Vector3.ProjectOnPlane(vThighAxisUp, HipGlobalTransform.forward);
+            vAngleHipAbductionNew = Vector3.Angle(HipGlobalTransform.up, vPlaneNormal);
+            vAbductionCrossPrdct = Vector3.Cross(HipGlobalTransform.forward, vPlaneNormal);
+            vAbdLHS = HipGlobalTransform.up;
+            LeftHipAbductionAngle = vAngleHipAbductionNew;
             float vAbdSign = Mathf.Sign(Vector3.Dot(vAbductionCrossPrdct, vAbdLHS));
-            LeftSignedHipAbductionAngle = vAbdSign * AngleHipAbduction * GetSign("System.Single LeftSignedHipAbductionAngle");
+            LeftHipAbductionSignedAngle = vAbdSign * LeftHipAbductionAngle * GetSign("System.Single LeftSignedHipAbductionAngle");
 
-            //calculate the Hip Rotation angle (angles between axis projection in XZ plane) 
+            //calculate the Hip Rotation angle
             float vAngleHipRotationNew = 180 - Mathf.Abs(180 - ThighTransform.rotation.eulerAngles.y);
-            LeftHipRotationAngle = vAngleHipRotationNew * GetSign("System.Single LeftHipRotationAngle");
+            LeftHipRotationSignedAngle = vAngleHipRotationNew * GetSign("System.Single LeftHipRotationAngle");
 
             //Calculate Leg height 
             float vThighHeight = mInitThighHeight * Mathf.Abs(Vector3.Dot(vThighAxisUp, Vector3.up));
@@ -199,26 +153,27 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             NotifyLegAnalysisCompletion();
         }
 
+        //TODO: Review all velocity and acceleration angles
         public void VelocityAndAccelerationExtraction(float vAngleKneeFlexionNew, float vAngleHipRotationNew, float vAngleHipAbductionNew,
          float vAngleHipFlexionNew, float vAngleKneeRotationNew, float vDeltaTime)
         {
-            float vAngularVelocityKneeFlexionNew = Mathf.Abs(vAngleKneeFlexionNew - LeftKneeFlexion) / vDeltaTime;
-            AngularAccelerationKneeFlexion = Mathf.Abs(vAngularVelocityKneeFlexionNew - AngularVelocityKneeFlexion) / vDeltaTime;
-            AngularVelocityKneeFlexion = vAngularVelocityKneeFlexionNew;
+            float vAngularVelocityKneeFlexionNew = Mathf.Abs(vAngleKneeFlexionNew - LeftKneeFlexionSignedAngle) / vDeltaTime;
+            LeftKneeFlexionAngularAcceleration = Mathf.Abs(vAngularVelocityKneeFlexionNew - LeftKneeFlexionAngularVelocity) / vDeltaTime;
+            LeftKneeFlexionAngularVelocity = vAngularVelocityKneeFlexionNew;
 
-            float vAngularVelocityRHipRotationNew = Mathf.Abs(vAngleHipRotationNew - Mathf.Abs(LeftHipRotationAngle)) / vDeltaTime;
-            AngularAccelerationHipRotation = Mathf.Abs(vAngularVelocityRHipRotationNew - AngularVelocityHipRotation) / vDeltaTime;
-            AngularVelocityHipRotation = vAngularVelocityRHipRotationNew;
+            float vAngularVelocityRHipRotationNew = Mathf.Abs(vAngleHipRotationNew - Mathf.Abs(LeftHipRotationSignedAngle)) / vDeltaTime;
+            LeftHipRotationAngularAcceleration = Mathf.Abs(vAngularVelocityRHipRotationNew - LeftHipRotationAngularVelocity) / vDeltaTime;
+            LeftHipRotationAngularVelocity = vAngularVelocityRHipRotationNew;
 
-            float vAngularVelocityHipAbductionNew = Mathf.Abs(vAngleHipAbductionNew - Mathf.Abs(AngleHipAbduction)) / vDeltaTime;
-            AngularAccelerationHipAbduction = Mathf.Abs(vAngularVelocityHipAbductionNew - AngularVelocityHipAbduction) / vDeltaTime;
-            AngularVelocityHipAbduction = vAngularVelocityHipAbductionNew;
-            float vAngularVelocityHipFlexionNew = Mathf.Abs(vAngleHipFlexionNew - Mathf.Abs(AngleHipFlexion)) / vDeltaTime;
-            AngularAccelerationHipFlexion = Mathf.Abs(vAngularVelocityHipFlexionNew - AngularVelocityHipFlexion) / vDeltaTime;
-            AngularVelocityHipFlexion = vAngularVelocityHipFlexionNew;
-            float vAngularVelocityKneeRotationNew = Mathf.Abs(vAngleKneeRotationNew - Mathf.Abs(AngleKneeRotation)) / vDeltaTime;
-            AngularAccelerationKneeRotation = Mathf.Abs(vAngularVelocityKneeRotationNew - AngularVelocityKneeRotation) / vDeltaTime;
-            AngularVelocityKneeRotation = vAngularVelocityKneeRotationNew;
+            float vAngularVelocityHipAbductionNew = Mathf.Abs(vAngleHipAbductionNew - Mathf.Abs(LeftHipAbductionAngle)) / vDeltaTime;
+            LeftHipAbductionAngularAcceleration = Mathf.Abs(vAngularVelocityHipAbductionNew - LeftHipAbductionAngularVelocity) / vDeltaTime;
+            LeftHipAbductionAngularVelocity = vAngularVelocityHipAbductionNew;
+            float vAngularVelocityHipFlexionNew = Mathf.Abs(vAngleHipFlexionNew - Mathf.Abs(LeftHipFlexionAngle)) / vDeltaTime;
+            LeftHipFlexionAngularAcceleration = Mathf.Abs(vAngularVelocityHipFlexionNew - LeftHipFlexionAngularVelocity) / vDeltaTime;
+            LeftHipFlexionAngularVelocity = vAngularVelocityHipFlexionNew;
+            float vAngularVelocityKneeRotationNew = Mathf.Abs(vAngleKneeRotationNew - Mathf.Abs(LeftKneeRotationSignedAngle)) / vDeltaTime;
+            LeftKneeRotationAngularAcceleration = Mathf.Abs(vAngularVelocityKneeRotationNew - LeftKneeRotationAngularVelocity) / vDeltaTime;
+            LeftKneeRotationAngularVelocity = vAngularVelocityKneeRotationNew;
         }
     }
 }

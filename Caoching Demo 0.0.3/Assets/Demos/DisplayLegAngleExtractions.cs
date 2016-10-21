@@ -33,11 +33,11 @@ namespace Assets.Demos
                     vLeftLegAnalysis =
                         CurrentBody.AnalysisSegments[BodyStructureMap.SegmentTypes.SegmentType_LeftLeg] as
                             LeftLegAnalysis;
-                    vText += "Left Hip Flexion / Extension: " + vLeftLegAnalysis.AngleHipFlexion + "\n";
-                    vText += "Left Hip Abduction/Adduction: " + vLeftLegAnalysis.AngleHipAbduction + "\n";
-                    vText += "Left Hip Internal/External Rotation: " + vLeftLegAnalysis.LeftHipRotationAngle + "\n";
-                    vText += "Knee Flexion/Extension: " + vLeftLegAnalysis.LeftKneeFlexion + "\n";
-                    vText += "Tibial Internal/External Rotation: " + vLeftLegAnalysis.AngleKneeRotation + "\n";
+                    vText += "Left Hip Flexion / Extension: " + vLeftLegAnalysis.LeftHipFlexionAngle + "\n";
+                    vText += "Left Hip Abduction/Adduction: " + vLeftLegAnalysis.LeftHipAbductionAngle + "\n";
+                    vText += "Left Hip Internal/External Rotation: " + vLeftLegAnalysis.LeftHipRotationSignedAngle + "\n";
+                    vText += "Knee Flexion/Extension: " + vLeftLegAnalysis.LeftKneeFlexionSignedAngle + "\n";
+                    vText += "Tibial Internal/External Rotation: " + vLeftLegAnalysis.LeftKneeRotationSignedAngle + "\n";
                    
                 }
                 if (CurrentBody.AnalysisSegments.ContainsKey(BodyStructureMap.SegmentTypes.SegmentType_RightLeg))
@@ -47,11 +47,11 @@ namespace Assets.Demos
                             RightLegAnalysis;
 
 
-                    vText += "Right Hip Flexion/Extension: " + vRightLegAnalysis.AngleHipFlexion + "\n";
-                    vText += "Right Hip Abduction/Adduction: " + vRightLegAnalysis.RightHipAbduction + "\n";
-                    vText += "Right Hip Internal/External Rotation: " + vRightLegAnalysis.SignedRightHipRotation + "\n";
-                    vText += "Knee Flexion/Extension: " + vRightLegAnalysis.RightKneeFlexion + "\n";
-                    vText += "Tibial Internal/External Rotation: " + vRightLegAnalysis.AngleKneeRotation + "\n";
+                    vText += "Right Hip Flexion/Extension: " + vRightLegAnalysis.RightHipFlexionAngle + "\n";
+                    vText += "Right Hip Abduction/Adduction: " + vRightLegAnalysis.RightHipAbductionAngle + "\n";
+                    vText += "Right Hip Internal/External Rotation: " + vRightLegAnalysis.RightHipRotationSignedAngle + "\n";
+                    vText += "Knee Flexion/Extension: " + vRightLegAnalysis.RightKneeFlexionSignedAngle + "\n";
+                    vText += "Tibial Internal/External Rotation: " + vRightLegAnalysis.RightKneeRotationSignedAngle + "\n";
                         
                 }
                 DisplayLegAngleText.text = vText;

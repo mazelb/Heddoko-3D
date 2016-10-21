@@ -69,7 +69,7 @@ namespace Assets.Scripts.UI.Metrics
                         RightLegAnalysis;
                 vRightLegAnalysis.StartCountingSquats(true);
                 //NumberSquatsOfText.text = "Total number = " + vRightLegAnalysis.NumberofRightSquats;
-                float vAngleKneeflex = Mathf.Abs(vRightLegAnalysis.RightKneeFlexion);
+                float vAngleKneeflex = Mathf.Abs(vRightLegAnalysis.RightKneeFlexionSignedAngle);
 
 
                 float vPositionOfSquat = vAngleKneeflex / mMaxKneeFlexion;

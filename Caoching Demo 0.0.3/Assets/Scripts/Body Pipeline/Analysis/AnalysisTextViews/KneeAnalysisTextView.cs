@@ -68,7 +68,7 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
         {
             if (mLeftLegAnalysis != null)
             {
-                LeftKneeFlexionText.text = FeedbackAngleToString(mLeftLegAnalysis.LeftKneeFlexion);
+                LeftKneeFlexionText.text = FeedbackAngleToString(mLeftLegAnalysis.LeftKneeFlexionSignedAngle);
             }
 
             else
@@ -81,7 +81,7 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
         {
             if (mRightLegAnalysis != null)
             {
-                RightKneeFlexionText.text = FeedbackAngleToString(mRightLegAnalysis.RightKneeFlexion);
+                RightKneeFlexionText.text = FeedbackAngleToString(mRightLegAnalysis.RightKneeFlexionSignedAngle);
             }
             else
             {
