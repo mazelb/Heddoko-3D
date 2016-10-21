@@ -20,9 +20,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
         //Elbow Angles
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float RightElbowFlexionAngle = 0;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RElbow F/E", Order = 13)]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RElbow F/E", Order = 17)]
         public float RightElbowFlexionSignedAngle = 0;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RForeArm Pro/Sup", Order = 13)]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RForeArm Pro/Sup", Order = 19)]
         public float RightForeArmPronationSignedAngle = 0;
 
         //Upper Arm Angles
@@ -38,7 +38,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
         public float RightShoulderHorAbductionAngle = 0;
         [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RShould H Add/Abd", Order = 7)]
         public float RightShoulderHorizontalAbductionSignedAngle = 0;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RShould Rot", Order = 7)]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RShould Rot", Order = 9)]
         public float RightShoulderRotationSignedAngle = 0;
 
         //Velocities and Accelerations

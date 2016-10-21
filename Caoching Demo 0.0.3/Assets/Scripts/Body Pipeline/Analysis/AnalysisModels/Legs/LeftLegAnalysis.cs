@@ -20,21 +20,21 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
         //Knee Angles
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float LeftKneeFlexionAngle = 0;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LKnee F/E", Order = 16)]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LKnee F/E", Order = 22)]
         public float LeftKneeFlexionSignedAngle;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LKnee Rot", Order = 13)]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LKnee Rot", Order = 24)]
         public float LeftKneeRotationSignedAngle;
 
         //Hip Angles
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float LeftHipFlexionAngle;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip F/E", Order = 8)]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip F/E", Order = 12)]
         public float LeftHipFlexionSignedAngle;
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float LeftHipAbductionAngle;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip Add/Abd", Order = 10)]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip Add/Abd", Order = 14)]
         public float LeftHipAbductionSignedAngle;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip Int/Ext Rot", Order = 12)]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip Int/Ext Rot", Order = 16)]
         public float LeftHipRotationSignedAngle;
 
         //Accelerations and velocities

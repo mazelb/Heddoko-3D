@@ -22,21 +22,21 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
         //Knee Angles
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float RightKneeFlexionAngle = 0;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RKnee F/E", Order = 15)]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RKnee F/E", Order = 21)]
         public float RightKneeFlexionSignedAngle;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RKnee Rot", Order = 13)]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RKnee Rot", Order = 23)]
         public float RightKneeRotationSignedAngle;
 
         //Hip Angles
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float RightHipFlexionAngle;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip F/E", Order = 7)]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip F/E", Order = 11)]
         public float RightHipFlexionSignedAngle;
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float RightHipAbductionAngle;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip Add/Abd", Order = 9)]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip Add/Abd", Order = 13)]
         public float RightHipAbductionSignedAngle;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip Int/Ext Rot", Order = 11)]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip Int/Ext Rot", Order = 15)]
         public float RightHipRotationSignedAngle;
 
         //Accelerations and velocities

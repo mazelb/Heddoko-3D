@@ -21,11 +21,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Trunk
         public float TrunkLateralAngle;
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float TrunkRotationAngle;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "Trunk LatBend R/L", Order = 0)]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "Trunk LatBend R/L", Order = 1)]
         public float TrunkLateralSignedAngle;
         [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "Trunk Rot R/L", Order = 2)]
         public float TrunkRotationSignedAngle;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "Trunk F/E", Order = 1)]
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "Trunk F/E", Order = 0)]
         public float TrunkFlexionSignedAngle;
 
         //current transforms
