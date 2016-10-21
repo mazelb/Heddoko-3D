@@ -67,22 +67,6 @@ namespace Assets.Scripts.UI.Metrics
                 RightLegAnalysis vRightLegAnalysis =
                     vCurrentBody.AnalysisSegments[BodyStructureMap.SegmentTypes.SegmentType_RightLeg] as
                         RightLegAnalysis;
-                vRightLegAnalysis.StartCountingSquats(true);
-                //NumberSquatsOfText.text = "Total number = " + vRightLegAnalysis.NumberofRightSquats;
-                float vAngleKneeflex = Mathf.Abs(vRightLegAnalysis.RightKneeFlexionSignedAngle);
-
-
-                float vPositionOfSquat = vAngleKneeflex / mMaxKneeFlexion;
-                if (vPositionOfSquat > 1)
-                {
-                    VisualSquatFeedback.fillAmount = 1;
-                }
-                else
-                {
-                    VisualSquatFeedback.fillAmount = vPositionOfSquat;
-                }
-                int vCurrentSquats = Mathf.FloorToInt(vRightLegAnalysis.NumberofSquats);
-                UpdateSquatsCount(vCurrentSquats);
             }
         }
 

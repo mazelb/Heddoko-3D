@@ -23,9 +23,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float DeltaTime;
         internal BodyStructureMap.SegmentTypes SegmentType;
-        [AnalysisSerialization(IgnoreAttribute = true)]
-        internal float mLastTimeCalled;
         internal event AnalysisComplete AnalysisCompletedEvent;
+
         /// <summary>
         /// Extraction of angles. The parent class Updates Delta time
         /// </summary>

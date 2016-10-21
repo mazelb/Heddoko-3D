@@ -165,6 +165,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             float vAngleShoulderRotationNew = 180 - Mathf.Abs(180 - UpArTransform.rotation.eulerAngles.x);
             LeftShoulderRotationSignedAngle = vAngleShoulderRotationNew * GetSign("System.Single LeftShoulderRotationAngle");
 
+            //Calculate the velocity and accelerations
             if (DeltaTime != 0)
             {
                 VelocityAndAccelerationExtraction(vAngleElbowFlexionNew, vAngleShoulderRotationNew,

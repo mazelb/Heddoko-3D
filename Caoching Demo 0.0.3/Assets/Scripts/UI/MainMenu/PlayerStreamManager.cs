@@ -386,10 +386,6 @@ namespace Assets.Scripts.UI.MainMenu
                 RightLegAnalysis vRightLegAnalysis =
                       CurrentBodyInPlay.AnalysisSegments[BodyStructureMap.SegmentTypes.SegmentType_RightLeg] as
                           RightLegAnalysis;
-                if (vRightLegAnalysis != null)
-                {
-                    vRightLegAnalysis.NumberofSquats = 0;
-                }
             }
 
             if (ResettableViews != null)

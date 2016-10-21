@@ -57,9 +57,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Trunk
         /// </summary>
         public override void AngleExtraction()
         {
-            float vTimeDifference = Time.time - mLastTimeCalled;
-            mLastTimeCalled = Time.time;
-
             //Get necessary Axis info
             Vector3 vTrunkAxisUp, vTrunkAxisRight, vTrunkAxisForward;
             Vector3 vHipAxisUp, vHipAxisRight, vHipAxisForward;
@@ -122,9 +119,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Trunk
             TrunkRotationSignedAngle = vSign * TrunkRotationAngle * GetSign("System.Single TrunkRotationAngle");
 
             //Calculate the velocity and accelerations
-            if (vTimeDifference != 0f)
+            if (DeltaTime != 0f)
             {
-                VelocityAndAccelerationExtraction( vAngleTorsoFlexionNew,   vAngleTrunkLateralNew,   vAngleTorsoRotationNew,   vTimeDifference);
+                VelocityAndAccelerationExtraction( vAngleTorsoFlexionNew,   vAngleTrunkLateralNew,   vAngleTorsoRotationNew, DeltaTime);
             }
 
             //notify listeners that analysis on this component has been completed. 
