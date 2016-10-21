@@ -87,7 +87,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             if (mDataStore == null)
             {
                 mDataStore = new AnalysisDataStore(vSegmentList);
-                BodyModel.View.BodyFrameResetInitializedEvent += mDataStore.IgnorePreviousFrame;
+             //   BodyModel.View.BodyFrameResetInitializedEvent += mDataStore.IgnorePreviousFrame;
             }
 
             mDataStore.SetNumberOfIndices(RecordingPlayerView.PbControlPanel.PlaybackTask.RawFramesCount);
@@ -120,7 +120,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             RecordingPlayerView.PbControlPanel.FinalFramePositionEvent -= OnEnd;
             RecordingPlayerView.PbControlPanel.NewRecordingSelectedEvent -= OnEnd;
             BodyModel.View.BodyFrameResetInitializedEvent -= SliderMaskContainerController.TPoseRequestedHandler;
-            BodyModel.View.BodyFrameResetInitializedEvent -= mDataStore.IgnorePreviousFrame;
+          //  BodyModel.View.BodyFrameResetInitializedEvent -= mDataStore.IgnorePreviousFrame;
 
             ExportDataButton.onClick.RemoveAllListeners();
             ExportDataButton.onClick.AddListener(OnStart);
