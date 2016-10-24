@@ -73,4 +73,15 @@ MonoBehaviour:
     \ \",\r\n\t\t\t\t\t\"PluralForm\":  null\r\n\t\t\t\t},\r\n\t\t\t\t\"NoInternetConnectionMsg\"
     : {\r\n\t\t\t\t\"SingularForm\": \" connection to the internet could not be established.
     Try again by clicking on the submit button.  \",\r\n\t\t\t\t\t\"PluralForm\":
-    \ null\r\n\t\t\t\t},\r\n\t\t\t\t\r\n\t\t\t\t\r\n\t\t\t\t\r\n\t\t\t\t\n\t\t\t}\n\t\t}\n\t}\n}"
+    \ null\r\n\t\t\t\t},\r\n\t\t\t\t\"BadKitUpload1\" : {\n\t\t\t\t\"SingularForm\":
+    \"You were unable to upload the following recording: \",\n\t\t\t\t\"PluralForm\":
+    \ \"You were unable to upload the following recordings:\"\n\t\t\t\t},\r\n\t\t\t\t\n\t\t\t\t\"BadKitUpload2\"
+    : {\n\t\t\t\t\"SingularForm\": \"This is likely caused by a uploading a recording
+    that belongs to a user who is in another team. If you are certain this is not
+    the case, please log into app.heddoko.com and verify that the current user has
+    the correct kit assigned to them.\",\n\t\t\t\t\"PluralForm\":  null\n\t\t\t\t},\n\t\t\t\t\"RecordingFileLessThanSkippableFrames\":{\n\t\t\t\t\"SingularForm\":
+    \"Cannot load recording file because there are not enough frames to analyze.Please
+    try a longer recording.\",\n\t\t\t\t\"PluralForm\":  null\n\t\t\t\t},\n\t\t\t\t\"CannotLoadRecording\"
+    : {\n\t\t\t\t\"SingularForm\": \"There was an issue loading this recording file.
+    Please try another file or report this problem to support\",\n\t\t\t\t\"PluralForm\":
+    \ null\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\t\n\t\t\t}\n\t\t}\n\t}\n}"

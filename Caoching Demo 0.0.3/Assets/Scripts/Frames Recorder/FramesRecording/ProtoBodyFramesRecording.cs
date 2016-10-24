@@ -101,5 +101,10 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
             vStopwatch.Stop();
             Debug.Log("completed after "+(vStopwatch.ElapsedMilliseconds/1000 )+ " seconds");
         }
+
+        public override void RemoveAt(int vI)
+        {
+            ProtobuffPackets.RemoveAt(vI);
+        }
     }
 }

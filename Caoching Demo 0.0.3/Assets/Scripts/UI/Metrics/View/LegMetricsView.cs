@@ -50,10 +50,10 @@ namespace Assets.Scripts.UI.Metrics
                                     RightLegAnalysis;
                         if (vRightLegAnalysis != null)
                         {
-                            HipFlexFill.fillAmount = Mathf.Abs(vRightLegAnalysis.AngleHipFlexion) / MaxHipFlexion;
-                            HipAngleText.text = (int)Mathf.Abs(vRightLegAnalysis.AngleHipFlexion) + "°";
-                            KneeFlexFill.fillAmount = Mathf.Abs(vRightLegAnalysis.RightKneeFlexion ) / MaxKneeFlexion;
-                            KneeFlexAngleText.text = (int)Mathf.Abs(vRightLegAnalysis.RightKneeFlexion)  + "°";
+                            HipFlexFill.fillAmount = Mathf.Abs(vRightLegAnalysis.RightHipFlexionAngle) / MaxHipFlexion;
+                            HipAngleText.text = (int)Mathf.Abs(vRightLegAnalysis.RightHipFlexionAngle) + "°";
+                            KneeFlexFill.fillAmount = Mathf.Abs(vRightLegAnalysis.RightKneeFlexionSignedAngle ) / MaxKneeFlexion;
+                            KneeFlexAngleText.text = (int)Mathf.Abs(vRightLegAnalysis.RightKneeFlexionSignedAngle)  + "°";
                         }
                     }
                 }
@@ -65,10 +65,10 @@ namespace Assets.Scripts.UI.Metrics
                                     LeftLegAnalysis;
                         if (vLeftLegAnalysis != null)
                         {
-                            HipFlexFill.fillAmount = Mathf.Abs(vLeftLegAnalysis.AngleHipFlexion)  / MaxHipFlexion;
-                            HipAngleText.text = (int)Mathf.Abs(vLeftLegAnalysis.AngleHipFlexion)  + "°";
-                            KneeFlexFill.fillAmount = Mathf.Abs(vLeftLegAnalysis.LeftKneeFlexion)  / MaxKneeFlexion;
-                            KneeFlexAngleText.text = (int)Mathf.Abs(vLeftLegAnalysis.LeftKneeFlexion)  + "°";
+                            HipFlexFill.fillAmount = Mathf.Abs(vLeftLegAnalysis.LeftHipFlexionAngle)  / MaxHipFlexion;
+                            HipAngleText.text = (int)Mathf.Abs(vLeftLegAnalysis.LeftHipFlexionAngle)  + "°";
+                            KneeFlexFill.fillAmount = Mathf.Abs(vLeftLegAnalysis.LeftKneeFlexionSignedAngle)  / MaxKneeFlexion;
+                            KneeFlexAngleText.text = (int)Mathf.Abs(vLeftLegAnalysis.LeftKneeFlexionSignedAngle)  + "°";
                         }
                     }
                 }

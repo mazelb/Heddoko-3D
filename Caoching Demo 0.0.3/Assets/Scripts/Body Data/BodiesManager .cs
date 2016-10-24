@@ -5,9 +5,8 @@
 * @date June 2015
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
-using UnityEngine; 
-using System.Collections.Generic;
-using System.Threading;
+ 
+using System.Collections.Generic; 
 using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.Utils;
 

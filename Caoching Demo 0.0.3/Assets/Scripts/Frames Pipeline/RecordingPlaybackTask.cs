@@ -8,12 +8,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+ 
 using System.Threading;
 using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
-using Assets.Scripts.UI;
+using Assets.Scripts.Localization;
+ 
 using Assets.Scripts.UI.Loading;
+using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.Utils;
 using HeddokoLib.body_pipeline;
 
@@ -22,9 +24,10 @@ namespace Assets.Scripts.Frames_Pipeline
 
     public delegate void FinalFramePositionReached();
 
-    /// <summary>
-    /// A recording playback task used by body frame thread
+     /// <summary>
+    /// A vRecording playback task used by body frame thread
     /// </summary>
+    
     public class RecordingPlaybackTask
     {
         public bool IsWorking;
@@ -33,7 +36,7 @@ namespace Assets.Scripts.Frames_Pipeline
         public bool LoopPlaybackEnabled = true;
         private bool mIsRewinding;
         private BodyFramesRecordingBase mCurrentRecording;
-        private BodyFrameBuffer mFrameBuffer;
+        private BodyFrameBuffer mFrameBuffer; 
         private int mCurrentIdx;
         private int mFirstPos = 0;
         internal event FinalFramePositionReached FinalFramePositionReachedEvent;
@@ -104,7 +107,7 @@ namespace Assets.Scripts.Frames_Pipeline
         }
 
         /// <summary>
-        /// Returns the frame count from the recording
+        /// Returns the frame count from the vRecording
         /// </summary>
         public int RecordingCount
         {
@@ -127,7 +130,7 @@ namespace Assets.Scripts.Frames_Pipeline
         }
 
         /// <summary>
-        /// Returns the total recording time
+        /// Returns the total vRecording time
         /// </summary>
         public float TotalRecordingTime
         {
@@ -211,7 +214,7 @@ namespace Assets.Scripts.Frames_Pipeline
         }
 
         /// <summary>
-        /// The recording play back task allows for recording playback by converting 
+        /// The vRecording play back task allows for vRecording playback by converting 
         /// Rawbody frames in to body frames. 
         /// </summary>
         public void Play()
@@ -309,6 +312,22 @@ namespace Assets.Scripts.Frames_Pipeline
 
         private void ConvertFrames()
         {
+            //There are less frames than currently supported, throw an error
+            if (mCurrentRecording.RecordingRawFramesCount <= StartConversionIndex)
+            {
+                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
+                {
+                    
+                    var vProgressBar = DisablingProgressBar.Instance;
+                    if (vProgressBar != null)
+                    {
+                        vProgressBar.StopAnimation();
+                    }
+                    ModalPanel.SingleChoice("ERROR",LocalizationBinderContainer.GetString(KeyMessage.RecordingFileLessThanSkippableFrames),
+                        () => { });
+                });
+                return;
+            }
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
                 var vProgressBar = DisablingProgressBar.Instance;

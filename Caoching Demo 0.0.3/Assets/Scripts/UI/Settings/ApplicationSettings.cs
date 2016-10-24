@@ -179,20 +179,9 @@ namespace Assets.Scripts.UI.Settings
         public static string AttributeFileOrderingPath
         {
             get
-            {
-                string vVal = PlayerPrefs.GetString("AnalysisSettings");
-                if (string.IsNullOrEmpty(vVal))
-                {
-                    //set the default to the current executable's directory + cache
-                    vVal = Application.dataPath + Path.DirectorySeparatorChar + "AnalysisSettings";
-                    if (!Directory.Exists(vVal))
-                    {
-                        Directory.CreateDirectory(vVal);
-                    }
-                    PlayerPrefs.SetString("AnalysisSettings", vVal);
-                }
-                sAnalysisAttributeSettingsFile = vVal;
-                return sAnalysisAttributeSettingsFile + ".txt";
+            { 
+                return Application.persistentDataPath + Path.DirectorySeparatorChar + "AnalysisSettings.txt";
+                
             }
 
         }

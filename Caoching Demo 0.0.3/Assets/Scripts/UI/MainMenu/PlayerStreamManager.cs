@@ -8,11 +8,9 @@
 */
  
 using System.Collections.Generic;
-using Assets.Scripts.Body_Data;
-using Assets.Scripts.Body_Data.View;
+ using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
-using Assets.Scripts.Body_Pipeline.Analysis.Legs;
-using Assets.Scripts.Communication.Controller;
+ using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.Loading;
 using Assets.Scripts.UI.Metrics; 
@@ -388,10 +386,6 @@ namespace Assets.Scripts.UI.MainMenu
                 RightLegAnalysis vRightLegAnalysis =
                       CurrentBodyInPlay.AnalysisSegments[BodyStructureMap.SegmentTypes.SegmentType_RightLeg] as
                           RightLegAnalysis;
-                if (vRightLegAnalysis != null)
-                {
-                    vRightLegAnalysis.NumberofSquats = 0;
-                }
             }
 
             if (ResettableViews != null)

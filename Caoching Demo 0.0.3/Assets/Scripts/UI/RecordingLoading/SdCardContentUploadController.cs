@@ -214,6 +214,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             mIsWorking = false;
             mWorker = new Thread(UploadFoundContent);
+            mWorker.IsBackground = true;
             mWorker.Start();
         }
 

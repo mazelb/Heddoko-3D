@@ -126,7 +126,7 @@ namespace Assets.Scripts.UI.Metrics
                         {
                             if (mCurrentCountOfFrames < NumberOfFrameToCount)
                             {
-                                mRightKneeAvg += Mathf.Abs(vRightLegAnalysis.AngularVelocityKneeFlexion);
+                                mRightKneeAvg += Mathf.Abs(vRightLegAnalysis.RightKneeFlexionAngularVelocity);
                             }
 
                         }
@@ -140,7 +140,7 @@ namespace Assets.Scripts.UI.Metrics
                         {
                             if (mCurrentCountOfFrames < NumberOfFrameToCount)
                             {
-                                mLeftKneeVelAvg += Mathf.Abs(vLeftLegAnalysis.AngularVelocityKneeFlexion);
+                                mLeftKneeVelAvg += Mathf.Abs(vLeftLegAnalysis.LeftKneeFlexionAngularVelocity);
                             }
 
                         }

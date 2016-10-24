@@ -999,8 +999,7 @@ class UniFileBrowser extends MonoBehaviour {
                         
                         for (var k = 0; k < dirInfo.length; k++) {
                             if (dirInfo[k].Name =="Documents and Settings") {
-                                Debug.Log("We'se the best");
-                                vSkippableIndex = k;
+                                 vSkippableIndex = k;
                             }
                         }
                         

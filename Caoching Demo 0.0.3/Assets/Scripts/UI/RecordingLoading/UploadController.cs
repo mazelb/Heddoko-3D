@@ -56,6 +56,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             mCardContentUploadController.ProblemUploadingContentEvent -= ProblemUploadEventHandler;
             mCardContentUploadController.DriveDisconnectedEvent -= DriveDisconnectedHandler;
             mCardContentUploadController.UploadingStartEvent -= UploadingItemStarted;
+            mCardContentUploadController.CleanUp();
         }
         public void BeginUpload()
         {

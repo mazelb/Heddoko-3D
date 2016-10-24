@@ -21,7 +21,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         private int mSkipMultiplier = 0;
         public RecordingListUpdated RecordingListUpdatedHandler;
         private IUserProfileManager mManager;
-       private Thread mWorkerThread;
+        private Thread mWorkerThread;
         private bool mIsWorking;
         private int mTimer = 10000;
 
@@ -152,7 +152,8 @@ namespace Assets.Scripts.UI.RecordingLoading
         public void Start()
         {
             mIsWorking = true;
-             mWorkerThread = new Thread(WorkingFunction);
+            mWorkerThread = new Thread(WorkingFunction);
+            mWorkerThread.IsBackground = true;
             mWorkerThread.Start();
 
         }

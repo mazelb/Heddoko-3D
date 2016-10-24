@@ -10,10 +10,10 @@ using UnityEngine;
 using UnityEngine.Assertions.Comparers;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
- 
+
 namespace Assets.Scripts.Body_Data.CalibrationData.TposeSelection
 {
-     
+
     public delegate void DeleteRequested(TPoseSliderMask vThis);
     /// <summary>
     /// A width resizable mask that is placed over a slider. 
@@ -45,6 +45,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.TposeSelection
             RightDragger.PoseSliderMask = this;
             Selectable = GetComponent<Selectable>();
             Outline = GetComponent<Outline>();
+
         }
         /// <summary>
         /// Initializes componenets with a background image that determines the overall size of the mask, a foreground rectransform object which this TPoseSliderMask will be parented under,
@@ -53,7 +54,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.TposeSelection
         /// <param name="vBackGroundImage"></param>
         /// <param name="vForground"></param>
         /// <param name="vHandler"></param>
-        public void Init(Slider vSlider,Image vBackGroundImage, RectTransform vForground, DeleteRequested vHandler,Camera vRenderingCam)
+        public void Init(Slider vSlider, Image vBackGroundImage, RectTransform vForground, DeleteRequested vHandler, Camera vRenderingCam)
         {
             RenderingCam = vRenderingCam;
             LeftDragger.RenderingCam = RenderingCam;
@@ -86,7 +87,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.TposeSelection
             var vLeft = Rectransform.offsetMin;
             vLeft.x = vHalfWidth + vNewPos;
             Rectransform.offsetMin = vLeft;
-          
+
             if (Rectransform.offsetMin.x <= 0)
             {
                 var vNewMin = Rectransform.offsetMin;
@@ -112,7 +113,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.TposeSelection
         {
             float vTPosePos = 1f / (Slider.maxValue) * Background.rectTransform.rect.width * (float)(Slider.maxValue - mPosePos);
             if (FloatComparer.AreEqual(vDir, 0f, float.Epsilon))
-            { 
+            {
                 return;
             }
             float vHalfWidth = Background.rectTransform.rect.width / 2f;
@@ -121,7 +122,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.TposeSelection
             vRight.x = vNewPos - vHalfWidth;
             Rectransform.offsetMax = vRight;
             if (Rectransform.offsetMax.x <= -vTPosePos)
-            { 
+            {
                 vRight = Rectransform.offsetMax;
                 vRight.x = -vTPosePos;
                 Rectransform.offsetMax = vRight;
@@ -134,8 +135,37 @@ namespace Assets.Scripts.Body_Data.CalibrationData.TposeSelection
                 Rectransform.offsetMax = vRight;
             }
             float vPossiblePos = Rectransform.offsetMax.x * (Slider.maxValue) / Background.rectTransform.rect.width;
-            PoseSelection.PoseIndexRight = (int)( vPossiblePos + Slider.maxValue);
- 
+            PoseSelection.PoseIndexRight = (int)(vPossiblePos + Slider.maxValue);
+
+        }
+
+        /// <summary>
+        /// Verifies left and right limits
+        /// </summary>
+        public void VerifyLimits()
+        {
+            if (PoseSelection.PoseIndexRight < PoseSelection.PoseIndex)
+            {
+                PoseSelection.PoseIndexRight = PoseSelection.PoseIndex;
+            }
+
+            else if (PoseSelection.PoseIndexRight > Slider.maxValue)
+            {
+                PoseSelection.PoseIndexRight = (int)Slider.maxValue;
+            }
+
+            if (PoseSelection.PoseIndexLeft > PoseSelection.PoseIndex)
+            {
+                PoseSelection.PoseIndexRight = PoseSelection.PoseIndex;
+                
+            }
+
+            else if (PoseSelection.PoseIndexLeft < 0)
+            {
+                PoseSelection.PoseIndexRight = 0;
+            }
+
+           
         }
 
         /// <summary>
@@ -162,16 +192,20 @@ namespace Assets.Scripts.Body_Data.CalibrationData.TposeSelection
             {
                 if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Delete))
                 {
-                    if (DeleteRequestedEvent != null)
-                    {
-                        DeleteRequestedEvent(this);
-                    }
+                    NotifyDeletionEvent();
                 }
             }
 
             PoseMarker.transform.position = mPoseMarkerPosition;
         }
 
+        public void NotifyDeletionEvent()
+        {
+            if (DeleteRequestedEvent != null)
+            {
+                DeleteRequestedEvent(this);
+            }
+        }
         /// <summary>
         /// Sets the tpose marker position
         /// </summary>
@@ -220,7 +254,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.TposeSelection
         /// <param name="vEventData"></param>
         public void OnSelect(BaseEventData vEventData)
         {
-           // when the object is selected, set IsSelected to true.
+            // when the object is selected, set IsSelected to true.
             mIsSelected = true;
             Outline.enabled = true;
         }
@@ -231,7 +265,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.TposeSelection
         /// <param name="vEventData"></param>
         public void OnPointerDown(PointerEventData vEventData)
         {
-            EventSystem.current.SetSelectedGameObject(this.gameObject, vEventData); 
+            EventSystem.current.SetSelectedGameObject(this.gameObject, vEventData);
 
         }
 
@@ -240,7 +274,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.TposeSelection
         /// </summary>
         /// <param name="vEventData"></param>
         public void OnDeselect(BaseEventData vEventData)
-        { 
+        {
             Outline.enabled = false;
             mIsSelected = false;
         }

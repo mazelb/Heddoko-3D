@@ -55,6 +55,7 @@ namespace Assets.Scripts.MainApp
         public HeddokoSdCardSearcher()
         {
             mWorkerThread = new Thread(Search);
+            mWorkerThread.IsBackground = true;
         }
 
         public DirectoryInfo FoundDrive

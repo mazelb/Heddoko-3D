@@ -59,11 +59,11 @@ namespace Assets.Scripts.UI.Metrics.View
                                 RightArmAnalysis;
                     if (vRightArmAnalysis != null)
                     {
-                        float vElbowFlexionVel = vRightArmAnalysis.AngularVelocityElbowFlexion;
+                        float vElbowFlexionVel = vRightArmAnalysis.RightElbowFlexionAngularVelocity;
                         mRightElbowVelSum += Mathf.Abs(vElbowFlexionVel);
-                        if (mPeakAngularVelocity < vRightArmAnalysis.PeakAngularVelocityElbowFlexion)
+                        if (mPeakAngularVelocity < vRightArmAnalysis.RightElbowFlexionPeakAngularVelocity)
                         {
-                            mPeakAngularVelocity = vRightArmAnalysis.PeakAngularVelocityElbowFlexion;
+                            mPeakAngularVelocity = vRightArmAnalysis.RightElbowFlexionPeakAngularVelocity;
                             AnalysisContentPanel.UpdatePeakValueText(mPeakAngularVelocity);
                         }
 

@@ -7,7 +7,7 @@
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
 
-using Assets.Scripts.Body_Pipeline.Analysis.Torso;
+using Assets.Scripts.Body_Pipeline.Analysis.Trunk;
 using UnityEngine;
 using System;
 
@@ -19,8 +19,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
         public Transform UpArTransform { get; set; }
         public Transform LoArTransform { get; set; }
         public Vector3 ReferenceVector { get; set; }
-        public TorsoAnalysis TorsoAnalysisSegment { get; set; }
-        public Transform TorsoTransform { get { return TorsoAnalysisSegment.TorsoTransform; } }
+        public TrunkAnalysis TorsoAnalysisSegment { get; set; }
+        public Transform TorsoTransform { get { return TorsoAnalysisSegment.TrunkTransform; } }
          
         internal  void NotifyArmAnalysisCompletion()
         {

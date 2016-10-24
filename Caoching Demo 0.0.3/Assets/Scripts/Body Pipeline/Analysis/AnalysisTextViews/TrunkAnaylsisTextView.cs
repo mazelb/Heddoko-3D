@@ -7,7 +7,7 @@
 */
 
 using Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews;
-using Assets.Scripts.Body_Pipeline.Analysis.Torso;
+using Assets.Scripts.Body_Pipeline.Analysis.Trunk;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,7 +23,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         public Text InclinationAngle;
         public Text RotationAngle;
         [SerializeField]
-        private TorsoAnalysis mTorsoAnalysis;
+        private TrunkAnalysis mTorsoAnalysis;
 
 
         public override string LabelName
@@ -37,22 +37,35 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         {
             if (BodyToAnalyze != null)
             {
+                //remove listeners
+                if (mTorsoAnalysis != null)
+                {
+                    mTorsoAnalysis.AnalysisCompletedEvent -= UpdateTrunkAnalysisTextView;
+                }
                 mTorsoAnalysis = BodyToAnalyze.TorsoAnalysis;
+                mTorsoAnalysis.AnalysisCompletedEvent += UpdateTrunkAnalysisTextView;
             }
             else
             {
+                //remove listeners
+                if (mTorsoAnalysis != null)
+                {
+                    mTorsoAnalysis.AnalysisCompletedEvent -= UpdateTrunkAnalysisTextView;
+                }
                 mTorsoAnalysis = null;
                 ClearText();
             }
+            
         }
 
-        protected override void BodyFrameUpdated(BodyFrame vFrame)
+
+        private void UpdateTrunkAnalysisTextView(SegmentAnalysis vTorso)
         {
             if (mTorsoAnalysis != null)
             {
-                LateralBendingAngle.text = FeedbackAngleToString(mTorsoAnalysis.AngleTorsoLateral);
-                InclinationAngle.text = FeedbackAngleToString(mTorsoAnalysis.AngleTorsoFlexion);
-                RotationAngle.text = FeedbackAngleToString( mTorsoAnalysis.AngleTorsoRotation);
+                LateralBendingAngle.text = FeedbackAngleToString(mTorsoAnalysis.TrunkLateralSignedAngle);
+                InclinationAngle.text = FeedbackAngleToString(mTorsoAnalysis.TrunkFlexionSignedAngle);
+                RotationAngle.text = FeedbackAngleToString(mTorsoAnalysis.TrunkRotationSignedAngle);
             }
         }
 

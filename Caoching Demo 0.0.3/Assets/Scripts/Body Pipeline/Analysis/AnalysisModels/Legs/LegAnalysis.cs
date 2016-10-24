@@ -7,7 +7,7 @@
 
 */
 
-using Assets.Scripts.Body_Pipeline.Analysis.Torso;
+using Assets.Scripts.Body_Pipeline.Analysis.Trunk;
 using UnityEngine;
 using System;
 
@@ -23,8 +23,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
 
         public Transform ThighTransform { get; set; }
         public Transform KneeTransform { get; set; }
-        public TorsoAnalysis TorsoAnalysisSegment { get; set; }
-        public Transform TorsoTransform { get { return TorsoAnalysisSegment.TorsoTransform; } }
+        public TrunkAnalysis TorsoAnalysisSegment { get; set; }
+        public Transform TorsoTransform { get { return TorsoAnalysisSegment.TrunkTransform; } }
         public Transform HipGlobalTransform { get { return TorsoAnalysisSegment.HipGlobalTransform; } }
         internal void NotifyLegAnalysisCompletion()
         {

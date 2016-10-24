@@ -9,12 +9,15 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Frames_Pipeline;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
+using Assets.Scripts.Localization;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Layouts;
 using Assets.Scripts.UI.AbstractViews.Permissions;
+using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.Utils;
 using HeddokoSDK.Models;
 using UnityEngine;
@@ -533,8 +536,20 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 mBody.StopThread();
                 if (mBody.InitialBodyFrame != null)
                 {
+                    var vPrev = BodySegment.IsUsingInterpolation;
+                    BodySegment.IsUsingInterpolation = false;
                     mBody.View.ResetInitialFrame();
+                    BodySegment.IsUsingInterpolation = vPrev;
                 }
+
+                if (vNewCsvBodyFramesRecording.RecordingRawFramesCount <= RecordingPlaybackTask.StartConversionIndex)
+                {
+                    ModalPanel.SingleChoice("ERROR", LocalizationBinderContainer.GetString(KeyMessage.RecordingFileLessThanSkippableFrames),
+                      () => { });
+                    ReleaseResources();
+                    return;
+                }
+
                 string vRecGuid = vNewCsvBodyFramesRecording.BodyRecordingGuid;
                 mBody.PlayRecording(vRecGuid);
                 //update the recording playback task by polling the body
@@ -547,12 +562,16 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 {
                     BodyUpdatedEvent(mBody);
                 }
-                //   CurrentRecordingInfo.text = vNewCsvBodyFramesRecording.Title;
-                Debug.Log("playing back "+ vNewCsvBodyFramesRecording.Title);
+                 Debug.Log("playing back "+ vNewCsvBodyFramesRecording.Title);
             }
             mIsNewRecording = true;
         }
 
+
+        private void ResetControls()
+        {
+            ReleaseResources();
+        }
         /// <summary>
         /// Polls the body until its create a recording playback task
         /// </summary> 

@@ -102,6 +102,7 @@ namespace Assets.Scripts.UI.MainMenu.View
             //Verify the number of found items
             if (vObj.Count > 0)
             {
+                PairButton.interactable = true;
                 List<Dropdown.OptionData> vList = new List<Dropdown.OptionData>();
                 mDropdownItems = vObj;
                 foreach (var vKvPair in vObj)
@@ -126,6 +127,7 @@ namespace Assets.Scripts.UI.MainMenu.View
             }
             else
             {
+                PairButton.enabled = false;
                 var vMsg = LocalizationBinderContainer.GetString(KeyMessage.NoBatteryPacksFoundMsg);
                 Notify.Template("fade").Show(
                  vMsg,
@@ -182,10 +184,17 @@ namespace Assets.Scripts.UI.MainMenu.View
             UnpairButton.interactable = false;
             UnpairButton.gameObject.SetActive(false);
             PairButton.gameObject.SetActive(true);
-            PairButton.interactable = true;
+            SetPairButtonInteraction();
             HaloForHaloman.gameObject.SetActive(false);
         }
 
+        public void SetPairButtonInteraction()
+        {
+            if (DropDownList.options.Count > 1)
+            {
+                PairButton.interactable = true;
+            }
+        }
         /// <summary>
         ///  Display the failed connection views
         /// </summary> 
@@ -194,7 +203,7 @@ namespace Assets.Scripts.UI.MainMenu.View
             UnpairButton.interactable = false;
             UnpairButton.gameObject.SetActive(false);
             PairButton.gameObject.SetActive(true);
-            PairButton.interactable = true;
+            SetPairButtonInteraction();
             FadeInFadeOutEffect.enabled = true;
             HaloForHaloman.enabled = true;
             HaloForHaloman.gameObject.SetActive(true);
@@ -251,6 +260,7 @@ namespace Assets.Scripts.UI.MainMenu.View
                 (Input.GetKey(KeyCode.RightShift) && Input.GetKeyDown(KeyCode.C)))
             {
                 BrainpackComPortInput.SetActive(!BrainpackComPortInput.activeInHierarchy);
+                PairButton.enabled = true;
             }
         }
     }

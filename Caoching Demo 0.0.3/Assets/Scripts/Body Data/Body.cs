@@ -17,9 +17,10 @@ using Assets.Scripts.Body_Pipeline.Analysis;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
-using Assets.Scripts.Body_Pipeline.Analysis.Torso;
+using Assets.Scripts.Body_Pipeline.Analysis.Trunk;
 using Assets.Scripts.Communication;
-using Assets.Scripts.Communication.Controller; 
+using Assets.Scripts.Communication.Controller;
+using Assets.Scripts.ErrorHandling;
 using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
 using Assets.Scripts.Frames_Recorder.FramesRecording; 
 
@@ -58,7 +59,7 @@ public class Body
     public RightArmAnalysis RightArmAnalysis;
     public LeftLegAnalysis LeftLegAnalysis;
     public RightLegAnalysis RightLegAnalysis;
-    public TorsoAnalysis TorsoAnalysis;
+    public TrunkAnalysis TorsoAnalysis;
 
     //view associated with this model
     private BodyView mView;
@@ -173,7 +174,7 @@ public class Body
     {
         //Get the list of segments from the bodystructuremap 
         List<BodyStructureMap.SegmentTypes> vSegmentList = BodyStructureMap.Instance.BodyToSegmentMap[vBodyType];
-        TorsoAnalysis vTorsoSegmentAnalysis = new TorsoAnalysis();
+        TrunkAnalysis vTorsoSegmentAnalysis = new TrunkAnalysis();
         vTorsoSegmentAnalysis.SegmentType = BodyStructureMap.SegmentTypes.SegmentType_Torso;
 
 
@@ -312,12 +313,33 @@ public class Body
         if (vBodyFrameRecording != null && vBodyFrameRecording.RecordingRawFramesCount > 0)
         {
             BodyFrame vBodyFrame = null;
-            vBodyFrame = RawFrameConverter.ConvertRawFrame(vBodyFrameRecording.GetBodyRawFrameAt(0));
 
-            //Setting the first frame as the initial frame
+            while (vBodyFrameRecording.RecordingRawFramesCount > 0)
+            {
+                try
+                {
+                    vBodyFrame = RawFrameConverter.ConvertRawFrame(vBodyFrameRecording.GetBodyRawFrameAt(0));
+                    break;
+                }
+                catch (IndexOutOfRangeException vE)
+                {
+                    vBodyFrameRecording.RemoveAt(0);
+                }
+                catch (FormatException vE)
+                {
+                    vBodyFrameRecording.RemoveAt(0);
+                }
+
+            }
+            if (vBodyFrameRecording.RecordingRawFramesCount == 0)
+            {
+                RecordingErrorHandlerManager.Instance.Notify("IssueLoading", vBodyFrameRecording);
+            }
+
+                //Setting the first frame as the initial frame
 
 
-            SetInitialFrame(vBodyFrame);
+                SetInitialFrame(vBodyFrame);
             BodyFrameBuffer vBuffer1 = new BodyFrameBuffer();
 
             // mBodyFrameThread = new BodyFrameThread(bodyFramesRec.RecordingRawFrames, vBuffer1);
@@ -426,7 +448,7 @@ public class Body
         //get the list of segments of the speicfied vBody
         List<BodySegment> vListBodySegments = vBody.BodySegments;
 
-         for (int i = 0; i < vListBodySegments.Count; i++)
+        for (int i = 0; i < vListBodySegments.Count; i++)
         { 
             //of the current body segment, get the appropriate subsegments
             List<BodyStructureMap.SensorPositions> vSensPosList =
@@ -445,8 +467,10 @@ public class Body
                     vFilteredDictionary.Add(vSensPosList[j], vTrackedMatrices);
                 }
             }  
+
             vListBodySegments[i].UpdateSegment(vFilteredDictionary); 
         }
+         
     }
     /**
     * GetTracking()

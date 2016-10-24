@@ -28,6 +28,7 @@ namespace Assets.Scripts.Communication.Communicators
             IPAddress vIpAddress = IPAddress.Parse("127.0.0.1");
             mEndPoint = new IPEndPoint(vIpAddress, 11000);
             mThread = new Thread(ThreadedJob);
+            mThread.IsBackground = true;
             mThread.Start();
             return true;
         }

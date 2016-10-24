@@ -27,15 +27,21 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         public List<Dictionary<FieldInfo, string>> SerializedList = new List<Dictionary<FieldInfo, string>>();
         private List<int> mFrameIndices = new List<int>();
         private List<float> mTimeStamps = new List<float>();
+                private List<BodyFrame> mBodyFrames = new List<BodyFrame>();
         private int[] mPoseSelectionIndicies;
         private int mFrameCount = -1;
-        private List<BodyFrame> mBodyFrames = new List<BodyFrame>();
+        private bool mRemovePreviousSerializedInfo;
+
         internal AnaylsisDataStoreSettings AnaylsisDataStoreSettings;
         public AnalysisDataStoreSerialization Serialization;
         private int mFieldInfoCount;
         private int mCounter;
         private int mSubCount = 0;
-        public bool Ignore { get; set; }
+
+        public void IgnorePreviousFrame(BodyFrame vNewBodyFrame)
+        {
+            mRemovePreviousSerializedInfo = true;
+        }
 
         public List<BodyFrame> BodyFrames
         {
@@ -118,6 +124,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             get { return mPoseSelectionIndicies; }
         }
 
+        public bool Ignore { get; set; }
+
 
         /// <summary>
         /// Removes an analysis field from being tracked
@@ -175,13 +183,24 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <param name="vKey"></param>
         public void UpdateSegmentFieldInfo(SegmentAnalysis vKey)
         {
+            
+            if (!mStorage.ContainsKey(vKey))
+            {
+                Debug.Log("no key found");
+                return;
+            }
             if (Ignore)
             {
                 return;
             }
-            if (!mStorage.ContainsKey(vKey))
+            //Remove the previous element if called for
+            if (mRemovePreviousSerializedInfo)
             {
-                Debug.Log("no key found");
+                mRemovePreviousSerializedInfo = false;
+                SerializedList.RemoveAt(SerializedList.Count - 1);
+                mTimeStamps.RemoveAt(mTimeStamps.Count - 1);
+                mBodyFrames.RemoveAt(mBodyFrames.Count - 1);
+                mFrameIndices.RemoveAt(mFrameIndices.Count - 1);
                 return;
             }
             var vFields = mStorage[vKey];
@@ -197,7 +216,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                 {
                     var vPassedInValue = (float)vKvPair.Key.GetValue(vKey);
                     vKvPair.Value.Add(vPassedInValue);
-                    vList.Add(vKvPair.Key, vPassedInValue + "");
+                    //avoid floating point rounding values
+                    string vRoundedValue =((double)vPassedInValue).ToString("F2");
+                    vList.Add(vKvPair.Key, vRoundedValue);
                     mCounter++;
 
                 }
@@ -265,8 +286,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         {
             mFrameCount = vRawFramesCount;
         }
-
-
-
+        
     }
 }

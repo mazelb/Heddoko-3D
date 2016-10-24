@@ -294,6 +294,7 @@ namespace Assets.Scripts.Communication
         {
             ClientSocketSettings = vSettings;
             mWorkerThread = new Thread(ReadServerSocket);
+            mWorkerThread.IsBackground = true;
             OpenSocket();
         }
         /// <summary>
