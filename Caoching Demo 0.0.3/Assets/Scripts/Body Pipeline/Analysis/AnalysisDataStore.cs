@@ -216,7 +216,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                 {
                     var vPassedInValue = (float)vKvPair.Key.GetValue(vKey);
                     vKvPair.Value.Add(vPassedInValue);
-                    vList.Add(vKvPair.Key, vPassedInValue + "");
+                    //avoid floating point rounding values
+                    string vRoundedValue =((double)vPassedInValue).ToString("F2");
+                    vList.Add(vKvPair.Key, vRoundedValue);
                     mCounter++;
 
                 }
