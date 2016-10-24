@@ -119,8 +119,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             BodyModel.View.BodyFrameUpdatedEvent -= CollectTimeStampData;
             RecordingPlayerView.PbControlPanel.FinalFramePositionEvent -= OnEnd;
             RecordingPlayerView.PbControlPanel.NewRecordingSelectedEvent -= OnEnd;
-            BodyModel.View.BodyFrameResetInitializedEvent -= SliderMaskContainerController.TPoseRequestedHandler;
-          //  BodyModel.View.BodyFrameResetInitializedEvent -= mDataStore.IgnorePreviousFrame;
+            BodyModel.View.BodyFrameResetInitializedEvent -= SliderMaskContainerController.TPoseRequestedHandler; 
 
             ExportDataButton.onClick.RemoveAllListeners();
             ExportDataButton.onClick.AddListener(OnStart);
