@@ -21,10 +21,10 @@ namespace Assets.Scripts.Communication.Communicators
 
         public event OnSuitDataReceivedEvent DataReceivedEvent;
         public event OnSuitConnectionEvent SuitConnectionEvent;
-        private object mLockIsConectedLock = new  object();
+        private object mLockIsConectedLock = new object();
         private Socket mSocket;
         public int Port = 8845;
-        
+        public IPAddress SuitIp;
 
         /// <summary>
         /// Is the suit currently connected?
@@ -49,16 +49,16 @@ namespace Assets.Scripts.Communication.Communicators
         /// </summary>
         public bool Start(string vIpEndPoint, int vPortNum = 8844)
         {
-          //  IPHostEntry vLocalHost = System.Net.Dns.GetHostEntry(System.Net.Dns.GetHostName());
             try
             {
-                //IPHostEntry vEndPointHostEntry = Dns.Resolve(vIpEndPoint);
-                IPAddress vIpAddress = IPAddress.Parse("127.0.0.1");// vEndPointHostEntry.AddressList[0];
-                IPEndPoint vRemoteEp = new IPEndPoint(vIpAddress, vPortNum);
+                Port = vPortNum;
+                IPAddress vIpAddress = IPAddress.Parse(vIpEndPoint);
+                SuitIp = vIpAddress;
+                IPEndPoint vRemoteEp = new IPEndPoint(vIpAddress, Port);
 
                 mSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 //begin to connect to the suit
-                mSocket.BeginConnect(vRemoteEp, new AsyncCallback(ConnectCallback), mSocket); 
+                mSocket.BeginConnect(vRemoteEp, new AsyncCallback(ConnectCallback), mSocket);
             }
             catch (ArgumentOutOfRangeException vException)
             {
@@ -112,6 +112,8 @@ namespace Assets.Scripts.Communication.Communicators
             {
                 string vMsg = "Line: 114  Error occured starting listener, check inner exception" + vE;
                 string vInnerExceptionMsg = "";
+                vMsg += vE.Message;
+                vMsg += "\r\n"+vE.GetBaseException();
                 if (vE.InnerException != null)
                 {
                     vInnerExceptionMsg = vE.InnerException.ToString();
@@ -167,15 +169,15 @@ namespace Assets.Scripts.Communication.Communicators
             }
             return true;
         }
-        public bool Send(byte[] vData )
+        public bool Send(byte[] vData)
         {
-      
-            if (mSocket != null )
+
+            if (mSocket != null)
             {
                 lock (mSocket)
                 {
                     mSocket.Send(vData, vData.Length, SocketFlags.None);
-                    
+
                 }
             }
             else

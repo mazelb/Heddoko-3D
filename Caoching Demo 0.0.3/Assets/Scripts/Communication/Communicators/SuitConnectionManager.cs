@@ -7,6 +7,7 @@
 // */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -14,23 +15,45 @@ using System.Text;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.UI.Settings;
 using heddoko;
-using HeddokoLib.heddokoProtobuff.Decoder; 
+using HeddokoLib.heddokoProtobuff.Decoder;
+using HeddokoLib.HeddokoDataStructs.Brainpack;
 using ProtoBuf;
 
 namespace Assets.Scripts.Communication.Communicators
 {
- 
+    public delegate void BrainpackStatusUpdated(Brainpack vBrainpack);
     /// <summary>
     /// A connection manager for the suit 
     /// </summary>
-    public class SuitConnectionManager 
+    public class SuitConnectionManager
     {
+        private Brainpack mBrainpack;
         private BLEConnection mBleConnection;
         private NetworkedSuitConnection mNetworkedSuitConnection;
         private ProtobuffDispatchRouter mDispatchRouter;
         private StreamToRawPacketDecoder mDecoder;
         private FirmwareUpdateManager mFirmwareUpdater;
         public OnSuitConnectionEvent NetworkSuitConnectionEstablishedEvent;
+        private event BrainpackStatusUpdated mBrainpackUpdateEvent;
+
+        /// <summary>
+        /// Adds an event handler to brainpack status update
+        /// </summary>
+        /// <param name="vBrainpackUpdatedHandle"></param>
+        public void AddBrainpackUpdatedHandler(BrainpackStatusUpdated vBrainpackUpdatedHandle)
+        {
+            mBrainpackUpdateEvent += vBrainpackUpdatedHandle;
+        }
+
+        /// <summary>
+        /// Adds an event handler to brainpack status update
+        /// </summary>
+        /// <param name="vBrainpackUpdatedHandle"></param>
+        public void RemoveBrainpackUpdatedHandler(BrainpackStatusUpdated vBrainpackUpdatedHandle)
+        {
+            mBrainpackUpdateEvent -= vBrainpackUpdatedHandle;
+        }
+
 
         private NetworkedSuitConnection SuitConnection
         {
@@ -40,7 +63,7 @@ namespace Assets.Scripts.Communication.Communicators
             }
         }
 
-     
+
         public bool IsConnectedToSuitViaNetwork
         {
             get { return SuitConnection.Connected; }
@@ -65,23 +88,45 @@ namespace Assets.Scripts.Communication.Communicators
         {
 
         }
- 
 
 
-        public SuitConnectionManager()
+        /// <summary>
+        /// Instantiates a suit connection manager for the specified brainpack
+        /// </summary>
+        /// <param name="vBrainpack"></param>
+        public SuitConnectionManager(Brainpack vBrainpack)
         {
+            mBrainpack = vBrainpack;
             mNetworkedSuitConnection = new NetworkedSuitConnection();
             mNetworkedSuitConnection.DataReceivedEvent += SuitDataReceivedHandler;
             mNetworkedSuitConnection.SuitConnectionEvent += NetworkedSuitConnected;
+            mDispatchRouter = new ProtobuffDispatchRouter();
             RegisterProtobufEvents();
+
         }
         /// <summary>
         /// 
         /// </summary>
         private void RegisterProtobufEvents()
         {
+            mDispatchRouter.Add(PacketType.StatusResponse, SetBrainpackStatus);
 
+        }
 
+        /// <summary>
+        /// Sets the status of the brainpack
+        /// </summary>
+        /// <param name="vVsender"></param>
+        /// <param name="vArgs"></param>
+        private void SetBrainpackStatus(object vVsender, object vArgs)
+        {
+            var vPacket = (Packet)vArgs;
+            var vBrainpackVersion = vPacket.firmwareVersion;
+            mBrainpack.Version = vBrainpackVersion;
+            if (mBrainpackUpdateEvent != null)
+            {
+                mBrainpackUpdateEvent(mBrainpack);
+            }
         }
 
         private void NetworkedSuitConnected()
@@ -90,7 +135,10 @@ namespace Assets.Scripts.Communication.Communicators
             {
                 NetworkSuitConnectionEstablishedEvent();
             }
+            //set up the end point of the brainpack
+            mBrainpack.Point = new IPEndPoint(mNetworkedSuitConnection.SuitIp, mNetworkedSuitConnection.Port);
         }
+
 
         /// <summary>
         /// Starts a connection to the suit via the given ip endpoint and its port number
@@ -134,10 +182,10 @@ namespace Assets.Scripts.Communication.Communicators
             //Start the firmware update manager before sending the request to update the firmware
             if (mFirmwareUpdater == null)
             {
-                mFirmwareUpdater = new FirmwareUpdateManager("C:\\downl\\server", vCurrentEndPoint ,ApplicationSettings.TftpPort);
+                mFirmwareUpdater = new FirmwareUpdateManager("C:\\downl\\server", vCurrentEndPoint, ApplicationSettings.TftpPort);
             }
             mNetworkedSuitConnection.Send(vRawBytes);
-           
+
 
         }
 
@@ -151,9 +199,20 @@ namespace Assets.Scripts.Communication.Communicators
             {
                 mFirmwareUpdater.CleanUp();
             }
-             
+
         }
 
-         
+
+        public void RequestSuitStatus()
+        {
+            Packet vPacket = new Packet();
+            vPacket.type = PacketType.StatusRequest;
+            MemoryStream vStream = new MemoryStream();
+            Serializer.Serialize(vStream, vPacket);
+            RawPacket vRawPacket = new RawPacket();
+            int vRawSize;
+            var vRawBytes = vRawPacket.GetRawPacketByteArray(out vRawSize, vStream);
+            mNetworkedSuitConnection.Send(vRawBytes);
+        }
     }
 }

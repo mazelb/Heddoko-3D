@@ -52,6 +52,7 @@
     <Compile Include="genericPatterns\IListenable.cs" />
     <Compile Include="genericPatterns\IReleasableResource.cs" />
     <Compile Include="genericPatterns\Pool.cs" />
+    <Compile Include="HeddokoDataStructs\Brainpack\Brainpack.cs" />
     <Compile Include="heddokoProtobuff\Decoder\BrainpackCommandEnum.cs" />
     <Compile Include="heddokoProtobuff\Decoder\RawPacketDecoder.cs" />
     <Compile Include="heddokoProtobuff\Decoder\ProtobuffDispatchRouter.cs" />
