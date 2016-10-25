@@ -68,6 +68,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 if (UploadErrorEvent != null)
                 {
+                    string vMessage = vE.Message;
                     ErrorUploadEventArgs vObj = new ErrorUploadEventArgs()
                     {
                         Object = (UploadableListItem)vItem,

@@ -6,6 +6,7 @@
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Assets.Scripts.Localization;
@@ -26,7 +27,7 @@ namespace Assets.Scripts.UI.RecordingLoading
     {
         private SdCardContentUploadController mCardContentUploadController;
         public RecordingListViewController RecordingListViewController;
-
+        private int mErrorCount;
         void Start()
         {
             mCardContentUploadController = new SdCardContentUploadController(UserSessionManager.Instance.UserProfile);
@@ -34,9 +35,10 @@ namespace Assets.Scripts.UI.RecordingLoading
             mCardContentUploadController.ContentsCompletedUploadEvent += ContentsCompletedUploadingEvent;
             mCardContentUploadController.SingleUploadEndEvent += x =>
             {
-               OutterThreadToUnityThreadIntermediary.QueueActionInUnity(RecordingListViewController.ResetDownloadList);
+                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(RecordingListViewController.ResetDownloadList);
             };
 
+            mCardContentUploadController.SingleUploadEndEvent += SingleRecordingUploaded;
             mCardContentUploadController.FoundFileListEvent += FoundFileListHandler;
             mCardContentUploadController.ProblemUploadingContentEvent += ProblemUploadEventHandler;
             mCardContentUploadController.DriveDisconnectedEvent += DriveDisconnectedHandler;
@@ -51,15 +53,23 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 OutterThreadToUnityThreadIntermediary.QueueActionInUnity(RecordingListViewController.ResetDownloadList);
             };
-
+            mCardContentUploadController.SingleUploadEndEvent -= SingleRecordingUploaded;
             mCardContentUploadController.FoundFileListEvent -= FoundFileListHandler;
             mCardContentUploadController.ProblemUploadingContentEvent -= ProblemUploadEventHandler;
             mCardContentUploadController.DriveDisconnectedEvent -= DriveDisconnectedHandler;
             mCardContentUploadController.UploadingStartEvent -= UploadingItemStarted;
+
             mCardContentUploadController.CleanUp();
         }
+
+        private void SingleRecordingUploaded(UploadableListItem vVitem)
+        {
+
+        }
+
         public void BeginUpload()
         {
+            mErrorCount = 0;
             var vMsg = LocalizationBinderContainer.GetString(KeyMessage.BeginUploadProcessMsg);
             Notify.Template("fade").Show(vMsg, 5f, sequenceType: NotifySequence.First);
             mCardContentUploadController.StartContentUpload();
@@ -70,7 +80,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         private void DriveDisconnectedHandler()
         {
             var vMsg = LocalizationBinderContainer.GetString(KeyMessage.DisconnectedSDCardWithLogMsg);
-            Notify.Template("fade").Show(vMsg, 5f, sequenceType: NotifySequence.First); 
+            Notify.Template("fade").Show(vMsg, 5f, sequenceType: NotifySequence.First);
         }
 
         void UploadingItemStarted(UploadableListItem vItem)
@@ -78,21 +88,46 @@ namespace Assets.Scripts.UI.RecordingLoading
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => Debug.Log("started uploading " + vItem.FileName));
 
         }
-        private void ProblemUploadEventHandler(ErrorUploadEventArgs vItem)
+        private void ProblemUploadEventHandler(List<ErrorUploadEventArgs> vErrorList)
         {
             //append to log file
-            for (int i = 0; i < vItem.ErrorCollection.Errors.Count; i++)
+            mErrorCount = vErrorList.Count;
+            string vMsg = "Error Uploading: ";
+            for (int i = 0; i < mErrorCount; i++)
             {
-                string vMsg = "Error Uploading: ";
-                if (vItem.Object != null)
+                var vItem = vErrorList[i];
+                try
                 {
-                    vMsg += vItem.Object.FileName;
+                    if (vItem.Object != null && vItem.Object.FileName != null)
+                    {
+                        vMsg += vItem.Object.FileName;
+                    }
+                    if (vItem.ErrorCollection != null && vItem.ErrorCollection.Errors[0] != null && vItem.ErrorCollection.Errors[0].Code != null)
+                    {
+                        vMsg += " ERROR CODE " + vItem.ErrorCollection.Errors[0].Code + ";";
+                    }
+                    if (vItem.ErrorCollection != null && vItem.ErrorCollection.Errors[0] != null && vItem.ErrorCollection.Errors[0].Message != null)
+                    {
+                        vMsg += " ERROR MSG " + vItem.ErrorCollection.Errors[0].Message + ";";
+                    }
+                    if (vItem.ExceptionArgs != null)
+                    {
+                        vMsg += " EXCEPTION " + vItem.ExceptionArgs;
+                    }
                 }
-                vMsg += " ERROR CODE "+ vItem.ErrorCollection.Errors[i].Code + " ERROR MSG "+ vItem.ErrorCollection.Errors[i].Message;
-                DebugLogger.Instance.LogMessage(LogType.Uploading, vMsg);
+                catch (Exception vE)
+
+                {
+                    UnityEngine.Debug.Log("HERE:  "+vE);
+                     
+                }
+               
+
+
             }
+            DebugLogger.Instance.LogMessage(LogType.Uploading, vMsg);
             string vErrMsg = LocalizationBinderContainer.GetString(KeyMessage.IssueUploadingRecordingsMsg) + DebugLogger.Instance.GetLogPath(LogType.Uploading);
-            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => Notify.Template("fade").Show(vErrMsg, customHideDelay:15f));
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => Notify.Template("fade").Show(vErrMsg, customHideDelay: 15f));
         }
 
         /// <summary>
@@ -103,12 +138,12 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
-             
+
                 int vCount = vFileInfos.Count;
 
                 if (vCount > 0)
                 {
-                    string vMsg = LocalizationBinderContainer.GetString(KeyMessage.NewRecFoundSyncBeginMsg, vCount > 1)  ; 
+                    string vMsg = LocalizationBinderContainer.GetString(KeyMessage.NewRecFoundSyncBeginMsg, vCount > 1);
                     var vTemp = Notify.Template("SyncNotification");
                     vTemp.gameObject.GetComponent<NotifyWithButtonExtension>()
                         .RegisterCallbackAndRemovePreviousCallback(BeginUpload);
@@ -121,7 +156,12 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
-                string vMsg = LocalizationBinderContainer.GetString(KeyMessage.UploadCompleteMsg) ;
+                //   string vMsg = LocalizationBinderContainer.GetString(KeyMessage.UploadCompleteMsg) ;
+                int vCount = mCardContentUploadController.FoundRecordingsList.Count;
+                int vFailCount = mErrorCount;
+                int vSucess = vCount - vFailCount;
+                string vMsg = String.Format("The total number of sucessful uploads is {0} and failed uploads {1}",
+                    vSucess, vFailCount);
                 Notify.Template("fade").Show(vMsg, 15f, sequenceType: NotifySequence.First);
             });
 

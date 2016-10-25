@@ -86,6 +86,16 @@ namespace Assets.Scripts.UI.RecordingLoading
                 {
                     vIndices.Push(i);
                 }
+                //remove directories
+                else
+                {
+                    FileAttributes vAttr = File.GetAttributes(vFileInfos[i].FullName);
+                    if ((vAttr & FileAttributes.Directory) == FileAttributes.Directory)
+                    {
+                        vIndices.Push(i);
+                    }
+                }
+            
             }
             while (vIndices.Count > 0)
             {
