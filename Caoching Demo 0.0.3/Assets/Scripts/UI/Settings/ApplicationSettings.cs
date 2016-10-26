@@ -33,7 +33,11 @@ namespace Assets.Scripts.UI.Settings
         {
             get
             {
- 
+                if (string.IsNullOrEmpty(sPreferedRecordingsFolder))
+                {
+                    DirectoryInfo vDirectoryInfo = new DirectoryInfo(Application.dataPath);
+                    sPreferedRecordingsFolder = vDirectoryInfo.Parent + "\\DemoRecordings";
+                }
                 return sPreferedRecordingsFolder;
             }
             set

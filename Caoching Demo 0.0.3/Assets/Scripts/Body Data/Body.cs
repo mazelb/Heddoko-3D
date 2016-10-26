@@ -23,6 +23,7 @@ using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Frames_Pipeline;
 using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
 using Assets.Scripts.Frames_Recorder.FramesRecording; 
+using Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion;
 
 /**
 * Body class 
@@ -44,6 +45,8 @@ public class Body
     public List<BodySegment> BodySegments = new List<BodySegment>();
     [SerializeField]
     public BodyStructureMap.BodyTypes BodyType = BodyStructureMap.BodyTypes.BodyType_FullBody;
+
+    public StaticROM RangeOfMotion = new StaticROM();
 
     [SerializeField]
     public BodyFrame CurrentBodyFrame;
@@ -187,6 +190,7 @@ public class Body
             //set the reference to the BodyFrameCalibrationContainer
             vSegment.BodyFrameCalibrationContainer = mBodyFrameCalibrationContainer;
             BodySegments.Add(vSegment);
+            vSegment.SetStaticROM(RangeOfMotion);
 
             vSegment.AssociatedView.transform.parent = View.transform;
 

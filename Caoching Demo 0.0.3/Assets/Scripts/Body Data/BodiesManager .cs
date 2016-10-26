@@ -57,7 +57,7 @@ public sealed class BodiesManager
     * CreateNewBody()
     * @brief Creates a new body and adds it to the list
     */
-    public void CreateNewBody(string vBodyUUID = "")
+    public Body CreateNewBody(string vBodyUUID = "")
     {
         Body vBody = new Body();
         if (!string.IsNullOrEmpty(vBodyUUID))
@@ -67,6 +67,7 @@ public sealed class BodiesManager
         bool vIsUnityThead = OutterThreadToUnityThreadIntermediary.InUnityThread();
         vBody.InitBody(vBodyUUID, vIsUnityThead);
         Bodies.Add(vBody);
+        return vBody;
     }
 
     /**

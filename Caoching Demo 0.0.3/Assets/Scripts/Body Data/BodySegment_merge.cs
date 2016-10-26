@@ -12,6 +12,7 @@
 #if CDRIN_BODY_SEGMENTS
 using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Data.CalibrationData;
+using Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion;
 using Assets.Scripts.Body_Data.view;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Body_Pipeline.Analysis;
@@ -27,6 +28,21 @@ using UnityEngine;
 public class BodyFlags
 {
     public BodyFlags() { }
+    public BodyFlags(bool setall)
+    {
+        IsTrackingHeight = setall;
+        IsTrackingGait = setall;
+        IsTrackingHips = setall;
+        IsProjectingXZ = setall;
+        IsProjectingXY = setall;
+        IsProjectingYZ = setall;
+        IsHipsEstimateForward = setall;
+        IsHipsEstimateUp = setall;
+        IsUsingInterpolation = setall;
+        IsCalibrating = setall;
+        IsAdjustingSegmentAxis = setall;
+        IsFusingSubSegments = setall;
+    }
 	private BodyFlags(BodyFlags aBF)
 	{
 		IsTrackingHeight = aBF.IsTrackingHeight;
@@ -107,6 +123,7 @@ public class BodySegment
 	///////////////************************************SIM
 #endif
 
+    private StaticROM mROM;
 
     //Is segment tracked (based on body type) 
     public bool IsTracked = true;
@@ -131,7 +148,7 @@ public class BodySegment
     // 	static public bool Flags.IsFusingSubSegments = true;
     // #endif
 
-    static public BodyFlags Flags = new BodyFlags();
+    static public BodyFlags Flags = new BodyFlags(false);
 
 
     public int ResetCounter = 0;
@@ -250,7 +267,10 @@ public class BodySegment
 	/// </summary>
 	/// <param name="vFrame"></param>
 	public void UpdateSensorsData(BodyFrame vFrame)
-	{ 
+	{
+        if (vFrame == null)
+            return;
+
 		//Update the delta time
 		CurrentFrameTime = vFrame.Timestamp;
 		DeltaTime = CurrentFrameTime - LastFrameTime;
@@ -296,6 +316,9 @@ public class BodySegment
 	/// <param name="vBodyCalibrationSetting">optional parameter to set the current calibration setting</param>
 	public void UpdateInitialSensorsData(BodyFrame vFrame)     ///*************************/////
 	{
+        if (vFrame == null)
+            return;
+
 		IsReseting = true;
 		List<BodyStructureMap.SensorPositions> vSensorPos = BodyStructureMap.Instance.SegmentToSensorPosMap[SegmentType];
 		foreach (BodyStructureMap.SensorPositions vPos in vSensorPos)
@@ -498,8 +521,12 @@ public class BodySegment
 			}
 
 		}
-		//Apply results
-		vUSSubsegment.UpdateSubsegmentOrientation(vTorsoQuat, 0, true);
+
+        mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine, vUSSubsegment, ref vTorsoQuat, true);
+        mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine, vLSSubsegment, ref vHipQuat);
+
+        //Apply results
+        vUSSubsegment.UpdateSubsegmentOrientation(vTorsoQuat, 0, true);
 		vLSSubsegment.UpdateSubsegmentOrientation(vHipQuat, 3, true);
 
 		////////////////////////////////////////////////////////  Analysis /////////////////////////////////////////////////////////////////////
@@ -838,7 +865,18 @@ public class BodySegment
 			}
 		}
 
-		vULSubsegment.UpdateSubsegmentOrientation(vNewThighQuat, 1, true);
+        if(vIsRight)
+        {
+            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_RightThigh, vULSubsegment, ref vNewThighQuat);
+            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_RightCalf, vLLSubsegment, ref vNewKneeQuat);
+        }                                                                                              
+        else
+        {
+            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh, vULSubsegment, ref vNewThighQuat);
+            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf, vLLSubsegment, ref vNewKneeQuat);
+        }
+
+        vULSubsegment.UpdateSubsegmentOrientation(vNewThighQuat, 1, true);
 		vLLSubsegment.UpdateSubsegmentOrientation(vNewKneeQuat, 1, true);
 	}
 
@@ -910,8 +948,10 @@ public class BodySegment
 			MapArmsOrientations(vUpArmInitialRawEuler, vUpArmCurrentRawEuler, vLoArmInitialRawEuler, vLoArmCurrentRawEuler, vTorsoInitialRawEuler, vTorsoCurrentRawEuler, vUASubsegment, vLASubsegment, vTorsoSubSegment, vHipsSubsegment);
 		}
 
-		////////////////////////////////////////////////////////  Analysis /////////////////////////////////////////////////////////////////////
-		vRightArmAnalysis.UpArTransform = vUASubsegment.AssociatedView.SubsegmentTransform;
+
+
+        ////////////////////////////////////////////////////////  Analysis /////////////////////////////////////////////////////////////////////
+        vRightArmAnalysis.UpArTransform = vUASubsegment.AssociatedView.SubsegmentTransform;
 		vRightArmAnalysis.LoArTransform = vLASubsegment.AssociatedView.SubsegmentTransform;
 		vRightArmAnalysis.DeltaTime = DeltaTime;
 		vRightArmAnalysis.ReferenceVector = Vector3.one;
@@ -1693,7 +1733,19 @@ public class BodySegment
 			}
 		}
 
-		aUASubsegment.UpdateSubsegmentOrientation(vNewUpArmQuat, 1, true);
+        if (aIsRight)
+        {
+            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_RightUpperArm, aUASubsegment, ref vNewUpArmQuat);
+            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm, aLASubsegment, ref vNewLoArmQuat);
+
+        } 
+        else
+        {
+            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm, aUASubsegment, ref vNewUpArmQuat);
+            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm, aLASubsegment, ref vNewLoArmQuat);
+        }
+
+        aUASubsegment.UpdateSubsegmentOrientation(vNewUpArmQuat, 1, true);
 		//aUASubsegment.UpdateSubsegmentOrientation(Quaternion.identity, 2, true);
 		aLASubsegment.UpdateSubsegmentOrientation(vNewLoArmQuat, 1, true);
 	}
@@ -1822,6 +1874,11 @@ public class BodySegment
 			vBodySubSegment.Value.ReleaseResources();
 		}
 	}
+
+    public void SetStaticROM(StaticROM segmentRom)
+    {
+        mROM = segmentRom;
+    }
 
 }
 

@@ -88,5 +88,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
         public AngleConstraint PitchMinMax = null;
         public AngleConstraint YawMinMax   = null;
         public AngleConstraint RollMinMax  = null;
+
+
     }
 }

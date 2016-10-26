@@ -42,6 +42,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         public PlaybackControlPanel PbControlPanel;
         private bool mIsInitialized = false;
         public Body CurrBody;
+        public Body CurrRef;
         public BodyFrameDataControl BodyFrameDataControl;
         public BodyFrameGraphControl FrameGraphControl;
         public Button LoadRecordingButton;
@@ -58,9 +59,14 @@ namespace Assets.Scripts.UI.RecordingLoading
             vLeftSide.Add(ControlPanelType.RecordingPlaybackControlPanel);
             List<ControlPanelType> vRightSide = new List<ControlPanelType>();
             vRightSide.Add(ControlPanelType.RecordingPlaybackControlPanel);
+
+            List<ControlPanelType> vcenter = new List<ControlPanelType>();
+            vcenter.Add(ControlPanelType.CameraControlPanel);
+
             ControlPanelTypeList.Add(vLeftSide);
             ControlPanelTypeList.Add(vRightSide);
-            
+            ControlPanelTypeList.Add(vcenter);
+
             SingleRecordingSelection.Instance.StartLoadingEvent += StartLoadHookFunc;
             SingleRecordingSelection.Instance.FinishLoadingEvent += StopLoadHookFunc;
             Hide();
@@ -96,8 +102,14 @@ namespace Assets.Scripts.UI.RecordingLoading
         public override void CreateDefaultLayout()
         {
             CurrentLayout = new Layout(LayoutType, this);
-            BodiesManager.Instance.CreateNewBody("Root");
-            CurrBody = BodiesManager.Instance.GetBodyFromUUID("Root");
+            CurrBody = BodiesManager.Instance.CreateNewBody("Root");
+
+            CurrRef = BodiesManager.Instance.CreateNewBody("Reference");
+            CurrBody.RangeOfMotion.Reference = CurrRef;
+            CurrRef.UpdateRenderedBody(Body_Data.View.RenderedBodyPool.RequestResource(CurrRef.BodyType, true));
+            CurrRef.RenderedBody.transform.Translate(2*Vector3.left);
+
+            //CurrBody = BodiesManager.Instance.GetBodyFromUUID("Root");
             mPanelNodes = CurrentLayout.ContainerStructure.RenderingPanelNodes;
             mPanelNodes[0].name = "Main";
             mPanelNodes[0].PanelSettings.Init(ControlPanelTypeList[0], true, CurrBody);
@@ -135,6 +147,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 BodySegment.Flags.IsUsingInterpolation = false;
                 CurrBody.View.ResetInitialFrame();
+                CurrRef.View.ResetInitialFrame();
             }
             catch
             {
@@ -160,6 +173,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 BodySegment.Flags.IsUsingInterpolation = false;
                 CurrBody.View.ResetInitialFrame();
+                CurrRef.View.ResetInitialFrame();
             }
             catch
             {
@@ -202,6 +216,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                             bool vPrev = BodySegment.Flags.IsUsingInterpolation;
                             BodySegment.Flags.IsUsingInterpolation = false;
                             CurrBody.View.ResetInitialFrame();
+                            CurrRef.View.ResetInitialFrame();
                             BodySegment.Flags.IsUsingInterpolation = vPrev;
                         }
                     });

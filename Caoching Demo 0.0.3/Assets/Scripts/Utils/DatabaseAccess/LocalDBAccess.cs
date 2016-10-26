@@ -39,21 +39,29 @@ namespace Assets.Scripts.Utils.DatabaseAccess
                 if (!Directory.Exists(vFilePath.Substring(0, vFilePath.LastIndexOf("/"))))
                     Directory.CreateDirectory(vFilePath);
 
-                if (File.Exists(vFilePath))
+                try
                 {
-                    mDbConnection = new SqliteConnection("URI=file:" + vFilePath);
-                    mDbConnection.Open();
-                    return true;
+                    if (File.Exists(vFilePath))
+                    {
+                        mDbConnection = new SqliteConnection("URI=file:" + vFilePath);
+                        mDbConnection.Open();
+                        return true;
+                    }
+                    else
+                    {
+                        //create the file
+                        SqliteConnection.CreateFile(vFilePath);
+                        mDbConnection = new SqliteConnection("URI=file:" + vFilePath);
+                        mDbConnection.Open();
+                        CreateTables();
+                        return true;
+                    }
                 }
-                else
+                catch (System.Exception ex)
                 {
-                    //create the file
-                    SqliteConnection.CreateFile(vFilePath);
-                    mDbConnection = new SqliteConnection("URI=file:" + vFilePath);
-                    mDbConnection.Open();
-                   CreateTables();
-                    return true;
+                    return false;
                 }
+               
             }
             return false;
 
@@ -179,7 +187,7 @@ namespace Assets.Scripts.Utils.DatabaseAccess
                     object vResWidthCheck = vDataReader.GetInt32(0);
                     object vResHeightCheck = vDataReader.GetInt32(1);
                     object vRecStrCheck = vDataReader.GetString(2);
-                  
+
 
                     if (vResWidthCheck is int)
                     {
@@ -196,13 +204,15 @@ namespace Assets.Scripts.Utils.DatabaseAccess
                         ApplicationSettings.PreferedRecordingsFolder = (string)vRecStrCheck;
                     }
 
-                 //break after first read
+                    //break after first read
                     break;
                 }
                 mDbConnection.Close();
-           
+
+                return true;
             }
-            return true;
+            else
+                return false;
         }
 
         /// <summary>
@@ -210,9 +220,12 @@ namespace Assets.Scripts.Utils.DatabaseAccess
         /// </summary>
         public void Dispose()
         {
-            Debug.Log("disposing");
-            mDbConnection.Close();
-           mDbConnection.Dispose();
+            if(mDbConnection != null)
+            {
+                Debug.Log("disposing");
+                mDbConnection.Close();
+                mDbConnection.Dispose();
+            }
         }
     }
 }

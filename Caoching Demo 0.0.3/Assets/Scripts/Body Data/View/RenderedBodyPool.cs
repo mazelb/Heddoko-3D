@@ -28,7 +28,7 @@ namespace Assets.Scripts.Body_Data.View
         /// </summary>
         /// <param name="vBodyTypes"></param>
         /// <returns></returns>
-        public static RenderedBody RequestResource(BodyStructureMap.BodyTypes vBodyTypes)
+        public static RenderedBody RequestResource(BodyStructureMap.BodyTypes vBodyTypes, bool reference = false)
         {
             if (sInitiated == false)
             {
@@ -56,7 +56,12 @@ namespace Assets.Scripts.Body_Data.View
             else
             {
                 //instantiate obj from resources
-                GameObject vObj = Resources.Load("Prefabs/Models/SegmentedModel") as GameObject;
+                GameObject vObj = null;
+                if(reference)
+                    vObj = Resources.Load("Prefabs/Models/reference") as GameObject;
+                else
+                    vObj = Resources.Load("Prefabs/Models/SegmentedModel") as GameObject;
+
                 GameObject vNew = GameObject.Instantiate(vObj);
                 vPooledBody = vNew.GetComponent<RenderedBody>();  
                 vPooledBody.gameObject.SetActive(false);
