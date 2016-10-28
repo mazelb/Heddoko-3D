@@ -5,13 +5,10 @@
 // * @date October 2016
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
-
-using System;
-using System.Collections.Generic;
+ 
 using System.IO;
 using System.Net;
-using System.Net.Sockets;
-using System.Text;
+using System.Net.Sockets; 
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.UI.Settings;
 using heddoko;
@@ -21,7 +18,7 @@ using ProtoBuf;
 
 namespace Assets.Scripts.Communication.Communicators
 {
-    public delegate void BrainpackStatusUpdated(Brainpack vBrainpack);
+    public delegate void BrainpackStatusUpdated(Packet vPacket);
     /// <summary>
     /// A connection manager for the suit 
     /// </summary>
@@ -74,13 +71,21 @@ namespace Assets.Scripts.Communication.Communicators
         /// </summary>
         /// <param name="vObject"></param>
         /// <param name="vData"></param>
-        private void SuitDataReceivedHandler(StateObject vObject, byte[] vData)
+        private void SuitDataReceivedHandler(StateObject vObject)
         {
-            //look for messages that request
-            string vMsg = Encoding.ASCII.GetString(vData);
-            if (vMsg.Contains("GetLatestFirmware<EOL>"))
+            var vRawPacket = vObject.OutgoingRawPacket;
+            MemoryStream vMemorySteam = new MemoryStream();
+            if (vRawPacket.Payload[0] == 0x04)
             {
-                FirmwareUpdateHandler();
+                //reset the stream pointer, write and reset.
+                vMemorySteam.Seek(0, SeekOrigin.Begin);
+                vMemorySteam.Write(vRawPacket.Payload, 1, (int)vRawPacket.PayloadSize - 1);
+                vMemorySteam.Seek(0, SeekOrigin.Begin);
+                Packet vProtoPacket = Serializer.Deserialize<Packet>(vMemorySteam);
+                var vMsgType = vProtoPacket.type;
+                mDispatchRouter.Process(vMsgType, vObject, vProtoPacket);
+
+
             }
         }
 
@@ -116,16 +121,16 @@ namespace Assets.Scripts.Communication.Communicators
         /// <summary>
         /// Sets the status of the brainpack
         /// </summary>
-        /// <param name="vVsender"></param>
+        /// <param name="vSender"></param>
         /// <param name="vArgs"></param>
-        private void SetBrainpackStatus(object vVsender, object vArgs)
+        private void SetBrainpackStatus(object vSender, object vArgs)
         {
             var vPacket = (Packet)vArgs;
             var vBrainpackVersion = vPacket.firmwareVersion;
             mBrainpack.Version = vBrainpackVersion;
             if (mBrainpackUpdateEvent != null)
             {
-                mBrainpackUpdateEvent(mBrainpack);
+                mBrainpackUpdateEvent(vPacket);
             }
         }
 

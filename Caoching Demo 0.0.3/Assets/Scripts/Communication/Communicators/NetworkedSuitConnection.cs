@@ -10,10 +10,13 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using Assets.Scripts.Communication.Controller;
+using HeddokoLib.heddokoProtobuff.Decoder;
+using UIWidgets;
 
 namespace Assets.Scripts.Communication.Communicators
 {
-    public delegate void OnSuitDataReceivedEvent(StateObject vObject, byte[] vData);
+    public delegate void OnSuitDataReceivedEvent(StateObject vObject);
+    
 
     public delegate void OnSuitConnectionEvent();
     public class NetworkedSuitConnection : IDisposable
@@ -88,14 +91,19 @@ namespace Assets.Scripts.Communication.Communicators
             //Register the suit's end point socket
             try
             {
-                Socket vCurrentSocket = (Socket)vAr.AsyncState;
+                Socket vSocket = (Socket)vAr.AsyncState;
                 //setup current socket
-                vCurrentSocket.EndConnect(vAr);
+
+                StateObject vSocketConnection = new StateObject();
+                vSocketConnection.Socket = vSocket;
+                vSocketConnection.Buffer = new byte[1024];
+                vSocket.EndConnect(vAr);
                 if (SuitConnectionEvent != null)
                 {
                     SuitConnectionEvent();
                 }
-                mSocket.BeginAccept(new AsyncCallback(AcceptCallback), mSocket);
+                vSocket.BeginReceive(vSocketConnection.Buffer, 0, vSocketConnection.Buffer.Length,
+                                   SocketFlags.None, new AsyncCallback(ReceiveCallback), vSocketConnection);
             }
             catch (SocketException vSocketException)
             {
@@ -113,7 +121,7 @@ namespace Assets.Scripts.Communication.Communicators
                 string vMsg = "Line: 114  Error occured starting listener, check inner exception" + vE;
                 string vInnerExceptionMsg = "";
                 vMsg += vE.Message;
-                vMsg += "\r\n"+vE.GetBaseException();
+                vMsg += "\r\n" + vE.GetBaseException();
                 if (vE.InnerException != null)
                 {
                     vInnerExceptionMsg = vE.InnerException.ToString();
@@ -202,11 +210,32 @@ namespace Assets.Scripts.Communication.Communicators
                 if (vBytesRead > 0)
                 {
                     //invoke data received event 
-                    if (DataReceivedEvent != null)
+
+                    //add the bytes to the state object's raw packet
+                     PacketStatus vPacketStatus  = PacketStatus.Processing;
+                    for (int i = 0; i < vIncomingConnection.Buffer.Length; i++)
                     {
-                        DataReceivedEvent(vIncomingConnection, vIncomingConnection.Buffer);
+                        vPacketStatus = vIncomingConnection.IncomingRawPacket.ProcessByte(vIncomingConnection.Buffer[i]);
+                        if (vPacketStatus == PacketStatus.PacketComplete)
+                        {
+                            if (DataReceivedEvent != null)
+                            {
+                                //todo: deep copy the packet, and send out an event that a raw packet
+                                //has been processed and is ready to be processed internally.
+                                //clear out buffer and state objects raw packet.
+                                RawPacket vDeepCopy = new RawPacket(vIncomingConnection.IncomingRawPacket);
+                                vIncomingConnection.OutgoingRawPacket = vDeepCopy;
+                                vIncomingConnection.IncomingRawPacket.Clear();
+                                DataReceivedEvent(vIncomingConnection);
+                                 
+                            }
+                        }
+                        if (vPacketStatus == PacketStatus.PacketError)
+                        {
+                            vIncomingConnection.IncomingRawPacket.Clear();
+                        }
                     }
-                    //get more data in case 
+                    
                     vIncomingConnection.Socket.BeginReceive(vIncomingConnection.Buffer, 0,
                         vIncomingConnection.Buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback),
                         vIncomingConnection);
@@ -215,7 +244,6 @@ namespace Assets.Scripts.Communication.Communicators
             catch (SocketException vE)
             {
                 CloseAndRemoveStateObject(vIncomingConnection);
-
             }
         }
 
@@ -252,8 +280,17 @@ namespace Assets.Scripts.Communication.Communicators
 
     public class StateObject
     {
+        public const int gPacketSize = 1024;
         public Socket Socket;
-        public byte[] Buffer;
+        public byte[] Buffer = new byte[gPacketSize];
+        public RawPacket IncomingRawPacket = new RawPacket();
+        public RawPacket OutgoingRawPacket = new RawPacket();
+
+        public void ClearIncomingData()
+        {
+            IncomingRawPacket.Clear();
+            Buffer = new byte[gPacketSize];
+        }
     }
 
 }

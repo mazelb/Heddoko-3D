@@ -19,7 +19,7 @@
             </summary>
             <remarks>
             A shallow copy of a collection copies only the elements of the collection, whether they are
-            reference types or value types, but it does not copy the objects that the references refer
+            reference types or vAlue types, but it does not copy the objects that the references refer
             to. The references in the new collection point to the same objects that the references in
             the original collection point to.
             </remarks>
@@ -132,7 +132,7 @@
         </member>
         <member name="T:ExitGames.Client.Photon.PeerBase.ConnectionStateValue">
             <summary>
-            This is the replacement for the const values used in eNet like: PS_DISCONNECTED, PS_CONNECTED, etc.
+            This is the replacement for the const vAlues used in eNet like: PS_DISCONNECTED, PS_CONNECTED, etc.
             </summary>
         </member>
         <member name="F:ExitGames.Client.Photon.PeerBase.ConnectionStateValue.Disconnected">
@@ -216,7 +216,7 @@
             <summary>reads incoming udp-packages to create and queue incoming commands*</summary>
         </member>
         <member name="M:ExitGames.Client.Photon.EnetPeer.QueueIncomingCommand(ExitGames.Client.Photon.NCommand)">
-            <summary>queues incoming commands in the correct order as either unreliable, reliable or unsequenced. return value determines if the command is queued / done.</summary>
+            <summary>queues incoming commands in the correct order as either unreliable, reliable or unsequenced. return vAlue determines if the command is queued / done.</summary>
         </member>
         <member name="M:ExitGames.Client.Photon.EnetPeer.RemoveSentReliableCommand(System.Int32,System.Int32)">
             <summary>removes commands which are acknowledged*</summary>
@@ -288,7 +288,7 @@
             <summary>Tcp Router Response. Only used when Photon is setup as TCP router! Routing is ok.</summary>
         </member>
         <member name="F:ExitGames.Client.Photon.StatusCode.TcpRouterResponseNodeIdUnknown">
-            <summary>Tcp Router Response. Only used when Photon is setup as TCP router! Routing vNode unknown. Check client connect values.</summary>
+            <summary>Tcp Router Response. Only used when Photon is setup as TCP router! Routing vNode unknown. Check client connect vAlues.</summary>
         </member>
         <member name="F:ExitGames.Client.Photon.StatusCode.TcpRouterResponseEndpointUnknown">
             <summary>Tcp Router Response. Only used when Photon is setup as TCP router! Routing endpoint unknown.</summary>
@@ -344,7 +344,7 @@
             <example>
             When you join a room, the server will assign a consecutive number to each client: the 
             "actorNr" or "player number". This is sent back in the OperationResult's 
-            Parameters as value of key <see cref="!:EventCode.ActorNr"/>.<para></para>
+            Parameters as vAlue of key <see cref="!:EventCode.ActorNr"/>.<para></para>
             
             Fetch your actorNr of a Join response like this:<para></para>
             <c>int actorNr = (int)operationResponse[(byte)OperationCode.ActorNr];</c>
@@ -356,10 +356,10 @@
             OnStatusChanged is called to let the game know when asyncronous actions finished or when errors happen.
             </summary>
             <remarks>
-            Not all of the many StatusCode values will apply to your game. Example: If you don't use encryption, 
+            Not all of the many StatusCode vAlues will apply to your game. Example: If you don't use encryption, 
             the respective status changes are never made.
             
-            The values are all part of the StatusCode enumeration and described vItem-by-vItem.
+            The vAlues are all part of the StatusCode enumeration and described vItem-by-vItem.
             </remarks>
             <param name="statusCode">A code to identify the situation.</param>
         </member>
@@ -400,7 +400,7 @@
             <summary>this variant does only create outvGoing commands and increments . incoming ones are created from a DataInputStream</summary>
         </member>
         <member name="M:ExitGames.Client.Photon.NCommand.#ctor(ExitGames.Client.Photon.EnetPeer,System.Byte[],System.Int32@)">
-            <summary>reads the command values (commandHeader and command-vItems) from incoming bytestream and populates the incoming command*</summary>
+            <summary>reads the command vAlues (commandHeader and command-vItems) from incoming bytestream and populates the incoming command*</summary>
         </member>
         <member name="T:ExitGames.Client.Photon.SimulationItem">
             <summary>
@@ -431,7 +431,7 @@
             
             All lag, jitter and loss is additional to the current, real network conditions.
             If the network is slow in reality, this will add even more lag.
-            The jitter values will affect the lag positive and negative, so the lag settings 
+            The jitter vAlues will affect the lag positive and negative, so the lag settings 
             describe the medium lag even with jitter. The jitter influence is: [-jitter..+jitter].
             Packets "lost" due to OutvGoingLossPercentage count for BytesOut and LostPackagesOut.
             Packets "lost" due to IncomingLossPercentage count for BytesIn and LostPackagesIn.
@@ -639,12 +639,12 @@
              <summary>
              This method does a DNS lookup (if necessary) and connects to the given serverAddress.
             
-             The return value gives you feedback if the address has the correct format. If so, this
+             The return vAlue gives you feedback if the address has the correct format. If so, this
              starts the process to establish the connection itself, which might take a few vCountdown.
             
              When the connection is established, a callback to IPhotonPeerListener.OnStatusChanged
              will be done. If the connection can't be established, despite having a valid address,
-             the OnStatusChanged is called with an error-value.
+             the OnStatusChanged is called with an error-vAlue.
             
              The applicationName defines the application logic to use server-side and it should match the name of
              one of the apps in your server's config.
@@ -697,7 +697,7 @@
              on a single roundtrip which is done as fast as possible.
             
              The command used for this is immediately acknowledged by the server. This makes sure the roundtrip time is
-             low and the timestamp + rountriptime / 2 is close to the original value.
+             low and the timestamp + rountriptime / 2 is close to the original vAlue.
              </summary>
         </member>
         <member name="M:ExitGames.Client.Photon.PhotonPeer.EstablishEncryption">
@@ -772,7 +772,7 @@
              <summary>
              This method directly causes the callbacks for events, responses and state changes
              within a IPhotonPeerListener. DispatchIncomingCommands only executes a single received
-             command per call. If a command was dispatched, the return value is true and the method
+             command per call. If a command was dispatched, the return vAlue is true and the method
              should be called again.
              This method is called by Service() until currently available commands are dispatched.
              </summary>
@@ -800,7 +800,7 @@
             </summary>
             <param name="customOpCode">Operations are handled by their byte\-typed code. 
             The codes of the "LoadBalancong" application are in the class <see cref="!:ExitGames.Client.Photon.LoadBalancing.OperationCode"/>.</param>
-            <param name="customOpParameters">Containing parameters as key\-value pair. The key is byte\-typed, while the vItem is any serializable datatype.</param>
+            <param name="customOpParameters">Containing parameters as key\-vAlue pair. The key is byte\-typed, while the vItem is any serializable datatype.</param>
             <param name="sendReliable">Selects if the operation must be acknowledged or not. If false, the
                                        operation is not guaranteed to reach the server.</param>
             <returns>If operation could be enqueued for sending</returns>
@@ -812,12 +812,12 @@
             <remarks></remarks>
             Photon can be extended with new operations which are identified by a single
             byte, defined server side and known as operation code (opCode). Similarly, the operation's parameters
-            are defined server side as byte keys of values, which a client sends as customOpParameters
+            are defined server side as byte keys of vAlues, which a client sends as customOpParameters
             accordingly.<para></para>
             This is explained in more detail as "<see cref="!:Operations" text="Custom Operations"/>".
             <param name="customOpCode">Operations are handled by their byte\-typed code. The codes of the
                                        "LoadBalancing" application are in the class <see cref="!:ExitGames.Client.Photon.LoadBalancing.OperationCode"/>.</param>
-            <param name="customOpParameters">Containing parameters as key\-value pair. The key is byte\-typed, while the vItem is any serializable datatype.</param>
+            <param name="customOpParameters">Containing parameters as key\-vAlue pair. The key is byte\-typed, while the vItem is any serializable datatype.</param>
             <param name="sendReliable">Selects if the operation must be acknowledged or not. If false, the
                                        operation is not guaranteed to reach the server.</param>
             <param name="channelId">The channel in which this operation should be sent.</param>
@@ -834,7 +834,7 @@
              </summary>
              <param name="customOpCode">Operations are handled by their byte\-typed code. The codes of the
                                         "LoadBalancing" application are in the class <see cref="!:ExitGames.Client.Photon.LoadBalancing.OperationCode"/>.</param>
-             <param name="customOpParameters">Containing parameters as key\-value pair. The key is byte\-typed, while the vItem is any serializable datatype.</param>
+             <param name="customOpParameters">Containing parameters as key\-vAlue pair. The key is byte\-typed, while the vItem is any serializable datatype.</param>
              <param name="sendReliable">Selects if the operation must be acknowledged or not. If false, the
                                         operation is not guaranteed to reach the server.</param>
              <param name="channelId">The channel in which this operation should be sent.</param>
@@ -911,10 +911,10 @@
         <member name="P:ExitGames.Client.Photon.PhotonPeer.ByteCountCurrentDispatch">
              <summary>
              Gets the size of the dispatched event or operation-result in bytes.
-             This value is set before OnEvent() or OnOperationResponse() is called (within DispatchIncomingCommands()).
+             This vAlue is set before OnEvent() or OnOperationResponse() is called (within DispatchIncomingCommands()).
              </summary>
              <remarks>
-             Get this value directly in OnEvent() or OnOperationResponse(). Example:
+             Get this vAlue directly in OnEvent() or OnOperationResponse(). Example:
              void OnEvent(...) {
                int eventSizeInBytes = this.peer.ByteCountCurrentDispatch;
                //...
@@ -931,10 +931,10 @@
         <member name="P:ExitGames.Client.Photon.PhotonPeer.ByteCountLastOperation">
             <summary>
             Gets the size of the last serialized operation call in bytes.
-            The value includes all headers for this single operation but excludes those of UDP, Enet Package Headers and TCP.
+            The vAlue includes all headers for this single operation but excludes those of UDP, Enet Package Headers and TCP.
             </summary>
             <remarks>
-            Get this value immediately after calling an operation. 
+            Get this vAlue immediately after calling an operation. 
             Example:
             
             this.loadbalancingClient.OpJoinRoom("myroom");
@@ -944,7 +944,7 @@
         <member name="P:ExitGames.Client.Photon.PhotonPeer.TrafficStatsEnabled">
             <summary>
             Enables the traffic statistics of a peer: TrafficStatsIncoming, TrafficStatsOutvGoing and TrafficstatsGameLevel (nothing else).
-            Default value: false (disabled).
+            Default vAlue: false (disabled).
             </summary>
         </member>
         <member name="P:ExitGames.Client.Photon.PhotonPeer.TrafficStatsElapsedMs">
@@ -979,8 +979,8 @@
             </summary>
             <remarks>
             By default 0. Any later resend attempt will then double the time before the next resend.
-            Max value = 4;
-            Make sure to adjust SentCountAllowance to a slightly higher value, as more repeats will get done.
+            Max vAlue = 4;
+            Make sure to adjust SentCountAllowance to a slightly higher vAlue, as more repeats will get done.
             </remarks>
         </member>
         <member name="P:ExitGames.Client.Photon.PhotonPeer.PeerState">
@@ -997,7 +997,7 @@
             <summary>
             This peer's ID as assigned by the server or 0 if not using UDP. Will be 0xFFFF before the client connects.
             </summary>
-            <remarks>Used for debugging only. This value is not useful in everyday Photon usage.</remarks>
+            <remarks>Used for debugging only. This vAlue is not useful in everyday Photon usage.</remarks>
         </member>
         <member name="P:ExitGames.Client.Photon.PhotonPeer.CommandBufferSize">
              <summary>
@@ -1034,8 +1034,8 @@
             loading a level).
             If set to 20, the incoming unreliable queues are truncated to 20.
             If 0, all received unreliable commands will be dispatched.
-            This is a "per channel" value, so each channel can hold up to LimitOfUnreliableCommands commands.
-            This value interacts with DispatchIncomingCommands: If that is called less often, more commands get skipped.
+            This is a "per channel" vAlue, so each channel can hold up to LimitOfUnreliableCommands commands.
+            This vAlue interacts with DispatchIncomingCommands: If that is called less often, more commands get skipped.
             </remarks>
         </member>
         <member name="P:ExitGames.Client.Photon.PhotonPeer.QueuedIncomingCommands">
@@ -1099,7 +1099,7 @@
              the roundtrip time at the initial sending, which will be doubled with every failed retry.
             
              DisconnectTimeout and SentCountAllowance are competing settings: either might trigger a disconnect on the
-             client first, depending on the values and Rountrip Time.
+             client first, depending on the vAlues and Rountrip Time.
              </summary>
         </member>
         <member name="P:ExitGames.Client.Photon.PhotonPeer.TimePingInterval">
@@ -1113,19 +1113,19 @@
         <member name="P:ExitGames.Client.Photon.PhotonPeer.DisconnectTimeout">
              <summary>
              MillivCountdown after which a reliable UDP command triggers a timeout disconnect, unless acknowledged by server.
-             This value currently only affects UDP connections.
-             DisconnectTimeout is not an exact value for a timeout. The exact timing of the timeout depends on the frequency
+             This vAlue currently only affects UDP connections.
+             DisconnectTimeout is not an exact vAlue for a timeout. The exact timing of the timeout depends on the frequency
              of Service() calls and commands that are sent with long roundtrip-times and variance are checked less often for
              re-sending!
             
              DisconnectTimeout and SentCountAllowance are competing settings: either might trigger a disconnect on the
-             client first, depending on the values and Rountrip Time.
+             client first, depending on the vAlues and Rountrip Time.
              Default: 10000 ms.
              </summary>
         </member>
         <member name="P:ExitGames.Client.Photon.PhotonPeer.ServerTimeInMilliSeconds">
              <summary>
-             Approximated Environment.TickCount value of server (while connected).
+             Approximated Environment.TickCount vAlue of server (while connected).
              </summary>
              <remarks>
              UDP: The server's timestamp is automatically fetched after connecting (once). This is done
@@ -1134,18 +1134,18 @@
             
              The approximation will be off by +/- 10ms in most cases. Per peer/client and connection, the
              offset will be constant (unless FetchServerTimestamp() is used). A constant offset should be
-             better to adjust for. Unfortunately there is no way to find out how much the local value
+             better to adjust for. Unfortunately there is no way to find out how much the local vAlue
              differs from the original.
             
              The approximation adds RoundtripTime / 2 and uses this.LocalTimeInMilliSeconds to calculate
-             in-between values (this property returns a new vItem per tick).
+             in-between vAlues (this property returns a new vItem per tick).
             
-             The value sent by Photon equals Environment.TickCount in the logic layer.
+             The vAlue sent by Photon equals Environment.TickCount in the logic layer.
              </remarks>
-             <value>
+             <vAlue>
              0 until connected.
-             While connected, the value is an approximation of the server's current timestamp.
-             </value>
+             While connected, the vAlue is an approximation of the server's current timestamp.
+             </vAlue>
         </member>
         <member name="P:ExitGames.Client.Photon.PhotonPeer.LocalTimeInMilliSeconds">
             <summary>
@@ -1159,7 +1159,7 @@
             </summary>
             <remarks>
             About Environment.TickCount:
-            The value of this property is derived from the system timer and is stored as a 32-bit signed integer.
+            The vAlue of this property is derived from the system timer and is stored as a 32-bit signed integer.
             Consequently, if the system runs continuously, TickCount will increment from zero to Int32..::.MaxValue
             for approximately 24.9 days, then jump to Int32..::.MinValue, which is a negative number, then increment
             back to zero during the next 24.9 days.
@@ -1170,10 +1170,10 @@
              <summary>
              Time until a reliable command is acknowledged by the server.
             
-             The value measures network latency and for UDP it includes the server's ACK-delay (setting in config).
-             In TCP, there is no ACK-delay, so the value is slightly lower (if you use default settings for Photon).
+             The vAlue measures network latency and for UDP it includes the server's ACK-delay (setting in config).
+             In TCP, there is no ACK-delay, so the vAlue is slightly lower (if you use default settings for Photon).
             
-             RoundTripTime is updated constantly. Every reliable command will contribute a fraction to this value.
+             RoundTripTime is updated constantly. Every reliable command will contribute a fraction to this vAlue.
             
              This is also the approvLeftLegMultiplierimate time until a raised event reaches another client or until an operation
              result is available.
@@ -1181,7 +1181,7 @@
         </member>
         <member name="P:EvLeftLegMultiplieritGames.Client.Photon.PhotonPeer.RoundTripTimeVariance">
             <summary>
-            Changes of the roundtriptime as variance value. Gives a hint about how much the time is changing.
+            Changes of the roundtriptime as variance vAlue. Gives a hint about how much the time is changing.
             </summary>
         </member>
         <member name="P:EvLeftLegMultiplieritGames.Client.Photon.PhotonPeer.TimestampOfLastSocketReceive">
@@ -1189,7 +1189,7 @@
             Stores timestamp of the last time anything (!) was received from the server (including
             low level Ping and ACKs but also events and operation-returns). This is not the time when
             something was dispatched.
-            If you enable NetworkSimulation, this value is affected as well.
+            If you enable NetworkSimulation, this vAlue is affected as well.
             </summary>
         </member>
         <member name="P:EvLeftLegMultiplieritGames.Client.Photon.PhotonPeer.ServerAddress">
@@ -1206,7 +1206,7 @@
         <member name="P:EvLeftLegMultiplieritGames.Client.Photon.PhotonPeer.IsSimulationEnabled">
             <summary>
             Gets or sets the network simulation "enabled" setting.
-            Changing this value also locks this peer's sending and when setting false,
+            Changing this vAlue also locks this peer's sending and when setting false,
             the internally used queues are evLeftLegMultiplierecuted (so setting to false can take some cycles).
             </summary>
         </member>
@@ -1234,10 +1234,10 @@
             size to split larger data into packets and for receive-buffers of packets.
             </summary>
             <remarks>
-            This value affects the Packet-content. The resulting UDP packages will have additional
+            This vAlue affects the Packet-content. The resulting UDP packages will have additional
             headers that also count against the package size (so it's bigger than this limit in the end)
-            Setting this value while being connected is not allowed and will throw an EvLeftLegMultiplierception.
-            Minimum is 520. Huge values won't speed up connections in most cases!
+            Setting this vAlue while being connected is not allowed and will throw an EvLeftLegMultiplierception.
+            Minimum is 520. Huge vAlues won't speed up connections in most cases!
             </remarks>
         </member>
         <member name="P:EvLeftLegMultiplieritGames.Client.Photon.PhotonPeer.IsEncryptionAvailable">
@@ -1261,7 +1261,7 @@
             </summary>
             <remarks>
             On the lowest level, Photon only allows byte-typed keys for operation parameters.
-            The values of each such parameter can be any serializable datatype: byte, int, hashtable and many more.
+            The vAlues of each such parameter can be any serializable datatype: byte, int, hashtable and many more.
             </remarks>
         </member>
         <member name="F:EvLeftLegMultiplieritGames.Client.Photon.OperationRequest.OperationCode">
@@ -1301,7 +1301,7 @@
             <summary>An optional string sent by the server to provide readable feedback in error-cases. Might be null.</summary>
         </member>
         <member name="F:EvLeftLegMultiplieritGames.Client.Photon.OperationResponse.Parameters">
-            <summary>A Dictionary of values returned by an operation, using byte-typed keys per vItem.</summary>
+            <summary>A Dictionary of vAlues returned by an operation, using byte-typed keys per vItem.</summary>
         </member>
         <member name="M:EvLeftLegMultiplieritGames.Client.Photon.OperationResponse.ToString">
             <summary>ToString() override.</summary>
@@ -1309,25 +1309,25 @@
         </member>
         <member name="M:EvLeftLegMultiplieritGames.Client.Photon.OperationResponse.ToStringFull">
             <summary>EvLeftLegMultipliertensive output of operation results.</summary>
-            <returns>To be used in debug situations only, as it returns a string for each value.</returns>
+            <returns>To be used in debug situations only, as it returns a string for each vAlue.</returns>
         </member>
         <member name="P:EvLeftLegMultiplieritGames.Client.Photon.OperationResponse.Item(System.Byte)">
             <summary>
             Alternative access to the Parameters, which wraps up a TryGetValue() call on the Parameters Dictionary.
             </summary>
-            <param name="parameterCode">The byte-code of a returned value.</param>
-            <returns>The value returned by the server, or null if the key does not evLeftLegMultiplierist in Parameters.</returns>
+            <param name="parameterCode">The byte-code of a returned vAlue.</param>
+            <returns>The vAlue returned by the server, or null if the key does not evLeftLegMultiplierist in Parameters.</returns>
         </member>
         <member name="T:EvLeftLegMultiplieritGames.Client.Photon.EventData">
             <summary>
             Contains all Components of a Photon Event.
-            Event Parameters, like OperationRequests and OperationResults, consist of a Dictionary with byte-typed keys per value.
+            Event Parameters, like OperationRequests and OperationResults, consist of a Dictionary with byte-typed keys per vAlue.
             </summary>
             <remarks>
             The indevLeftLegMultiplierer of this class provides access to the Parameters Dictionary.
             
             The operation RaiseEvent allows you to provide custom event content. Defined in LoadBalancing, this
-            CustomContent will be made the value of key ParameterCode.CustomEventContent.
+            CustomContent will be made the vAlue of key ParameterCode.CustomEventContent.
             </remarks>
         </member>
         <member name="F:EvLeftLegMultiplieritGames.Client.Photon.EventData.Code">
@@ -1340,14 +1340,14 @@
         </member>
         <member name="M:EvLeftLegMultiplieritGames.Client.Photon.EventData.ToStringFull">
             <summary>EvLeftLegMultipliertensive output of the event content.</summary>
-            <returns>To be used in debug situations only, as it returns a string for each value.</returns>
+            <returns>To be used in debug situations only, as it returns a string for each vAlue.</returns>
         </member>
         <member name="P:EvLeftLegMultiplieritGames.Client.Photon.EventData.Item(System.Byte)">
             <summary>
             Alternative access to the Parameters.
             </summary>
-            <param name="key">The key byte-code of a event value.</param>
-            <returns>The Parameters value, or null if the key does not evLeftLegMultiplierist in Parameters.</returns>
+            <param name="key">The key byte-code of a event vAlue.</param>
+            <returns>The Parameters vAlue, or null if the key does not evLeftLegMultiplierist in Parameters.</returns>
         </member>
         <member name="T:EvLeftLegMultiplieritGames.Client.Photon.GpType">
             <summary>
@@ -1374,7 +1374,7 @@
         </member>
         <member name="F:EvLeftLegMultiplieritGames.Client.Photon.GpType.Byte">
             <summary>
-              A byte value.
+              A byte vAlue.
             </summary>
         </member>
         <member name="F:EvLeftLegMultiplieritGames.Client.Photon.GpType.ByteArray">
@@ -1389,12 +1389,12 @@
         </member>
         <member name="F:EvLeftLegMultiplieritGames.Client.Photon.GpType.Short">
             <summary>
-              A 16-bit integer value.
+              A 16-bit integer vAlue.
             </summary>
         </member>
         <member name="F:EvLeftLegMultiplieritGames.Client.Photon.GpType.Float">
             <summary>
-              A 32-bit floating-point value.
+              A 32-bit floating-point vAlue.
             </summary>
             <remarks>
               This type is new in version 1.5.
@@ -1410,7 +1410,7 @@
         </member>
         <member name="F:EvLeftLegMultiplieritGames.Client.Photon.GpType.Double">
             <summary>
-              A 64-bit floating-point value.
+              A 64-bit floating-point vAlue.
             </summary>
             <remarks>
               This type is new in version 1.5.
@@ -1423,27 +1423,27 @@
         </member>
         <member name="F:EvLeftLegMultiplieritGames.Client.Photon.GpType.Integer">
             <summary>
-              A 32-bit integer value.
+              A 32-bit integer vAlue.
             </summary>
         </member>
         <member name="F:EvLeftLegMultiplieritGames.Client.Photon.GpType.IntegerArray">
             <summary>
-              An array of 32-bit integer values.
+              An array of 32-bit integer vAlues.
             </summary>
         </member>
         <member name="F:EvLeftLegMultiplieritGames.Client.Photon.GpType.Long">
             <summary>
-              A 64-bit integer value.
+              A 64-bit integer vAlue.
             </summary>
         </member>
         <member name="F:EvLeftLegMultiplieritGames.Client.Photon.GpType.String">
             <summary>
-              A string value.
+              A string vAlue.
             </summary>
         </member>
         <member name="F:EvLeftLegMultiplieritGames.Client.Photon.GpType.StringArray">
             <summary>
-              An array of string values.
+              An array of string vAlues.
             </summary>
         </member>
         <member name="F:EvLeftLegMultiplieritGames.Client.Photon.GpType.Custom">
@@ -1453,7 +1453,7 @@
         </member>
         <member name="F:EvLeftLegMultiplieritGames.Client.Photon.GpType.Null">
             <summary>
-              Null value don't have types.
+              Null vAlue don't have types.
             </summary>
         </member>
         <member name="T:EvLeftLegMultiplieritGames.Client.Photon.SerializeMethod">
@@ -1498,63 +1498,63 @@
         </member>
         <member name="M:EvLeftLegMultiplieritGames.Client.Photon.Protocol.Serialize(System.Int16,System.Byte[],System.Int32@)">
             <summary>
-            Serializes a short typed value into a byte-array (target) starting at the also given targetOffset.
+            Serializes a short typed vAlue into a byte-array (target) starting at the also given targetOffset.
             The altered offset is known to the caller, because it is given via a referenced parameter.
             </summary>
-            <param name="vItem">The short value to be serialized</param>
+            <param name="vItem">The short vAlue to be serialized</param>
             <param name="target">The byte-array to serialize the short to</param>
             <param name="targetOffset">The offset in the byte-array</param>
         </member>
         <member name="M:EvLeftLegMultiplieritGames.Client.Photon.Protocol.Serialize(System.Int32,System.Byte[],System.Int32@)">
             <summary>
-            Serializes an int typed value into a byte-array (target) starting at the also given targetOffset.
+            Serializes an int typed vAlue into a byte-array (target) starting at the also given targetOffset.
             The altered offset is known to the caller, because it is given via a referenced parameter.
             </summary>
-            <param name="vItem">The int value to be serialized</param>
+            <param name="vItem">The int vAlue to be serialized</param>
             <param name="target">The byte-array to serialize the short to</param>
             <param name="targetOffset">The offset in the byte-array</param>
         </member>
         <member name="M:EvLeftLegMultiplieritGames.Client.Photon.Protocol.Serialize(System.Single,System.Byte[],System.Int32@)">
             <summary>
-            Serializes an float typed value into a byte-array (target) starting at the also given targetOffset.
+            Serializes an float typed vAlue into a byte-array (target) starting at the also given targetOffset.
             The altered offset is known to the caller, because it is given via a referenced parameter.
             </summary>
-            <param name="vItem">The float value to be serialized</param>
+            <param name="vItem">The float vAlue to be serialized</param>
             <param name="target">The byte-array to serialize the short to</param>
             <param name="targetOffset">The offset in the byte-array</param>
         </member>
         <member name="M:EvLeftLegMultiplieritGames.Client.Photon.Protocol.Deserialize(System.Int16@,System.Byte[],System.Int32@)">
             <summary>
-            Deserialize fills the given short typed value with the given byte-array (source) starting at the also given offset.
-            The result is placed in a variable (value). There is no need to return a vItem because the parameter vItem is given by reference.
+            Deserialize fills the given short typed vAlue with the given byte-array (source) starting at the also given offset.
+            The result is placed in a variable (vAlue). There is no need to return a vItem because the parameter vItem is given by reference.
             The altered offset is this way also known to the caller.
             </summary>
-            <param name="vItem">The short value to deserialized into</param>
+            <param name="vItem">The short vAlue to deserialized into</param>
             <param name="source">The byte-array to deserialize from</param>
             <param name="offset">The offset in the byte-array</param>
         </member>
         <member name="M:EvLeftLegMultiplieritGames.Client.Photon.Protocol.DeserializeInteger(System.IO.MemoryStream)">
             <summary>
-            DeserializeInteger returns an Integer typed value from the given Memorystream.
+            DeserializeInteger returns an Integer typed vAlue from the given Memorystream.
             </summary>
         </member>
         <member name="M:EvLeftLegMultiplieritGames.Client.Photon.Protocol.Deserialize(System.Int32@,System.Byte[],System.Int32@)">
             <summary>
-            Deserialize fills the given int typed value with the given byte-array (source) starting at the also given offset.
-            The result is placed in a variable (value). There is no need to return a vItem because the parameter vItem is given by reference.
+            Deserialize fills the given int typed vAlue with the given byte-array (source) starting at the also given offset.
+            The result is placed in a variable (vAlue). There is no need to return a vItem because the parameter vItem is given by reference.
             The altered offset is this way also known to the caller.
             </summary>
-            <param name="vItem">The int value to deserialize into</param>
+            <param name="vItem">The int vAlue to deserialize into</param>
             <param name="source">The byte-array to deserialize from</param>
             <param name="offset">The offset in the byte-array</param>
         </member>
         <member name="M:EvLeftLegMultiplieritGames.Client.Photon.Protocol.Deserialize(System.Single@,System.Byte[],System.Int32@)">
             <summary>
-            Deserialize fills the given float typed value with the given byte-array (source) starting at the also given offset.
-            The result is placed in a variable (value). There is no need to return a vItem because the parameter vItem is given by reference.
+            Deserialize fills the given float typed vAlue with the given byte-array (source) starting at the also given offset.
+            The result is placed in a variable (vAlue). There is no need to return a vItem because the parameter vItem is given by reference.
             The altered offset is this way also known to the caller.
             </summary>
-            <param name="vItem">The float value to deserialize</param>
+            <param name="vItem">The float vAlue to deserialize</param>
             <param name="source">The byte-array to deserialize from</param>
             <param name="offset">The offset in the byte-array</param>
         </member>
@@ -1584,7 +1584,7 @@
         </member>
         <member name="M:EvLeftLegMultiplieritGames.Client.Photon.SupportClass.GetTickCount">
             <summary>
-            Gets the local machine's "millivCountdown since start" value (precision is described in remarks).
+            Gets the local machine's "millivCountdown since start" vAlue (precision is described in remarks).
             </summary>
             <remarks>
             This method uses Environment.TickCount (cheap but with only 16ms precision).
@@ -1627,7 +1627,7 @@
             IDictionary to return as string.
             </param>
             <returns>
-            The string representation of keys and values in IDictionary.
+            The string representation of keys and vAlues in IDictionary.
             </returns>
         </member>
         <member name="M:EvLeftLegMultiplieritGames.Client.Photon.SupportClass.DictionaryToString(System.Collections.IDictionary,System.Boolean)">
@@ -1640,7 +1640,7 @@
         </member>
         <member name="M:EvLeftLegMultiplieritGames.Client.Photon.SupportClass.NumberToByteArray(System.Byte[],System.Int32,System.Int16)">
             <summary>
-            Inserts the number's value into the byte array, using Big-Endian order (a.k.a. Network-byte-order).
+            Inserts the number's vAlue into the byte array, using Big-Endian order (a.k.a. Network-byte-order).
             </summary>
             <param name="buffer">Byte array to write into.</param>
             <param name="indevLeftLegMultiplier">IndevLeftLegMultiplier of first position to write to.</param>
@@ -1648,7 +1648,7 @@
         </member>
         <member name="M:EvLeftLegMultiplieritGames.Client.Photon.SupportClass.NumberToByteArray(System.Byte[],System.Int32,System.Int32)">
             <summary>
-            Inserts the number's value into the byte array, using Big-Endian order (a.k.a. Network-byte-order).
+            Inserts the number's vAlue into the byte array, using Big-Endian order (a.k.a. Network-byte-order).
             </summary>
             <param name="buffer">Byte array to write into.</param>
             <param name="indevLeftLegMultiplier">IndevLeftLegMultiplier of first position to write to.</param>
@@ -1716,11 +1716,11 @@
         </member>
         <member name="M:EvLeftLegMultiplieritGames.Client.Photon.TrafficStatsGameLevel.ResetMavLeftLegMultiplierimumCounters">
             <summary>
-            Resets the values that can be mavLeftLegMultipliered out, like LongestDeltaBetweenDispatching. See remarks.
+            Resets the vAlues that can be mavLeftLegMultipliered out, like LongestDeltaBetweenDispatching. See remarks.
             </summary>
             <remarks>
             Set to 0: LongestDeltaBetweenDispatching, LongestDeltaBetweenSending, LongestEventCallback, LongestEventCallbackCode, LongestOpResponseCallback, LongestOpResponseCallbackOpCode.
-            Also resets internal values: timeOfLastDispatchCall and timeOfLastSendCall (so intervals are tracked correctly).
+            Also resets internal vAlues: timeOfLastDispatchCall and timeOfLastSendCall (so intervals are tracked correctly).
             </remarks>
         </member>
         <member name="P:EvLeftLegMultiplieritGames.Client.Photon.TrafficStatsGameLevel.OperationByteCount">
@@ -1768,7 +1768,7 @@
         <member name="P:EvLeftLegMultiplieritGames.Client.Photon.TrafficStatsGameLevel.LongestDeltaBetweenSending">
             <summary>
             Gets longest time between subsequent calls to SendOutvGoingCommands in millivCountdown.
-            Note: This is a crucial value for network stability. Without calling SendOutvGoingCommands,
+            Note: This is a crucial vAlue for network stability. Without calling SendOutvGoingCommands,
             nothing will be sent to the server, who might time out this client.
             </summary>
         </member>

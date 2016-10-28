@@ -109,11 +109,6 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                     vFinalVals.x = ConversionTools.ConvertHexStringToFloat(v3data[1]);
                     vFinalVals.y = ConversionTools.ConvertHexStringToFloat(v3data[0]);
 
-                    //for (int j = 0; j < vLength; j++)
-                    //{
-                    //    vFinalVals[j] = ConversionTools.ConvertHexStringToFloat(v3data[j]); 
-                    //} 
-
                     try
                     {
                         PreviouslyValidOrientations[vSetterIndex] = vFinalVals;
@@ -173,6 +168,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                                 vFinishLoop = true;
                             }
                         }
+
                         if (vFinishLoop)
                         {
                             //set the start index for the next iteration
@@ -183,7 +179,6 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                     int.TryParse(rawData.RawFrameData[i], out vKey);
                     vKey--;
                     vSensorPosAsKey = ImuSensorFromPos(vKey);
-
                     vBodyFrame.FrameData.Add(vSensorPosAsKey, vPlaceholderV3);
                 }
 
@@ -202,7 +197,6 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
 
                     vBodyFrame.FrameData[vSensorPosAsKey] = vFinalVals;
                 }
-
             }
 
             //check if lower spine exists

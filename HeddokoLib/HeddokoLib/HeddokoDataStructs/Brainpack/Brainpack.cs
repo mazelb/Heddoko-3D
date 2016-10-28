@@ -26,7 +26,7 @@ namespace HeddokoLib.HeddokoDataStructs.Brainpack
         private string mDataBoardId;
         private string mKitId;
         private EndPoint mEndPoint;
-
+        public int TcpControlPort;
         public string KitId
         {
             get { return mKitId; }
