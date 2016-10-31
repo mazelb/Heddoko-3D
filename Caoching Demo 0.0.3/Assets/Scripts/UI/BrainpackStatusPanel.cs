@@ -14,7 +14,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.UI
 {
-   
+
     public class BrainpackStatusPanel : MonoBehaviour
     {
         public FirmwareSubPanel FirmwareSubPanel;
@@ -24,18 +24,18 @@ namespace Assets.Scripts.UI
         public Text BatteryLevelText;
         private Brainpack mCurrentBrainpack;
         public Text LatestVersionText;
-        
-         /// <summary>
+
+        /// <summary>
         /// Registers the fimrware sub panel's button to begin the Firmware Update process
         /// </summary>
         /// <param name="vCallbackAction"></param>
         public void RegisterFirmwareSubPanelUpdateCallback(Action vCallbackAction)
         {
-             FirmwareSubPanel.RegisterUpdateAction(vCallbackAction);
+            FirmwareSubPanel.RegisterUpdateAction(vCallbackAction);
         }
 
 
-       
+
         void Start()
         {
             Clear();
@@ -73,15 +73,18 @@ namespace Assets.Scripts.UI
         /// <param name="vBrainpack"></param>
         public void ClearIfBrainpack(Brainpack vBrainpack)
         {
-            if (vBrainpack.Id == mCurrentBrainpack.Id)
+            if (mCurrentBrainpack != null)
             {
-                Clear();
+                if (vBrainpack.Id == mCurrentBrainpack.Id)
+                {
+                    Clear();
+                }
             }
         }
         public void EnableFirmwareUpdateSubpanel()
         {
             FirmwareSubPanel.DisplayFirmwareUpdate();
-         }
+        }
 
         public void Clear()
         {

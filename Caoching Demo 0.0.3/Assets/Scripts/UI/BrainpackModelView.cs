@@ -40,8 +40,7 @@ namespace Assets.Scripts.UI
         IEnumerator ShineEffect()
         {
             while (true)
-            {
-                Debug.Log("here");
+            { 
                 float vLastCallTime = Time.time;
                 float vDuration = 0;
                 float vStart = 1;
