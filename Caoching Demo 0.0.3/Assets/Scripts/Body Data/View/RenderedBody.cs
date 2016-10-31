@@ -26,7 +26,7 @@ namespace Assets.Scripts.Body_Data.View
         public SkinnedMeshRenderer Torso;
         public SkinnedMeshRenderer Limbs;
         public AnaylsisFeedBackContainer AnaylsisFeedBackContainer;
-
+        public SensorContainer SensorTransformContainer;
         public Shader NormalShader;
         public Shader XRayShader;
         public Transform UpperLeftArm;
@@ -75,6 +75,7 @@ namespace Assets.Scripts.Body_Data.View
                         LayerCopyListeners[i].layer = mCurrLayerMask;
                     }
                 }
+                SensorTransformContainer.SetLayer(mCurrLayerMask);
             }
         }
 
@@ -86,12 +87,13 @@ namespace Assets.Scripts.Body_Data.View
         /// <param name="vTypes"></param>
         public void Init(BodyStructureMap.BodyTypes vType = BodyStructureMap.BodyTypes.BodyType_FullBody)
         {
-            mCurrentBodyType = vType; 
+            SensorTransformContainer.Hide();
+            mCurrentBodyType = vType;
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf, new SegmentInteractibleObjects(LowerLeftLeg, 6, Limbs));
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh, new SegmentInteractibleObjects(UpperLeftLeg, 4, Limbs));
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_RightCalf, new SegmentInteractibleObjects(LowerRightLeg, 7, Limbs));
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_RightThigh, new SegmentInteractibleObjects(UpperRightLeg, 5, Limbs));
-            TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine, new SegmentInteractibleObjects(UpperSpine,0, Torso));
+            TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine, new SegmentInteractibleObjects(UpperSpine, 0, Torso));
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine, new SegmentInteractibleObjects(Hips, 0, Torso));
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm, new SegmentInteractibleObjects(LowerLeftArm, 0, Limbs));
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm, new SegmentInteractibleObjects(UpperLeftArm, 2, Limbs));
@@ -129,6 +131,19 @@ namespace Assets.Scripts.Body_Data.View
 
         }
 
+
+        public void SetViewType(ViewType vType)
+        {
+            switch (vType)
+            {
+                case ViewType.Body:
+
+                    break;
+
+                case ViewType.Sensor:
+                    break;
+            }
+        }
         /// <summary>
         /// Request a RulaVisualAngleAnalysis for the current rendered body
         /// </summary>
@@ -188,6 +203,11 @@ namespace Assets.Scripts.Body_Data.View
                 vKeyPair.Value.SubsegmentVisibility.IsVisible = true;
             }
         }
+        public enum ViewType
+        {
+            Body,
+            Sensor
+        }
     }
 
     public class SegmentInteractibleObjects
@@ -207,6 +227,8 @@ namespace Assets.Scripts.Body_Data.View
 
 
         }
+
+
     }
     [Serializable]
     public class InvalidSegmentChangeRequestException : Exception
@@ -235,5 +257,7 @@ namespace Assets.Scripts.Body_Data.View
             StreamingContext context) : base(info, context)
         {
         }
+
+
     }
 }
