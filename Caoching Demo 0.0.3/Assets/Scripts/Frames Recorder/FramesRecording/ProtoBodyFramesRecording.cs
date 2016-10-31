@@ -79,17 +79,17 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
             //Serializer.PrepareSerializer<Packet>();
             ProtoBodyRecordingReader vReader = (ProtoBodyRecordingReader) vRecordingReaderbase; 
             MemoryStream vStream = new MemoryStream();
-            for (int i = 0; i < vReader.RawProtopackets.Count; i++)
+            for (int vI = 0; vI < vReader.RawProtopackets.Count; vI++)
             {
                 try
                 {
-                    if (vReader.RawProtopackets[i].Payload[0] == 0x04)
+                    if (vReader.RawProtopackets[vI].Payload[0] == 0x04)
                     {
                         vStream.Seek(0, SeekOrigin.Begin);
-                        vStream.Write(vReader.RawProtopackets[i].Payload, 1, vReader.RawProtopackets[i].PayloadSize - 1);
+                        vStream.Write(vReader.RawProtopackets[vI].Payload, 1, (int)vReader.RawProtopackets[vI].PayloadSize - 1);
                         vStream.Seek(0, SeekOrigin.Begin);
                         Packet vPacket = Serializer.Deserialize<Packet>(vStream);
-                        ProtobuffPackets.Add(new BodyProtoPacketFrame(vPacket, i));
+                        ProtobuffPackets.Add(new BodyProtoPacketFrame(vPacket, vI));
                         vStream.SetLength(0);
                     }
                 }

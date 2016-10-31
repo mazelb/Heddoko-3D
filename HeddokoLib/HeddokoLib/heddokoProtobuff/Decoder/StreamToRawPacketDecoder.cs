@@ -14,7 +14,7 @@ using HeddokoLib.adt;
 namespace HeddokoLib.heddokoProtobuff.Decoder
 {
 
-
+    public delegate void PacketizationCompleted();
     /// <summary>
     /// A Stream Decoder,taking in a binary stream, and places the resulting raw packet to an outputbuffer. Uses a ReaderWriterLock to guarantee threadsafety for underlying stream. 
     /// </summary>
@@ -24,7 +24,8 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
         private volatile bool mIsWorking = false;
         private int mBufferSize = 1024;
         private CircularQueue<RawPacket> mQueue = new CircularQueue<RawPacket>(1024, false);
-
+        private Queue<byte[]> mQueueByte= new Queue<byte[]>();
+        public PacketizationCompleted PacketizationCompletedEvent;
         public Stream Stream
         {
             get
@@ -37,6 +38,7 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
             }
 
         }
+
         /// <summary>
         /// Default constructor: takes in a stream T
         /// </summary>
@@ -96,6 +98,24 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
             private set { mQueue = value; }
         }
 
+        public Queue<byte[]> QueueByte
+        {
+            get
+            {
+                lock (mQueueByte)
+                {
+                    return mQueueByte;
+                }
+            }
+            set
+            {
+                lock (mQueueByte)
+                {
+                    mQueueByte = value;
+                }
+            }
+        }
+
 
         /// <summary>
         /// Begins to read the content of the stream, searching for patterns that make up a RawPacket
@@ -115,7 +135,10 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
             ThreadPool.QueueUserWorkItem(WorkerFunc, vStreamCompletionAction);
         }
 
-
+        public void EnqueueByteData( byte[] vByteData)
+        {
+            QueueByte.Enqueue(vByteData);
+        }
         /// <summary>
         /// Returns a list of raw packets from a file stream
         /// </summary>
@@ -198,6 +221,44 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
             {
                 vCallbackAction.Invoke();
             }
+            mIsWorking = false;
+            Dispose();
+        }
+
+        private void Worker()
+        {
+            byte[] vByteArrayBuffer = new byte[BufferSize];
+            RawPacket vPacket = new RawPacket();
+            while (Stream.CanRead)
+            {
+                if (OutputBuffer.IsFull())
+                {
+                    continue;
+                }
+                int vNumberOfByteRead = Stream.Read(vByteArrayBuffer, 0, BufferSize);
+                if (vNumberOfByteRead == 0)
+                {
+                    break;
+                }
+                for (int vI = 0; vI < vNumberOfByteRead; vI++)
+                {
+                    byte vByte = vByteArrayBuffer[vI];
+                    //the byte is 0, this means that the current array buffer has received an incomplete amount of bytes
+                    PacketStatus vPacketStatus = vPacket.ProcessByte(vByte);
+                    if (vPacketStatus == PacketStatus.PacketComplete)
+                    {
+                        RawPacket vPacketCopy = new RawPacket(vPacket);
+                        OutputBuffer.Enqueue(vPacketCopy);
+                        vPacket.ResetPacket();
+                    }
+                    else if (vPacketStatus == PacketStatus.PacketError)
+                    {
+                        vPacket.ResetPacket();
+                    }
+                }
+
+            }
+         
             mIsWorking = false;
             Dispose();
         }

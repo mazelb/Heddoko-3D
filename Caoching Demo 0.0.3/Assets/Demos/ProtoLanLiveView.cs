@@ -12,13 +12,14 @@ using Assets.Scripts.UI.RecordingLoading;
 using UnityEngine;
 using System.Collections.Generic;
 using Assets.Scripts.Communication;
+using Assets.Scripts.Communication.Controller;
 
 namespace Assets.Demos
 {
     public class ProtoLanLiveView : LiveSuitFeedView
     {
-        public UdpSocketListener mSocketListener;
-           void Awake()
+        public UdpSocketListener mSocketListener; 
+        void Awake()
         {
             mSocketListener = new UdpSocketListener();
                BodySegment.GBodyFrameUsingQuaternion = true;
@@ -52,6 +53,7 @@ namespace Assets.Demos
             mRootNode.PanelSettings.Init(ControlPanelTypeList[0], true, BrainpackBody);
             mLiveFeedViewControlPanel = (LiveFeedViewControlPanel)mRootNode.PanelSettings.GetPanelOfType(ControlPanelType.LiveBPFeedView);
             mLiveFeedViewControlPanel.Body = BrainpackBody;
+            mLiveFeedViewControlPanel.SuitChanger.SuitConnection = BpController;
             mLiveFeedViewControlPanel.gameObject.SetActive(true);
             mLiveFeedViewControlPanel.Show();
             mIsInitialized = true;
@@ -74,6 +76,7 @@ namespace Assets.Demos
             {
                 mPanelNodes[0].PanelSettings.RequestResources();
             }
+            BodySegment.GBodyFrameUsingQuaternion = true;
             BrainpackBody.PlayFromDataStream(mSocketListener.FrameRouter);
             mSocketListener.Start();
             try
