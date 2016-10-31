@@ -6,8 +6,7 @@
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
 
-using System.Collections;
-using UnityEditor;
+using System.Collections; 
 using UnityEngine;
 
 namespace Assets.Scripts.UI
