@@ -180,11 +180,12 @@ namespace Assets.Scripts.Licensing.Controller
                     var vErrorMsg = FormatLoginNoOkError(vUser.Errors);
                     string vMsg = LocalizationBinderContainer.GetString(KeyMessage.LoginFailureMsg);
                     Action vRaiseModalPanelAction = () => ModalPanel.Instance().Choice(vMsg, vErrorMsg, () =>
-                   {
-                       Application.OpenURL(mUrl);
-                   }, () => { });
+                    {
+                        Application.OpenURL(mUrl);
+                    }, () => { });
                     OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vRaiseModalPanelAction);
-                    OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(false));
+                    OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
+                        () => LoginView.SetLoadingIconAsActive(false));
                     return;
                 }
                 LicenseInfo vLicense = vUser.LicenseInfo;
@@ -242,7 +243,7 @@ namespace Assets.Scripts.Licensing.Controller
                                         OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
                                             () =>
                                                 mLoginController.RaiseErrorEvent(LoginErrorType.CannotAuthenticate,
-                                                   LocalizationBinderContainer.GetString(KeyMessage.InvalidUnPwMsg)));
+                                                    LocalizationBinderContainer.GetString(KeyMessage.InvalidUnPwMsg)));
                                         vIsHandled = true;
                                         break;
                                     default:
@@ -266,6 +267,10 @@ namespace Assets.Scripts.Licensing.Controller
                         }
                         break;
                 }
+            }
+            catch (Exception vE)
+            {
+                UnityEngine.Debug.Log("error "+vE);
             }
 
         }

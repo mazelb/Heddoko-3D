@@ -42,7 +42,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                 UploadableListItem vUploadableItem = (UploadableListItem)vItem;
                 Asset vAsset = mProfile.Client.Upload(new AssetRequest()
                 { 
-                    Serial = vUploadableItem.BrainpackSerialNumber,
+                    Label = vUploadableItem.BrainpackSerialNumber,
                     Type = vUploadableItem.AssetType
                 }, vUploadableItem.RelativePath);
                 if (vAsset.IsOk)

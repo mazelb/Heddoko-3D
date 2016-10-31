@@ -13,7 +13,7 @@ using System.Threading;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
-using HeddokoSDK.Models; 
+using HeddokoSDK.Models;
 
 namespace Assets.Scripts.UI.RecordingLoading
 {
@@ -152,7 +152,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <summary>
         /// Handler for succesful file upload handler.      
         /// </summary>
-        void BrainpackLogFileUploadHandler( )
+        void BrainpackLogFileUploadHandler()
         {
             //delete file
             FileInfo vBpLogFileItem = new FileInfo(BrainpackLogFileItem.RelativePath);
@@ -285,7 +285,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
 
             //On completion handle errors and succesful uploads
-            bool vHasProblematicResults = mUploadRecordingStatus.ProblematicUploads != null;
+            bool vHasProblematicResults = mUploadRecordingStatus.ProblematicUploads != null && mUploadRecordingStatus.ProblematicUploads.Count > 0;
             if (vHasProblematicResults)
             {
                 if (ProblemUploadingContentEvent != null)
@@ -294,11 +294,13 @@ namespace Assets.Scripts.UI.RecordingLoading
                 }
             }
 
-            
+
             if (ContentsCompletedUploadEvent != null)
             {
                 ContentsCompletedUploadEvent();
             }
+            if (mUploadRecordingStatus.ProblematicUploads != null)
+            { mUploadRecordingStatus.ProblematicUploads.Clear(); }
         }
 
         /// <summary>
@@ -306,7 +308,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         void UploadBrainpackLogData()
         {
-            if (BrainpackLogFileItem != null && mSearcher.HeddokoSdCardStruct.LogFileInRootDir )
+            if (BrainpackLogFileItem != null && mSearcher.HeddokoSdCardStruct.LogFileInRootDir)
             {
                 mUploader.UploadSingleItem(BrainpackLogFileItem);
             }
@@ -355,8 +357,8 @@ namespace Assets.Scripts.UI.RecordingLoading
             string vBpSerial = mSearcher.GetSerialNumFromSdCard();
             var vLogFileInfo = new FileInfo(mSearcher.HeddokoSdCardStruct.LogFileDirectoryPath);
 
-            if (vBpSerial != null  )
-            { 
+            if (vBpSerial != null)
+            {
                 BrainpackLogFileItem = new UploadableListItem()
                 {
                     FileName = vLogFileInfo.Name,
@@ -368,7 +370,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             //var vFiles = vDrive.GetFiles();
 
             ////var vLogFile = vFiles.First(vX => vX.Name.Contains("sysHdk.bin"));
-            
+
             //if (vLogFile != null)
             //{
             //    //get brainpack name
@@ -386,7 +388,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             //            }
             //        }
             //    }
-                
+
             //}
         }
     }
