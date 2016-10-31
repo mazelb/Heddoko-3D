@@ -11,7 +11,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7fb8241a0c3d064f88101a0ab7b239c, type: 3}
   m_Name: EnUSBinder.binder
   m_EditorClassIdentifier: 
-  Path: C:/Users/MohammedHaider/AppData/LocalLow/Heddoko/Heddoko Desktop/EnUSBinder.binder
+  Path: E:/Code/Heddoko3D/Caoching Demo 0.0.3/Assets/Resources/EnUSBinder.binder
   ParsedContent: "{\n\t\"mContainer\": {\n\t\t\"En-Us\": {\n\t\t\t\"StringContainer\":
     {\n\t\t\t\t\"DownloadCompleteMsg\": {\n\t\t\t\t\t\"SingularForm\": \"Download
     has been completed\",\n\t\t\t\t\t\"PluralForm\": \"All downloads have been completed\"\n\t\t\t\t},\n\t\t\t\t\"Greet\":
@@ -45,8 +45,8 @@ MonoBehaviour:
     {\r\n\t\t\t\t\t\"SingularForm\": \"Could not locate any Battery packs. Please
     try again. \",\r\n\t\t\t\t\t\"PluralForm\": \"Could not locate any Battery packs.
     Please try again. \"\r\n\t\t\t\t},\r\n\t\t\t\t\"BeginUploadProcessMsg\": {\r\n\t\t\t\t\t\"SingularForm\":
-    \"Could not locate any Battery packs. Please try again. \",\r\n\t\t\t\t\t\"PluralForm\":
-    \"Could not locate any Battery packs. Please try again. \"\r\n\t\t\t\t},\r\n\t\t\t\t\"DisconnectedSDCardWithLogMsg\":
+    \"Starting upload process, please do not disconnect the SD card \",\r\n\t\t\t\t\t\"PluralForm\":
+    \"Starting upload process, please do not disconnect the SD card \"\r\n\t\t\t\t},\r\n\t\t\t\t\"DisconnectedSDCardWithLogMsg\":
     {\r\n\t\t\t\t\t\"SingularForm\": \"Heddoko SD card has been disconnected\",\r\n\t\t\t\t\t\"PluralForm\":
     \"Heddoko SD card has been disconnected\"\r\n\t\t\t\t},\r\n\t\t\t\t\"IssueUploadingRecordingsMsg\":
     {\r\n\t\t\t\t\t\"SingularForm\": \" There was an issue uploading one or more recording

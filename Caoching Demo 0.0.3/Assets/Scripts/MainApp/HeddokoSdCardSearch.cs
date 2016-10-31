@@ -29,7 +29,7 @@ namespace Assets.Scripts.MainApp
         private Thread mWorkerThread;
         private object mLockObject= new object();
         private bool mSdCardIsConnected;
-
+       
         /// <summary>
         /// is the sd card current connected?
         /// </summary>
@@ -61,6 +61,11 @@ namespace Assets.Scripts.MainApp
         public DirectoryInfo FoundDrive
         {
             get { return mHeddokoSdCardStruct.DirectoryInfo; }
+        }
+
+        public BrainpackSdCardStruct HeddokoSdCardStruct
+        {
+            get { return mHeddokoSdCardStruct; }
         }
 
         /// <summary>
@@ -138,7 +143,7 @@ namespace Assets.Scripts.MainApp
         }
 
         /// <summary>
-        /// Searches for a heddoko sd card drive
+        /// Searches for a heddoko sd card drive and sets the path of the log file
         /// </summary>
         /// <param name="vDrives">the array of drives</param>
         /// <returns></returns>
@@ -151,8 +156,21 @@ namespace Assets.Scripts.MainApp
                     var vDirectoryInfo = new DirectoryInfo(vDrives[vI]);
                     var vSysHdk = vDirectoryInfo.GetFiles("sysHdk.bin");
                     var vSettings = vDirectoryInfo.GetFiles("settings.dat");
-                    if (vSysHdk.Length == 1 && vSettings.Length == 1)
+                    if (vSysHdk.Length == 0 && vSettings.Length == 1)
                     {
+                        //locate a backup folder
+                       var vBackupFolder = vDirectoryInfo.GetDirectories("Backup");
+                        if (vBackupFolder.Length > 0)
+                        {
+                            mHeddokoSdCardStruct.LogFileDirectoryPath = vBackupFolder[0].FullName;
+                            mHeddokoSdCardStruct.LogFileInRootDir = false;
+                            return vDirectoryInfo;
+                        }
+                    }
+                    else  if (vSysHdk.Length == 1 && vSettings.Length == 1)
+                    {
+                        mHeddokoSdCardStruct.LogFileDirectoryPath = vDirectoryInfo.FullName;
+                        mHeddokoSdCardStruct.LogFileInRootDir = true;
                         return vDirectoryInfo;
                     }
 
@@ -190,19 +208,22 @@ namespace Assets.Scripts.MainApp
         {
             if (mHeddokoSdCardStruct.BrainpackSerialNumber == null)
             {
-                var vFiles = mHeddokoSdCardStruct.DirectoryInfo.GetFiles();
+                var vLogFileDirectory = new DirectoryInfo(mHeddokoSdCardStruct.LogFileDirectoryPath);
+                var vFiles = vLogFileDirectory.GetFiles();
                 var vLogFile = vFiles.First(vX => vX.Name.Contains("sysHdk.bin"));
                 string vBrainpackSerial = null;
+           
                 if (vLogFile != null)
                 {
                     //get brainpack name
-                    using (StreamReader vSr = new StreamReader(mHeddokoSdCardStruct.DirectoryInfo.Name + Path.DirectorySeparatorChar + "sysHdk.bin"))
+                    using (StreamReader vSr = new StreamReader(vLogFile.FullName))
                     {
                         string vLine;
+                        
                         while ((vLine = vSr.ReadLine()) != null)
-                        {
-                            var vMatch = Regex.Match(vLine, @"S\\d\\d\\d\\d\\d_");
-                            if (vMatch.Index >= 0)
+                        { 
+                            var vMatch = Regex.Match(vLine, @"S\d\d\d\d\d_");
+                            if (vMatch.Index > 0)
                             {
                                 vBrainpackSerial = vLine.Substring(vMatch.Index, 6);
                                 break;
@@ -215,10 +236,12 @@ namespace Assets.Scripts.MainApp
             return mHeddokoSdCardStruct.BrainpackSerialNumber;
         }
          
-        private struct BrainpackSdCardStruct
+        public struct BrainpackSdCardStruct
         {
             public DirectoryInfo DirectoryInfo;
             public string BrainpackSerialNumber;
+            public string LogFileDirectoryPath;
+            public bool LogFileInRootDir;
 
         }
     }
