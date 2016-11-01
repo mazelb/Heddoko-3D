@@ -237,15 +237,22 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
         }
 
+        /// <summary>
+        /// Reset the list
+        /// </summary>
         public void ResetDownloadList()
         {
-            StartCoroutine(WaitOneSecondThenDownload());
-            Debug.Log("reset download list");
+            StartCoroutine(WaitThenReDownload(1.5f)); 
         }
 
-        private IEnumerator WaitOneSecondThenDownload()
+        /// <summary>
+        /// Wait then redownload the recording list again
+        /// </summary>
+        /// <param name="vSeconds"></param>
+        /// <returns></returns>
+        private IEnumerator WaitThenReDownload(float vSeconds)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(vSeconds);
             Clear();
             mListFetcher.Start();
             View.OnClickAction += DoubleClickCheck;

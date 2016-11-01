@@ -21,6 +21,7 @@ namespace Assets.Scripts.UI.RecordingLoading.View
     {
 
         public UnityAction OnClickAction;
+        public  bool CanDoubleClick=true;
         void Awake()
         {
             base.Start();
@@ -56,8 +57,11 @@ namespace Assets.Scripts.UI.RecordingLoading.View
         /// <param name="vItem"></param>
         protected override void SetData(SingleRecordingListItemComponent vComponent, RecordingListItem vItem)
         {
-            vComponent.onClick.RemoveListener(OnClickAction);
-            vComponent.onClick.AddListener(OnClickAction);
+            if (CanDoubleClick)
+            {
+                vComponent.onClick.RemoveListener(OnClickAction);
+                vComponent.onClick.AddListener(OnClickAction);
+            }
             vComponent.SetData(vItem);
         }
 

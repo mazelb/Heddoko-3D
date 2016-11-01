@@ -27,19 +27,14 @@ namespace Assets.Scripts.UI.RecordingLoading
     public class UploadController : MonoBehaviour
     {
         private SdCardContentUploadController mCardContentUploadController;
-        public RecordingListViewController RecordingListViewController;
+     public RecordingListViewController RecordingListViewController;
         private int mErrorCount;
         void Start()
         {
             mCardContentUploadController = new SdCardContentUploadController(UserSessionManager.Instance.UserProfile);
             mCardContentUploadController.DriveFoundEvent += DriveFoundHandler;
             mCardContentUploadController.ContentsCompletedUploadEvent += ContentsCompletedUploadingEvent;
-            mCardContentUploadController.SingleUploadEndEvent += x =>
-            {
-                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(RecordingListViewController.ResetDownloadList);
-            };
-
-            mCardContentUploadController.SingleUploadEndEvent += SingleRecordingUploaded;
+             
             mCardContentUploadController.FoundFileListEvent += FoundFileListHandler;
             mCardContentUploadController.ProblemUploadingContentEvent += ProblemUploadEventHandler;
             mCardContentUploadController.DriveDisconnectedEvent += DriveDisconnectedHandler;
@@ -50,11 +45,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             mCardContentUploadController.DriveFoundEvent -= DriveFoundHandler;
             mCardContentUploadController.ContentsCompletedUploadEvent -= ContentsCompletedUploadingEvent;
-            mCardContentUploadController.SingleUploadEndEvent -= x =>
-            {
-                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(RecordingListViewController.ResetDownloadList);
-            };
-            mCardContentUploadController.SingleUploadEndEvent -= SingleRecordingUploaded;
+            
             mCardContentUploadController.FoundFileListEvent -= FoundFileListHandler;
             mCardContentUploadController.ProblemUploadingContentEvent -= ProblemUploadEventHandler;
             mCardContentUploadController.DriveDisconnectedEvent -= DriveDisconnectedHandler;
@@ -171,6 +162,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                 string vMsg = String.Format("The total number of sucessful uploads is {0} and failed uploads {1}",
                     vSucess, vFailCount);
                 Notify.Template("fade").Show(vMsg, 15f, sequenceType: NotifySequence.First);
+                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(RecordingListViewController.ResetDownloadList);
             });
 
 

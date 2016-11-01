@@ -38,12 +38,12 @@ namespace Assets.Scripts.UI.RecordingLoading
         public void UploadSingleItem(object vItem)
         {
             string vItemName = "";
-            
+
             try
             {
                 UploadableListItem vUploadableItem = (UploadableListItem)vItem;
                 Asset vAsset = mProfile.Client.Upload(new AssetRequest()
-                { 
+                {
                     Serial = vUploadableItem.BrainpackSerialNumber,
                     Type = vUploadableItem.AssetType
                 }, vUploadableItem.RelativePath);
@@ -57,12 +57,12 @@ namespace Assets.Scripts.UI.RecordingLoading
                 }
                 else
                 {
-                    ErrorCollection vCollection =vAsset.Errors;
+                    ErrorCollection vCollection = vAsset.Errors;
                     ErrorUploadEventArgs vObj = new ErrorUploadEventArgs()
                     {
                         Object = (UploadableListItem)vItem,
                         ExceptionArgs = null,
-                        ErrorCollection =  vCollection
+                        ErrorCollection = vCollection
                     };
                     InvokeErrorEvent(vObj);
                 }
@@ -71,7 +71,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 if (UploadErrorEvent != null)
                 {
-                    string vMessage = "This item failed to upload"+ vItemName+ " \t Reason:" + vE.Message;
+                    string vMessage = "This item failed to upload" + vItemName + " \t Reason:" + vE.Message;
                     ErrorUploadEventArgs vObj = new ErrorUploadEventArgs()
                     {
                         Object = (UploadableListItem)vItem,
@@ -86,7 +86,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// Invokes error events
         /// </summary>
         /// <param name="vArgs"></param>
-        void InvokeErrorEvent(ErrorUploadEventArgs vArgs )
+        void InvokeErrorEvent(ErrorUploadEventArgs vArgs)
         {
             if (UploadErrorEvent != null)
             {

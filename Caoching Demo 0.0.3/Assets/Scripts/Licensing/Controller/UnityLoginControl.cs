@@ -56,8 +56,8 @@ namespace Assets.Scripts.Licensing.Controller
             mSecret = "HEDFstcKsx0NHjPSsjcndjnckSDJjknCCSjcnsJSK89SJDkvVBrk";
 
 #if DEBUG
-            mUrl = "http://dev.app.heddoko.com/";
-            mSecret = "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk";
+        //    mUrl = "http://dev.app.heddoko.com/";
+         //   mSecret = "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk";
 #endif
             HeddokoConfig vConfig = new HeddokoConfig(mUrl + mUrlExt, mSecret);
             mClient = new HeddokoClient(vConfig);
