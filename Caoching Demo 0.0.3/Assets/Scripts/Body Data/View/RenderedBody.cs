@@ -137,11 +137,30 @@ namespace Assets.Scripts.Body_Data.View
             switch (vType)
             {
                 case ViewType.Body:
-
+                    Joints.gameObject.SetActive(true);
+                    Torso.gameObject.SetActive(true);
+                    Limbs.gameObject.SetActive(true);
+                    SensorTransformContainer.Hide();
                     break;
 
                 case ViewType.Sensor:
+                    Joints.gameObject.SetActive(false);
+                    Torso.gameObject.SetActive(false);
+                    Limbs.gameObject.SetActive(false);
+                    SensorTransformContainer.Show();
                     break;
+            }
+        }
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                SetViewType(ViewType.Body);
+            }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                SetViewType(ViewType.Sensor);
             }
         }
         /// <summary>

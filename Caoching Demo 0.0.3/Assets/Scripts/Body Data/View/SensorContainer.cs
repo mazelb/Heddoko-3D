@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.Body_Data.View
 {
-    public class SensorContainer
+    public class SensorContainer : MonoBehaviour
     {
         [SerializeField]
         private List<SensorTransform> mSensorTransformList = new List<SensorTransform>();
