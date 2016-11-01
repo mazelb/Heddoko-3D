@@ -37,6 +37,8 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <param name="vItem"></param>
         public void UploadSingleItem(object vItem)
         {
+            string vItemName = "";
+            
             try
             {
                 UploadableListItem vUploadableItem = (UploadableListItem)vItem;
@@ -45,6 +47,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                     Serial = vUploadableItem.BrainpackSerialNumber,
                     Type = vUploadableItem.AssetType
                 }, vUploadableItem.RelativePath);
+                vItemName = vUploadableItem.RelativePath;
                 if (vAsset.IsOk)
                 {
                     if (UploadCompleteEvent != null)
@@ -68,7 +71,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 if (UploadErrorEvent != null)
                 {
-                    string vMessage = vE.Message;
+                    string vMessage = "This item failed to upload"+ vItemName+ " \t Reason:" + vE.Message;
                     ErrorUploadEventArgs vObj = new ErrorUploadEventArgs()
                     {
                         Object = (UploadableListItem)vItem,

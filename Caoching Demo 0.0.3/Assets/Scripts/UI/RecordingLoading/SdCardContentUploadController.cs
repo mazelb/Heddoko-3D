@@ -9,11 +9,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
 using HeddokoSDK.Models;
+using UnityEngine;
 
 namespace Assets.Scripts.UI.RecordingLoading
 {
@@ -105,7 +107,10 @@ namespace Assets.Scripts.UI.RecordingLoading
             UploadableListItem vItem = vArgs.Object;
             if (vItem != null)
             {
-                mUploadRecordingStatus.ProblematicUploads.Add(vArgs);
+                if (!mUploadRecordingStatus.ProblematicUploads.ContainsKey(vItem.FileName))
+                {
+                    mUploadRecordingStatus.ProblematicUploads.Add( vItem.FileName, vArgs);
+                }
             }
         }
 
@@ -290,7 +295,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 if (ProblemUploadingContentEvent != null)
                 {
-                    ProblemUploadingContentEvent(mUploadRecordingStatus.ProblematicUploads);
+                    ProblemUploadingContentEvent(mUploadRecordingStatus.ProblematicUploads.Values.ToList());
                 }
             }
 
@@ -355,14 +360,14 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             //get brainpack serial number
             string vBpSerial = mSearcher.GetSerialNumFromSdCard();
-            var vLogFileInfo = new FileInfo(mSearcher.HeddokoSdCardStruct.LogFileDirectoryPath);
-
+            //    var vLogFileInfo = new FileInfo(mSearcher.HeddokoSdCardStruct.LogFileDirectoryPath);
+            var vLogFileInfo = mSearcher.HeddokoSdCardStruct;
             if (vBpSerial != null)
             {
                 BrainpackLogFileItem = new UploadableListItem()
                 {
-                    FileName = vLogFileInfo.Name,
-                    RelativePath = vLogFileInfo.FullName,
+                    FileName = vLogFileInfo.LogFileName,
+                    RelativePath = vLogFileInfo.LogFilePath,
                     BrainpackSerialNumber = vBpSerial,
                     AssetType = AssetType.Log
                 };
@@ -399,7 +404,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <summary>
         /// a list of recordings who have had problems uploading
         /// </summary>
-        public List<ErrorUploadEventArgs> ProblematicUploads = new List<ErrorUploadEventArgs>();
+        public Dictionary<string,ErrorUploadEventArgs> ProblematicUploads = new Dictionary<string,ErrorUploadEventArgs>();
         public List<UploadableListItem> SucessfullyUploadedRecordings = new List<UploadableListItem>();
     }
 }

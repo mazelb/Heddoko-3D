@@ -14,6 +14,7 @@ using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
 using Assets.Scripts.Utils;
 using Assets.Scripts.Utils.DebugContext.logging;
+using HeddokoSDK.Models;
 using UIWidgets;
 using UnityEngine;
 using LogType = Assets.Scripts.Utils.DebugContext.logging.LogType;
@@ -92,17 +93,23 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             //append to log file
             mErrorCount = vErrorList.Count;
+            int vLogFileError = 0;
             string vMsg = "Error Uploading: ";
             for (int i = 0; i < mErrorCount; i++)
             {
                 var vItem = vErrorList[i];
                 try
                 {
+                    if (vItem.Object.AssetType != AssetType.Record)
+                    {
+                        vLogFileError ++;
+                        continue;
+                    }
                     if (vItem.Object != null && vItem.Object.FileName != null)
                     {
                         vMsg += vItem.Object.FileName;
                     }
-                    if (vItem.ErrorCollection != null && vItem.ErrorCollection.Errors[0] != null && vItem.ErrorCollection.Errors[0].Code != null)
+                    if (vItem.ErrorCollection != null && vItem.ErrorCollection.Errors[0] != null)
                     {
                         vMsg += " ERROR CODE " + vItem.ErrorCollection.Errors[0].Code + ";";
                     }
@@ -118,12 +125,13 @@ namespace Assets.Scripts.UI.RecordingLoading
                 catch (Exception vE)
 
                 {
-                    UnityEngine.Debug.Log("HERE:  "+vE);
+                    UnityEngine.Debug.Log("err:  "+vE);
                      
                 }
-               
-
-
+            }
+            if (mErrorCount > 0)
+            {
+                mErrorCount -= vLogFileError;
             }
             DebugLogger.Instance.LogMessage(LogType.Uploading, vMsg);
             string vErrMsg = LocalizationBinderContainer.GetString(KeyMessage.IssueUploadingRecordingsMsg) + DebugLogger.Instance.GetLogPath(LogType.Uploading);
