@@ -44,10 +44,10 @@ public partial class BodySegment
     static public bool IsTrackingGait = false;
     static public bool IsTrackingHips = false;
     static public bool IsAdjustingSegmentAxis = true;
-    static public bool IsFusingSubSegments = true;
+   static public bool IsFusingSubSegments = true;
     static public bool IsProjectingXZ = false;
-    static public bool IsProjectingXY = false;
-    static public bool IsProjectingYZ = false;
+     static public bool IsProjectingXY = false;
+     static public bool IsProjectingYZ = false;
     static public bool IsHipsEstimateForward = true;
     static public bool IsHipsEstimateUp = false;
     static public bool IsUsingInterpolation = true;
@@ -725,14 +725,16 @@ public partial class BodySegment
         vLeftArmAnalysis.UpArTransform = vUASubsegment.AssociatedView.SubsegmentTransform;
         vLeftArmAnalysis.LoArTransform = vLASubsegment.AssociatedView.SubsegmentTransform;
         vLeftArmAnalysis.DeltaTime = DeltaTime;
-        vLeftArmAnalysis.AngleExtraction();//*/
+        vLeftArmAnalysis.AngleExtraction();
     }
 
+    public static Vector3 FirstVector;
+    public static Vector3 SecondVector;
     public void MapArmsOrientationsQuat(Quaternion vUAInitQuat, Quaternion vUACurQuat, Quaternion vLAInitQuat, Quaternion vLACurQuat, Quaternion vTorsoInitQuat, Quaternion vTorsoCurQuat,
                                 BodySubSegment vUASubsegment, BodySubSegment vLASubsegment, BodySubSegment vTorsoSubSegment, BodySubSegment vHipsSubsegment, bool vIsRight = true)
     {
-        Quaternion vUpArmQuat = Quaternion.Inverse(Quaternion.Euler(180, 0, 90)) * Quaternion.Inverse(vUAInitQuat) * vUACurQuat * Quaternion.Euler(180, 180, 90);
-        Quaternion vLoArmQuat = Quaternion.Inverse(Quaternion.Euler(180, 0, 90)) * Quaternion.Inverse(vLAInitQuat) * vLACurQuat * Quaternion.Euler(180, 0, 90);
+        Quaternion vUpArmQuat = Quaternion.Inverse(Quaternion.Euler(FirstVector) * Quaternion.Inverse(vUAInitQuat) * vUACurQuat * Quaternion.Euler(SecondVector));
+        Quaternion vLoArmQuat = Quaternion.Inverse(Quaternion.Euler(FirstVector) * Quaternion.Inverse(vLAInitQuat) * vLACurQuat * Quaternion.Euler(180, 0, 90));
 
         Quaternion vNewUpArmQuat = Quaternion.identity;
         Quaternion vNewLoArmQuat = Quaternion.identity;
@@ -749,7 +751,7 @@ public partial class BodySegment
         }
 
         vUASubsegment.UpdateSubsegmentOrientation(vNewUpArmQuat, 1, true);
-        //vLASubsegment.UpdateSubsegmentOrientation(vNewLoArmQuat, 1, true);
+        vLASubsegment.UpdateSubsegmentOrientation(vNewLoArmQuat, 1, true);
     }
 
 
@@ -827,27 +829,7 @@ public partial class BodySegment
         vLAAxisRight = vLoArmQuat * Vector3.right;
         vLAAxisForward = vLoArmQuat * Vector3.forward;
 
-        if (IsProjectingXY)
-        {
-            vLANewRight = Vector3.ProjectOnPlane(vLAAxisRight, vUAAxisForward);
-            vLANewUp = Vector3.Cross(vLAAxisForward, vLANewRight);
-            vLANewForward = Vector3.Cross(vLANewRight, vLANewUp);
-            vLoArmQuat = Quaternion.LookRotation(vLANewForward, vLANewUp);
-        }
-        else if(IsProjectingXZ)
-        {
-            vLANewRight = Vector3.ProjectOnPlane(vLAAxisRight, vUAAxisUp);
-            vLANewUp = Vector3.Cross(vLAAxisForward, vLANewRight);
-            vLANewForward = Vector3.Cross(vLANewRight, vLANewUp);
-            vLoArmQuat = Quaternion.LookRotation(vLANewForward, vLANewUp);
-        }
-        else if(IsProjectingYZ)
-        {
-            vLANewRight = Vector3.ProjectOnPlane(vLAAxisRight, vUAAxisRight);
-            vLANewUp = Vector3.Cross(vLAAxisForward, vLANewRight);
-            vLANewForward = Vector3.Cross(vLANewRight, vLANewUp);
-            vLoArmQuat = Quaternion.LookRotation(vLANewForward, vLANewUp);
-        }
+        
 
         vUAAxisUp = vUpArmQuat * Vector3.up;
         vUAAxisRight = vUpArmQuat * Vector3.right;
@@ -857,37 +839,7 @@ public partial class BodySegment
         vLAAxisRight = vLoArmQuat * Vector3.right;
         vLAAxisForward = vLoArmQuat * Vector3.forward;
 
-        if (IsFusingSubSegments)
-        {
-            Vector3 vNewAxisUp = Vector3.up;
-            Vector3 vTempUp = Vector3.up;
-
-            vNewAxisUp = Vector3.Cross(vLAAxisRight, vUAAxisRight).normalized;
-            vTempUp = Vector3.Cross(vUAAxisRight, vLAAxisRight).normalized;
-
-            if (Mathf.Abs(Vector3.Angle(vLAAxisRight, vUAAxisRight)) < 10)
-            {
-                vNewAxisUp = vUAAxisUp;
-            }
-            else
-            {
-                if (!vIsRight)
-                {
-                    vNewAxisUp = vTempUp;
-                }
-            }
-
-            vUANewForward = Vector3.Cross(vUAAxisRight, vNewAxisUp).normalized;
-            vLANewForward = Vector3.Cross(vLAAxisRight, vNewAxisUp).normalized;
-
-            vUpArmQuat = Quaternion.LookRotation(vUANewForward, vNewAxisUp);
-            vLoArmQuat = Quaternion.LookRotation(vLANewForward, vNewAxisUp);
-
-            //Vector3 vNewUAAxisRight = vUpArmQuat * Vector3.right;
-            //Vector3 vNewLAAxisRight = vLoArmQuat * Vector3.right;
-            //if(vIsRight) Debug.Log(SegmentAnalysis.GetSignedAngle(vNewUAAxisRight, vNewLAAxisRight, vNewAxisUp));
-            //vLoArmQuat = Quaternion.AngleAxis(SegmentAnalysis.GetSignedAngle(vNewLAAxisRight, vNewUAAxisRight, vNewAxisUp), vNewAxisUp);
-        }
+         
 
         Quaternion vNewUpArmQuat = Quaternion.identity;
         Quaternion vNewLoArmQuat = Quaternion.identity;
@@ -1001,25 +953,50 @@ public partial class BodySegment
         if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_Torso)
         {
             //Debug.Log("TORSO");
+            if (!vFilteredDictionary.ContainsKey(BodyStructureMap.SensorPositions.SP_UpperSpine))
+            {
+                return;
+            }
             MapTorsoSegment(vFilteredDictionary);
         }
         if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_RightArm)
         {
+            if (!vFilteredDictionary.ContainsKey(BodyStructureMap.SensorPositions.SP_RightForeArm) ||
+              
+               !vFilteredDictionary.ContainsKey(BodyStructureMap.SensorPositions.SP_RightUpperArm))
+            {
+                return;
+            }
             //Debug.Log("RIGHT ARM");
             MapRightArmSubsegment(vFilteredDictionary);
         }
         if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_LeftArm)
         {
+            if (!vFilteredDictionary.ContainsKey(BodyStructureMap.SensorPositions.SP_LeftForeArm) || 
+                !vFilteredDictionary.ContainsKey(BodyStructureMap.SensorPositions.SP_LeftUpperArm))
+            {
+                return;
+            }
             //Debug.Log("LEFT ARM");
             MapLeftArmSubsegment(vFilteredDictionary);
         }
         if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_RightLeg)
         {
+            if (!vFilteredDictionary.ContainsKey(BodyStructureMap.SensorPositions.SP_RightCalf) || 
+                !vFilteredDictionary.ContainsKey(BodyStructureMap.SensorPositions.SP_RightThigh))
+            {
+                return;
+            }
             //Debug.Log("RIGHT LEG");
             MapRightLegSegment(vFilteredDictionary);
         }
         if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_LeftLeg)
         {
+            if (!vFilteredDictionary.ContainsKey(BodyStructureMap.SensorPositions.SP_LeftCalf) || 
+                !vFilteredDictionary.ContainsKey(BodyStructureMap.SensorPositions.SP_LeftThigh))
+            {
+                return;
+            }
             //Debug.Log("LEFT LEG");
             MapLeftLegSegment(vFilteredDictionary);
         }

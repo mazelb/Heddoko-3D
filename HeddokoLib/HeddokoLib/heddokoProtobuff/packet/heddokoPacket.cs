@@ -60,7 +60,7 @@ namespace heddoko
 
         private float? _quat_y_pitch;
         [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name = @"quat_y_pitch", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
-        public float quat_y_pitch
+        public float  quat_y_pitch
         {
             get { return _quat_y_pitch ?? default(float); }
             set { _quat_y_pitch = value; }

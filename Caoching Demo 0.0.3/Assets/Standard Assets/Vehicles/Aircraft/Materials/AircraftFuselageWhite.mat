@@ -104,6 +104,10 @@ Material:
         second: 0.5
       data:
         first:
+          name: _Glossiness
+        second: 0.86
+      data:
+        first:
           name: _Parallax
         second: 0.02
       data:
@@ -112,16 +116,12 @@ Material:
         second: 1
       data:
         first:
-          name: _Glossiness
+          name: _BumpScale
         second: 0.15
       data:
         first:
-          name: _BumpScale
-        second: 1
-      data:
-        first:
           name: _OcclusionStrength
-        second: 1
+        second: 0.93
       data:
         first:
           name: _DetailNormalMapScale
@@ -166,7 +166,7 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: 0, g: 0.6745098, b: 0.827451, a: 1}
+        second: {r: 0.24313727, g: 0.43137258, b: 0.47450984, a: 1}
       data:
         first:
           name: _SpecColor

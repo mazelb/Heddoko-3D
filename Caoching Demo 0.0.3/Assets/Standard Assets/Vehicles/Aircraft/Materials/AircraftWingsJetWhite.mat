@@ -8,7 +8,8 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: AircraftWingsJetWhite
   m_Shader: {fileID: 45, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _LIGHTMAPPING_STATIC_LIGHTMAPS _NORMALMAP _UVPRIM_UV1 _UVSEC_UV1
+  m_ShaderKeywords: _EMISSION _LIGHTMAPPING_STATIC_LIGHTMAPS _NORMALMAP _UVPRIM_UV1
+    _UVSEC_UV1
   m_LightmapFlags: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -108,16 +109,16 @@ Material:
         second: 0.3706869
       data:
         first:
+          name: _Glossiness
+        second: 0.65
+      data:
+        first:
           name: _Parallax
         second: 0.02
       data:
         first:
           name: _ZWrite
         second: 1
-      data:
-        first:
-          name: _Glossiness
-        second: 0.15
       data:
         first:
           name: _BumpScale
@@ -166,11 +167,11 @@ Material:
       data:
         first:
           name: _EmissionColor
-        second: {r: 0, g: 0, b: 0, a: 0.99999994}
+        second: {r: 0.1, g: 0.1, b: 0.1, a: 1}
       data:
         first:
           name: _Color
-        second: {r: 0, g: 0.6745098, b: 0.827451, a: 1}
+        second: {r: 0.10067042, g: 0.24637431, b: 0.2794118, a: 1}
       data:
         first:
           name: _SpecColor

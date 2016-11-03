@@ -110,6 +110,7 @@ namespace Assets.Scripts.Body_Data.View
                     vKvPair.Value.Selectable.SegmentHeldDownEvent += vKvPair.Value.SubsegmentVisibility.ToggleVisiblity;
                 }
             }
+            SetViewType(ViewType.Body);
         }
 
         /// <summary>

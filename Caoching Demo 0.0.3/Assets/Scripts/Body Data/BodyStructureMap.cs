@@ -42,7 +42,9 @@ public class BodyStructureMap
                 instance.CreateSegmentToSubSegmentMap();
                 instance.CreateSensorPosToSensorIDMap();
                 instance.CreateSensorPosToSensorTypeMap();
+                instance.CreateSensorPosToSegmentType();
                 instance.isInitialized = true;
+
             }
             return instance;
         }
@@ -140,6 +142,8 @@ public class BodyStructureMap
     public Dictionary<SegmentTypes, List<SubSegmentTypes>> SegmentToSubSegmentMap = new Dictionary<SegmentTypes, List<SubSegmentTypes>>();
     [JsonProperty]
     public Dictionary<SegmentTypes, List<SensorPositions>> SegmentToSensorPosMap = new Dictionary<SegmentTypes, List<SensorPositions>>();
+    public Dictionary<SensorPositions,SegmentTypes > SensorPosToSegmentType = new Dictionary<SensorPositions, SegmentTypes>();
+
     [JsonProperty]
     public Dictionary<SensorPositions, SensorTypes> SensorPosToSensorTypeMap = new Dictionary<SensorPositions, SensorTypes>();
     [JsonProperty]
@@ -181,6 +185,25 @@ public class BodyStructureMap
     {
         string path = FilePathReferences.LocalSavedDataPath("body_structure_map.json");
         JsonUtilities.ConvertObjectToJson(path, this);
+    }
+
+    public void CreateSensorPosToSegmentType()
+    {
+        SensorPosToSegmentType.Add(SensorPositions.SP_UpperSpine, SegmentTypes.SegmentType_Torso);
+        SensorPosToSegmentType.Add(SensorPositions.SP_LowerSpine, SegmentTypes.SegmentType_Torso);
+        SensorPosToSegmentType.Add(SensorPositions.SP_RightUpperArm, SegmentTypes.SegmentType_RightArm);
+        SensorPosToSegmentType.Add(SensorPositions.SP_RightForeArm, SegmentTypes.SegmentType_RightArm);
+        SensorPosToSegmentType.Add(SensorPositions.SP_LeftUpperArm, SegmentTypes.SegmentType_LeftArm);
+        SensorPosToSegmentType.Add(SensorPositions.SP_LeftForeArm, SegmentTypes.SegmentType_LeftArm);
+        SensorPosToSegmentType.Add(SensorPositions.SP_RightThigh, SegmentTypes.SegmentType_RightLeg);
+        SensorPosToSegmentType.Add(SensorPositions.SP_RightCalf, SegmentTypes.SegmentType_RightLeg);
+        SensorPosToSegmentType.Add(SensorPositions.SP_LeftThigh, SegmentTypes.SegmentType_LeftLeg);
+        SensorPosToSegmentType.Add(SensorPositions.SP_LeftCalf, SegmentTypes.SegmentType_LeftLeg);
+        SensorPosToSegmentType.Add(SensorPositions.SP_LeftKnee, SegmentTypes.SegmentType_LeftLeg);
+        SensorPosToSegmentType.Add(SensorPositions.SP_RightElbow, SegmentTypes.SegmentType_RightArm);
+        SensorPosToSegmentType.Add(SensorPositions.SP_LeftElbow, SegmentTypes.SegmentType_LeftArm);
+        SensorPosToSegmentType.Add(SensorPositions.SP_RightKnee, SegmentTypes.SegmentType_RightLeg);
+         
     }
 
     public void CreateBodyToSegmentMap()

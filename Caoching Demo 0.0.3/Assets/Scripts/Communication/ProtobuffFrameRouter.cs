@@ -29,6 +29,7 @@ namespace Assets.Scripts.Communication
         private BodyFrameBuffer mOutBoundBuffer;
         private ProtobuffDispatchRouter mProtDispatchRouter; 
         private MemoryStream mMemoryStream = new MemoryStream();
+        public ProtoFrameDelegate DataFrameMessageReceivedEvent;
         /// <summary>
         /// Constructor needing an inbound and outbound buffer. Call Start to start the process. 
         /// </summary>
@@ -57,6 +58,10 @@ namespace Assets.Scripts.Communication
             {
                 var vBodyFrame = new BodyFrame(vPacket);
                 OutBoundBuffer.Enqueue(vBodyFrame);
+                if (DataFrameMessageReceivedEvent != null)
+                {
+                    DataFrameMessageReceivedEvent(vSender, vPacket);
+                }
             }
         }
 

@@ -22,7 +22,7 @@ using Assets.Scripts.Communication;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.ErrorHandling;
 using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
-using Assets.Scripts.Frames_Recorder.FramesRecording; 
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 
 /**
 * Body class 
@@ -41,7 +41,8 @@ public class Body
 
     //Body Composition
     [SerializeField]
-    public List<BodySegment> BodySegments = new List<BodySegment>();
+    public Dictionary<BodyStructureMap.SegmentTypes, BodySegment> BodySegments = new Dictionary<BodyStructureMap.SegmentTypes, BodySegment>();
+
     [SerializeField]
     public BodyStructureMap.BodyTypes BodyType = BodyStructureMap.BodyTypes.BodyType_FullBody;
 
@@ -186,7 +187,7 @@ public class Body
             vSegment.ParentBody = this;
             //set the reference to the BodyFrameCalibrationContainer
             vSegment.BodyFrameCalibrationContainer = mBodyFrameCalibrationContainer;
-            BodySegments.Add(vSegment);
+            BodySegments.Add(type, vSegment);
 
             vSegment.AssociatedView.transform.parent = View.transform;
 
@@ -247,10 +248,14 @@ public class Body
         PreviousBodyFrame = CurrentBodyFrame;
         CurrentBodyFrame = vFrame;
 
-        for (int i = 0; i < BodySegments.Count; i++)
+        foreach (var vKv in BodySegments)
         {
-            BodySegments[i].UpdateSensorsData(vFrame);
+            vKv.Value.UpdateSensorsData(vFrame);
         }
+        //for (int i = 0; i < BodySegments.Count; i++)
+        //{
+        //    BodySegments[i].UpdateSensorsData(vFrame);
+        //}
     }
 
     /**
@@ -272,10 +277,14 @@ public class Body
     /// </summary>
     public void UpdateInitialFrameData()
     {
-        for (int i = 0; i < BodySegments.Count; i++)
+        foreach (var vKv in BodySegments)
         {
-            BodySegments[i].UpdateInitialSensorsData(InitialBodyFrame);
+            vKv.Value.UpdateInitialSensorsData(InitialBodyFrame);
         }
+        //for (int i = 0; i < BodySegments.Count; i++)
+        //{
+        //    BodySegments[i].UpdateInitialSensorsData(InitialBodyFrame);
+        //}
     }
 
     /// <summary>
@@ -283,10 +292,14 @@ public class Body
     /// </summary>
     public void ResetBodyMetrics()
     {
-        for (int i = 0; i < BodySegments.Count; i++)
+        foreach (var vKv in BodySegments)
         {
-            BodySegments[i].ResetMetrics();
+            vKv.Value.ResetMetrics();
         }
+        //for (int i = 0; i < BodySegments.Count; i++)
+        //{
+        //    BodySegments[i].ResetMetrics();
+        //}
     }
 
     /**
@@ -303,7 +316,7 @@ public class Body
         //first try to get the recording from the recording manager. 
         BodyRecordingsMgr.Instance.TryGetRecordingByUuid(vRecUuid, PlayRecordingCallback);
     }
- 
+
     /// <summary>
     /// Callback action after a body frames recording has been retrieved
     /// </summary>
@@ -336,10 +349,10 @@ public class Body
                 RecordingErrorHandlerManager.Instance.Notify("IssueLoading", vBodyFrameRecording);
             }
 
-                //Setting the first frame as the initial frame
+            //Setting the first frame as the initial frame
 
 
-                SetInitialFrame(vBodyFrame);
+            SetInitialFrame(vBodyFrame);
             BodyFrameBuffer vBuffer1 = new BodyFrameBuffer();
 
             // mBodyFrameThread = new BodyFrameThread(bodyFramesRec.RecordingRawFrames, vBuffer1);
@@ -444,33 +457,32 @@ public class Body
     /// <param name="vBody">Body vBody: The body to apply tracking to. </param> 
     /// <param name="vDic">Dictionary vDic: The tracking matrices to be applied. </param> 
     public static void ApplyTracking(Body vBody, Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic)
-    { 
+    {
         //get the list of segments of the speicfied vBody
-        List<BodySegment> vListBodySegments = vBody.BodySegments;
-
-        for (int i = 0; i < vListBodySegments.Count; i++)
-        { 
-            //of the current body segment, get the appropriate subsegments
+        var vListBodySegments = vBody.BodySegments;
+        foreach (var vBodySegment in vBody.BodySegments)
+        {
             List<BodyStructureMap.SensorPositions> vSensPosList =
-                BodyStructureMap.Instance.SegmentToSensorPosMap[vListBodySegments[i].SegmentType];
-
-            //create a Dictionary of BodyStructureMap.SensorPositions, float[,] , which will be passed
-            //to the segment
-            Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vFilteredDictionary = new Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure>(2);
-
-             for (int j = 0; j < vSensPosList.Count; j++)
-            { 
-                //    if (vDic.ContainsKey(vSenPos))
-                if (vDic.ContainsKey(vSensPosList[j]))
-                { 
-                    BodyStructureMap.TrackingStructure vTrackedMatrices = vDic[vSensPosList[j]];
-                    vFilteredDictionary.Add(vSensPosList[j], vTrackedMatrices);
+             BodyStructureMap.Instance.SegmentToSensorPosMap[vBodySegment.Key];
+            Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vFilteredDictionary
+                = new Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure>(2);
+            for (int i = 0; i < vSensPosList.Count; i++)
+            {
+                if (vDic.ContainsKey(vSensPosList[i]))
+                {
+                    if (vDic.ContainsKey(vSensPosList[i]))
+                    {
+                        var vTrackedStruc = vDic[vSensPosList[i]];
+                        vFilteredDictionary.Add(vSensPosList[i], vTrackedStruc);
+                    }
                 }
-            }  
+            }
+            //check current segment  and the filtered dictionary. 
 
-            vListBodySegments[i].UpdateSegment(vFilteredDictionary); 
+            vBodySegment.Value.UpdateSegment(vFilteredDictionary);
         }
-         
+        
+
     }
     /**
     * GetTracking()
@@ -509,7 +521,12 @@ public class Body
     */
     public BodySegment GetSegmentFromSegmentType(BodyStructureMap.SegmentTypes vSegmentType)
     {
-        BodySegment vSegment = BodySegments.First(x => x.SegmentType == vSegmentType);
+        BodySegment vSegment = null;
+        if (BodySegments.ContainsKey(vSegmentType))
+        {
+            vSegment = BodySegments[vSegmentType];
+        }
+        //  BodySegment vSegment = BodySegments.First(x => x.SegmentType == vSegmentType);
         return vSegment;
     }
 
@@ -559,7 +576,7 @@ public class Body
         RenderedBody = vRendered;
         foreach (var vBodySegment in BodySegments)
         {
-            vBodySegment.UpdateRenderedSegment(vRendered);
+            vBodySegment.Value.UpdateRenderedSegment(vRendered);
         }
         RenderedBody.AssociatedBodyView = View;
     }
@@ -574,10 +591,11 @@ public class Body
             RenderedBodyPool.ReleaseResource(RenderedBody);
             RenderedBody = null;
         }
-        for (int i = 0; i < BodySegments.Count; i++)
+        foreach (var vBodySegment in BodySegments)
         {
-            BodySegments[i].ReleaseResources();
+            vBodySegment.Value.ReleaseResources();
         }
+
     }
     /// <summary>
     /// Sets the buffer to stream Body frames    from
