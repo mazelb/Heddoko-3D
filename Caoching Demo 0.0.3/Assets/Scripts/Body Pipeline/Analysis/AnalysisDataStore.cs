@@ -27,7 +27,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         public List<Dictionary<FieldInfo, string>> SerializedList = new List<Dictionary<FieldInfo, string>>();
         private List<int> mFrameIndices = new List<int>();
         private List<float> mTimeStamps = new List<float>();
-                private List<BodyFrame> mBodyFrames = new List<BodyFrame>();
+        private List<BodyFrame> mBodyFrames = new List<BodyFrame>();
         private int[] mPoseSelectionIndicies;
         private int mFrameCount = -1;
         private bool mRemovePreviousSerializedInfo;
@@ -183,7 +183,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <param name="vKey"></param>
         public void UpdateSegmentFieldInfo(SegmentAnalysis vKey)
         {
-            
+
             if (!mStorage.ContainsKey(vKey))
             {
                 Debug.Log("no key found");
@@ -217,7 +217,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                     var vPassedInValue = (float)vKvPair.Key.GetValue(vKey);
                     vKvPair.Value.Add(vPassedInValue);
                     //avoid floating point rounding values
-                    string vRoundedValue =((double)vPassedInValue).ToString("F2");
+                    string vRoundedValue = ((double)vPassedInValue).ToString("F2");
                     vList.Add(vKvPair.Key, vRoundedValue);
                     mCounter++;
 
@@ -286,6 +286,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         {
             mFrameCount = vRawFramesCount;
         }
-        
+
     }
 }
