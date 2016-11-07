@@ -117,12 +117,6 @@ public class BodySegment
 	private BodyFrameCalibrationContainer mBodyFrameCalibrationContainer;
 	public Body ParentBody;
 
-#if SEGMENTS_DEBUG_SIM
-	///////////////************************************SIM
-	static public CalData RArm = new CalData();
-	///////////////************************************SIM
-#endif
-
     private StaticROM mROM;
 
     //Is segment tracked (based on body type) 
@@ -300,13 +294,7 @@ public class BodySegment
 	/// <param name="vFilteredDictionary">Dictionnary of tracked segments and their transformations.</param>
 	internal void UpdateSegment(Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vFilteredDictionary)
 	{
-#if SEGMENTS_DEBUG
-		 Profiler.BeginSample("MapSubSegments");
-#endif
 		MapSubSegments(vFilteredDictionary);
-#if SEGMENTS_DEBUG
-		Profiler.EndSample();
-#endif
 	}
 
 	/// <summary>
@@ -459,7 +447,6 @@ public class BodySegment
 
 		Quaternion vTorsoQuat = Quaternion.identity;
 		Quaternion vHipQuat = Quaternion.identity;
-#if !SEGMENTS_DEBUG && !SEGMENTS_DEBUG_SIM
 		if (GBodyFrameUsingQuaternion)
 		{
 			//Upper torso
@@ -467,9 +454,7 @@ public class BodySegment
 			vTorsoQuat = new Quaternion(vTorsoCurRawQuat.x, vTorsoCurRawQuat.y, vTorsoCurRawQuat.z, vTorsoCurRawQuat.w);
 			vTorsoQuat = Quaternion.Inverse(vTorsoInitQuat) * vTorsoQuat;
 		}
-
-		if (!GBodyFrameUsingQuaternion)
-#endif
+		else
 		{
 			Vector3 vTorsoInitialRawEuler = new Vector3(vTorsoInitRawQuat.x, vTorsoInitRawQuat.y, vTorsoInitRawQuat.z) * 180f / Mathf.PI;//vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler * 180f / Mathf.PI;
 			Vector3 vTorsoCurrentRawEuler = new Vector3(vTorsoCurRawQuat.x, vTorsoCurRawQuat.y, vTorsoCurRawQuat.z) * 180f / Mathf.PI;
@@ -495,7 +480,8 @@ public class BodySegment
 			float vForwardAngle = 0;
 			float vUpAngle = 0;
 
-			if (Flags.IsHipsEstimateForward)
+
+            if (Flags.IsHipsEstimateForward)
 			{
 				vForwardAngle = -EstimateHipsForwardAngle(vLSSubsegment.AssociatedView.SubsegmentTransform, vUSSubsegment.AssociatedView.SubsegmentTransform,
 														  vRULSubSegment.AssociatedView.SubsegmentTransform, vLULSubSegment.AssociatedView.SubsegmentTransform,
@@ -509,21 +495,32 @@ public class BodySegment
 											   vRLLSubsegment.AssociatedView.SubsegmentTransform, vLLLSubsegment.AssociatedView.SubsegmentTransform);
 			}
 
-			if (Flags.IsUsingInterpolation)
-			{
-				vHipQuat = Quaternion.Slerp(vLSSubsegment.SubsegmentOrientation, Quaternion.Euler(vUpAngle, 0, 0) * Quaternion.Euler(0, vForwardAngle, 0), InterpolationSpeed);
-				vTorsoQuat = Quaternion.Slerp(vUSSubsegment.SubsegmentOrientation, Quaternion.Inverse(vHipQuat) * vTorsoQuatY * vTorsoQuatX * vTorsoQuatZ, InterpolationSpeed);
-			}
-			else
-			{
-				vHipQuat = Quaternion.Euler(vUpAngle, 0, 0) * Quaternion.Euler(0, vForwardAngle, 0);
-				vTorsoQuat = Quaternion.Inverse(vHipQuat) * vTorsoQuatY * vTorsoQuatX * vTorsoQuatZ;
-			}
+            //if (Flags.IsUsingInterpolation)
+            //{
+            //	vHipQuat = Quaternion.Slerp(vLSSubsegment.SubsegmentOrientation, Quaternion.Euler(vUpAngle, 0, 0) * Quaternion.Euler(0, vForwardAngle, 0), InterpolationSpeed);
+            //	vTorsoQuat = Quaternion.Slerp(vUSSubsegment.SubsegmentOrientation, Quaternion.Inverse(vHipQuat) * vTorsoQuatY * vTorsoQuatX * vTorsoQuatZ, InterpolationSpeed);
+            //}
+            //else
+            //{
+            vHipQuat = Quaternion.Euler(vUpAngle, 0, 0) * Quaternion.Euler(0, vForwardAngle, 0);
+            vTorsoQuat = Quaternion.Inverse(vHipQuat) * vTorsoQuatY * vTorsoQuatX * vTorsoQuatZ;
+			//}
 
-		}
 
-        mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine, vUSSubsegment, ref vTorsoQuat, true);
-        mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine, vLSSubsegment, ref vHipQuat);
+            //if (Flags.IsCalibrating)
+            {
+                mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine, vUSSubsegment, ref vTorsoQuat, true);
+                mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine, vLSSubsegment, ref vHipQuat);
+            }
+
+            if (Flags.IsUsingInterpolation)
+            {
+                vHipQuat = Quaternion.Slerp(vLSSubsegment.SubsegmentOrientation, vHipQuat, InterpolationSpeed);
+                vTorsoQuat = Quaternion.Slerp(vUSSubsegment.SubsegmentOrientation, vTorsoQuat, InterpolationSpeed);
+            }
+
+        }
+
 
         //Apply results
         vUSSubsegment.UpdateSubsegmentOrientation(vTorsoQuat, 0, true);
@@ -576,22 +573,14 @@ public class BodySegment
 		BodyFrame.Vect4 vThighInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightThigh].InitRawEuler;
 		BodyFrame.Vect4 vThighCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightThigh].CurrRawEuler;
 		BodyFrame.Vect4 vKneeInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightCalf].InitRawEuler;
-#if SEGMENTS_DEBUG
-		BodyFrame.Vect4 vKneeCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightCalf].InitRawEuler;
-#else
 		BodyFrame.Vect4 vKneeCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightCalf].CurrRawEuler;
-#endif
 
-		//Vector3 vThighInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightThigh].InitRawEuler * 180f / Mathf.PI;
-		//Vector3 vThighCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightThigh].CurrRawEuler * 180f / Mathf.PI;
-		//Vector3 vKneeInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightCalf].InitRawEuler * 180f / Mathf.PI;
-		//Vector3 vKneeCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightCalf].CurrRawEuler * 180f / Mathf.PI;
 		Vector3 vThighInitialRawEuler = new Vector3(vThighInit.x, vThighInit.y, vThighInit.z) * 180f / Mathf.PI;
 		Vector3 vThighCurrentRawEuler = new Vector3(vThighCurr.x, vThighCurr.y, vThighCurr.z) * 180f / Mathf.PI;
 		Vector3 vKneeInitialRawEuler = new Vector3(vKneeInit.x, vKneeInit.y, vKneeInit.z) * 180f / Mathf.PI;
 		Vector3 vKneeCurrentRawEuler = new Vector3(vKneeCurr.x, vKneeCurr.y, vKneeCurr.z) * 180f / Mathf.PI;
-#if !SEGMENTS_DEBUG && !SEGMENTS_DEBUG_SIM
-		if(GBodyFrameUsingQuaternion)
+
+        if (GBodyFrameUsingQuaternion)
 		{
 			Quaternion vThighInitialRawQuat = new Quaternion(vThighInit.x, vThighInit.y, vThighInit.z, vThighInit.w);
 			Quaternion vThighCurrentRawQuat = new Quaternion(vThighCurr.x, vThighCurr.y, vThighCurr.z, vThighCurr.w);
@@ -601,7 +590,6 @@ public class BodySegment
 			MapLegsOrientationsQuat(vThighInitialRawQuat, vThighCurrentRawQuat, vKneeInitialRawQuat, vKneeCurrentRawQuat, vULSubsegment, vLLSubsegment, vHipsSubsegment);
 		}
 		else
-#endif
 		{
 			MapLegsOrientations(vThighInitialRawEuler, vThighCurrentRawEuler, vKneeInitialRawEuler, vKneeCurrentRawEuler, vULSubsegment, vLLSubsegment, vHipsSubsegment);
 		}
@@ -633,26 +621,13 @@ public class BodySegment
 		BodyFrame.Vect4 vThighInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftThigh].InitRawEuler;
 		BodyFrame.Vect4 vThighCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftThigh].CurrRawEuler;
 		BodyFrame.Vect4 vKneeInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftCalf].InitRawEuler;
-#if SEGMENTS_DEBUG
-		BodyFrame.Vect4 vKneeCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftCalf].InitRawEuler;
-#else
 		BodyFrame.Vect4 vKneeCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftCalf].CurrRawEuler;
-#endif
-		//Vector3 vThighInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftThigh].InitRawEuler * 180f / Mathf.PI;
-		//Vector3 vThighCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftThigh].CurrRawEuler * 180f / Mathf.PI;
-		//Vector3 vKneeInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftCalf].InitRawEuler * 180f / Mathf.PI;
-		//Vector3 vKneeCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftCalf].CurrRawEuler * 180f / Mathf.PI;
 
 		Vector3 vThighInitialRawEuler = new Vector3(vThighInit.x, vThighInit.y, vThighInit.z) * 180f / Mathf.PI; 
 		Vector3 vThighCurrentRawEuler = new Vector3(vThighCurr.x, vThighCurr.y, vThighCurr.z) * 180f / Mathf.PI; 
 		Vector3 vKneeInitialRawEuler = new Vector3(vKneeInit.x, vKneeInit.y, vKneeInit.z) * 180f / Mathf.PI;
-#if SEGMENTS_DEBUG_SIM
-		Vector3 vKneeCurrentRawEuler = new Vector3(vKneeInit.x, vKneeInit.y, vKneeInit.z) * 180f / Mathf.PI;
-#else
 		Vector3 vKneeCurrentRawEuler = new Vector3(vKneeCurr.x, vKneeCurr.y, vKneeCurr.z) * 180f / Mathf.PI;
-#endif
 
-#if !SEGMENTS_DEBUG && !SEGMENTS_DEBUG_SIM
 		if (GBodyFrameUsingQuaternion)
 		{
 			Quaternion vThighInitialRawQuat = new Quaternion(vThighInit.x, vThighInit.y, vThighInit.z, vThighInit.w);
@@ -663,7 +638,6 @@ public class BodySegment
 			MapLegsOrientationsQuat(vThighInitialRawQuat, vThighCurrentRawQuat, vKneeInitialRawQuat, vKneeCurrentRawQuat, vULSubsegment, vLLSubsegment, vHipsSubsegment, false);
 		}
 		else
-#endif
 		{
 			MapLegsOrientations(vThighInitialRawEuler, vThighCurrentRawEuler, vKneeInitialRawEuler, vKneeCurrentRawEuler, vULSubsegment, vLLSubsegment, vHipsSubsegment, false);
 		}
@@ -719,49 +693,49 @@ public class BodySegment
 		Quaternion vThighQuat = Quaternion.identity;
 		Quaternion vKneeQuat =  Quaternion.identity;
 
-		if(Flags.IsFusingSubSegments)
-		{
-			//////////////////////////////////////////////////////////////////////////
-			// upper
-			//////////////////////////////////////////////////////////////////////////
-			// init frame
-			Quaternion vThighInitQuatX = Quaternion.Euler(0, -vULInitEuler.z, 0);
-			Quaternion vThighInitQuatY = Quaternion.Euler(-vULInitEuler.x, 0, 0);
-			Quaternion vThighInitQuatZ = Quaternion.Euler(0, 0, vULInitEuler.y);
-			Quaternion vThighInitQuat = vThighInitQuatY * vThighInitQuatX * vThighInitQuatZ;
-			Quaternion vThighInitInverse = Quaternion.Inverse(vThighInitQuat);
+		//if(Flags.IsFusingSubSegments)
+		//{
+		//	//////////////////////////////////////////////////////////////////////////
+		//	// upper
+		//	//////////////////////////////////////////////////////////////////////////
+		//	// init frame
+		//	Quaternion vThighInitQuatX = Quaternion.Euler(0, -vULInitEuler.z, 0);
+		//	Quaternion vThighInitQuatY = Quaternion.Euler(-vULInitEuler.x, 0, 0);
+		//	Quaternion vThighInitQuatZ = Quaternion.Euler(0, 0, vULInitEuler.y);
+		//	Quaternion vThighInitQuat = vThighInitQuatY * vThighInitQuatX * vThighInitQuatZ;
+		//	Quaternion vThighInitInverse = Quaternion.Inverse(vThighInitQuat);
 
-			// current frame
-			Quaternion vThighQuatY = Quaternion.Euler(0, -vULCurEuler.z, 0);
-			Quaternion vThighQuatX = Quaternion.Euler(-vULCurEuler.x, 0, 0);
-			Quaternion vThighQuatZ = Quaternion.Euler(0, 0, vULCurEuler.y);
+		//	// current frame
+		//	Quaternion vThighQuatY = Quaternion.Euler(0, -vULCurEuler.z, 0);
+		//	Quaternion vThighQuatX = Quaternion.Euler(-vULCurEuler.x, 0, 0);
+		//	Quaternion vThighQuatZ = Quaternion.Euler(0, 0, vULCurEuler.y);
 
-			// computing
-			Quaternion vThighCurrentQuat = vThighQuatY * vThighQuatX * vThighQuatZ;
-			vThighQuat = vThighInitInverse * vThighCurrentQuat;
+		//	// computing
+		//	Quaternion vThighCurrentQuat = vThighQuatY * vThighQuatX * vThighQuatZ;
+		//	vThighQuat = vThighInitInverse * vThighCurrentQuat;
 
 
-			//////////////////////////////////////////////////////////////////////////
-			// lower
-			//////////////////////////////////////////////////////////////////////////
-			// init frame
-			Quaternion vKneeInitQuatX = Quaternion.Euler(0, -vLLInitEuler.z, 0);
-			Quaternion vKneeInitQuatY = Quaternion.Euler(-vLLInitEuler.x, 0, 0);
-			Quaternion vKneeInitQuatZ = Quaternion.Euler(0, 0, vLLInitEuler.y);
-			Quaternion vKneeInitQuat = vKneeInitQuatY * vKneeInitQuatX * vKneeInitQuatZ;
-			Quaternion vKneeInitInverse = Quaternion.Inverse(vKneeInitQuat);
+		//	//////////////////////////////////////////////////////////////////////////
+		//	// lower
+		//	//////////////////////////////////////////////////////////////////////////
+		//	// init frame
+		//	Quaternion vKneeInitQuatX = Quaternion.Euler(0, -vLLInitEuler.z, 0);
+		//	Quaternion vKneeInitQuatY = Quaternion.Euler(-vLLInitEuler.x, 0, 0);
+		//	Quaternion vKneeInitQuatZ = Quaternion.Euler(0, 0, vLLInitEuler.y);
+		//	Quaternion vKneeInitQuat = vKneeInitQuatY * vKneeInitQuatX * vKneeInitQuatZ;
+		//	Quaternion vKneeInitInverse = Quaternion.Inverse(vKneeInitQuat);
 
-			// current frame
-			Quaternion vKneeQuatY = Quaternion.Euler(0, -vLLCurEuler.z, 0);
-			Quaternion vKneeQuatX = Quaternion.Euler(-vLLCurEuler.x, 0, 0);
-			Quaternion vKneeQuatZ = Quaternion.Euler(0, 0, vLLCurEuler.y);
+		//	// current frame
+		//	Quaternion vKneeQuatY = Quaternion.Euler(0, -vLLCurEuler.z, 0);
+		//	Quaternion vKneeQuatX = Quaternion.Euler(-vLLCurEuler.x, 0, 0);
+		//	Quaternion vKneeQuatZ = Quaternion.Euler(0, 0, vLLCurEuler.y);
 
-			// computing
-			Quaternion vKneeCurrentQuat = vKneeQuatY * vKneeQuatX * vKneeQuatZ;
-			vKneeQuat = vKneeInitInverse * vKneeCurrentQuat;
+		//	// computing
+		//	Quaternion vKneeCurrentQuat = vKneeQuatY * vKneeQuatX * vKneeQuatZ;
+		//	vKneeQuat = vKneeInitInverse * vKneeCurrentQuat;
 
-		}
-		else
+		//}
+		//else
 		{
 
 			//Upper Leg
@@ -838,44 +812,51 @@ public class BodySegment
 		Quaternion vNewThighQuat = Quaternion.identity;
 		Quaternion vNewKneeQuat = Quaternion.identity;
 
-		if (Flags.IsUsingInterpolation)
-		{
-			//if (Flags.IsAdjustingSegmentAxis)
-			//{
-			//    vNewThighQuat = Quaternion.Slerp(vULSubsegment.SubsegmentOrientation, vThighQuat * vThighQuatY, InterpolationSpeed);
-			//    vNewKneeQuat = Quaternion.Slerp(vLLSubsegment.SubsegmentOrientation, vKneeQuat * vKneeQuatY, InterpolationSpeed);
-			//}
-			//else
-			{
-				vNewThighQuat = Quaternion.Slerp(vULSubsegment.SubsegmentOrientation, vThighQuat, InterpolationSpeed);
-				vNewKneeQuat = Quaternion.Slerp(vLLSubsegment.SubsegmentOrientation, vKneeQuat, InterpolationSpeed);
-			}
-		}
-		else
-		{
-			//if (Flags.IsAdjustingSegmentAxis)
-			//{
-			//    vNewThighQuat = vThighQuat * vThighQuatY;
-			//    vNewKneeQuat = vKneeQuat * vKneeQuatY;
-			//}
-			//else
-			{
-				vNewThighQuat = vThighQuat;
-				vNewKneeQuat = vKneeQuat;
-			}
-		}
+// 		if (Flags.IsUsingInterpolation)
+// 		{
+// 			//if (Flags.IsAdjustingSegmentAxis)
+// 			//{
+// 			//    vNewThighQuat = Quaternion.Slerp(vULSubsegment.SubsegmentOrientation, vThighQuat * vThighQuatY, InterpolationSpeed);
+// 			//    vNewKneeQuat = Quaternion.Slerp(vLLSubsegment.SubsegmentOrientation, vKneeQuat * vKneeQuatY, InterpolationSpeed);
+// 			//}
+// 			//else
+// 			{
+// 				vNewThighQuat = Quaternion.Slerp(vULSubsegment.SubsegmentOrientation, vThighQuat, InterpolationSpeed);
+// 				vNewKneeQuat = Quaternion.Slerp(vLLSubsegment.SubsegmentOrientation, vKneeQuat, InterpolationSpeed);
+// 			}
+// 		}
+// 		else
+// 		{
+// 			//if (Flags.IsAdjustingSegmentAxis)
+// 			//{
+// 			//    vNewThighQuat = vThighQuat * vThighQuatY;
+// 			//    vNewKneeQuat = vKneeQuat * vKneeQuatY;
+// 			//}
+// 			//else
+// 			{
+		vNewThighQuat = vThighQuat;
+		vNewKneeQuat = vKneeQuat;
+//			}
+//		}
+        //if (Flags.IsCalibrating)
+        {
 
-        if(vIsRight)
-        {
-            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_RightThigh, vULSubsegment, ref vNewThighQuat);
-            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_RightCalf, vLLSubsegment, ref vNewKneeQuat);
-        }                                                                                              
-        else
-        {
-            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh, vULSubsegment, ref vNewThighQuat);
-            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf, vLLSubsegment, ref vNewKneeQuat);
+            if (vIsRight)
+            {
+                mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_RightThigh, vULSubsegment, ref vNewThighQuat);
+                mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_RightCalf, vLLSubsegment, ref vNewKneeQuat);
+            }
+            else
+            {
+                mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh, vULSubsegment, ref vNewThighQuat);
+                mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf, vLLSubsegment, ref vNewKneeQuat);
+            }
         }
-
+        if (Flags.IsUsingInterpolation)
+        {
+            vNewThighQuat = Quaternion.Slerp(vULSubsegment.SubsegmentOrientation, vNewThighQuat, InterpolationSpeed);
+            vNewKneeQuat = Quaternion.Slerp(vLLSubsegment.SubsegmentOrientation, vNewKneeQuat, InterpolationSpeed);
+        }
         vULSubsegment.UpdateSubsegmentOrientation(vNewThighQuat, 1, true);
 		vLLSubsegment.UpdateSubsegmentOrientation(vNewKneeQuat, 1, true);
 	}
@@ -899,11 +880,6 @@ public class BodySegment
 		BodyFrame.Vect4 vUpArmInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightUpperArm].InitRawEuler;
 		BodyFrame.Vect4 vUpArmCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightUpperArm].CurrRawEuler;
 		BodyFrame.Vect4 vLoArmInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightForeArm].InitRawEuler;
-#if SEGMENTS_DEBUG
-		BodyFrame.Vect4 vLoArmCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightForeArm].InitRawEuler;
-		BodyFrame.Vect4 vTorsoInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler;
-		BodyFrame.Vect4 vTorsoCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler;
-#else
 		BodyFrame.Vect4 vLoArmCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightForeArm].CurrRawEuler;
 /*
 		BodyFrame.Vect4 vTorsoInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler;
@@ -912,7 +888,6 @@ public class BodySegment
 		BodyFrame.Vect4 vTorsoInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightUpperArm].InitRawEuler;
 		BodyFrame.Vect4 vTorsoCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightUpperArm].CurrRawEuler;
 //*/
-#endif
 
 
 		Vector3 vUpArmInitialRawEuler = new Vector3(vUpArmInit.x, vUpArmInit.y, vUpArmInit.z) * Mathf.Rad2Deg;
@@ -922,15 +897,8 @@ public class BodySegment
 		Vector3 vTorsoInitialRawEuler = new Vector3(vTorsoInit.x, vTorsoInit.y, vTorsoInit.z) * Mathf.Rad2Deg;
 		Vector3 vTorsoCurrentRawEuler = new Vector3(vTorsoCurr.x, vTorsoCurr.y, vTorsoCurr.z) * Mathf.Rad2Deg;
 
+        
 
-		//Vector3 vUpArmInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightUpperArm].InitRawEuler * Mathf.Rad2Deg;
-		//Vector3 vUpArmCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightUpperArm].CurrRawEuler * Mathf.Rad2Deg;
-		//Vector3 vLoArmInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightForeArm].InitRawEuler * Mathf.Rad2Deg;
-		//Vector3 vLoArmCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightForeArm].CurrRawEuler * Mathf.Rad2Deg;
-		//Vector3 vTorsoInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler * Mathf.Rad2Deg;
-		//Vector3 vTorsoCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].CurrRawEuler * Mathf.Rad2Deg;
-
-#if !SEGMENTS_DEBUG && !SEGMENTS_DEBUG_SIM
 		if (GBodyFrameUsingQuaternion)
 		{
 			Quaternion vUpArmInitialRawQuat = new Quaternion(vUpArmInit.x, vUpArmInit.y, vUpArmInit.z, vUpArmInit.w);
@@ -943,7 +911,6 @@ public class BodySegment
 			MapArmsOrientationsQuat(vUpArmInitialRawQuat, vUpArmCurrentRawQuat, vLoArmInitialRawQuat, vLoArmCurrentRawQuat, vTorsoInitialRawQuat, vTorsoCurrentRawQuat, vUASubsegment, vLASubsegment, vTorsoSubSegment, vHipsSubsegment);
 		}
 		else
-#endif
 		{
 			MapArmsOrientations(vUpArmInitialRawEuler, vUpArmCurrentRawEuler, vLoArmInitialRawEuler, vLoArmCurrentRawEuler, vTorsoInitialRawEuler, vTorsoCurrentRawEuler, vUASubsegment, vLASubsegment, vTorsoSubSegment, vHipsSubsegment);
 		}
@@ -976,15 +943,9 @@ public class BodySegment
 		BodyFrame.Vect4 vUpArmInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftUpperArm].InitRawEuler;
 		BodyFrame.Vect4 vUpArmCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftUpperArm].CurrRawEuler;
 		BodyFrame.Vect4 vLoArmInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftForeArm].InitRawEuler;
-#if SEGMENTS_DEBUG
-		BodyFrame.Vect4 vLoArmCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftForeArm].InitRawEuler;
-		BodyFrame.Vect4 vTorsoInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler;
-		BodyFrame.Vect4 vTorsoCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler;
-#else
 		BodyFrame.Vect4 vLoArmCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftForeArm].CurrRawEuler;
 		BodyFrame.Vect4 vTorsoInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler;
 		BodyFrame.Vect4 vTorsoCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].CurrRawEuler;
-#endif
 
 		Vector3 vUpArmInitialRawEuler = new Vector3(vUpArmInit.x, vUpArmInit.y, vUpArmInit.z) * Mathf.Rad2Deg;
 		Vector3 vUpArmCurrentRawEuler = new Vector3(vUpArmCurr.x, vUpArmCurr.y, vUpArmCurr.z) * Mathf.Rad2Deg;
@@ -993,7 +954,6 @@ public class BodySegment
 		Vector3 vTorsoInitialRawEuler = new Vector3(vTorsoInit.x, vTorsoInit.y, vTorsoInit.z) * Mathf.Rad2Deg;
 		Vector3 vTorsoCurrentRawEuler = new Vector3(vTorsoCurr.x, vTorsoCurr.y, vTorsoCurr.z) * Mathf.Rad2Deg;
 
-#if !SEGMENTS_DEBUG && !SEGMENTS_DEBUG_SIM
 		if (GBodyFrameUsingQuaternion)
 		{
 			Quaternion vUpArmInitialRawQuat = new Quaternion(vUpArmInit.x, vUpArmInit.y, vUpArmInit.z, vUpArmInit.w);
@@ -1006,7 +966,6 @@ public class BodySegment
 			MapArmsOrientationsQuat(vUpArmInitialRawQuat, vUpArmCurrentRawQuat, vLoArmInitialRawQuat, vLoArmCurrentRawQuat, vTorsoInitialRawQuat, vTorsoCurrentRawQuat, vUASubsegment, vLASubsegment, vTorsoSubSegment, vHipsSubsegment);
 		}
 		else
-#endif
 		{
 			MapArmsOrientations(vUpArmInitialRawEuler, vUpArmCurrentRawEuler, vLoArmInitialRawEuler, vLoArmCurrentRawEuler, vTorsoInitialRawEuler, vTorsoCurrentRawEuler, vUASubsegment, vLASubsegment, vTorsoSubSegment, vHipsSubsegment, false);
 		}
@@ -1015,20 +974,8 @@ public class BodySegment
 		vLeftArmAnalysis.UpArTransform = vUASubsegment.AssociatedView.SubsegmentTransform;
 		vLeftArmAnalysis.LoArTransform = vLASubsegment.AssociatedView.SubsegmentTransform;
 		vLeftArmAnalysis.DeltaTime = DeltaTime;
-		vLeftArmAnalysis.AngleExtraction();//*/
-
-		//testing Calibration container
-		/*************** Get a list of a calibration movement type ****************************/
-		//List<Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure>> vItem = mBodyFrameCalibrationContainer.GetListOfCalibrationMovement(CalibrationType.Tpose);
-		/*************** possible check for null references ****************************/
-
-		//if(vItem != null)
-		//{
-		/*************** Get first movement frame's CurrRawEuler of the left forearm****************************/
-
-		//    vItem[0][BodyStructureMap.SensorPositions.SP_LeftForeArm].CurrRawEuler
-
-		//}
+		vLeftArmAnalysis.AngleExtraction();
+        
 	}
 
 	public void MapArmsOrientationsQuat(Quaternion vUAInitQuat, Quaternion vUACurQuat, Quaternion vLAInitQuat, Quaternion vLACurQuat, Quaternion vTorsoInitQuat, Quaternion vTorsoCurQuat,
@@ -1066,16 +1013,7 @@ public class BodySegment
 	{
 
 		//Upper arm
-		//Quaternion vUpArmInitQuatY = Quaternion.Euler(0, 0, 0);
-		//Quaternion vUpArmQuatY = Quaternion.Euler(0, (aIsRight) ? 100 * Mathf.Sin(vCurrentAngle) : -100 * Mathf.Sin(vCurrentAngle), 0);
-		//vUpArmQuatY = Quaternion.Inverse(vUpArmInitQuatY) * vUpArmQuatY;
-		//vUpArmQuatY = Quaternion.Inverse(vUpArmQuatY);
-
-#if SEGMENTS_DEBUG
-		Quaternion vUpArmInitQuatY = Quaternion.Euler(0,  aUAInitEuler.z, 0);
-#else
 		Quaternion vUpArmInitQuatY = Quaternion.Euler(0, aUAInitEuler.z, 0);
-#endif
 		Quaternion vUpArmQuatY = Quaternion.Euler(0, aUACurEuler.z, 0);
 		vUpArmQuatY = Quaternion.Inverse(vUpArmInitQuatY) * vUpArmQuatY;
 		vUpArmQuatY = Quaternion.Inverse(vUpArmQuatY);
@@ -1083,48 +1021,15 @@ public class BodySegment
 		Quaternion vUpArmInitQuatX = Quaternion.Euler(aUAInitEuler.x, 0, 0);
 		Quaternion vUpArmQuatX = Quaternion.Euler(aUACurEuler.x, 0, 0);
 		vUpArmQuatX = Quaternion.Inverse(vUpArmInitQuatX) * vUpArmQuatX;
-#if SEGMENTS_DEBUG
-		Quaternion vUpArmInitQuatZ = Quaternion.Euler(0, 0, aUAInitEuler.y);
-		Quaternion vUpArmQuatZ = Quaternion.Euler(0, 0, aUACurEuler.y);
-#else
+
 		Quaternion vUpArmInitQuatZ = Quaternion.Euler(0, 0, (aUAInitEuler.y));
 		Quaternion vUpArmQuatZ = Quaternion.Euler(0, 0, (aUACurEuler.y));
-#endif
 		vUpArmQuatZ = Quaternion.Inverse(vUpArmInitQuatZ) * vUpArmQuatZ;
 		vUpArmQuatZ = Quaternion.Inverse(vUpArmQuatZ);
 
-#if SEGMENTS_DEBUG
-		if (aIsRight)
-		{
-			// Make sure we have a directory to write to.
-			string vDataPath = "../../RecordedData";
-			if (!Directory.Exists(vDataPath))
-			{
-				Directory.CreateDirectory(vDataPath);
-			}
-
-			// Set the file name to write to and start the file stream.
-			int vFileNameIncrement = 2;
-			mRecordingFileName = string.Format("{0}/{1}_{2}.csv", vDataPath, mRecordingTitle, vFileNameIncrement);
-
-			Debug.Log("Recording data to file: " + mRecordingFileName);
-			mRecordingFileStream = new StreamWriter(mRecordingFileName, true);
-			mRecordingFileStream.WriteLine(aUACurEuler.x + "," + aUACurEuler.y + "," + aUACurEuler.z);
-			mRecordingFileStream.Close();
-		}
-#endif
 		//Lower arm
-		//Quaternion vLoArmInitQuatY = Quaternion.Euler(0, 0, 0);
-		//Quaternion vLoArmQuatY = Quaternion.Euler(0, (aIsRight) ? 100 * Mathf.Sin(vCurrentAngle) : -100 * Mathf.Sin(vCurrentAngle), 0);
-		//vLoArmQuatY = Quaternion.Inverse(vLoArmInitQuatY) * vLoArmQuatY;
-		//vLoArmQuatY = Quaternion.Inverse(vLoArmQuatY);
-#if SEGMENTS_DEBUG
-		Quaternion vLoArmInitQuatY = Quaternion.Euler(0, aLAInitEuler.z, 0);
-		Quaternion vLoArmQuatY = Quaternion.Euler(0, aLACurEuler.z, 0);
-#else
 		Quaternion vLoArmInitQuatY = Quaternion.Euler(0, (aLAInitEuler.z), 0);
 		Quaternion vLoArmQuatY = Quaternion.Euler(0, (aLACurEuler.z), 0);
-#endif
 		vLoArmQuatY = Quaternion.Inverse(vLoArmInitQuatY) * vLoArmQuatY;
 		vLoArmQuatY = Quaternion.Inverse(vLoArmQuatY);
 
@@ -1132,98 +1037,13 @@ public class BodySegment
 		Quaternion vLoArmQuatX = Quaternion.Euler(aLACurEuler.x, 0, 0);
 		vLoArmQuatX = Quaternion.Inverse(vLoArmInitQuatX) * vLoArmQuatX;
 
-#if SEGMENTS_DEBUG
-		Quaternion vLoArmInitQuatZ = Quaternion.Euler(0, 0, aLAInitEuler.y);
-		Quaternion vLoArmQuatZ = Quaternion.Euler(0, 0, aLACurEuler.y );
-#else
 		Quaternion vLoArmInitQuatZ = Quaternion.Euler(0, 0, (aLAInitEuler.y));
 		Quaternion vLoArmQuatZ = Quaternion.Euler(0, 0, (aLACurEuler.y));
-#endif
 		vLoArmQuatZ = Quaternion.Inverse(vLoArmInitQuatZ) * vLoArmQuatZ;
 		vLoArmQuatZ = Quaternion.Inverse(vLoArmQuatZ);
 
 		Quaternion vUpArmQuat = vUpArmQuatY * vUpArmQuatX * vUpArmQuatZ;
 		Quaternion vLoArmQuat = vLoArmQuatY * vLoArmQuatX * vLoArmQuatZ;
-#if SEGMENTS_DEBUG
-		if (aIsRight)
-		{
-			//Test
-			Quaternion vUpArmTestInit = Quaternion.Euler(aUAInitEuler.x, -aUAInitEuler.z, -aUAInitEuler.y);
-			Quaternion vUpArmTest = Quaternion.Euler(aUACurEuler.x, -aUACurEuler.z, -aUACurEuler.y);
-			Quaternion vUpArmQuatTest = Quaternion.Inverse(vUpArmTestInit) * vUpArmTest;
-			vUpArmQuat = vUpArmQuatTest;
-
-			Quaternion vLoArmTestInit = Quaternion.Euler(aLAInitEuler.x, -aLAInitEuler.z, -aLAInitEuler.y);
-			Quaternion vLoArmTest = Quaternion.Euler(aLACurEuler.x, -aLACurEuler.z, -aLACurEuler.y);
-			Quaternion vLoArmQuatTest = Quaternion.Inverse(vLoArmTestInit) * vLoArmTest;
-			vLoArmQuat = vLoArmQuatTest;
-
-			//Convert to orientation
-
-			Vector3 pos = new Vector3(0f, 0f, 0f);
-			Vector3 s = new Vector3(1f, 1f, 1f);
-			Matrix4x4 vUpArmMat = Matrix4x4.TRS(pos, vUpArmQuat, s);
-
-			Matrix4x4 vLoArmMat=Matrix4x4.TRS(pos, vLoArmQuat,s);
-
-			Debug.Log("vLoArmMat="+ vLoArmMat+"vUpArmQuat :" + vUpArmQuat + "-" + "vUpArmQuatTest:" + vUpArmQuatTest);
-		}
-#endif
-#if SEGMENTS_DEBUG_SIM
-		///////////////*************************************************************SIM
-		float t = BodyFrameCalibrationContainer.CurrentTime;
-		BodySegment.RArm.UpdateStates(t);
-		bool T1pOn = RArm.T1pOn;
-		bool T2pOn = RArm.T2pOn;
-		bool ZpOn  = RArm.ZpOn;
-		bool SpOn  = RArm.SpOn;
-		bool CalOn = RArm.CalibrationOn;
-		bool RecOn = RArm.RecOn;
-		BodySegment.RArm.CountFrame++;
-		if ((BodySegment.RArm.CountFrame % BodySegment.RArm.NFrameOnM) == 0 && RecOn)
-		{
-			BodySegment.RArm.TimeQ.Add(t);
-			BodySegment.RArm.Q["Up"].Add(vUpArmQuat);
-			BodySegment.RArm.Q["Lo"].Add(vLoArmQuat);
-			BodySegment.RArm.CountQuarRec++;
-			if (T1pOn)
-			{
-				//Debug.Log("T1p:" + t);
-				BodySegment.RArm.SensT1PoseQuat["Up"].Add(vUpArmQuat);
-				BodySegment.RArm.SensT1PoseQuat["Lo"].Add(vLoArmQuat);
-				BodySegment.RArm.TimePose["T1"].Add(t);
-			}
-			if (T2pOn)
-			{
-				//Debug.Log("T2p:" + t);
-				BodySegment.RArm.SensT2PoseQuat["Up"].Add(vUpArmQuat);
-				BodySegment.RArm.SensT2PoseQuat["Lo"].Add(vLoArmQuat);
-				BodySegment.RArm.TimePose["T2"].Add(t);
-			}
-			if (ZpOn)
-			{
-				//Debug.Log("Zp:" + t);
-				BodySegment.RArm.SensZPoseQuat["Up"].Add(vUpArmQuat);
-				BodySegment.RArm.SensZPoseQuat["Lo"].Add(vLoArmQuat);
-				BodySegment.RArm.TimePose["Z"].Add(t);
-			}
-			if (SpOn)
-			{
-				//Debug.Log("Sp:" + t);
-				BodySegment.RArm.SensSPoseQuat["Up"].Add(vUpArmQuat);
-				BodySegment.RArm.SensSPoseQuat["Lo"].Add(vLoArmQuat);
-				BodySegment.RArm.TimePose["S"].Add(t);
-			}
-			if (CalOn)
-			{
-				Debug.Log("Cp:" + t);
-				BodySegment.RArm.Calibration();
-			}
-		} 
-		///////////////*************************************************************SIM
-
-#endif
-		//vCurrentAngle += 0.01f;
 
 		//Get necessary Axis info
 		Vector3 vUAAxisUp, vUAAxisRight, vUAAxisForward;
@@ -1243,404 +1063,8 @@ public class BodySegment
 		vLAAxisUp = vLoArmQuat * Vector3.up;
 		vLAAxisRight = vLoArmQuat * Vector3.right;
 		vLAAxisForward = vLoArmQuat * Vector3.forward;
-
 #if SEGMENTS_DEBUG
-		//**** Calibration process for arms Shiu algorithm -Right Arm*****
-		if (aIsRight)
-		{
-			counterR++;
-		}
-		else
-		{
-			counterL++;
-		}
-
-		if (Flags.IsCalibrating)
-		{
-			if (aIsRight)
-			{
-				if (Flags.IsCalibrating)
-				{
-
-					// ------ UA R1------------ 
-					float[,] R1 = new float[3, 3];
-
-					R1[0, 0] = 0.964f;
-					R1[0, 1] = -0.249f;
-					R1[0, 2] = 0.091f;
-
-					R1[2, 0] = -0.102f;
-					R1[2, 1] = -0.032f;
-					R1[2, 2] = 0.994f;
-
-					R1[1, 0] = 0.245f;
-					R1[1, 1] = 0.968f;
-					R1[1, 2] = 0.056f;
-
-					Quaternion UAR1Quat = MatrixTools.MatToQuat(R1);
-
-					//------UA R2: -----------
-					float[,] R2 = new float[3, 3];
-
-					//R2[0, 0] = -0.16f;
-					//R2[0, 1] = -0.273f;
-					//R2[0, 2] = 0.949f;
-
-					//R2[1, 0] = 0.211f;
-					//R2[1, 1] = 0.929f;
-					//R2[1, 2] = 0.303f;
-
-					//R2[2, 0] = -0.964f;
-					//R2[2, 1] = 0.249f;
-					R2[2, 2] = -0.091f;
-
-					Quaternion UAR2Quat = MatrixTools.MatToQuat(R2);
-
-					// ------LA R1------------ 
-					 R1 = new float[3, 3];
-
-					R1[0, 0] = 0.971f;
-					R1[0, 1] = -0.232f;
-					R1[0, 2] = 0.058f;
-
-					R1[1, 0] = 0.232f;
-					R1[1, 1] = 0.973f;
-					R1[1, 2] = 0.01f;
-
-					R1[2, 0] = -0.058f;
-					R1[2, 1] = 0.004f;
-					R1[2, 2] = 0.998f;
-
-					Quaternion LAR1Quat = MatrixTools.MatToQuat(R1);
-
-					//------LA R2: -----------
-					R2 = new float[3, 3];
-
-					//R2[0, 0] = -0.16f;
-					//R2[0, 1] = -0.273f;
-					//R2[0, 2] = 0.949f;
-
-					//R2[1, 0] = 0.211f;
-					//R2[1, 1] = 0.929f;
-					//R2[1, 2] = 0.303f;
-
-					//R2[2, 0] = -0.964f;
-					//R2[2, 1] = 0.249f;
-					//R2[2, 2] = -0.091f;
-
-					Quaternion LAR2Quat = MatrixTools.MatToQuat(R2);
-
-
-					// if (counterR > 1000) // apply calibration from now on// how??
-					{
-						vLoArmQuat = Quaternion.Inverse(LAR1Quat) * vLoArmQuat * LAR1Quat ; *vRLAQuatUpsZombie Quaternion.Inverse(vRLAQuatUpsZombie) 
-						vUpArmQuat = Quaternion.Inverse(UAR1Quat) * vUpArmQuat * UAR1Quat;//vRUAQuatUpsZombie); //Quaternion.Inverse *vRUAQuatUpsZombie       *(vRUAQuatUpsZombie)             
-						Debug.Log("Quaternion.Inverse(UAR1Quat)=" + Quaternion.Inverse(UAR2Quat) + "R2Quat=" + UAR2Quat);
-					}
-				}
-
-			}
-
-		}
-		//******************** lisa recording- simon****************
-		//if (aIsRight)
-		//{
-		//    counterR++;
-		//}
-		//else
-		//{
-		//    counterL++;
-		//}
-		//vUAAxisRight = vUpArmQuat * Vector3.right;
-		//vLAAxisRight = vLoArmQuat * Vector3.right;
-		//vUAAxisUp = vUpArmQuat * Vector3.up;
-		//vLAAxisUp = vLoArmQuat * Vector3.up;
-
-		//if (aIsRight)
-		//{
-		//    if (counterR < 200) //T-pose-horizontal 
-		//    {
-		//        // Lower arm
-		//        vRLAAxisRightTPose = vLAAxisRight; //right direction in T-pose ,it is ideal =(1,0,0)
-		//        vRLAAxisUpTPose = vLAAxisUp;
-		//        // Upper arm
-		//        vRUAAxisRightTPose = vUAAxisRight;
-		//        vRUAAxisUpTPose = vUAAxisUp;
-		//        //Debug.Log( "Right"+counterR + ";" + vUAAxisRight + ";" + vLAAxisRight);
-		//    }
-
-		//    if (counterR < 500 && counterR > 460) // zombie pose-horizontal movement (90 degree rotation frames) -TO DO : average the up axis
-		//    {
-		//        // Lower arm
-		//        vRLAAxisRightZombie = vLAAxisRight; //right direction in zombie pose: the ideal is (0,0,1)
-		//        vRLAAxisUpZombie = vLAAxisUp;  //up direction in zombie pose ideal is (1,0,0) we suppose ideal movement around up initial axis at T-pose
-		//                                       // Upper arm
-		//        vRUAAxisRightZombie = vUAAxisRight;
-		//        vRUAAxisUpZombie = vUAAxisUp;
-		//        //sum
-		//        vRLAAxisRightZombieSum += vLAAxisRight;
-		//        vRLAAxisUpZombieSum += vRLAAxisUpZombie;
-		//    }
-
-		//    //right lower arm zombie
-
-		//    //1-correct right Axis
-		//    vRLAQuatRightsZombie = Quaternion.FromToRotation(vRLAAxisRightZombie, Vector3.forward);
-		//    float vForwrdsaAgle = Vector3.Angle(vRLAAxisRightZombie, Vector3.forward);
-
-		//    ///******** 2-correct up axis with Vector3.up **********
-		//    float vUpsAngleRLA = Vector3.Angle(vRLAAxisUpZombie, Vector3.up);
-
-
-		//    ///******** 2-a correct up axis with t-pose **********
-		//    float vUpsAngleRLA1 = Vector3.Angle(vRLAAxisUpZombie, vRLAAxisUpTPose);
-		//    //vRLAQuatUpsZombie = Quaternion.FromToRotation(vRLAAxisUpZombie, vRLAAxisUpTPose);
-
-		//    //3-correct cross product of zombie and t-pose
-		//    Vector3 vRightsCrossRLA = Vector3.Cross(vRLAAxisRightZombie, vRLAAxisRightTPose);
-		//    float vCrossUpAngleRLA = Vector3.Angle(vRightsCrossRLA, Vector3.up);
-		//    //vRLAQuatUpsZombie = Quaternion.FromToRotation(vRightsCrossRLA, Vector3.up);
-
-		//    //4-correct cross product of zombie and vector3.right
-		//    Vector3 vRightsCrossRLA1 = Vector3.Cross(vRLAAxisRightZombie, Vector3.right);
-		//    float vCrossUpAngleRLA1 = Vector3.Angle(vRightsCrossRLA, Vector3.up);
-		//    //Debug.Log("Right" + counterR + "rights;" + vRLAAxisRightZombie + "Ups-vec.up;" + vUpsAngleRLA + "zombie up=" + vRLAAxisUpZombie  + "Ups-tposeup;" + vUpsAngleRLA1 +"T up="+ vRLAAxisUpTPose + "cross;" + vCrossUpAngleRLA + "rightsCross=" + vRightsCrossRLA );
-
-		//    vRLAQuatUpsZombie = Quaternion.FromToRotation(vRLAAxisUpZombie, Vector3.up);
-		//    //right upper arm  zombie
-		//    vRUAQuatUpsZombie = Quaternion.FromToRotation(vRUAAxisUpZombie, Vector3.up);
-
-		//    //Debug.Log("Zombie-before-R" + counterR + ";" + vLoArmQuat * Vector3.up + ";" + vLoArmQuat * Vector3.right + ";" + vUpArmQuat * Vector3.up + ";" + vUpArmQuat * Vector3.right);
-
-		//    if (Flags.IsCalibrating)
-		//    {
-		//        if (counterR > 500) // apply calibration from now on// how??
-		//        {
-		//            //vLoArmQuat = vLoArmQuat * (vRLAQuatUpsZombie); *vRLAQuatUpsZombie Quaternion.Inverse(vRLAQuatUpsZombie) 
-		//            //vUpArmQuat = vUpArmQuat * Quaternion.Inverse(vRUAQuatUpsZombie); //Quaternion.Inverse *vRUAQuatUpsZombie       *(vRUAQuatUpsZombie)             
-		//        }
-
-		//        //Debug.Log("Zombie-After-R" + counterR + ";" + vLoArmQuat * Vector3.up + ";" + vLoArmQuat * Vector3.right + ";" + vUpArmQuat * Vector3.up + ";" + vUpArmQuat * Vector3.right);
-
-		//        /////////////// soldier pose ////////
-		//        if (counterR < 1000 && counterR > 907) // soldier pose-horizontal  (90 degree rotation frames) -TO DO : average
-		//        {
-		//            // Lower arm
-		//            vRLAAxisRightSoldier = vLoArmQuat * Vector3.right; //right direction in zombie pose: the ideal is (0,0,1)
-		//            vRLAAxisUpSoldier = vLoArmQuat * Vector3.up;  //up direction in zombie pose ideal is (1,0,0) we suppose ideal movement around up initial axis at T-pose
-		//            vRLAAxisFwdSoldier = vLoArmQuat * Vector3.forward;
-		//            // Upper arm
-		//            vRUAAxisRightSoldier = vUpArmQuat * Vector3.right;
-		//            vRUAAxisUpSoldier = vUpArmQuat * Vector3.up;
-		//            vRUAAxisFwdSoldier = vUpArmQuat * Vector3.forward;
-
-		//            vRLAAxisRightSoldierSum += vLAAxisRight;
-		//            vRLAAxisUpSoldierSum += vRLAAxisUpSoldier;
-		//        }
-
-		//        //right lower arm Soldier
-		//        //1- forward axis and vector3.forward
-		//        vRLAQuatforwardsSoldier = Quaternion.FromToRotation(vRLAAxisFwdSoldier, Vector3.forward);
-		//        float vFwdsAngleRLA = Vector3.Angle(vRLAAxisFwdSoldier, Vector3.forward);
-		//        //2- cross product of rights and vector3.forward 
-		//        Vector3 vCrossRightsSoldierRLA = Vector3.Cross(vRLAAxisRightSoldier, Vector3.right);
-		//        vRLAQuatforwardsSoldier = Quaternion.FromToRotation(vCrossRightsSoldierRLA, Vector3.forward);
-		//        float vCrossAngleSoldierRLA = Vector3.Angle(vCrossRightsSoldierRLA, Vector3.forward);
-
-		//        //Debug.Log("Right-soldier" + counterR + "forward=" + vRLAAxisFwdSoldier + "fwd ang=" + vFwdsAngleRLA + "soldier cross=" + vCrossRightsSoldierRLA + "cross angl=" + vCrossAngleSoldierRLA);
-
-		//        ////right uper arm  Soldier
-		//        //1- forward axis and vector3.forward
-		//        vRUAQuatforwardsSoldier = Quaternion.FromToRotation(vRUAAxisFwdSoldier, Vector3.forward);
-		//        float vFwdsAngleRUA = Vector3.Angle(vRUAAxisFwdSoldier, Vector3.forward);
-
-		//        //2- cross product of rights and vector3.forward 
-		//        Vector3 vCrossRightsSoldierRUA = Vector3.Cross(vRUAAxisRightSoldier, Vector3.right);
-		//        //vRUAQuatforwardsSoldier = Quaternion.FromToRotation(vCrossRightsSoldierRUA, Vector3.forward);
-		//        float vCrossAngleSoldierRUA = Vector3.Angle(vCrossRightsSoldierRUA, Vector3.forward);
-		//        Debug.Log("Right-soldier" + counterR + "forward=" + vRLAAxisFwdSoldier + "fwd ang=" + vFwdsAngleRUA + "soldier cross=" + vCrossRightsSoldierRUA + "cross angl=" + vCrossAngleSoldierRUA);
-		//        Debug.Log("Soldier-before-R" + counterR + ";" + vLoArmQuat * Vector3.up + ";" + vLoArmQuat * Vector3.right + ";" + vUpArmQuat * Vector3.up + ";" + vUpArmQuat * Vector3.right);
-		//        if (counterR > 1000) // apply Soldier calibration from now on//
-		//        {
-		//            //vLoArmQuat = vLoArmQuat * (vRLAQuatforwardsSoldier);* (vRLAQuatforwardsSoldier); *vRLAQuatUpsZombie Quaternion.Inverse
-		//            vUpArmQuat = vUpArmQuat * Quaternion.Inverse(vRUAQuatforwardsSoldier); //Quaternion.Inverse *vRUAQuatUpsZombie                    
-		//        }
-		//        Debug.Log("Soldier-After-R" + counterR + ";" + vLoArmQuat * Vector3.up + ";" + vLoArmQuat * Vector3.right + ";" + vUpArmQuat * Vector3.up + ";" + vUpArmQuat * Vector3.right);
-		//    }
-		//}
-		//else //left arm -TODO: Averaging the mis aligned value
-		//{
-		//    if (counterL < 390) //T-pose-horizontal 
-		//    {
-		//        //Debug.Log("Left" + counterL + ";" + vUAAxisRight + ";" + vLAAxisRight);
-		//        vLLAAxisRightTPose = vLAAxisRight; //right direction in T-pose ,it is ideal(1,0,0)
-		//    }
-		//    if (counterL < 590 && counterL > 475)
-		//    {
-		//        //Debug.Log("Left" + counterL + ";" + vUAAxisRight + ";" + vLAAxisRight);
-		//        vLLAAxisRightZombie = vLAAxisRight;
-		//        //right direction in zombie pose the ideal is (0,0,1)
-		//        //vLLAAxisRightZombie.x = -vLLAAxisRightZombie.x;
-		//        vLLAAxisUpZombie = vLAAxisUp;  //up direction in zombie pose ideal is (1,0,0) we suppose ideal movement around up initial axis at t-pose
-		//                                       // Upper arm
-		//        vLUAAxisRightZombie = vUAAxisRight;
-		//        vLUAAxisUpZombie = vUAAxisUp;
-
-		//        vLLAAxisRightZombieSum += vLAAxisRight;
-		//        vLLAAxisUpZombieSum += vLLAAxisUpZombie;
-		//    }
-		//    //left lower arm
-		//    vLLAQuatRightsZombie = Quaternion.FromToRotation(vLLAAxisRightZombie, Vector3.forward);
-		//    vLLAQuatUpsZombie = (Quaternion.FromToRotation(vLLAAxisUpZombie, Vector3.up));
-		//    //left upper arm
-		//    vLUAQuatRightsZombie = Quaternion.FromToRotation(vLUAAxisRightZombie, Vector3.forward);
-		//    vLUAQuatUpsZombie = (Quaternion.FromToRotation(vLUAAxisUpZombie, Vector3.up));
-		//    //Debug.Log(counterL + ";" + Vector3.Cross(vLLAAxisRightTPose, vLLAAxisRightZombie) + ";" + vLLAAxisUpZombie);
-		//    if (counterL > 590)
-		//    {
-		//        vLoArmQuat = Quaternion.Inverse(vLLAQuatUpsZombie) * vLoArmQuat * vLLAQuatUpsZombie;
-		//        vUpArmQuat = Quaternion.Inverse(vLUAQuatUpsZombie) * vUpArmQuat * vLUAQuatUpsZombie;
-		//    }
-		//}
-
-			///************* calibation for specific movements  *****
-			//if (aIsRight)
-			//{
-			//    counterR++;
-			//}
-			//else
-			//{
-			//    counterL++;
-			//}
-			//vUAAxisRight = vUpArmQuat * Vector3.right;
-			//vLAAxisRight = vLoArmQuat * Vector3.right;
-			//vUAAxisUp = vUpArmQuat * Vector3.up;
-			//vLAAxisUp = vLoArmQuat * Vector3.up;
-
-			/////****************** T-pose-horizontal elbow movement*****************
-			//    if (aIsRight)
-			//{
-			//    if (counterR < 20) //T-pose-horizontal elbow movement
-			//    {
-			//        //Debug.Log( "Right"+counterR + ";" + vUAAxisRight + ";" + vLAAxisRight);
-			//        vRLAAxisRightTPose = vLAAxisRight; //right direction in T-pose ,it is ideal =(1,0,0)                    
-			//    }
-
-			//    if (counterR < 297 && counterR > 293) // zombie pose-horizontal elbow movement (90 degree rotation frames)
-			//    {
-			//        Debug.Log(counterR + ";" + vUAAxisRight + ";" + vLAAxisRight);
-			//        vRLAAxisRightZombie = vLAAxisRight; //right direction in zombie pose: the ideal is (0,0,1)
-			//        vRLAAxisUpZombie = vLAAxisUp;  //up direction in zombie pose ideal is (1,0,0) we suppose ideal movement around up initial axis at T-pose
-			//        vRLAAxisRightZombieSum += vLAAxisRight;
-			//        vRLAAxisUpZombieSum += vRLAAxisUpZombie;
-			//    }
-
-			//    //vRAQuatRights = Quaternion.FromToRotation(vRLAAxisRightZombie, Vector3.forward);
-			//    vRLAQuatUpsZombie = Quaternion.FromToRotation(vRLAAxisUpZombie, Vector3.up);
-
-			//    //Debug.Log("Right" + counterR + ";" + Vector3.Cross(vRLAAxisRightTPose, vRLAAxisRightZombie)  + ";" + vLLAQuatUpsZombie);
-			//    if (counterR > 296) // apply calibration from now on// this may mess up T-pose at first, TODO: fix it!
-			//    {
-			//        vLoArmQuat = vRLAQuatUpsZombie * vLoArmQuat;
-			//    }
-			//}
-
-			//else //left arm
-			//{
-
-			//    if (counterL < 20) //T-pose-horizontal elbow
-			//    {
-			//        Debug.Log("Left" + counterL + ";" + vUAAxisRight + ";" + vLAAxisRight);
-			//        vLLAAxisRightTPose = vLAAxisRight; //right direction in T-pose ,it is ideal(1,0,0)
-
-			//    }
-			//    if (counterL < 297 && counterL > 293)
-			//    {
-			//        Debug.Log("Left" + counterL + ";" + vUAAxisRight + ";" + vLAAxisRight);
-			//        vLLAAxisRightZombie = vLAAxisRight;
-			//        //right direction in zombie pose the ideal is (0,0,1)
-			//        //vLLAAxisRightZombie.x = -vLLAAxisRightZombie.x;
-			//        vLLAAxisUpZombie = vLAAxisUp;  //up direction in zombie pose ideal is (1,0,0) we suppose ideal movement around up initial axis at t-pose
-			//                                       // vLLAAxisUpZombie.x = -vLLAAxisUpZombie.x;
-			//        vLLAAxisRightZombieSum += vLAAxisRight;
-			//        vLLAAxisUpZombieSum += vLLAAxisUpZombie;
-			//    }
-
-			//    //vLAQuatRights = Quaternion.FromToRotation(vLLAAxisRightZombie, Vector3.forward);
-			//    vLLAQuatUpsZombie = (Quaternion.FromToRotation(vLLAAxisUpZombie, Vector3.up));
-			//    //Debug.Log(counterL + ";" + vLAQuatRights + ";" + vLAQuatUps);
-			//    Debug.Log(counterL + ";" + Vector3.Cross(vLLAAxisRightTPose, vLLAAxisRightZombie) + ";" + vLLAAxisUpZombie);
-			//    if (counterL > 296)
-			//    {
-			//        vLoArmQuat = vLoArmQuat* vLLAQuatUpsZombie;
-			//    }
-			//}
-			//  **************** horizontal shoulder movement***********
-			//if (aIsRight)
-			//{
-			//    if (counterR < 35) //T-pose-horizontal shoulder movement
-			//    {
-			//        vRLAAxisRightTPose = vLAAxisRight; //right direction in T-pose ,it is ideal =(1,0,0) 
-			//    }
-			//    Debug.Log(counterR + ";beforeif" + vUAAxisRight + ";" + vLAAxisRight + ";" + vUAAxisUp + ";" + vLAAxisUp);
-			//    if (counterR < 202 && counterR > 195)
-			//    {
-			//        Debug.Log(counterR + ";" + vUAAxisRight + ";" + vLAAxisRight + ";" + vUAAxisUp + ";" + vLAAxisUp);
-			//        vRLAAxisRightZombie = vLAAxisRight; //right direction in zombie pose: the ideal is (0,0,1)
-			//        vRLAAxisUpZombie = vLAAxisUp;  //up direction in zombie pose, ideal is (1,0,0) we suppose ideal movement around up initial axis at T-pose
-			//        vRLAAxisRightZombieSum += vLAAxisRight;
-			//        vRLAAxisUpZombieSum += vRLAAxisUpZombie;
-			//    }
-
-			//    //vRLAAxisUpZombie = vRLAAxisUpZombieSum / 3;
-			//    //vRLAAxisRightZombie = vRLAAxisRightZombieSum / 3;
-
-			//    vRAQuatRights = Quaternion.FromToRotation(vRLAAxisRightZombie, Vector3.forward);
-			//    vRAQuatUps = Quaternion.FromToRotation(vRLAAxisUpZombie, Vector3.up);
-
-			//    //Debug.Log("Right" + counterR + ";" + Vector3.Cross(vRLAAxisRightTPose, vRLAAxisRightZombie) + ";" + vRAQuatRights + ";" + vRAQuatUps);
-			//    if (counterR > 201) // apply calibration from now on// this may mess up T-pose at first, TODO: fix it!
-			//    {
-			//        vLoArmQuat = vRAQuatUps * vLoArmQuat;
-			//    }
-			//}
-			//else //left arm
-			//{
-			//    if (counterL < 35) //T-pose-horizontal shoulder
-			//    {
-			//        //Debug.Log("Left" + counterL + ";" + vUAAxisRight + ";" + vLAAxisRight);
-			//        vLLAAxisRightTPose = vLAAxisRight; //right direction in T-pose ,it is ideal(1,0,0)
-			//    }
-
-			//    if (counterL < 202 && counterL > 195)
-			//    {
-			//        //Debug.Log("Left" + counterL + ";" + vUAAxisRight + ";" + vLAAxisRight);
-			//        vLLAAxisRightZombie = vLAAxisRight;
-			//        //right direction in zombie pose the ideal is (0,0,1)
-			//        //vLLAAxisRightZombie.x = -vLLAAxisRightZombie.x;
-			//        vLLAAxisUpZombie = vLAAxisUp;  //up direction in zombie pose ideal is (1,0,0) we suppose ideal movement around up initial axis at t-pose
-			//                                       // vLLAAxisUpZombie.x = -vLLAAxisUpZombie.x;
-			//        vLLAAxisRightZombieSum += vLAAxisRight;
-			//        vLLAAxisUpZombieSum += vLLAAxisUpZombie;
-			//    }
-
-			//    //vLLAAxisUpZombie = vLLAAxisUpZombieSum / 3;
-			//    //vLLAAxisRightZombie = vLLAAxisRightZombieSum / 3;
-
-			//    vLAQuatRights = Quaternion.FromToRotation(vLLAAxisRightZombie, Vector3.forward);
-			//    vLAQuatUps = (Quaternion.FromToRotation(vLLAAxisUpZombie, Vector3.up));
-			//    //Debug.Log(counterL + ";" + vLAQuatRights + ";" + vLAQuatUps);
-			//    Debug.Log(counterL + ";" + Vector3.Cross(vLLAAxisRightTPose, vLLAAxisRightZombie) + ";" + vLLAAxisUpZombie);
-			//    if (counterL > 201)
-			//    {
-			//        vLoArmQuat = vLAQuatUps * vLoArmQuat;
-			//    }
-			//}           
-		   //} //calibration end
-
-#endif
-
-		if (Flags.IsProjectingXY)
+        if (Flags.IsProjectingXY)
 		{
 			vLANewRight = Vector3.ProjectOnPlane(vLAAxisRight, vUAAxisForward);
 			vLANewUp = Vector3.Cross(vLAAxisForward, vLANewRight);
@@ -1661,6 +1085,7 @@ public class BodySegment
 			vLANewForward = Vector3.Cross(vLANewRight, vLANewUp);
 			vLoArmQuat = Quaternion.LookRotation(vLANewForward, vLANewUp);
 		}
+#endif
 
 #if SEGMENTS_DEBUG
 		vUAAxisUp = vUpArmQuat * Vector3.up;
@@ -1706,79 +1131,89 @@ public class BodySegment
 		Quaternion vNewUpArmQuat = Quaternion.identity;
 		Quaternion vNewLoArmQuat = Quaternion.identity;
 
-		if (Flags.IsUsingInterpolation)
-		{
-			if (Flags.IsAdjustingSegmentAxis)
-			{
-				vNewUpArmQuat = Quaternion.Slerp(aUASubsegment.SubsegmentOrientation, vUpArmQuat * Quaternion.Inverse(vUpArmQuatX), InterpolationSpeed);
-				vNewLoArmQuat = Quaternion.Slerp(aLASubsegment.SubsegmentOrientation, vLoArmQuat * Quaternion.Inverse(vLoArmQuatX), InterpolationSpeed);
-			}
-			else
-			{
-				vNewUpArmQuat = Quaternion.Slerp(aUASubsegment.SubsegmentOrientation, vUpArmQuat, InterpolationSpeed);
-				vNewLoArmQuat = Quaternion.Slerp(aLASubsegment.SubsegmentOrientation, vLoArmQuat, InterpolationSpeed);
-			}
-		}
-		else
-		{
-			if (Flags.IsAdjustingSegmentAxis)
-			{
-				vNewUpArmQuat = vUpArmQuat * Quaternion.Inverse(vUpArmQuatX);
-				vNewLoArmQuat = vLoArmQuat * Quaternion.Inverse(vLoArmQuatX);
-			}
-			else
-			{
-				vNewUpArmQuat = vUpArmQuat;
-				vNewLoArmQuat = vLoArmQuat;
-			}
-		}
+        //if (Flags.IsUsingInterpolation)
+        //{
+        //	if (Flags.IsAdjustingSegmentAxis)
+        //	{
+        //		vNewUpArmQuat = Quaternion.Slerp(aUASubsegment.SubsegmentOrientation, vUpArmQuat * Quaternion.Inverse(vUpArmQuatX), InterpolationSpeed);
+        //		vNewLoArmQuat = Quaternion.Slerp(aLASubsegment.SubsegmentOrientation, vLoArmQuat * Quaternion.Inverse(vLoArmQuatX), InterpolationSpeed);
+        //	}
+        //	else
+        //	{
+        //		vNewUpArmQuat = Quaternion.Slerp(aUASubsegment.SubsegmentOrientation, vUpArmQuat, InterpolationSpeed);
+        //		vNewLoArmQuat = Quaternion.Slerp(aLASubsegment.SubsegmentOrientation, vLoArmQuat, InterpolationSpeed);
+        //	}
+        //}
+        //else
+        //{
+        //	if (Flags.IsAdjustingSegmentAxis)
+        //	{
+        //		vNewUpArmQuat = vUpArmQuat * Quaternion.Inverse(vUpArmQuatX);
+        //		vNewLoArmQuat = vLoArmQuat * Quaternion.Inverse(vLoArmQuatX);
+        //	}
+        //	else
+        //	{
+        //		vNewUpArmQuat = vUpArmQuat;
+        //		vNewLoArmQuat = vLoArmQuat;
+        //	}
+        //}
 
-        if (aIsRight)
+        vNewUpArmQuat = vUpArmQuat;
+        vNewLoArmQuat = vLoArmQuat;
+        //if(Flags.IsCalibrating)
         {
-            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_RightUpperArm, aUASubsegment, ref vNewUpArmQuat);
-            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm, aLASubsegment, ref vNewLoArmQuat);
+            if (aIsRight)
+            {
+                mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_RightUpperArm, aUASubsegment, ref vNewUpArmQuat);
+                mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm, aLASubsegment, ref vNewLoArmQuat);
 
-        } 
-        else
+            }
+            else
+            {
+                mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm, aUASubsegment, ref vNewUpArmQuat);
+                mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm, aLASubsegment, ref vNewLoArmQuat);
+            }
+        }
+
+        if(Flags.IsUsingInterpolation)
         {
-            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm, aUASubsegment, ref vNewUpArmQuat);
-            mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm, aLASubsegment, ref vNewLoArmQuat);
+            vNewUpArmQuat = Quaternion.Slerp(aUASubsegment.SubsegmentOrientation, vNewUpArmQuat, InterpolationSpeed);
+            vNewLoArmQuat = Quaternion.Slerp(aLASubsegment.SubsegmentOrientation, vNewLoArmQuat, InterpolationSpeed);
         }
 
         aUASubsegment.UpdateSubsegmentOrientation(vNewUpArmQuat, 1, true);
-		//aUASubsegment.UpdateSubsegmentOrientation(Quaternion.identity, 2, true);
 		aLASubsegment.UpdateSubsegmentOrientation(vNewLoArmQuat, 1, true);
 	}
 
-	public float getAngleDelta(float vCurAngle, float vInitAngle)
-	{
-		float vResult = 0;
+	//public float getAngleDelta(float vCurAngle, float vInitAngle)
+	//{
+	//	float vResult = 0;
 
-		if (vCurAngle > 0)
-		{
-			if (Mathf.Abs(vCurAngle) > Mathf.Abs(vInitAngle))
-			{
-				vResult = Mathf.Abs(vCurAngle) - Mathf.Abs(vInitAngle);
-			}
-			else
-			{
-				vResult = Mathf.Abs(vInitAngle) - Mathf.Abs(vCurAngle);
-			}
-		}
-		else
-		{
-			if (Mathf.Abs(vCurAngle) > Mathf.Abs(vInitAngle))
-			{
-				vResult = Mathf.Abs(vInitAngle) - Mathf.Abs(vCurAngle);
-			}
-			else
-			{
-				vResult = Mathf.Abs(vCurAngle) - Mathf.Abs(vInitAngle);
-			}
-		}
+	//	if (vCurAngle > 0)
+	//	{
+	//		if (Mathf.Abs(vCurAngle) > Mathf.Abs(vInitAngle))
+	//		{
+	//			vResult = Mathf.Abs(vCurAngle) - Mathf.Abs(vInitAngle);
+	//		}
+	//		else
+	//		{
+	//			vResult = Mathf.Abs(vInitAngle) - Mathf.Abs(vCurAngle);
+	//		}
+	//	}
+	//	else
+	//	{
+	//		if (Mathf.Abs(vCurAngle) > Mathf.Abs(vInitAngle))
+	//		{
+	//			vResult = Mathf.Abs(vInitAngle) - Mathf.Abs(vCurAngle);
+	//		}
+	//		else
+	//		{
+	//			vResult = Mathf.Abs(vCurAngle) - Mathf.Abs(vInitAngle);
+	//		}
+	//	}
 
-		return vResult;
-	}
+	//	return vResult;
+	//}
 
 	/// <summary>
 	/// InitializeBodySegment: Initializes a new body structure's internal properties with the desired Segment Type.
@@ -1878,6 +1313,7 @@ public class BodySegment
     public void SetStaticROM(StaticROM segmentRom)
     {
         mROM = segmentRom;
+        mROM.mFlags = Flags;
     }
 
 }

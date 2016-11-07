@@ -46,48 +46,46 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
         //    }
         //}
 
-        public void SetPitchMinMax(float min, float max)
+        public void SetXMinMax(float min, float max)
         {
-            if (PitchMinMax == null)
+            if (XMinMax == null)
             {
-                PitchMinMax = new AngleConstraint(Vector3.right, min, max);
+                XMinMax = new AngleConstraint(Vector3.right, min, max);
             }
             else
             {
-                PitchMinMax.minAngle = min;
-                PitchMinMax.maxAngle = max;
-
+                XMinMax.minAngle = min;
+                XMinMax.maxAngle = max;
             }
         }
-        public void SetYawMinMax(float min, float max)
+        public void SetYMinMax(float min, float max)
         {
-            if (PitchMinMax == null)
+            if (YMinMax == null)
             {
-                PitchMinMax = new AngleConstraint(Vector3.up, min, max);
+                YMinMax = new AngleConstraint(Vector3.up, min, max);
             }
             else
             {
-                PitchMinMax.minAngle = min;
-                PitchMinMax.maxAngle = max;
+                YMinMax.minAngle = min;
+                YMinMax.maxAngle = max;
             }
         }
-        public void SetRollMinMax(float min, float max)
+        public void SetZMinMax(float min, float max)
         {
-            if (PitchMinMax == null)
+            if (ZMinMax == null)
             {
-                PitchMinMax = new AngleConstraint(Vector3.forward, min, max);
+                ZMinMax = new AngleConstraint(Vector3.forward, min, max);
             }
             else
             {
-                PitchMinMax.minAngle = min;
-                PitchMinMax.maxAngle = max;
-
+                ZMinMax.minAngle = min;
+                ZMinMax.maxAngle = max;
             }
         }
 
-        public AngleConstraint PitchMinMax = null;
-        public AngleConstraint YawMinMax   = null;
-        public AngleConstraint RollMinMax  = null;
+        public AngleConstraint XMinMax = null;
+        public AngleConstraint YMinMax   = null;
+        public AngleConstraint ZMinMax  = null;
 
 
     }

@@ -107,7 +107,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             CurrRef = BodiesManager.Instance.CreateNewBody("Reference");
             CurrBody.RangeOfMotion.Reference = CurrRef;
             CurrRef.UpdateRenderedBody(Body_Data.View.RenderedBodyPool.RequestResource(CurrRef.BodyType, true));
-            CurrRef.RenderedBody.transform.Translate(2*Vector3.left);
+            CurrRef.RenderedBody.transform.Translate(2*Vector3.right);
 
             //CurrBody = BodiesManager.Instance.GetBodyFromUUID("Root");
             mPanelNodes = CurrentLayout.ContainerStructure.RenderingPanelNodes;

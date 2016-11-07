@@ -24345,6 +24345,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 162584, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
   m_IsPrefabParent: 0
@@ -29069,7 +29073,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 890272455}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999999
+  m_Size: 0.9999998
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -32151,7 +32155,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000015258789}
+  m_AnchoredPosition: {x: 0, y: 0.000022888184}
   m_SizeDelta: {x: 0, y: 20.6}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1441013632
