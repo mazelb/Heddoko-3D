@@ -6,8 +6,8 @@
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
 
-using System;
-using System.Deployment.Internal;
+
+using HeddokoLib.genericPatterns;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -19,6 +19,7 @@ namespace Assets.Scripts.Body_Data.View
     /// </summary>
     public class SensorTransform : MonoBehaviour, IPointerClickHandler
     {
+        
         public Transform OrientationToCopy;
         private bool mIsHidden = true;
         public AxisViewContainer Axis;
@@ -30,9 +31,22 @@ namespace Assets.Scripts.Body_Data.View
         
         public GameObject[] HighlightedGameObjects;
         private bool mIsHighlighted;
+        private bool mPreviousCalState = false;
+        private bool mPreviousMagState = false;
+        private ParticlePoolManager mRedPool;
+        private ParticlePoolManager mWhitePool;
+        public AirplaneSensorColor Wings ;
+        public AirplaneSensorColor Fuselage;
+
+
         public bool IsHighlighted
         {
             get { return mIsHighlighted; }
+        }
+
+        private void Awake()
+        {
+            
         }
         /// <summary>
         /// Hide the sensor
@@ -42,6 +56,8 @@ namespace Assets.Scripts.Body_Data.View
             mIsHidden = true;
             HighlightObject(false);
             gameObject.SetActive(false);
+            Wings.ResetState();
+            Fuselage.ResetState();
         }
 
         public void HighlightObject(bool vFlag)
@@ -106,12 +122,56 @@ namespace Assets.Scripts.Body_Data.View
             }
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+       
+        public void OnPointerClick(PointerEventData vEventData)
         {
             if (SensorClicked != null)
             {
                 SensorClicked(SensorPos);
             }
+        }
+
+        public void UpdateState(bool vCalStatus, bool vMagneticTransience)
+        {
+            if (!gameObject.activeSelf)
+            {
+                return;
+            }
+            if (vCalStatus != mPreviousCalState)
+            {
+                TriggerCalStateChange(vCalStatus);
+                mPreviousCalState = vCalStatus;
+            }
+
+            if (vMagneticTransience != mPreviousMagState)
+            {
+                TriggerMagTransStateChange(vMagneticTransience);
+                mPreviousMagState = vMagneticTransience;
+            }
+        }
+
+        public void TriggerMagTransStateChange(bool vMagneticTransience)
+        {
+            mRedPool.RequestResource(transform.position);
+            AirplaneSensorColor.SensorState vState = vMagneticTransience
+               ? AirplaneSensorColor.SensorState.Good
+               : AirplaneSensorColor.SensorState.Bad; 
+            Fuselage.SetState(vState);
+        }
+
+        public void TriggerCalStateChange(bool vCalStatus)
+        {
+            mWhitePool.RequestResource(transform.position);
+            AirplaneSensorColor.SensorState vState = vCalStatus
+                ? AirplaneSensorColor.SensorState.Good
+                : AirplaneSensorColor.SensorState.Bad;
+            Wings.SetState(vState);
+        }
+
+        public void SetPools(ParticlePoolManager vRedPool, ParticlePoolManager vWhitePool)
+        {
+            mWhitePool = vWhitePool;
+            mRedPool = vRedPool;
         }
     }
 }

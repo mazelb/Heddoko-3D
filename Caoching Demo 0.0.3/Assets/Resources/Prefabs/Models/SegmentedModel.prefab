@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &100046
 GameObject:
   m_ObjectHideFlags: 1
@@ -50,7 +50,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &100292
 GameObject:
   m_ObjectHideFlags: 1
@@ -247,7 +247,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &102876
 GameObject:
   m_ObjectHideFlags: 1
@@ -363,7 +363,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &104068
 GameObject:
   m_ObjectHideFlags: 1
@@ -615,7 +615,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &106056
 GameObject:
   m_ObjectHideFlags: 1
@@ -649,7 +649,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &106730
 GameObject:
   m_ObjectHideFlags: 1
@@ -735,7 +735,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &107078
 GameObject:
   m_ObjectHideFlags: 1
@@ -769,7 +769,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &107220
 GameObject:
   m_ObjectHideFlags: 1
@@ -820,7 +820,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &108104
 GameObject:
   m_ObjectHideFlags: 1
@@ -905,7 +905,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &109246
 GameObject:
   m_ObjectHideFlags: 1
@@ -958,7 +958,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &109366
 GameObject:
   m_ObjectHideFlags: 1
@@ -975,7 +975,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &109380
 GameObject:
   m_ObjectHideFlags: 1
@@ -1057,7 +1057,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &109996
 GameObject:
   m_ObjectHideFlags: 1
@@ -1074,7 +1074,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &110072
 GameObject:
   m_ObjectHideFlags: 1
@@ -1241,7 +1241,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &110728
 GameObject:
   m_ObjectHideFlags: 1
@@ -1290,7 +1290,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &112180
 GameObject:
   m_ObjectHideFlags: 1
@@ -1423,7 +1423,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &113218
 GameObject:
   m_ObjectHideFlags: 1
@@ -1440,7 +1440,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &113232
 GameObject:
   m_ObjectHideFlags: 1
@@ -1574,7 +1574,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &114712
 GameObject:
   m_ObjectHideFlags: 1
@@ -1657,7 +1657,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &115372
 GameObject:
   m_ObjectHideFlags: 1
@@ -1994,7 +1994,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &117332
 GameObject:
   m_ObjectHideFlags: 1
@@ -2198,7 +2198,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &119162
 GameObject:
   m_ObjectHideFlags: 1
@@ -2224,6 +2224,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 423278}
+  - 114: {fileID: 11468272}
   m_Layer: 18
   m_Name: AircraftFuselage
   m_TagString: Untagged
@@ -2281,7 +2282,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &119360
 GameObject:
   m_ObjectHideFlags: 1
@@ -2298,7 +2299,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &119562
 GameObject:
   m_ObjectHideFlags: 1
@@ -2332,7 +2333,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &119752
 GameObject:
   m_ObjectHideFlags: 1
@@ -2341,6 +2342,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 410970}
+  - 114: {fileID: 11425740}
   m_Layer: 18
   m_Name: AircraftFuselage
   m_TagString: Untagged
@@ -2381,7 +2383,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &120154
 GameObject:
   m_ObjectHideFlags: 1
@@ -2468,7 +2470,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &120598
 GameObject:
   m_ObjectHideFlags: 1
@@ -2502,7 +2504,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &120780
 GameObject:
   m_ObjectHideFlags: 1
@@ -2527,6 +2529,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 458582}
+  - 114: {fileID: 11447876}
   m_Layer: 18
   m_Name: AircraftWingsJet
   m_TagString: Untagged
@@ -2635,7 +2638,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &122078
 GameObject:
   m_ObjectHideFlags: 1
@@ -2838,7 +2841,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &123134
 GameObject:
   m_ObjectHideFlags: 1
@@ -2855,7 +2858,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &123176
 GameObject:
   m_ObjectHideFlags: 1
@@ -2889,7 +2892,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &123284
 GameObject:
   m_ObjectHideFlags: 1
@@ -2898,6 +2901,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 456490}
+  - 114: {fileID: 11416476}
   m_Layer: 18
   m_Name: AircraftFuselage
   m_TagString: Untagged
@@ -2972,7 +2976,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &124074
 GameObject:
   m_ObjectHideFlags: 1
@@ -2989,7 +2993,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &124246
 GameObject:
   m_ObjectHideFlags: 1
@@ -3023,7 +3027,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &124452
 GameObject:
   m_ObjectHideFlags: 1
@@ -3194,7 +3198,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &126892
 GameObject:
   m_ObjectHideFlags: 1
@@ -3366,7 +3370,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &129168
 GameObject:
   m_ObjectHideFlags: 1
@@ -3613,7 +3617,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &132152
 GameObject:
   m_ObjectHideFlags: 1
@@ -3781,7 +3785,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &133276
 GameObject:
   m_ObjectHideFlags: 1
@@ -3951,7 +3955,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &135102
 GameObject:
   m_ObjectHideFlags: 1
@@ -4002,7 +4006,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &135240
 GameObject:
   m_ObjectHideFlags: 1
@@ -4019,7 +4023,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &135488
 GameObject:
   m_ObjectHideFlags: 1
@@ -4053,7 +4057,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &135778
 GameObject:
   m_ObjectHideFlags: 1
@@ -4172,7 +4176,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &136936
 GameObject:
   m_ObjectHideFlags: 1
@@ -4189,7 +4193,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &137192
 GameObject:
   m_ObjectHideFlags: 1
@@ -4223,7 +4227,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &137698
 GameObject:
   m_ObjectHideFlags: 1
@@ -4340,7 +4344,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &138378
 GameObject:
   m_ObjectHideFlags: 1
@@ -4558,7 +4562,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &141672
 GameObject:
   m_ObjectHideFlags: 1
@@ -4608,7 +4612,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &142056
 GameObject:
   m_ObjectHideFlags: 1
@@ -4711,7 +4715,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &143714
 GameObject:
   m_ObjectHideFlags: 1
@@ -4794,7 +4798,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &144942
 GameObject:
   m_ObjectHideFlags: 1
@@ -4828,7 +4832,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &145122
 GameObject:
   m_ObjectHideFlags: 1
@@ -5094,7 +5098,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &149406
 GameObject:
   m_ObjectHideFlags: 1
@@ -5192,7 +5196,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &149828
 GameObject:
   m_ObjectHideFlags: 1
@@ -5309,7 +5313,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &150950
 GameObject:
   m_ObjectHideFlags: 1
@@ -5382,6 +5386,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 455094}
+  - 114: {fileID: 11429896}
   m_Layer: 18
   m_Name: AircraftFuselage
   m_TagString: Untagged
@@ -5458,7 +5463,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &152826
 GameObject:
   m_ObjectHideFlags: 1
@@ -5467,6 +5472,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 474210}
+  - 114: {fileID: 11415392}
   m_Layer: 18
   m_Name: AircraftFuselage
   m_TagString: Untagged
@@ -5607,7 +5613,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &153828
 GameObject:
   m_ObjectHideFlags: 1
@@ -5692,7 +5698,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &155022
 GameObject:
   m_ObjectHideFlags: 1
@@ -5758,7 +5764,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &155652
 GameObject:
   m_ObjectHideFlags: 1
@@ -5860,7 +5866,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &157256
 GameObject:
   m_ObjectHideFlags: 1
@@ -5918,6 +5924,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 464610}
+  - 114: {fileID: 11425720}
   m_Layer: 18
   m_Name: AircraftWingsJet
   m_TagString: Untagged
@@ -5950,6 +5957,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 448188}
+  - 114: {fileID: 11432974}
   m_Layer: 18
   m_Name: AircraftFuselage
   m_TagString: Untagged
@@ -6007,7 +6015,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &158462
 GameObject:
   m_ObjectHideFlags: 1
@@ -6039,7 +6047,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &158600
 GameObject:
   m_ObjectHideFlags: 1
@@ -6128,7 +6136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &159140
 GameObject:
   m_ObjectHideFlags: 1
@@ -6162,7 +6170,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &159162
 GameObject:
   m_ObjectHideFlags: 1
@@ -6245,7 +6253,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &160502
 GameObject:
   m_ObjectHideFlags: 1
@@ -6254,6 +6262,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 417148}
+  - 114: {fileID: 11496850}
   m_Layer: 18
   m_Name: AircraftFuselage
   m_TagString: Untagged
@@ -6397,7 +6406,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &161708
 GameObject:
   m_ObjectHideFlags: 1
@@ -6406,6 +6415,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 455076}
+  - 114: {fileID: 11486796}
   m_Layer: 18
   m_Name: AircraftWingsJet
   m_TagString: Untagged
@@ -6544,7 +6554,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &163694
 GameObject:
   m_ObjectHideFlags: 1
@@ -6750,7 +6760,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &165056
 GameObject:
   m_ObjectHideFlags: 1
@@ -6936,7 +6946,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &166278
 GameObject:
   m_ObjectHideFlags: 1
@@ -7102,7 +7112,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &168518
 GameObject:
   m_ObjectHideFlags: 1
@@ -7143,6 +7153,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 445904}
+  - 114: {fileID: 11442004}
   m_Layer: 18
   m_Name: AircraftFuselage
   m_TagString: Untagged
@@ -7216,7 +7227,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &170040
 GameObject:
   m_ObjectHideFlags: 1
@@ -7265,7 +7276,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &170156
 GameObject:
   m_ObjectHideFlags: 1
@@ -7386,7 +7397,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &171446
 GameObject:
   m_ObjectHideFlags: 1
@@ -7422,7 +7433,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &172248
 GameObject:
   m_ObjectHideFlags: 1
@@ -7431,6 +7442,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 471600}
+  - 114: {fileID: 11480118}
   m_Layer: 18
   m_Name: AircraftFuselage
   m_TagString: Untagged
@@ -7486,7 +7498,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &173622
 GameObject:
   m_ObjectHideFlags: 1
@@ -7556,7 +7568,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &174292
 GameObject:
   m_ObjectHideFlags: 1
@@ -7573,7 +7585,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &174320
 GameObject:
   m_ObjectHideFlags: 1
@@ -7622,7 +7634,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &174558
 GameObject:
   m_ObjectHideFlags: 1
@@ -7790,7 +7802,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &176040
 GameObject:
   m_ObjectHideFlags: 1
@@ -7905,7 +7917,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &176524
 GameObject:
   m_ObjectHideFlags: 1
@@ -8023,7 +8035,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &177458
 GameObject:
   m_ObjectHideFlags: 1
@@ -8089,7 +8101,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &178388
 GameObject:
   m_ObjectHideFlags: 1
@@ -8138,7 +8150,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &178910
 GameObject:
   m_ObjectHideFlags: 1
@@ -8220,7 +8232,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &179476
 GameObject:
   m_ObjectHideFlags: 1
@@ -8318,7 +8330,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &180300
 GameObject:
   m_ObjectHideFlags: 1
@@ -8388,7 +8400,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &181156
 GameObject:
   m_ObjectHideFlags: 1
@@ -8454,7 +8466,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &181396
 GameObject:
   m_ObjectHideFlags: 1
@@ -8471,7 +8483,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &181564
 GameObject:
   m_ObjectHideFlags: 1
@@ -8505,7 +8517,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &181768
 GameObject:
   m_ObjectHideFlags: 1
@@ -8522,7 +8534,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &182140
 GameObject:
   m_ObjectHideFlags: 1
@@ -8629,6 +8641,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 408262}
+  - 114: {fileID: 11470420}
   m_Layer: 18
   m_Name: AircraftWingsJet
   m_TagString: Untagged
@@ -8833,7 +8846,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &185696
 GameObject:
   m_ObjectHideFlags: 1
@@ -8867,7 +8880,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &186114
 GameObject:
   m_ObjectHideFlags: 1
@@ -8901,7 +8914,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &186266
 GameObject:
   m_ObjectHideFlags: 1
@@ -8942,6 +8955,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 433176}
+  - 114: {fileID: 11483462}
   m_Layer: 18
   m_Name: AircraftWingsJet
   m_TagString: Untagged
@@ -9040,6 +9054,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 415228}
+  - 114: {fileID: 11446892}
   m_Layer: 18
   m_Name: AircraftWingsJet
   m_TagString: Untagged
@@ -9080,7 +9095,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &188500
 GameObject:
   m_ObjectHideFlags: 1
@@ -9097,7 +9112,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &188574
 GameObject:
   m_ObjectHideFlags: 1
@@ -9148,7 +9163,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &188956
 GameObject:
   m_ObjectHideFlags: 1
@@ -9165,7 +9180,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &188974
 GameObject:
   m_ObjectHideFlags: 1
@@ -9208,6 +9223,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 442750}
+  - 114: {fileID: 11449320}
   m_Layer: 18
   m_Name: AircraftWingsJet
   m_TagString: Untagged
@@ -9240,6 +9256,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 474606}
+  - 114: {fileID: 11477006}
   m_Layer: 18
   m_Name: AircraftWingsJet
   m_TagString: Untagged
@@ -9297,7 +9314,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &189618
 GameObject:
   m_ObjectHideFlags: 1
@@ -9365,7 +9382,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &189876
 GameObject:
   m_ObjectHideFlags: 1
@@ -9374,6 +9391,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 425716}
+  - 114: {fileID: 11415354}
   m_Layer: 18
   m_Name: AircraftWingsJet
   m_TagString: Untagged
@@ -9397,7 +9415,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &190002
 GameObject:
   m_ObjectHideFlags: 1
@@ -9532,7 +9550,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &192630
 GameObject:
   m_ObjectHideFlags: 1
@@ -9583,7 +9601,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &192806
 GameObject:
   m_ObjectHideFlags: 1
@@ -9617,7 +9635,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &193718
 GameObject:
   m_ObjectHideFlags: 1
@@ -9735,7 +9753,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &194522
 GameObject:
   m_ObjectHideFlags: 1
@@ -9752,7 +9770,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &194684
 GameObject:
   m_ObjectHideFlags: 1
@@ -9769,7 +9787,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &194686
 GameObject:
   m_ObjectHideFlags: 1
@@ -9856,7 +9874,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &196852
 GameObject:
   m_ObjectHideFlags: 1
@@ -10157,7 +10175,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &199836
 GameObject:
   m_ObjectHideFlags: 1
@@ -34050,6 +34068,8 @@ MonoBehaviour:
   HighlightedGameObjects:
   - {fileID: 145622}
   - {fileID: 155652}
+  Wings: {fileID: 11470420}
+  Fuselage: {fileID: 11442004}
 --- !u!114 &11410334
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34125,6 +34145,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 0
+--- !u!114 &11415354
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0.04016233, g: 0.5294118, b: 0, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.5441177, g: 0, b: 0, a: 0}
+  FirstMeshRenderChild: {fileID: 2372654}
+--- !u!114 &11415392
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 152826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0, g: 0.20588237, b: 0.069574066, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.30882353, g: 0.05676903, b: 0.05676903, a: 0}
+  FirstMeshRenderChild: {fileID: 2368750}
 --- !u!114 &11415830
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34146,6 +34196,21 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &11416476
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0, g: 0.20588237, b: 0.069574066, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.30882353, g: 0.05676903, b: 0.05676903, a: 0}
+  FirstMeshRenderChild: {fileID: 2341386}
 --- !u!114 &11416494
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34236,6 +34301,8 @@ MonoBehaviour:
   HighlightedGameObjects:
   - {fileID: 162200}
   - {fileID: 112428}
+  Wings: {fileID: 11486796}
+  Fuselage: {fileID: 11496850}
 --- !u!114 &11424672
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34260,6 +34327,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cone: {fileID: 131028}
+--- !u!114 &11425720
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 157774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0.04016233, g: 0.5294118, b: 0, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.5441177, g: 0, b: 0, a: 0}
+  FirstMeshRenderChild: {fileID: 2389120}
+--- !u!114 &11425740
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 119752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0, g: 0.20588237, b: 0.069574066, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.30882353, g: 0.05676903, b: 0.05676903, a: 0}
+  FirstMeshRenderChild: {fileID: 2379038}
 --- !u!114 &11425936
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34296,6 +34393,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cone: {fileID: 162224}
+--- !u!114 &11429896
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 151926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0, g: 0.20588237, b: 0.069574066, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.30882353, g: 0.05676903, b: 0.05676903, a: 0}
+  FirstMeshRenderChild: {fileID: 2367720}
 --- !u!114 &11430478
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34335,6 +34447,21 @@ MonoBehaviour:
   m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 2
+--- !u!114 &11432974
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 158300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0, g: 0.20588237, b: 0.069574066, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.30882353, g: 0.05676903, b: 0.05676903, a: 0}
+  FirstMeshRenderChild: {fileID: 2311674}
 --- !u!114 &11433014
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34412,6 +34539,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cone: {fileID: 184638}
+--- !u!114 &11442004
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 168716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0, g: 0.20588237, b: 0.069574066, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.30882353, g: 0.05676903, b: 0.05676903, a: 0}
+  FirstMeshRenderChild: {fileID: 2382878}
 --- !u!114 &11442182
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34478,6 +34620,21 @@ MonoBehaviour:
   X: {fileID: 11441274}
   Y: {fileID: 11456192}
   Z: {fileID: 11424672}
+--- !u!114 &11446892
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 187826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0.04016233, g: 0.5294118, b: 0, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.5441177, g: 0, b: 0, a: 0}
+  FirstMeshRenderChild: {fileID: 2389016}
 --- !u!114 &11447800
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34490,6 +34647,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cone: {fileID: 112432}
+--- !u!114 &11447876
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 121064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0.04016233, g: 0.5294118, b: 0, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.5441177, g: 0, b: 0, a: 0}
+  FirstMeshRenderChild: {fileID: 2384660}
+--- !u!114 &11449320
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0.04016233, g: 0.5294118, b: 0, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.5441177, g: 0, b: 0, a: 0}
+  FirstMeshRenderChild: {fileID: 2318614}
 --- !u!114 &11449998
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34532,6 +34719,8 @@ MonoBehaviour:
   HighlightedGameObjects:
   - {fileID: 179018}
   - {fileID: 179708}
+  Wings: {fileID: 11483462}
+  Fuselage: {fileID: 11415392}
 --- !u!114 &11452626
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34627,6 +34816,8 @@ MonoBehaviour:
   HighlightedGameObjects:
   - {fileID: 125248}
   - {fileID: 110728}
+  Wings: {fileID: 11449320}
+  Fuselage: {fileID: 11416476}
 --- !u!114 &11456192
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34697,6 +34888,8 @@ MonoBehaviour:
   HighlightedGameObjects:
   - {fileID: 103376}
   - {fileID: 159644}
+  Wings: {fileID: 11447876}
+  Fuselage: {fileID: 11432974}
 --- !u!114 &11463024
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34744,6 +34937,8 @@ MonoBehaviour:
   - {fileID: 11475730}
   - {fileID: 11424450}
   - {fileID: 11449998}
+  WhitePref: {fileID: 11481878, guid: 7a3995ae18669ca4f864e474119be171, type: 2}
+  RedPref: {fileID: 11457592, guid: 782573de7ab7cca4b876760b810bf04c, type: 2}
 --- !u!114 &11465574
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34777,6 +34972,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cone: {fileID: 157256}
+--- !u!114 &11468272
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 119166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0, g: 0.20588237, b: 0.069574066, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.30882353, g: 0.05676903, b: 0.05676903, a: 0}
+  FirstMeshRenderChild: {fileID: 2349508}
+--- !u!114 &11470420
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 183340}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0.04016233, g: 0.5294118, b: 0, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.5441177, g: 0, b: 0, a: 0}
+  FirstMeshRenderChild: {fileID: 2320798}
 --- !u!114 &11470472
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34833,6 +35058,8 @@ MonoBehaviour:
   HighlightedGameObjects:
   - {fileID: 199836}
   - {fileID: 167526}
+  Wings: {fileID: 11415354}
+  Fuselage: {fileID: 11429896}
 --- !u!114 &11472392
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -34953,6 +35180,8 @@ MonoBehaviour:
   HighlightedGameObjects:
   - {fileID: 170048}
   - {fileID: 150950}
+  Wings: {fileID: 11477006}
+  Fuselage: {fileID: 11480118}
 --- !u!114 &11476512
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35007,6 +35236,8 @@ MonoBehaviour:
   HighlightedGameObjects:
   - {fileID: 134518}
   - {fileID: 157482}
+  Wings: {fileID: 11425720}
+  Fuselage: {fileID: 11425740}
 --- !u!114 &11476794
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35049,6 +35280,8 @@ MonoBehaviour:
   HighlightedGameObjects:
   - {fileID: 186266}
   - {fileID: 135104}
+  Wings: {fileID: 11446892}
+  Fuselage: {fileID: 11468272}
 --- !u!114 &11476958
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35083,6 +35316,36 @@ MonoBehaviour:
   _backgroundPadding: 10
   _autofitEnabled: 1
   _labelColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+--- !u!114 &11477006
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 189204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0.04016233, g: 0.5294118, b: 0, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.5441177, g: 0, b: 0, a: 0}
+  FirstMeshRenderChild: {fileID: 2326582}
+--- !u!114 &11480118
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 172248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0, g: 0.20588237, b: 0.069574066, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.30882353, g: 0.05676903, b: 0.05676903, a: 0}
+  FirstMeshRenderChild: {fileID: 2325942}
 --- !u!114 &11482812
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35095,6 +35358,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cone: {fileID: 177236}
+--- !u!114 &11483462
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 186378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0.04016233, g: 0.5294118, b: 0, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.5441177, g: 0, b: 0, a: 0}
+  FirstMeshRenderChild: {fileID: 2360102}
 --- !u!114 &11484024
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35131,6 +35409,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Cone: {fileID: 132496}
+--- !u!114 &11486796
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 161708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0.04016233, g: 0.5294118, b: 0, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.5441177, g: 0, b: 0, a: 0}
+  FirstMeshRenderChild: {fileID: 2370392}
 --- !u!114 &11488956
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -35277,6 +35570,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ConeObj: {fileID: 2342820}
   RodObj: {fileID: 2381490}
+--- !u!114 &11496850
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 160502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d17fab48ac3e94a91b05b0f7229dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GoodState: {r: 0, g: 0.20588237, b: 0.069574066, a: 0}
+  Neutral: {r: 0.27058825, g: 0.45882353, b: 0.5019608, a: 0}
+  BadState: {r: 0.30882353, g: 0.05676903, b: 0.05676903, a: 0}
+  FirstMeshRenderChild: {fileID: 2374992}
 --- !u!114 &11498176
 MonoBehaviour:
   m_ObjectHideFlags: 1

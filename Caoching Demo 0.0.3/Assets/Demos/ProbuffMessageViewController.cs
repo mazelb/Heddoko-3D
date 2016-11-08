@@ -156,7 +156,7 @@ namespace Assets.Demos
                 Transform vTransform = Body.RenderedBody.GetSubSegmentTransform(vType);
                 var vQuatRot = vTransform.rotation;
                 var vEulerRot = vTransform.eulerAngles;
-                vIndex = ListView.DataSource.Count < 9 ? 0 : vI;
+                vIndex = ListView.DataSource.Count < 9 ? 0 : vID;
                 ListView.DataSource[vIndex].RawQuat = string.Format("{0} , {1} , {2}, {3} ", FormatFloatTo2Decimals(vQx), FormatFloatTo2Decimals(vQy), FormatFloatTo2Decimals(vQz), FormatFloatTo2Decimals(vQw));
                 ListView.DataSource[vIndex].RawEuler = string.Format("{0} , {1} , {2} ", FormatFloatTo2Decimals(vYaw), FormatFloatTo2Decimals(vPitch), FormatFloatTo2Decimals(vRoll));
                 vDescription.MappedEuler = string.Format("{0} , {1} , {2} ", FormatFloatTo2Decimals(vEulerRot.y), FormatFloatTo2Decimals(vEulerRot.x), FormatFloatTo2Decimals(vEulerRot.z));
@@ -164,10 +164,23 @@ namespace Assets.Demos
                 vDescription.Magnetometer = string.Format("{0} , {1} , {2}   ", FormatFloatTo2Decimals(vMx), FormatFloatTo2Decimals(vMy), FormatFloatTo2Decimals(vMz));
                 vDescription.Acceleration = string.Format("{0} , {1} , {2}  ", FormatFloatTo2Decimals(vAccelx), FormatFloatTo2Decimals(vAccely), FormatFloatTo2Decimals(vAccelz));
 
+                UpdateSensors(vIndex,vImuDataFrame[vI]);
+
             }
             ListView.UpdateItems();
+        
         }
 
+        private void UpdateSensors(int vIndex,ImuDataFrame vImuDataFrame)
+        {
+            if (Body != null)
+            {
+                var vCalStableStatus = (vImuDataFrame.sensorMask >> 19) & 0x01;
+                var vMagTransient = (vImuDataFrame.sensorMask >> 20) & 0x01;
+                Body.RenderedBody.SensorTransformContainer.ChangeState(vIndex, vCalStableStatus ==1 , vMagTransient ==1);
+
+            }
+        }
         private string FormatFloatTo2Decimals(float vValue)
         {
             return vValue.ToString("0.00");

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Body_Data.View
 {
@@ -18,15 +19,32 @@ namespace Assets.Scripts.Body_Data.View
         [SerializeField]
         private List<SensorTransform> mSensorTransformList = new List<SensorTransform>();
 
+        private ParticlePoolManager mRedPool;
+        private ParticlePoolManager mWhitePool;
+        public ParticleSystemDisabler WhitePref;
+        public ParticleSystemDisabler RedPref;
         public Action<int> SensorSelected;
-        public Action<int> SensorDeselected;  
+        public Action<int> SensorDeselected;
+
+        void Awake()
+        {
+            mRedPool = new ParticlePoolManager(18, RedPref);
+            mWhitePool = new ParticlePoolManager(18, WhitePref);
+        }  
         void OnEnable()
         {
 
             for (int i = 0; i < mSensorTransformList.Count; i++)
             {
                 mSensorTransformList[i].SensorClicked += SetHighlightToObject;
+                mSensorTransformList[i].SetPools(mRedPool, mWhitePool);
             }
+        }
+
+
+        public void ChangeState(int vSensorIndex, bool vCalStatus, bool vMagneticTransience)
+        {
+            mSensorTransformList[vSensorIndex].UpdateState(vCalStatus, vMagneticTransience);
         }
 
         private void SetHighlightToObject(int vArg0)
@@ -96,6 +114,8 @@ namespace Assets.Scripts.Body_Data.View
             {
                 mSensorTransformList[i].SetLayer(vCurrLayerMask);
             }
+            mRedPool.SetLayer(vCurrLayerMask);
+            mWhitePool.SetLayer(vCurrLayerMask);
         }
 
         void Update()
@@ -108,6 +128,32 @@ namespace Assets.Scripts.Body_Data.View
             {
                 SetSensorsSpatialPosition(1);
             }
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                int vRand = Random.Range(0,8);
+                mSensorTransformList[vRand].TriggerCalStateChange(true);
+            }
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                int vRand = Random.Range(0, 8);
+                mSensorTransformList[vRand].TriggerCalStateChange(true);
+                mSensorTransformList[vRand].TriggerMagTransStateChange(true);
+            }
+            if (Input.GetKeyDown(KeyCode.U))
+            {
+                int vRand = Random.Range(0, 8);
+                mSensorTransformList[vRand].TriggerCalStateChange(false);
+                mSensorTransformList[vRand].TriggerMagTransStateChange(false);
+            }
+            if (Input.GetKeyDown(KeyCode.Y))
+            {
+                int vRand = Random.Range(0, 8);
+                mSensorTransformList[vRand].Wings.ResetState();
+                mSensorTransformList[vRand].Fuselage.ResetState();
+
+            }
+
+
         }
 
         /// <summary>
