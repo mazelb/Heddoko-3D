@@ -26,7 +26,8 @@ namespace Assets.Scripts.Communication.Communicators
     {
         private Brainpack mBrainpack;
         private BLEConnection mBleConnection;
-        private NetworkedSuitConnection mNetworkedSuitConnection;
+        private NetworkedSuitControlConnection mNetworkedSuitControlConnection;
+        private NetworkedSuitUdpConnection mNetworkSuitUdpConnection = new NetworkedSuitUdpConnection();
         private ProtobuffDispatchRouter mDispatchRouter;
         private StreamToRawPacketDecoder mDecoder;
         private FirmwareUpdateManager mFirmwareUpdater;
@@ -52,18 +53,18 @@ namespace Assets.Scripts.Communication.Communicators
         }
 
 
-        private NetworkedSuitConnection SuitConnection
+        private NetworkedSuitControlConnection SuitControlConnection
         {
             get
             {
-                return mNetworkedSuitConnection;
+                return mNetworkedSuitControlConnection;
             }
         }
 
 
         public bool IsConnectedToSuitViaNetwork
         {
-            get { return SuitConnection.Connected; }
+            get { return SuitControlConnection.Connected; }
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace Assets.Scripts.Communication.Communicators
         /// </summary>
         /// <param name="vObject"></param>
         /// <param name="vData"></param>
-        private void SuitDataReceivedHandler(StateObject vObject)
+        private void SuitControlDataReceivedHandler(StateObject vObject)
         {
             var vRawPacket = vObject.OutgoingRawPacket;
             MemoryStream vMemorySteam = new MemoryStream();
@@ -102,9 +103,9 @@ namespace Assets.Scripts.Communication.Communicators
         public SuitConnectionManager(Brainpack vBrainpack)
         {
             mBrainpack = vBrainpack;
-            mNetworkedSuitConnection = new NetworkedSuitConnection();
-            mNetworkedSuitConnection.DataReceivedEvent += SuitDataReceivedHandler;
-            mNetworkedSuitConnection.SuitConnectionEvent += NetworkedSuitConnected;
+            mNetworkedSuitControlConnection = new NetworkedSuitControlConnection();
+            mNetworkedSuitControlConnection.DataReceivedEvent += SuitControlDataReceivedHandler;
+            mNetworkedSuitControlConnection.SuitConnectionEvent += NetworkedSuitControlConnected;
             mDispatchRouter = new ProtobuffDispatchRouter();
             RegisterProtobufEvents();
 
@@ -134,14 +135,14 @@ namespace Assets.Scripts.Communication.Communicators
             }
         }
 
-        private void NetworkedSuitConnected()
+        private void NetworkedSuitControlConnected()
         {
             if (NetworkSuitConnectionEstablishedEvent != null)
             {
                 NetworkSuitConnectionEstablishedEvent();
             }
             //set up the end point of the brainpack
-            mBrainpack.Point = new IPEndPoint(mNetworkedSuitConnection.SuitIp, mNetworkedSuitConnection.Port);
+            mBrainpack.Point = new IPEndPoint(mNetworkedSuitControlConnection.SuitIp, mNetworkedSuitControlConnection.Port);
         }
 
 
@@ -152,7 +153,7 @@ namespace Assets.Scripts.Communication.Communicators
         /// <param name="vPortNum"></param>
         public void ConnectToSuit(string vIpEndPoint, int vPortNum)
         {
-            SuitConnection.Start(vIpEndPoint, vPortNum);
+            SuitControlConnection.Start(vIpEndPoint, vPortNum);
         }
 
 
@@ -189,16 +190,28 @@ namespace Assets.Scripts.Communication.Communicators
             {
                 mFirmwareUpdater = new FirmwareUpdateManager("C:\\downl\\server", vCurrentEndPoint, ApplicationSettings.TftpPort);
             }
-            mNetworkedSuitConnection.Send(vRawBytes);
+            mNetworkedSuitControlConnection.Send(vRawBytes);
 
 
+        }
+
+        public void SendPacket(Packet vPacket)
+        {
+            MemoryStream vStream = new MemoryStream();
+            Serializer.Serialize(vStream, vPacket);
+            RawPacket vRawPacket = new RawPacket();
+
+            int vRawSize;
+            var vRawBytes = vRawPacket.GetRawPacketByteArray(out vRawSize, vStream);
+            //Start the firmware update manager before sending the request to update the firmware
+            mNetworkedSuitControlConnection.Send(vRawBytes);
         }
 
         public void CleanUp()
         {
             if (NetworkSuitConnectionEstablishedEvent != null)
             {
-                SuitConnection.SuitConnectionEvent -= NetworkedSuitConnected;
+                SuitControlConnection.SuitConnectionEvent -= NetworkedSuitControlConnected;
             }
             if (mFirmwareUpdater != null)
             {
@@ -217,7 +230,7 @@ namespace Assets.Scripts.Communication.Communicators
             RawPacket vRawPacket = new RawPacket();
             int vRawSize;
             var vRawBytes = vRawPacket.GetRawPacketByteArray(out vRawSize, vStream);
-            mNetworkedSuitConnection.Send(vRawBytes);
+            mNetworkedSuitControlConnection.Send(vRawBytes);
         }
     }
 }

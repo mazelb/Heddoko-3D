@@ -1,5 +1,5 @@
 ﻿// /**
-// * @file NetworkedSuitConnection.cs
+// * @file NetworkedSuitControlConnection.cs
 // * @brief Contains the 
 // * @author Mohammed Haider( 
 // * @date 10 2016
@@ -19,7 +19,7 @@ namespace Assets.Scripts.Communication.Communicators
     
 
     public delegate void OnSuitConnectionEvent();
-    public class NetworkedSuitConnection : IDisposable
+    public class NetworkedSuitControlConnection : IDisposable
     {
 
         public event OnSuitDataReceivedEvent DataReceivedEvent;
@@ -197,8 +197,7 @@ namespace Assets.Scripts.Communication.Communicators
 
         private void SendCallbackBack(IAsyncResult vAr)
         {
-            throw new NotImplementedException();
-        }
+         }
 
 
         private void ReceiveCallback(IAsyncResult vAr)

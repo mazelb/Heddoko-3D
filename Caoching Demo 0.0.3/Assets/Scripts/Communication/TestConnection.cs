@@ -10,6 +10,7 @@ using System;
 using System.Net;
 using Assets.Scripts.Communication.Communicators;
 using Assets.Scripts.UI;
+using Assets.Scripts.UI.Settings;
 using Assets.Scripts.Utils;
 using heddoko;
 using HeddokoLib.HeddokoDataStructs.Brainpack;
@@ -26,6 +27,7 @@ namespace Assets.Scripts.Communication
         private Version mServerVersion;
         private Version mBrainpackVersion;
         private BrainpackAdvertisingListener mAdvertisingListener;
+        
         void Awake()
         {
             OutterThreadToUnityThreadIntermediary.Instance.Init();
@@ -56,6 +58,18 @@ namespace Assets.Scripts.Communication
                 BrainpackStatusPanel.RegisterFirmwareSubPanelUpdateCallback(UpdateFirmware);
             }
             mBrainpack = vSelected;
+
+            IPEndPoint vEndPoint = (IPEndPoint)vSelected.Point;
+            string vIpAddress = vEndPoint.Address.ToString();
+            SuitConnectionManager.ConnectToSuit(vIpAddress, vSelected.TcpControlPort);
+            Packet vPacket = new Packet();
+            vPacket.type = PacketType.StartDataStream;
+            vPacket.recordingRate = 20u;
+            vPacket.endpoint = new Endpoint();
+            vPacket.endpoint.address = "192.168.11.140";
+            vPacket.endpoint.port = 8458;
+
+            SuitConnectionManager.SendPacket(vPacket);
         }
 
         private void BrainpackLostHandler(Brainpack vBrainpack)
