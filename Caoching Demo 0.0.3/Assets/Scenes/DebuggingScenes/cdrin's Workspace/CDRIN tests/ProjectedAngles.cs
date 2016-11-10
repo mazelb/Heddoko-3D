@@ -49,30 +49,30 @@ public class ProjectedAngles : MonoBehaviour
 		a_Angles.z = Vector3.Angle(Vector3.right, rightProj);
 	}
 
-// 	public static Quaternion ComputeQuaternion(Vector3 a_WantedAngles)
-// 	{
-// 		//Vector3 localForward = Vector3.forward;
-// 		//Vector3 localRight = Vector3.right;
-// 		//Vector3 localUp = Vector3.up;
-// 		//
-// 		//localUp.y = Mathf.Cos(a_WantedAngles.x * Mathf.Deg2Rad);
-// 		//localUp.z = Mathf.Sin(a_WantedAngles.x * Mathf.Deg2Rad);
-// 		//
-// 		//localForward.x = Mathf.Sin(a_WantedAngles.y * Mathf.Deg2Rad);
-// 		//localForward.z = Mathf.Cos(a_WantedAngles.y * Mathf.Deg2Rad);
-// 		//
-// 		//localRight.x = Mathf.Cos(a_WantedAngles.z * Mathf.Deg2Rad);
-// 		//localRight.y = Mathf.Sin(a_WantedAngles.z * Mathf.Deg2Rad);
-// 		//
-// 		//
-// 		//Vector3 tt = Vector3.Cross(localUp, localForward);
-// 		//
-// 		//Quaternion tret = Quaternion.LookRotation(localForward, localUp);
-// 		//
-// 		//Quaternion tret = Quaternion.Euler(0, a_WantedAngles.y, 0) * Quaternion.Euler(a_WantedAngles.x, 0, 0) * Quaternion.Euler(0, 0, a_WantedAngles.z);
-// 		Quaternion tret = Quaternion.Euler(a_WantedAngles);
-// 		return tret;
-// 	}
+    public static Quaternion ComputeQuaternion(Vector3 a_WantedAngles)
+    {
+        Vector3 localForward = Vector3.forward;
+        Vector3 localRight = Vector3.right;
+        Vector3 localUp = Vector3.up;
+
+        localUp.y = Mathf.Cos(a_WantedAngles.x * Mathf.Deg2Rad);
+        localUp.z = Mathf.Sin(a_WantedAngles.x * Mathf.Deg2Rad);
+
+        localForward.x = Mathf.Sin(a_WantedAngles.y * Mathf.Deg2Rad);
+        localForward.z = Mathf.Cos(a_WantedAngles.y * Mathf.Deg2Rad);
+
+        localRight.x = Mathf.Cos(a_WantedAngles.z * Mathf.Deg2Rad);
+        localRight.y = Mathf.Sin(a_WantedAngles.z * Mathf.Deg2Rad);
+
+
+        Vector3 tt = Vector3.Cross(localUp, localForward);
+
+        Quaternion tret = Quaternion.LookRotation(localForward, localUp);
+        //
+        //Quaternion tret = Quaternion.Euler(0, a_WantedAngles.y, 0) * Quaternion.Euler(a_WantedAngles.x, 0, 0) * Quaternion.Euler(0, 0, a_WantedAngles.z);
+        //Quaternion tret = Quaternion.Euler(a_WantedAngles);
+        return tret;
+    }
 
 
 }

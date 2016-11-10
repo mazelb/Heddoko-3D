@@ -81,65 +81,57 @@ public class Quatconstraint : MonoBehaviour
     void Update()
     {
         Quaternion tQuat = Animate();
-        CurrentQuat = tQuat;
+        //CurrentQuat = tQuat;
 
-        float angle = ExtractAngles(CurrentQuat, Vector3.up, Vector3.right);
-        tQuat = Quaternion.AngleAxis(ClampAngleX(angle), Vector3.right);
-        CurrentQuat = CurrentQuat * tQuat;
-
-        angle = ExtractAngles(CurrentQuat, Vector3.forward, Vector3.up);
-        tQuat = Quaternion.AngleAxis(ClampAngleY(angle), Vector3.up);
-        CurrentQuat = CurrentQuat * tQuat;
-
-        angle = ExtractAngles(CurrentQuat, Vector3.right, Vector3.forward);
-        tQuat = Quaternion.AngleAxis(ClampAngleZ(angle), Vector3.forward);
-        CurrentQuat = CurrentQuat * tQuat;
-        //ProjectedAngles.ExtractAngles(tQuat,ref m_AnglesAnalysis);
-        //CurrentQuat = tQuat * Constraint(m_AnglesAnalysis);
+//         float angle = ExtractAngles(CurrentQuat, Vector3.up, Vector3.right);
+//         tQuat = Quaternion.AngleAxis(ClampAngleX(angle), Vector3.right);
+//         CurrentQuat = CurrentQuat * tQuat;
+// 
+//         angle = ExtractAngles(CurrentQuat, Vector3.forward, Vector3.up);
+//         tQuat = Quaternion.AngleAxis(ClampAngleY(angle), Vector3.up);
+//         CurrentQuat = CurrentQuat * tQuat;
+// 
+//         angle = ExtractAngles(CurrentQuat, Vector3.right, Vector3.forward);
+//         tQuat = Quaternion.AngleAxis(ClampAngleZ(angle), Vector3.forward);
+//         CurrentQuat = CurrentQuat * tQuat;
+        ExtractAngles(tQuat, ref m_AnglesAnalysis);
+        CurrentQuat = tQuat * Constraint(m_AnglesAnalysis);
 
         transform.localRotation = CurrentQuat; // Constraint(m_ProjectedAngles.m_ReferenceProjectedAngles);
     }
 
-//     Quaternion Constraint(Vector3 a_ProjAngles)
-//     {
-// 
-//         ////currentEuler = aQuat.eulerAngles;
-//         //ExtractAngles(aQuat, ref ProjectedAngles);
-//         a_ProjAngles = ClampAngle(a_ProjAngles);
-//         Quaternion tRet = Quaternion.Euler(a_ProjAngles);
-// 
-//         return tRet;
-//     }
+    Quaternion Constraint(Vector3 a_ProjAngles)
+    {
 
-    public float ExtractAngles(Quaternion a_QuatLocal, Vector3 a_Globalaxis, Vector3 a_normal)
-	{
-		Vector3 localAxis = a_QuatLocal * a_Globalaxis;
-		Vector3 upProj = Vector3.ProjectOnPlane(localAxis, a_normal);   // pitch angle
-		upProj.Normalize();
-        Mathf.Atan2(upProj.y, upProj.x);
-		return Vector3.Angle(a_Globalaxis, upProj);
-	}
-    
-//     private float ClampAngle(float a_ProjAngles)
-//     {
-//         float offset =0;
-//         if      (a_ProjAngles > XminMax.y)
-//                        offset = XminMax.y - a_ProjAngles;
-//         else if (a_ProjAngles < XminMax.x)
-//                        offset = XminMax.x - a_ProjAngles;
-// 
-//         if      (a_ProjAngles > YminMax.y)
-//                        offset = YminMax.y - a_ProjAngles;
-//         else if (a_ProjAngles < YminMax.x)
-//                        offset = YminMax.x - a_ProjAngles;
-// 
-//         if      (a_ProjAngles > ZminMax.y)
-//                        offset = ZminMax.y - a_ProjAngles;
-//         else if (a_ProjAngles < ZminMax.x)
-//                        offset = ZminMax.x - a_ProjAngles;
-// 
-//         return offset;
-//     }
+        ////currentEuler = aQuat.eulerAngles;
+        //ExtractAngles(aQuat, ref ProjectedAngles);
+        a_ProjAngles = ClampAngle(a_ProjAngles);
+        Quaternion tRet = ComputeQuaternion(a_ProjAngles);
+
+        return tRet;
+    }
+
+
+    private Vector3 ClampAngle(Vector3 a_ProjAngles)
+    {
+        Vector3 offset = Vector3.zero;
+             if (a_ProjAngles.x > XminMax.y)
+                       offset.x = XminMax.y - a_ProjAngles.x;
+        else if (a_ProjAngles.x < XminMax.x)
+                       offset.x = XminMax.x - a_ProjAngles.x;
+
+             if (a_ProjAngles.y > YminMax.y)
+                       offset.y = YminMax.y - a_ProjAngles.y;
+        else if (a_ProjAngles.y < YminMax.x)
+                       offset.y = YminMax.x - a_ProjAngles.y;
+
+             if (a_ProjAngles.z > ZminMax.y)
+                       offset.z = ZminMax.y - a_ProjAngles.z;
+        else if (a_ProjAngles.z < ZminMax.x)
+                       offset.z = ZminMax.x - a_ProjAngles.z;
+
+        return offset;
+    }
 
     private float ClampAngleX(float a_ProjAngles)
     {
@@ -174,6 +166,39 @@ public class Quatconstraint : MonoBehaviour
         return offset;
     }
 
+
+    public static Quaternion ComputeQuaternion(Vector3 a_WantedAngles)
+    {
+        
+    }
+
+
+    public float ExtractAngles(Quaternion a_QuatLocal, Vector3 a_Globalaxis, Vector3 a_normal)
+    {
+        Vector3 localAxis = a_QuatLocal * a_Globalaxis;
+        Vector3 upProj = Vector3.ProjectOnPlane(localAxis, a_normal);   // pitch angle
+        upProj.Normalize();
+        Mathf.Atan2(upProj.y, upProj.x);
+        return Vector3.Angle(a_Globalaxis, upProj);
+    }
+    public static void ExtractAngles(Quaternion a_QuatLocal, ref Vector3 a_Angles)
+    {
+        Vector3 localForward = a_QuatLocal * Vector3.forward;
+        Vector3 localRight = a_QuatLocal * Vector3.right;
+        Vector3 localUp = a_QuatLocal * Vector3.up;
+
+        Vector3 upProj = Vector3.ProjectOnPlane(localUp, Vector3.right);            // pitch angle
+        Vector3 forwardProj = Vector3.ProjectOnPlane(localForward, Vector3.up);     //yaw angle 
+        Vector3 rightProj = Vector3.ProjectOnPlane(localRight, Vector3.forward);    // roll angle
+
+        upProj.Normalize();
+        forwardProj.Normalize();
+        rightProj.Normalize();
+
+        a_Angles.x = Vector3.Angle(Vector3.up, upProj);
+        a_Angles.y = Vector3.Angle(Vector3.forward, forwardProj);
+        a_Angles.z = Vector3.Angle(Vector3.right, rightProj);
+    }
 
 }
 
