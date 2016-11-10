@@ -43,6 +43,7 @@ namespace Assets.Scripts.Communication.Communicators
             mBrainpackUpdateEvent += vBrainpackUpdatedHandle;
         }
 
+       
         /// <summary>
         /// Adds an event handler to brainpack status update
         /// </summary>
@@ -190,7 +191,7 @@ namespace Assets.Scripts.Communication.Communicators
             {
                 mFirmwareUpdater = new FirmwareUpdateManager("C:\\downl\\server", vCurrentEndPoint, ApplicationSettings.TftpPort);
             }
-            mNetworkedSuitControlConnection.Send(vRawBytes);
+            mNetworkedSuitControlConnection.Send(vRawBytes, vRawSize);
 
 
         }
@@ -203,9 +204,12 @@ namespace Assets.Scripts.Communication.Communicators
 
             int vRawSize;
             var vRawBytes = vRawPacket.GetRawPacketByteArray(out vRawSize, vStream);
+           // vRawBytes[1] = 4;
             //Start the firmware update manager before sending the request to update the firmware
-            mNetworkedSuitControlConnection.Send(vRawBytes);
+            mNetworkedSuitControlConnection.Send(vRawBytes, vRawSize);
         }
+
+ 
 
         public void CleanUp()
         {
@@ -230,7 +234,9 @@ namespace Assets.Scripts.Communication.Communicators
             RawPacket vRawPacket = new RawPacket();
             int vRawSize;
             var vRawBytes = vRawPacket.GetRawPacketByteArray(out vRawSize, vStream);
-            mNetworkedSuitControlConnection.Send(vRawBytes);
+            mNetworkedSuitControlConnection.Send(vRawBytes, vRawSize);
         }
+
+       
     }
 }

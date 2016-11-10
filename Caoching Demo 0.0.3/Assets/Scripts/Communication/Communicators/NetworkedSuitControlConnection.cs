@@ -10,6 +10,8 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using Assets.Scripts.Communication.Controller;
+using Assets.Scripts.UI;
+using heddoko;
 using HeddokoLib.heddokoProtobuff.Decoder;
 using UIWidgets;
 
@@ -47,6 +49,7 @@ namespace Assets.Scripts.Communication.Communicators
             }
         }
 
+      
         /// <summary>
         /// Start the network connection to the suit
         /// </summary>
@@ -177,14 +180,14 @@ namespace Assets.Scripts.Communication.Communicators
             }
             return true;
         }
-        public bool Send(byte[] vData)
+        public bool Send(byte[] vData, int vBuffersize)
         {
 
             if (mSocket != null)
             {
                 lock (mSocket)
                 {
-                    mSocket.Send(vData, vData.Length, SocketFlags.None);
+                    mSocket.Send(vData, vBuffersize, SocketFlags.None);
 
                 }
             }

@@ -27,7 +27,7 @@ namespace Assets.Scripts.Communication
         private Version mServerVersion;
         private Version mBrainpackVersion;
         private BrainpackAdvertisingListener mAdvertisingListener;
-        
+
         void Awake()
         {
             OutterThreadToUnityThreadIntermediary.Instance.Init();
@@ -35,11 +35,7 @@ namespace Assets.Scripts.Communication
         void Start()
         {
             mBrainpack = new Brainpack();
-             SuitConnectionManager = new SuitConnectionManager(mBrainpack);
-            // SuitConnectionManager.ConnectToSuit("127.0.0.1",8844);
-            //SuitConnectionManager.NetworkSuitConnectionEstablishedEvent += UpdateStatusPanelView;
-            //SuitConnectionManager.AddBrainpackUpdatedHandler(BrainpackStatusHandle);
-            //BrainpackStatusPanel.RegisterFirmwareSubPanelUpdateCallback(UpdateFirmware);
+            SuitConnectionManager = new SuitConnectionManager(mBrainpack);
             mAdvertisingListener = new BrainpackAdvertisingListener(10);
             mAdvertisingListener.BrainpackFoundEvent += NewBrainpackFound;
             mAdvertisingListener.BrainpackLostEvent += BrainpackLostHandler;
@@ -62,41 +58,39 @@ namespace Assets.Scripts.Communication
             IPEndPoint vEndPoint = (IPEndPoint)vSelected.Point;
             string vIpAddress = vEndPoint.Address.ToString();
             SuitConnectionManager.ConnectToSuit(vIpAddress, vSelected.TcpControlPort);
-            Packet vPacket = new Packet();
-            vPacket.type = PacketType.StartDataStream;
-            vPacket.recordingRate = 20u;
-            vPacket.endpoint = new Endpoint();
-            vPacket.endpoint.address = "192.168.11.140";
-            vPacket.endpoint.port = 8458;
-
-            SuitConnectionManager.SendPacket(vPacket);
         }
 
+        public void SendReq()
+        {
+            Packet vPacket = new Packet();
+            vPacket.type = PacketType.StatusRequest;
+            SuitConnectionManager.SendPacket(vPacket);
+        }
         private void BrainpackLostHandler(Brainpack vBrainpack)
         {
-           OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
-           {
-               Brainpack vBrainpackCopy = new Brainpack();
-               vBrainpackCopy.Id = vBrainpack.Id;
-               vBrainpackCopy.Version = vBrainpack.Version;
-               vBrainpackCopy.Point = vBrainpack.Point;
-               vBrainpackCopy.Status = vBrainpack.Status;
-               BrainpackContainerPanel.RemoveBrainpackModel(vBrainpackCopy);
-           }); 
-         
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
+            {
+                Brainpack vBrainpackCopy = new Brainpack();
+                vBrainpackCopy.Id = vBrainpack.Id;
+                vBrainpackCopy.Version = vBrainpack.Version;
+                vBrainpackCopy.Point = vBrainpack.Point;
+                vBrainpackCopy.Status = vBrainpack.Status;
+                BrainpackContainerPanel.RemoveBrainpackModel(vBrainpackCopy);
+            });
+
         }
 
         private void NewBrainpackFound(Brainpack vBrainpack)
         {
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
                 () => BrainpackContainerPanel.AddBrainpackModel(vBrainpack));
-       
+
         }
 
         private void UpdateStatusPanelView()
         {
 
- 
+
         }
 
         private void UpdateFirmware()
@@ -108,10 +102,10 @@ namespace Assets.Scripts.Communication
             else
             {
                 IPEndPoint vIp = mBrainpack.Point as IPEndPoint;
-                SuitConnectionManager.ConnectToSuit(vIp.Address.ToString(),mBrainpack.TcpControlPort);
+                SuitConnectionManager.ConnectToSuit(vIp.Address.ToString(), mBrainpack.TcpControlPort);
                 SuitConnectionManager.UpdateFirmware("firmware.bin");
             }
-          
+
         }
 
         private void BrainpackStatusHandle(Packet vPacket)
@@ -147,6 +141,10 @@ namespace Assets.Scripts.Communication
             {
                 SuitConnectionManager.RequestSuitStatus();
             }
+            if (Input.GetKeyDown(KeyCode.P))
+            {
+                SendReq();
+            }
         }
 
 
@@ -163,5 +161,7 @@ namespace Assets.Scripts.Communication
             BrainpackContainerPanel.BrainpackSelectedEvent -= BrainpackSelected;
 
         }
+
+
     }
 }

@@ -40,7 +40,7 @@ namespace Assets.Scripts.Communication.Communicators
         public BrainpackAdvertisingListener(double vTimer)
         {
             mTimer = vTimer;
-            mBrainpackTimer = new Timer(1000);
+            mBrainpackTimer = new Timer(10000);
             mBrainpackTimer.AutoReset = true;
             mBrainpackTimer.Elapsed += VerifyBrainpackCallTime;
             mBrainpackTimer.Start();

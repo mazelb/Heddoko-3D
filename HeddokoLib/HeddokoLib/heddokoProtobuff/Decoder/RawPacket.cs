@@ -265,13 +265,14 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
         /// <returns></returns>
         public byte[] GetRawPacketByteArray(out int vRawSize, MemoryStream vStream)
         {
-            PayloadSize = vStream.Length + 1;
+            long vStreamLength = vStream.Length;
+            PayloadSize = vStreamLength + 1;
             mRawPacketBytes[mRawPacketBytesIndex++] = StartByte;
             InsertByteToRawPacket((byte)(PayloadSize & 0x00ff));
             InsertByteToRawPacket((byte)((PayloadSize >> 8) & 0x00ff));
             InsertByteToRawPacket(0x04);
             vStream.Seek(0, SeekOrigin.Begin);
-            for (int vI = 0; vI < PayloadSize; vI++)
+            for (int vI = 0; vI < vStreamLength; vI++)
             {
                 InsertByteToRawPacket((byte)vStream.ReadByte());
             }
