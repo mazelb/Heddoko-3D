@@ -48611,6 +48611,7 @@ MonoBehaviour:
   FirstVector: {x: 180, y: 0, z: 90}
   SecondVector: {x: 180, y: 0, z: 90}
   vVal: 5
+  IsPaused: 0
 --- !u!1 &1754098890
 GameObject:
   m_ObjectHideFlags: 0
@@ -48822,7 +48823,8 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: "Press A To Toggle To Avatar View\t \t\t|\tPress S To Toggle to Sensor View\nPress
-    O/P to set sensors to grid/t pose\t|\tPress Home to calibrate"
+    O/P to set sensors to grid/t pose\t|\tPress Home to calibrate\nPress Space to
+    pause data text update"
 --- !u!222 &1761359604
 CanvasRenderer:
   m_ObjectHideFlags: 0

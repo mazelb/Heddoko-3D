@@ -32,11 +32,16 @@ namespace Assets.Demos
         public Vector3 FirstVector;
         public Vector3 SecondVector;
         public int vVal;
+        public bool IsPaused = false;
         void Update()
         {
             BodySegment.FirstVector = FirstVector;
             BodySegment.SecondVector = SecondVector;
             BodyFrame.vVal = vVal;
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                IsPaused = !IsPaused;
+            }
         }
         public BrainpackMessagePerSecond BrainpackMessagePerSecond
         {
@@ -105,25 +110,29 @@ namespace Assets.Demos
 
             for (int i = 0; i < mSelectedIntegers.Length; i++)
             {
-                mSelectedIntegers[i] =i == vObj;
+                mSelectedIntegers[i] = i == vObj;
 
-            } 
-            ListView. UpdateItems();
+            }
+            ListView.UpdateItems();
         }
 
 
         public void ProcessMessage(Packet vPacket)
         {
+            if (IsPaused)
+            {
+                return;
+            }
             int vCount = vPacket.fullDataFrame.imuDataFrame.Count;
             var vImuDataFrame = vPacket.fullDataFrame.imuDataFrame;
-             
+
             for (int vI = 0; vI < vCount; vI++)
             {
                 if (!mSelectedIntegers[vI])
                 {
                     continue;
                 }
-                
+
                 int vID = (int)vImuDataFrame[vI].imuId;
                 float vMx = vImuDataFrame[vI].Mag_x;
                 float vMy = vImuDataFrame[vI].Mag_y;
@@ -164,20 +173,20 @@ namespace Assets.Demos
                 vDescription.Magnetometer = string.Format("{0} , {1} , {2}   ", FormatFloatTo2Decimals(vMx), FormatFloatTo2Decimals(vMy), FormatFloatTo2Decimals(vMz));
                 vDescription.Acceleration = string.Format("{0} , {1} , {2}  ", FormatFloatTo2Decimals(vAccelx), FormatFloatTo2Decimals(vAccely), FormatFloatTo2Decimals(vAccelz));
 
-                UpdateSensors(vIndex,vImuDataFrame[vI]);
+                UpdateSensors(vIndex, vImuDataFrame[vI]);
 
             }
             ListView.UpdateItems();
-        
+
         }
 
-        private void UpdateSensors(int vIndex,ImuDataFrame vImuDataFrame)
+        private void UpdateSensors(int vIndex, ImuDataFrame vImuDataFrame)
         {
             if (Body != null)
             {
                 var vCalStableStatus = (vImuDataFrame.sensorMask >> 19) & 0x01;
                 var vMagTransient = (vImuDataFrame.sensorMask >> 20) & 0x01;
-                Body.RenderedBody.SensorTransformContainer.ChangeState(vIndex, vCalStableStatus ==1 , vMagTransient ==1);
+                Body.RenderedBody.SensorTransformContainer.ChangeState(vIndex, vCalStableStatus == 1, vMagTransient == 1);
 
             }
         }
