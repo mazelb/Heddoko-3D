@@ -56,8 +56,8 @@ namespace Assets.Scripts.Body_Data.View
             mIsHidden = true;
             HighlightObject(false);
             gameObject.SetActive(false);
-            Wings.ResetState();
-            Fuselage.ResetState();
+           // Wings.ResetState();
+            //Fuselage.ResetState();
         }
 
         public void HighlightObject(bool vFlag)
@@ -80,7 +80,7 @@ namespace Assets.Scripts.Body_Data.View
         {
             if (!mIsHidden)
             {
-                transform.rotation = OrientationToCopy.rotation;
+                transform.localRotation= OrientationToCopy.localRotation;
             }
         }
 

@@ -128,30 +128,6 @@ namespace Assets.Scripts.Body_Data.View
             {
                 SetSensorsSpatialPosition(1);
             }
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                int vRand = Random.Range(0,8);
-                mSensorTransformList[vRand].TriggerCalStateChange(true);
-            }
-            if (Input.GetKeyDown(KeyCode.I))
-            {
-                int vRand = Random.Range(0, 8);
-                mSensorTransformList[vRand].TriggerCalStateChange(true);
-                mSensorTransformList[vRand].TriggerMagTransStateChange(true);
-            }
-            if (Input.GetKeyDown(KeyCode.U))
-            {
-                int vRand = Random.Range(0, 8);
-                mSensorTransformList[vRand].TriggerCalStateChange(false);
-                mSensorTransformList[vRand].TriggerMagTransStateChange(false);
-            }
-            if (Input.GetKeyDown(KeyCode.Y))
-            {
-                int vRand = Random.Range(0, 8);
-                mSensorTransformList[vRand].Wings.ResetState();
-                mSensorTransformList[vRand].Fuselage.ResetState();
-
-            }
 
 
         }
