@@ -8,6 +8,7 @@ public class Quatconstraint : MonoBehaviour
     public Vector2 XminMax = new Vector2(-30, 30);
     public Vector2 YminMax = new Vector2(-30, 30);
     public Vector2 ZminMax = new Vector2(-30, 30);
+    public bool animatePingPong = false;
 
     ///*public*/ Vector3 axis;
     ///*public*/ float angle;
@@ -47,66 +48,130 @@ public class Quatconstraint : MonoBehaviour
     {
         beginQuat = Quaternion.Euler(eulerBegin);
         EndQuat = Quaternion.Euler(eulerEnd);
+        if(animatePingPong)
+        {
 
-        if (pos) ++i;
-        else --i;
-        //EndQuat = Quaternion.Euler(eulerEnd);
-        Quaternion tQuat = Quaternion.Slerp(beginQuat, EndQuat, i * 0.01f);
+            if (pos)
+            {
+                ++i;
+                if (i == 100)
+                    pos = false;
+            }
+            else
+            {
+                --i;
+                if (i == 0)
+                    pos = true;
+            }
+            //EndQuat = Quaternion.Euler(eulerEnd);
+            Quaternion tQuat = Quaternion.Slerp(beginQuat, EndQuat, i * 0.01f);
 
-        if (Quaternion.Angle(tQuat, EndQuat) < 3) pos = false;
-        else if (Quaternion.Angle(tQuat, beginQuat) < 3) pos = true;
+            //if (Quaternion.Angle(tQuat, EndQuat) < 1) pos = false;
+            //else if (Quaternion.Angle(tQuat, beginQuat) < 1) pos = true;
+            return tQuat;
+        }
+        else
+        {
+            return EndQuat;
+        }
 
-        return tQuat;
     }
 
     // Update is called once per frame
     void Update()
     {
         Quaternion tQuat = Animate();
-        ProjectedAngles.ExtractAngles(tQuat,ref m_AnglesAnalysis);
-        CurrentQuat = tQuat * Constraint(m_AnglesAnalysis);
+        CurrentQuat = tQuat;
+
+        float angle = ExtractAngles(CurrentQuat, Vector3.up, Vector3.right);
+        tQuat = Quaternion.AngleAxis(ClampAngleX(angle), Vector3.right);
+        CurrentQuat = CurrentQuat * tQuat;
+
+        angle = ExtractAngles(CurrentQuat, Vector3.forward, Vector3.up);
+        tQuat = Quaternion.AngleAxis(ClampAngleY(angle), Vector3.up);
+        CurrentQuat = CurrentQuat * tQuat;
+
+        angle = ExtractAngles(CurrentQuat, Vector3.right, Vector3.forward);
+        tQuat = Quaternion.AngleAxis(ClampAngleZ(angle), Vector3.forward);
+        CurrentQuat = CurrentQuat * tQuat;
+        //ProjectedAngles.ExtractAngles(tQuat,ref m_AnglesAnalysis);
+        //CurrentQuat = tQuat * Constraint(m_AnglesAnalysis);
 
         transform.localRotation = CurrentQuat; // Constraint(m_ProjectedAngles.m_ReferenceProjectedAngles);
     }
 
-    Quaternion Constraint(Vector3 a_ProjAngles)
+//     Quaternion Constraint(Vector3 a_ProjAngles)
+//     {
+// 
+//         ////currentEuler = aQuat.eulerAngles;
+//         //ExtractAngles(aQuat, ref ProjectedAngles);
+//         a_ProjAngles = ClampAngle(a_ProjAngles);
+//         Quaternion tRet = Quaternion.Euler(a_ProjAngles);
+// 
+//         return tRet;
+//     }
+
+    public float ExtractAngles(Quaternion a_QuatLocal, Vector3 a_Globalaxis, Vector3 a_normal)
+	{
+		Vector3 localAxis = a_QuatLocal * a_Globalaxis;
+		Vector3 upProj = Vector3.ProjectOnPlane(localAxis, a_normal);   // pitch angle
+		upProj.Normalize();
+        Mathf.Atan2(upProj.y, upProj.x);
+		return Vector3.Angle(a_Globalaxis, upProj);
+	}
+    
+//     private float ClampAngle(float a_ProjAngles)
+//     {
+//         float offset =0;
+//         if      (a_ProjAngles > XminMax.y)
+//                        offset = XminMax.y - a_ProjAngles;
+//         else if (a_ProjAngles < XminMax.x)
+//                        offset = XminMax.x - a_ProjAngles;
+// 
+//         if      (a_ProjAngles > YminMax.y)
+//                        offset = YminMax.y - a_ProjAngles;
+//         else if (a_ProjAngles < YminMax.x)
+//                        offset = YminMax.x - a_ProjAngles;
+// 
+//         if      (a_ProjAngles > ZminMax.y)
+//                        offset = ZminMax.y - a_ProjAngles;
+//         else if (a_ProjAngles < ZminMax.x)
+//                        offset = ZminMax.x - a_ProjAngles;
+// 
+//         return offset;
+//     }
+
+    private float ClampAngleX(float a_ProjAngles)
     {
-
-        ////currentEuler = aQuat.eulerAngles;
-        //ExtractAngles(aQuat, ref ProjectedAngles);
-        a_ProjAngles = ClampAngle(a_ProjAngles);
-        Quaternion tRet = Quaternion.Euler(a_ProjAngles);
-
-        return tRet;
+        float offset = 0;
+        if (a_ProjAngles > XminMax.y)
+            offset = XminMax.y - a_ProjAngles;
+        else if (a_ProjAngles < XminMax.x)
+            offset = XminMax.x - a_ProjAngles;
+        
+        return offset;
     }
 
-    private Vector3 ClampAngle(Vector3 a_ProjAngles)
+    private float ClampAngleY(float a_ProjAngles)
     {
-        Vector3 offset = Vector3.zero;
-        if      (a_ProjAngles.x > XminMax.y)
-                       offset.x = XminMax.y - a_ProjAngles.x;
-        else if (a_ProjAngles.x < XminMax.x)
-                       offset.x = XminMax.x - a_ProjAngles.x;
-        else           offset.x = 0;
-
-        if      (a_ProjAngles.y > YminMax.y)
-                       offset.y = YminMax.y - a_ProjAngles.y;
-        else if (a_ProjAngles.y < YminMax.x)
-                       offset.y = YminMax.x - a_ProjAngles.y;
-        else           offset.y = 0;
-
-        if      (a_ProjAngles.z > ZminMax.y)
-                       offset.z = ZminMax.y - a_ProjAngles.z;
-        else if (a_ProjAngles.z < ZminMax.x)
-                       offset.z = ZminMax.x - a_ProjAngles.z;
-        else           offset.z = 0;
+        float offset = 0;
+        if (a_ProjAngles > YminMax.y)
+            offset = YminMax.y - a_ProjAngles;
+        else if (a_ProjAngles < YminMax.x)
+            offset = YminMax.x - a_ProjAngles;
 
         return offset;
-//         if (currentEuler.x > MaxEulerConsttraint.x) { currentEuler.x = MaxEulerConsttraint.x; pos = !pos; }
-//         if (currentEuler.y > MaxEulerConsttraint.y) { currentEuler.y = MaxEulerConsttraint.y; pos = !pos; }
-//         if (currentEuler.z > MaxEulerConsttraint.z) { currentEuler.z = MaxEulerConsttraint.z; pos = !pos; }
+    }
 
+    private float ClampAngleZ(float a_ProjAngles)
+    {
+        float offset = 0;
+        if (a_ProjAngles > ZminMax.y)
+            offset = ZminMax.y - a_ProjAngles;
+        else if (a_ProjAngles < ZminMax.x)
+            offset = ZminMax.x - a_ProjAngles;
 
+        return offset;
     }
 
 
