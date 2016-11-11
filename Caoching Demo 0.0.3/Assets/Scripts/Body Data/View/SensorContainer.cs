@@ -8,8 +8,9 @@
 
 using System;
 using System.Collections.Generic;
+using heddoko;
 using UnityEngine;
-using UnityEngine.Events;
+using  System.Linq;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Body_Data.View
@@ -30,7 +31,9 @@ namespace Assets.Scripts.Body_Data.View
         {
             mRedPool = new ParticlePoolManager(18, RedPref);
             mWhitePool = new ParticlePoolManager(18, WhitePref);
-        }  
+            List<SensorTransform> vSortedList = mSensorTransformList.OrderBy(o => o.SensorPos).ToList();
+            mSensorTransformList = vSortedList;
+        }
         void OnEnable()
         {
 
@@ -141,6 +144,16 @@ namespace Assets.Scripts.Body_Data.View
             for (int i = 0; i < mSensorTransformList.Count; i++)
             {
                 mSensorTransformList[i].ChangePosition(vDirection);
+            }
+        }
+
+        public void UpdateSensorOrientation(Packet vPacket)
+        {
+            var vImuFrames = vPacket.fullDataFrame.imuDataFrame;
+            for (int vI = 0; vI < vImuFrames.Count; vI++)
+            {
+                int vIdx = (int)vImuFrames[vI].imuId;
+                mSensorTransformList[vIdx].UpdateRotation(vImuFrames[vI]);
             }
         }
     }

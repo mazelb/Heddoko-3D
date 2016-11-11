@@ -7,6 +7,8 @@
 // */
 
 
+using heddoko;
+using HeddokoLib.body_pipeline;
 using HeddokoLib.genericPatterns;
 using UnityEngine;
 using UnityEngine.Events;
@@ -19,35 +21,47 @@ namespace Assets.Scripts.Body_Data.View
     /// </summary>
     public class SensorTransform : MonoBehaviour, IPointerClickHandler
     {
-        
+
         public Transform OrientationToCopy;
+        public bool UseBodyOrientation = false;
         private bool mIsHidden = true;
         public AxisViewContainer Axis;
         public GameObject[] ListenerLayerobjects;
         public Vector3[] Positions;
         private int mSpatialPos = 0;
-        public int SensorPos;
+        public int SensorPos; 
         public UnityAction<int> SensorClicked;
-        
+
         public GameObject[] HighlightedGameObjects;
         private bool mIsHighlighted;
         private bool mPreviousCalState = false;
         private bool mPreviousMagState = false;
         private ParticlePoolManager mRedPool;
         private ParticlePoolManager mWhitePool;
-        public AirplaneSensorColor Wings ;
+        public AirplaneSensorColor Wings;
         public AirplaneSensorColor Fuselage;
 
+        [SerializeField]
+        private SensorRotation mRotation;
+
+        private SensorRotation Rotation
+        {
+            get
+            {
+                if (mRotation == null)
+                {
+                    mRotation = gameObject.GetComponent<SensorRotation>();
+                }
+                return mRotation;
+            }
+        }
 
         public bool IsHighlighted
         {
             get { return mIsHighlighted; }
         }
 
-        private void Awake()
-        {
-            
-        }
+
         /// <summary>
         /// Hide the sensor
         /// </summary>
@@ -56,8 +70,6 @@ namespace Assets.Scripts.Body_Data.View
             mIsHidden = true;
             HighlightObject(false);
             gameObject.SetActive(false);
-           // Wings.ResetState();
-            //Fuselage.ResetState();
         }
 
         public void HighlightObject(bool vFlag)
@@ -78,9 +90,22 @@ namespace Assets.Scripts.Body_Data.View
 
         void Update()
         {
-            if (!mIsHidden)
+            if (!mIsHidden && UseBodyOrientation)
             {
-                transform.localRotation= OrientationToCopy.localRotation;
+                transform.localRotation = OrientationToCopy.localRotation;
+            }
+        }
+
+        public void UpdateRotation(ImuDataFrame vFrame)
+        {
+            if (!UseBodyOrientation)
+            {
+                Quaternion vFrameRot = Quaternion.identity;
+                vFrameRot.x = vFrame.quat_x_yaw;
+                vFrameRot.y = vFrame.quat_y_pitch;
+                vFrameRot.z = vFrame.quat_z_roll;
+                vFrameRot.w = vFrame.quat_w;
+                Rotation.UpdateRotatation(vFrameRot);
             }
         }
 
@@ -92,7 +117,7 @@ namespace Assets.Scripts.Body_Data.View
         {
 
             mSpatialPos += vDirection;
-            if (mSpatialPos <0)
+            if (mSpatialPos < 0)
             {
                 mSpatialPos = Positions.Length - 1;
             }
@@ -100,7 +125,7 @@ namespace Assets.Scripts.Body_Data.View
             if (mSpatialPos >= Positions.Length)
             {
                 mSpatialPos = 0;
-            }    
+            }
             transform.localPosition = Positions[mSpatialPos];
         }
 
@@ -112,7 +137,7 @@ namespace Assets.Scripts.Body_Data.View
         public void SetLayer(LayerMask vCurrLayerMask)
         {
             gameObject.layer = vCurrLayerMask;
-            Axis.SetLayer (vCurrLayerMask);
+            Axis.SetLayer(vCurrLayerMask);
             if (ListenerLayerobjects != null)
             {
                 for (int i = 0; i < ListenerLayerobjects.Length; i++)
@@ -122,7 +147,7 @@ namespace Assets.Scripts.Body_Data.View
             }
         }
 
-       
+
         public void OnPointerClick(PointerEventData vEventData)
         {
             if (SensorClicked != null)
@@ -155,7 +180,7 @@ namespace Assets.Scripts.Body_Data.View
             mRedPool.RequestResource(transform.position);
             AirplaneSensorColor.SensorState vState = vMagneticTransience
                ? AirplaneSensorColor.SensorState.Good
-               : AirplaneSensorColor.SensorState.Bad; 
+               : AirplaneSensorColor.SensorState.Bad;
             Fuselage.SetState(vState);
         }
 

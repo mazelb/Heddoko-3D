@@ -177,7 +177,7 @@ namespace Assets.Demos
 
             }
             ListView.UpdateItems();
-
+            Body.RenderedBody.SensorTransformContainer.UpdateSensorOrientation(vPacket);
         }
 
         private void UpdateSensors(int vIndex, ImuDataFrame vImuDataFrame)
