@@ -41,9 +41,11 @@ namespace Assets.Scripts.Body_Data.View
         public Transform UpperSpine;
         public GameObject[] LayerCopyListeners;
 
+		public CalibrationData.RangeOfMotion.StaticROM ROM = null;
 
 
-        [SerializeField]
+
+		[SerializeField]
         private BodyStructureMap.BodyTypes mCurrentBodyType;
         internal Dictionary<BodyStructureMap.SubSegmentTypes, SegmentInteractibleObjects> TransformMapping = new Dictionary<BodyStructureMap.SubSegmentTypes, SegmentInteractibleObjects>(10);
         private LayerMask mCurrLayerMask;

@@ -46,7 +46,7 @@ public class Body
     [SerializeField]
     public BodyStructureMap.BodyTypes BodyType = BodyStructureMap.BodyTypes.BodyType_FullBody;
 
-    public StaticROM RangeOfMotion = new StaticROM();
+    public StaticROM RangeOfMotion = null;
 
     [SerializeField]
     public BodyFrame CurrentBodyFrame;
@@ -116,6 +116,8 @@ public class Body
         private set
         {
             mRenderedBody = value;
+            mRenderedBody.ROM = RangeOfMotion;
+
         }
     }
 
@@ -175,6 +177,9 @@ public class Body
     */
     public void CreateBodyStructure(BodyStructureMap.BodyTypes vBodyType)
     {
+        if(RangeOfMotion == null)
+            RangeOfMotion = new StaticROM();
+
         //Get the list of segments from the bodystructuremap 
         List<BodyStructureMap.SegmentTypes> vSegmentList = BodyStructureMap.Instance.BodyToSegmentMap[vBodyType];
         TorsoAnalysis vTorsoSegmentAnalysis = new TorsoAnalysis();
