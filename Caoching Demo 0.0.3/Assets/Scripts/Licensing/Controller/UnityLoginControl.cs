@@ -55,9 +55,9 @@ namespace Assets.Scripts.Licensing.Controller
             mUrl = "https://app.heddoko.com/";
             mSecret = "HEDFstcKsx0NHjPSsjcndjnckSDJjknCCSjcnsJSK89SJDkvVBrk";
 
-#if DEBUG
-        //    mUrl = "http://dev.app.heddoko.com/";
-         //   mSecret = "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk";
+#if DEBUG 
+            mUrl = "http://dev.app.heddoko.com/";
+            mSecret = "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk";
 #endif
             HeddokoConfig vConfig = new HeddokoConfig(mUrl + mUrlExt, mSecret);
             mClient = new HeddokoClient(vConfig);
@@ -270,7 +270,12 @@ namespace Assets.Scripts.Licensing.Controller
             }
             catch (Exception vE)
             {
-                UnityEngine.Debug.Log("error "+vE);
+                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
+                {
+                    LoginView.EnableButtonControls();
+                    LoginView.SetLoadingIconAsActive(false);
+                });
+                  UnityEngine.Debug.Log("error "+vE);
             }
 
         }
