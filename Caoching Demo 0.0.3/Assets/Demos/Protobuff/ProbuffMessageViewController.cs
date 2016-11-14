@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections.Generic;
+using Assets.Demos.Protobuff;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Communication.View;
 using Assets.Scripts.Utils;
@@ -27,12 +28,15 @@ namespace Assets.Demos
         public Text AverageMessagePerSec;
         private BrainpackMessagePerSecond mBrainpackMessagePerSecond = new BrainpackMessagePerSecond();
         public Body Body;
+        private PniSensorDataCollector mCollector = new PniSensorDataCollector();
         //private Dictionary<int, bool> mSelectedIntegers = new Dictionary<int, bool>();
         private bool[] mSelectedIntegers = new bool[9];
         public Vector3 FirstVector;
         public Vector3 SecondVector;
         public int vVal;
         public bool IsPaused = false;
+         public bool CollectData;
+        public Text DataCollectionLabel;
         void Update()
         {
             BodySegment.FirstVector = FirstVector;
@@ -41,6 +45,10 @@ namespace Assets.Demos
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 IsPaused = !IsPaused;
+            }
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                ChangeDataCollectionState();
             }
         }
         public BrainpackMessagePerSecond BrainpackMessagePerSecond
@@ -116,7 +124,10 @@ namespace Assets.Demos
             ListView.UpdateItems();
         }
 
-
+        /// <summary>
+        /// Process protobuuf message
+        /// </summary>
+        /// <param name="vPacket"></param>
         public void ProcessMessage(Packet vPacket)
         {
             if (IsPaused)
@@ -134,6 +145,9 @@ namespace Assets.Demos
                 }
 
                 int vID = (int)vImuDataFrame[vI].imuId;
+                float vTimeStamp = vPacket.fullDataFrame.timeStamp;
+                var vCalStableStatus = (vImuDataFrame[vID].sensorMask >> 19) & 0x01;
+                var vMagTransient = (vImuDataFrame[vID].sensorMask >> 20) & 0x01;
                 float vMx = vImuDataFrame[vI].Mag_x;
                 float vMy = vImuDataFrame[vI].Mag_y;
                 float vMz = vImuDataFrame[vI].Mag_z;
@@ -166,21 +180,53 @@ namespace Assets.Demos
                 var vQuatRot = vTransform.rotation;
                 var vEulerRot = vTransform.eulerAngles;
                 vIndex = ListView.DataSource.Count < 9 ? 0 : vID;
-                ListView.DataSource[vIndex].RawQuat = string.Format("{0} , {1} , {2}, {3} ", FormatFloatTo2Decimals(vQx), FormatFloatTo2Decimals(vQy), FormatFloatTo2Decimals(vQz), FormatFloatTo2Decimals(vQw));
-                ListView.DataSource[vIndex].RawEuler = string.Format("{0} , {1} , {2} ", FormatFloatTo2Decimals(vYaw), FormatFloatTo2Decimals(vPitch), FormatFloatTo2Decimals(vRoll));
-                vDescription.MappedEuler = string.Format("{0} , {1} , {2} ", FormatFloatTo2Decimals(vEulerRot.y), FormatFloatTo2Decimals(vEulerRot.x), FormatFloatTo2Decimals(vEulerRot.z));
-                vDescription.MappedQuat = string.Format("{0} , {1} , {2} , {3} ", FormatFloatTo2Decimals(vQuatRot.x), FormatFloatTo2Decimals(vQuatRot.y), FormatFloatTo2Decimals(vQuatRot.z), FormatFloatTo2Decimals(vQuatRot.w));
-                vDescription.Magnetometer = string.Format("{0} , {1} , {2}   ", FormatFloatTo2Decimals(vMx), FormatFloatTo2Decimals(vMy), FormatFloatTo2Decimals(vMz));
-                vDescription.Acceleration = string.Format("{0} , {1} , {2}  ", FormatFloatTo2Decimals(vAccelx), FormatFloatTo2Decimals(vAccely), FormatFloatTo2Decimals(vAccelz));
 
-                UpdateSensors(vIndex, vImuDataFrame[vI]);
+                string vRawQuat = string.Format("{0} ; {1} ; {2}; {3} ", FormatFloatTo2Decimals(vQx), FormatFloatTo2Decimals(vQy), FormatFloatTo2Decimals(vQz), FormatFloatTo2Decimals(vQw));
+                string vRawEuler = string.Format("{0} ; {1} ; {2} ", FormatFloatTo2Decimals(vYaw), FormatFloatTo2Decimals(vRoll), FormatFloatTo2Decimals(vPitch));
+                string vMappedEuler = string.Format("{0} ; {1} ; {2} ", FormatFloatTo2Decimals(vEulerRot.y), FormatFloatTo2Decimals(vEulerRot.x), FormatFloatTo2Decimals(vEulerRot.z));
+                string vMappedQuat = string.Format("{0} ; {1} ; {2} ; {3} ", FormatFloatTo2Decimals(vQuatRot.x), FormatFloatTo2Decimals(vQuatRot.y), FormatFloatTo2Decimals(vQuatRot.z), FormatFloatTo2Decimals(vQuatRot.w));
+                string vMagData = string.Format("{0} ; {1} ; {2} ", FormatFloatTo2Decimals(vMx), FormatFloatTo2Decimals(vMy), FormatFloatTo2Decimals(vMz));
+                string vAccelData = string.Format("{0} ; {1} ; {2} ", FormatFloatTo2Decimals(vAccelx), FormatFloatTo2Decimals(vAccely), FormatFloatTo2Decimals(vAccelz));
+                
+                ListView.DataSource[vIndex].RawQuat = vRawQuat;
+                ListView.DataSource[vIndex].RawEuler = vRawEuler;
+                vDescription.MappedEuler = vMappedEuler;
+                vDescription.MappedQuat = vMappedQuat;
+                vDescription.Magnetometer = vMagData;
+                vDescription.Acceleration = vAccelData;
+
+                UpdateSensorState(vIndex, vImuDataFrame[vI]);
+                if (CollectData)
+                {
+                    mCollector.UpdateCollection(vID, vTimeStamp,vRawQuat,vRawEuler,vMappedEuler,vMappedQuat,vMagData, vAccelData,vMagTransient == 1,vCalStableStatus ==1);
+                }
 
             }
             ListView.UpdateItems();
             Body.RenderedBody.SensorTransformContainer.UpdateSensorOrientation(vPacket);
         }
 
-        private void UpdateSensors(int vIndex, ImuDataFrame vImuDataFrame)
+        public void ChangeDataCollectionState()
+        {
+            if (CollectData)
+            {
+                mCollector.Write();
+                CollectData = false;
+                mCollector.Clear();
+                DataCollectionLabel.text = "IS COLLECTING DATA? NO";
+            }
+            else
+            {
+                DataCollectionLabel.text = "IS COLLECTING DATA? YES";
+                CollectData = true;
+            }
+        }
+        /// <summary>
+        /// Update the state of a given sensor.
+        /// </summary>
+        /// <param name="vIndex"></param>
+        /// <param name="vImuDataFrame"></param>
+        private void UpdateSensorState(int vIndex, ImuDataFrame vImuDataFrame)
         {
             if (Body != null)
             {
@@ -212,7 +258,5 @@ namespace Assets.Demos
             };
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vAction);
         }
-
-
     }
 }
