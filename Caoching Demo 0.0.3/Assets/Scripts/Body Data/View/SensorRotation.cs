@@ -22,6 +22,8 @@ namespace Assets.Scripts.Body_Data.View
         [SerializeField]
         public Vector3 OrientationCorrection;
 
+        public bool UseCorrection = false;
+
         void Awake()
         {
             SetAxisOfRotation();
@@ -40,7 +42,10 @@ namespace Assets.Scripts.Body_Data.View
             AbsoluteRotation.y = vNewRot.y;
             AbsoluteRotation.z = vNewRot.z;
             AbsoluteRotation.w = vNewRot.w;
-            AbsoluteRotation *= Quaternion.Euler(OrientationCorrection);
+            if (UseCorrection)
+            {
+                AbsoluteRotation *= Quaternion.Euler(OrientationCorrection);
+            }
             RelativeRotation = InitialRotation * AbsoluteRotation;
         }
 
@@ -52,7 +57,10 @@ namespace Assets.Scripts.Body_Data.View
         void Update()
         {
             transform.rotation = RelativeRotation;
-
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                UseCorrection = !UseCorrection;
+            }
         }
 
     }
