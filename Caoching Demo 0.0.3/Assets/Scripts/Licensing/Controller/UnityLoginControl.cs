@@ -16,6 +16,7 @@ using System.Threading;
 using Assets.Scripts.Licensing.Authentication;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.Localization;
+using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.Utils;
 using HeddokoSDK;
@@ -42,7 +43,6 @@ namespace Assets.Scripts.Licensing.Controller
         internal OnLoginSuccess LoginSuccessEvent;
         private Thread mConnectionThread;
         private string mUrl;
-        private string mUrlExt;
         private string mSecret;
         public LoginController LoginController
         {
@@ -51,15 +51,14 @@ namespace Assets.Scripts.Licensing.Controller
 
         internal void Awake()
         {
-            mUrlExt = "api/v1";
-            mUrl = "https://app.heddoko.com/";
-            mSecret = "HEDFstcKsx0NHjPSsjcndjnckSDJjknCCSjcnsJSK89SJDkvVBrk";
+            mUrl = GlobalConfig.MainServer;
+            mSecret = GlobalConfig.MainServerKey;
 
 #if DEBUG 
-            mUrl = "http://dev.app.heddoko.com/";
-            mSecret = "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk";
+            mUrl = GlobalConfig.DevServer;
+            mSecret = GlobalConfig.DevServerKey;
 #endif
-            HeddokoConfig vConfig = new HeddokoConfig(mUrl + mUrlExt, mSecret);
+            HeddokoConfig vConfig = new HeddokoConfig(mUrl, mSecret);
             mClient = new HeddokoClient(vConfig);
             ServicePointManager.ServerCertificateValidationCallback += RemoteCertificateValidationCallback;
             mLoginController = new LoginController();
@@ -176,6 +175,11 @@ namespace Assets.Scripts.Licensing.Controller
                 User vUser = mClient.SignIn(vRequest);
                 if (!vUser.IsOk)
                 {
+                    string token = mClient.GenerateDeviceToken();
+                    string message = mClient.AddDevice(token)
+             ? "Device was added successfully"
+             : "Something went wrong on adding device";
+                  //  mClient.SetToken(vUser.Token);
                     OutterThreadToUnityThreadIntermediary.QueueActionInUnity(EnableControls);
                     var vErrorMsg = FormatLoginNoOkError(vUser.Errors);
                     string vMsg = LocalizationBinderContainer.GetString(KeyMessage.LoginFailureMsg);
@@ -189,7 +193,7 @@ namespace Assets.Scripts.Licensing.Controller
                     return;
                 }
                 LicenseInfo vLicense = vUser.LicenseInfo;
-                mClient.SetToken(vUser.Token);
+
                 if (vUser.IsOk)
                 {
                     UserProfileModel vProfileModel = new UserProfileModel()
@@ -198,7 +202,7 @@ namespace Assets.Scripts.Licensing.Controller
                         LicenseInfo = vLicense,
                         Client = mClient
                     };
-                    //if user is a analyst
+                    //if user is an analyst
                     if (vUser.RoleType == UserRoleType.Analyst)
                     {
                         ListCollection<User> vUsers = mClient.UsersCollection(new ListRequest()
