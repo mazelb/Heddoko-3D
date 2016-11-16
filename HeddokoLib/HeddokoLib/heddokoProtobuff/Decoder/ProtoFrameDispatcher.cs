@@ -20,17 +20,31 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
     public class ProtoFrameDispatcher
     {
         internal Dispatch<PacketType> mProtoPacketDispatcher = new Dispatch<PacketType>();
+        internal Dispatch<ReportType> mReportTypeDispatcher = new Dispatch<ReportType>();
         internal Dispatch<BrainpackCommandId> mBrainpackCommandDispatcher = new Dispatch<BrainpackCommandId>();
 
-    /// <summary>
+        /// <summary>
         /// Registers a protobuf packet command
         /// </summary>
         /// <param name="vPacketType">The packet type</param>
         /// <param name="vDelegate">the delegate to register</param> 
         public void AddProtobuffCommand(PacketType vPacketType, ProtoFrameDelegate vDelegate)
         {
-             mProtoPacketDispatcher.Add(vPacketType, vDelegate);
+            mProtoPacketDispatcher.Add(vPacketType, vDelegate);
         }
+
+
+        /// <summary>
+        /// Registers a ReportType packet command
+        /// </summary>
+        /// <param name="vPacketType">The packet type</param>
+        /// <param name="vDelegate">the delegate to register</param> 
+        public void AddProtobuffCommand(ReportType vPacketType, ProtoFrameDelegate vDelegate)
+        {
+            mReportTypeDispatcher.Add(vPacketType, vDelegate);
+        }
+
+
         /// <summary>
         /// Registers a Brainpack command Id
         /// </summary>
@@ -54,6 +68,17 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
             return mBrainpackCommandDispatcher.Process(vCommandId, vSender, vArgs);
         }
 
+
+
+        /// <summary>
+        /// Processes a ReportType packet command
+        /// </summary>
+        /// <param name="vPacketType">The packet type</param>
+        /// <param name="vDelegate">the delegate to register</param> 
+        public bool Process(ReportType vPacketType, object vSender, object vArgs)
+        {
+            return mReportTypeDispatcher.Process(vPacketType , vSender, vArgs);
+        }
         /// <summary>
         /// Process a packet type
         /// </summary>
@@ -112,7 +137,7 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
             /// <param name="vSender"></param>
             /// <param name="vArgs"></param>
             /// <returns></returns>
-            public bool Process(Enum vEnum,object vSender, object vArgs)
+            public bool Process(Enum vEnum, object vSender, object vArgs)
             {
                 if (DispatchCollection.ContainsKey(vEnum))
                 {
@@ -122,7 +147,7 @@ namespace HeddokoLib.heddokoProtobuff.Decoder
                 return false;
             }
         }
- 
+
     }
 
 

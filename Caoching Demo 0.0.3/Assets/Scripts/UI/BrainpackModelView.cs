@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections;
+using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
 using HeddokoLib.HeddokoDataStructs.Brainpack;
 using UnityEngine;
 using UnityEngine.UI;
@@ -51,7 +52,7 @@ namespace Assets.Scripts.UI
                 {
                     Shine.effectRoot.SetActive(true);
                     float vDeltaTime = Time.time - vLastCallTime;
-                    float vValue = AnimCurveUtilities.ExpoOut(vStart, vDistance, vDuration, vTimeToComplete);
+                    float vValue = AnimationHelpers.ExpoOut(vStart, vDistance, vDuration, vTimeToComplete);
                     vDuration += vDeltaTime;
                     Shine.YOffset= vValue;
                     vLastCallTime = Time.time;

@@ -55,7 +55,7 @@ namespace Assets.Scripts.Licensing.Controller
             mUrl = "https://app.heddoko.com/";
             mSecret = "HEDFstcKsx0NHjPSsjcndjnckSDJjknCCSjcnsJSK89SJDkvVBrk";
 
-#if DEBUG
+#if DEBUG 
             mUrl = "http://dev.app.heddoko.com/";
             mSecret = "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk";
 #endif
@@ -180,11 +180,12 @@ namespace Assets.Scripts.Licensing.Controller
                     var vErrorMsg = FormatLoginNoOkError(vUser.Errors);
                     string vMsg = LocalizationBinderContainer.GetString(KeyMessage.LoginFailureMsg);
                     Action vRaiseModalPanelAction = () => ModalPanel.Instance().Choice(vMsg, vErrorMsg, () =>
-                   {
-                       Application.OpenURL(mUrl);
-                   }, () => { });
+                    {
+                        Application.OpenURL(mUrl);
+                    }, () => { });
                     OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vRaiseModalPanelAction);
-                    OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(false));
+                    OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
+                        () => LoginView.SetLoadingIconAsActive(false));
                     return;
                 }
                 LicenseInfo vLicense = vUser.LicenseInfo;
@@ -242,7 +243,7 @@ namespace Assets.Scripts.Licensing.Controller
                                         OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
                                             () =>
                                                 mLoginController.RaiseErrorEvent(LoginErrorType.CannotAuthenticate,
-                                                   LocalizationBinderContainer.GetString(KeyMessage.InvalidUnPwMsg)));
+                                                    LocalizationBinderContainer.GetString(KeyMessage.InvalidUnPwMsg)));
                                         vIsHandled = true;
                                         break;
                                     default:
@@ -266,6 +267,15 @@ namespace Assets.Scripts.Licensing.Controller
                         }
                         break;
                 }
+            }
+            catch (Exception vE)
+            {
+                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
+                {
+                    LoginView.EnableButtonControls();
+                    LoginView.SetLoadingIconAsActive(false);
+                });
+                UnityEngine.Debug.Log("error " + vE);
             }
 
         }
@@ -323,7 +333,7 @@ namespace Assets.Scripts.Licensing.Controller
             vBuilder.Append(vMsg);
             foreach (var vError in vErrors.Errors)
             {
-                vBuilder.Append("\r\n"+vListCount + "." + vError.Message + "");
+                vBuilder.Append("\r\n" + vListCount + "." + vError.Message + "");
                 vListCount++;
             }
             string vYesMsg = LocalizationBinderContainer.GetString(KeyMessage.AckErrorMsg);

@@ -7,6 +7,7 @@
 // */
 
 using System.Collections;
+using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
 using UnityEditor;
 using UnityEngine;
 
@@ -51,7 +52,7 @@ namespace Assets.Scripts.UI
             while (vDuration < TimeToCompletion)
             {
                 float vDeltaTime = Time.time - vLastCallTime;
-                float vValue = AnimCurveUtilities.CircOut(vStart, vDistance, vDuration, TimeToCompletion);
+                float vValue = AnimationHelpers.CircOut(vStart, vDistance, vDuration, TimeToCompletion);
                 vDuration += vDeltaTime;
                 FillImage.fillAmount = vValue;
                 vLastCallTime = Time.time;
@@ -82,7 +83,7 @@ namespace Assets.Scripts.UI
             while (vDuration < TimeToCompletion)
             {
                 float vDeltaTime = Time.time - vLastCallTime;
-                float vValue = AnimCurveUtilities.CircOut(vStart, vDistance, vDuration, TimeToCompletion);
+                float vValue = AnimationHelpers.CircOut(vStart, vDistance, vDuration, TimeToCompletion);
                 vDuration += vDeltaTime;
                 FillImage.fillAmount = vValue;
                 vLastCallTime = Time.time;
@@ -92,34 +93,5 @@ namespace Assets.Scripts.UI
 
     }
 
-    public static class AnimCurveUtilities
-    {
-        public static float CircOut(float vStart, float vDistance, float vElapsedTime, float vTotalDuration)
-        {
-            vElapsedTime = (vElapsedTime > vTotalDuration) ? 1.0f : vElapsedTime / vTotalDuration;
-            vElapsedTime--;
-            return vDistance * Mathf.Sqrt(1 - vElapsedTime * vElapsedTime) + vStart;
-        }
-        public static float ExpoOut(float vStart, float vDistance, float vElapsedTime, float vTotalDuration)
-        {
-            // clamp elapsedTime to be <= duration
-            if (vElapsedTime > vTotalDuration) { vElapsedTime = vTotalDuration; }
-            return vDistance * (-Mathf.Pow(2, -10 * vElapsedTime / vTotalDuration) + 1) + vStart;
-        }
-
-        public static float CircIn(float vStart, float vDistance, float vElapsedTime, float vTotalDuration)
-        {
-            // clamp elapsedTime so that it cannot be greater than duration
-            vElapsedTime = (vElapsedTime > vTotalDuration) ? 1.0f : vElapsedTime / vTotalDuration;
-            return -vDistance * (Mathf.Sqrt(1 - vElapsedTime * vElapsedTime) - 1) + vStart;
-
-        }
-
-
-        public enum AnimationType
-        {
-            EaseInCirc,
-            EaseOutCirc
-        }
-    }
+  
 }

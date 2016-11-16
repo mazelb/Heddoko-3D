@@ -24,6 +24,7 @@ namespace Assets.Scripts.UI
         public Text BatteryLevelText;
         private Brainpack mCurrentBrainpack;
         public Text LatestVersionText;
+        public Button ConnectToBrainpackButton;
 
         /// <summary>
         /// Registers the fimrware sub panel's button to begin the Firmware Update process

@@ -7,14 +7,18 @@
 // */
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using Assets.Scripts.Communication.Communicators;
 using Assets.Scripts.UI;
-using Assets.Scripts.UI.Settings;
+using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
 using Assets.Scripts.Utils;
 using heddoko;
 using HeddokoLib.HeddokoDataStructs.Brainpack;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Assets.Scripts.Communication
 {
@@ -27,10 +31,18 @@ namespace Assets.Scripts.Communication
         private Version mServerVersion;
         private Version mBrainpackVersion;
         private BrainpackAdvertisingListener mAdvertisingListener;
+        public OnlineMaps Map;
+        private Queue<Vector2> mNewPositions = new Queue<Vector2>();
+        [SerializeField]
+        private float mTimeToComplete = 1.5f;
 
+        public StandaloneInputModule StandaloneInputModule;
         void Awake()
         {
             OutterThreadToUnityThreadIntermediary.Instance.Init();
+            StartCoroutine(CalculatePathPosition());
+            StandaloneInputModule.forceModuleActive = true;
+            Map.redrawOnPlay = true;
         }
         void Start()
         {
@@ -43,6 +55,92 @@ namespace Assets.Scripts.Communication
             mServerVersion = new Version(1, 5, 8, 0);
             BrainpackContainerPanel.BrainpackSelectedEvent += BrainpackSelected;
             BrainpackStatusPanel.UpdateLatestVersionText(mServerVersion.ToString());
+            SuitConnectionManager.ConcerningReportIncludedEvent += ConcernReportHandler;
+            OnlineMaps.instance.renderInThread = true;
+            StandaloneInputModule.forceModuleActive = false;
+            OnlineMaps.instance.position = new Vector2(-101.5942f, 49.3028f );
+            OnlineMaps.instance.zoom = 3;
+            StartCoroutine(DrawAfter());
+
+        }
+
+        IEnumerator DrawAfter()
+        {
+            yield return new WaitForSeconds(0.5f);
+            OnlineMaps.instance.Testerino();
+        }
+        public bool isDrawing = false;
+        /// <summary>
+        /// Handle concern report event. 
+        /// </summary>
+        /// <param name="vIsInPain"></param>
+        /// <param name="vVpacket"></param>
+        private void ConcernReportHandler(bool vIsInPain, Packet vVpacket)
+        {
+            //get GPS data
+            var vGpsCoords = vVpacket.fullDataFrame.gpsCoordinates;
+            Vector2 vGpsNumCoords = new Vector2();
+            string[] vGpsCoordsArr = vGpsCoords.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            float.TryParse(vGpsCoordsArr[1], out vGpsNumCoords.x);
+            float.TryParse(vGpsCoordsArr[0], out vGpsNumCoords.y);
+            string vLabel = vIsInPain ? "PAIN REPORTED" : "CONCERN REPORTED";
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
+                () =>
+                {
+                    if (!isDrawing)
+                    {
+                        OnlineMaps.instance.AddMarker(vGpsNumCoords, vLabel);
+                        OnlineMaps.instance.zoom = 18;
+                        OnlineMaps.instance.Redraw();
+
+                        Vector2 vNewPos = new Vector2(vGpsNumCoords.x, vGpsNumCoords.y);
+                        Debug.Log("X: " + vNewPos.x + " , " + "Y :" + vNewPos.y);
+                        Debug.Log("Queue Size" + mNewPositions.Count);
+                        mNewPositions.Enqueue(vNewPos);
+                        // OnlineMaps.instance.position = vGpsNumCoords;
+                        //OnlineMaps.instance.Redraw();
+                        //isDrawing = true;
+                    }
+                });
+        }
+        Queue<Vector2> mNextPath = new Queue<Vector2>();
+        private IEnumerator CalculatePathPosition()
+        {
+            while (true)
+            {
+                if (mNewPositions.Count == 0)
+                {
+                    yield return null;
+                    continue;
+                }
+
+                Vector2 vStartPath = OnlineMaps.instance.position;
+                Vector2 vEndPosition = mNewPositions.Dequeue();
+                float vLastCallTime = Time.time;
+                float vPercentage = 0;
+                float vDuration = 0;  
+                while (vDuration < mTimeToComplete)
+                {
+
+                    float vDeltaTime = Time.time - vLastCallTime;
+                    var vCurrPos = AnimationHelpers.Hermite(vStartPath, vEndPosition, vPercentage);
+                    OnlineMaps.instance.position = vCurrPos;
+                    vDuration += vDeltaTime;
+                    vLastCallTime = Time.time;
+                    OnlineMaps.instance.Redraw();
+                    vPercentage = vDuration / mTimeToComplete;
+                    if (vPercentage >= 1)
+                    {
+                        vPercentage = 1;
+                    }
+                    yield return null;
+
+                }
+                yield return  new WaitForSeconds(mTimeToComplete * 0.15f);
+            }
+
+
+
         }
 
         private void BrainpackSelected(Brainpack vSelected)
@@ -57,7 +155,16 @@ namespace Assets.Scripts.Communication
 
             IPEndPoint vEndPoint = (IPEndPoint)vSelected.Point;
             string vIpAddress = vEndPoint.Address.ToString();
-            SuitConnectionManager.ConnectToSuit(vIpAddress, vSelected.TcpControlPort);
+            SuitConnectionManager.ConnectToSuitControlSocket(vIpAddress, vSelected.TcpControlPort);
+
+        }
+
+
+
+        public void RequestDataStream()
+        {
+            SuitConnectionManager.RequestDataStreamFromBrainpack(1258);
+            BrainpackStatusPanel.ConnectToBrainpackButton.gameObject.SetActive(false);
         }
 
         public void SendReq()
@@ -93,6 +200,8 @@ namespace Assets.Scripts.Communication
 
         }
 
+
+
         private void UpdateFirmware()
         {
             if (SuitConnectionManager.IsConnectedToSuitViaNetwork)
@@ -102,7 +211,7 @@ namespace Assets.Scripts.Communication
             else
             {
                 IPEndPoint vIp = mBrainpack.Point as IPEndPoint;
-                SuitConnectionManager.ConnectToSuit(vIp.Address.ToString(), mBrainpack.TcpControlPort);
+                SuitConnectionManager.ConnectToSuitControlSocket(vIp.Address.ToString(), mBrainpack.TcpControlPort);
                 SuitConnectionManager.UpdateFirmware("firmware.bin");
             }
 
@@ -145,6 +254,10 @@ namespace Assets.Scripts.Communication
             {
                 SendReq();
             }
+            if (Input.GetKeyDown(KeyCode.I))
+            {
+                isDrawing = !isDrawing;
+            }
         }
 
 
@@ -156,6 +269,7 @@ namespace Assets.Scripts.Communication
                 SuitConnectionManager.CleanUp();
             }
             mAdvertisingListener.StopListening();
+
             mAdvertisingListener.BrainpackFoundEvent -= NewBrainpackFound;
             mAdvertisingListener.BrainpackLostEvent -= BrainpackLostHandler;
             BrainpackContainerPanel.BrainpackSelectedEvent -= BrainpackSelected;

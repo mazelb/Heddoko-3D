@@ -7,18 +7,17 @@
 // */
 
 using System;
+using System.IO;
 using System.Net;
-using System.Net.Sockets;
-using Assets.Scripts.Communication.Controller;
-using Assets.Scripts.UI;
+using System.Net.Sockets; 
 using heddoko;
 using HeddokoLib.heddokoProtobuff.Decoder;
-using UIWidgets;
+using ProtoBuf; 
 
 namespace Assets.Scripts.Communication.Communicators
 {
     public delegate void OnSuitDataReceivedEvent(StateObject vObject);
-    
+
 
     public delegate void OnSuitConnectionEvent();
     public class NetworkedSuitControlConnection : IDisposable
@@ -49,7 +48,7 @@ namespace Assets.Scripts.Communication.Communicators
             }
         }
 
-      
+
         /// <summary>
         /// Start the network connection to the suit
         /// </summary>
@@ -180,6 +179,16 @@ namespace Assets.Scripts.Communication.Communicators
             }
             return true;
         }
+
+        public bool Send(Packet vPacket)
+        {
+            MemoryStream vStream = new MemoryStream();
+            Serializer.Serialize(vStream, vPacket);
+            RawPacket vRawPacket = new RawPacket();
+            int vRawSize;
+            var vRawBytes = vRawPacket.GetRawPacketByteArray(out vRawSize, vStream);
+            return Send(vRawBytes, vRawSize);
+        }
         public bool Send(byte[] vData, int vBuffersize)
         {
 
@@ -200,7 +209,7 @@ namespace Assets.Scripts.Communication.Communicators
 
         private void SendCallbackBack(IAsyncResult vAr)
         {
-         }
+        }
 
 
         private void ReceiveCallback(IAsyncResult vAr)
@@ -214,7 +223,7 @@ namespace Assets.Scripts.Communication.Communicators
                     //invoke data received event 
 
                     //add the bytes to the state object's raw packet
-                     PacketStatus vPacketStatus  = PacketStatus.Processing;
+                    PacketStatus vPacketStatus = PacketStatus.Processing;
                     for (int i = 0; i < vIncomingConnection.Buffer.Length; i++)
                     {
                         vPacketStatus = vIncomingConnection.IncomingRawPacket.ProcessByte(vIncomingConnection.Buffer[i]);
@@ -229,7 +238,7 @@ namespace Assets.Scripts.Communication.Communicators
                                 vIncomingConnection.OutgoingRawPacket = vDeepCopy;
                                 vIncomingConnection.IncomingRawPacket.Clear();
                                 DataReceivedEvent(vIncomingConnection);
-                                 
+
                             }
                         }
                         if (vPacketStatus == PacketStatus.PacketError)
@@ -237,7 +246,7 @@ namespace Assets.Scripts.Communication.Communicators
                             vIncomingConnection.IncomingRawPacket.Clear();
                         }
                     }
-                    
+
                     vIncomingConnection.Socket.BeginReceive(vIncomingConnection.Buffer, 0,
                         vIncomingConnection.Buffer.Length, SocketFlags.None, new AsyncCallback(ReceiveCallback),
                         vIncomingConnection);

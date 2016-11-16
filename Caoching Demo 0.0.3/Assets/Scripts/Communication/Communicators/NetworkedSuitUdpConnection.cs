@@ -11,38 +11,54 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using heddoko;
-using HeddokoLib.heddokoProtobuff.Decoder; 
+using HeddokoLib.heddokoProtobuff.Decoder;
 using ProtoBuf;
+using UnityEngine;
 
 namespace Assets.Scripts.Communication.Communicators
 {
-    public delegate  void PacketReceivedEvent(Packet packet);
+    public delegate void PacketReceivedEvent(Packet packet);
     /// <summary>
     /// Using Udp, listen to an incoming stream from a brainpack
     /// </summary>
     public class NetworkedSuitUdpConnection : IDisposable
     {
         public event PacketReceivedEvent DataReceivedEvent;
-         private UdpClient mListener;
+        private UdpClient mListener;
         public int Port = 0;
         public IPAddress SuitIp;
+        private string mIpAddress;
 
+        /// <summary>
+        /// Start an instance of a networked suit udp connection with a given ip address to listen to 
+        /// </summary>
+        /// <param name="vIpAddress"></param>
+        public NetworkedSuitUdpConnection(string vIpAddress)
+        {
+            mIpAddress = vIpAddress;
+        }
+
+        /// <summary>
+        /// begin listening on the specified port.
+        /// </summary>
+        /// <param name="vPort"></param>
         public void StartListen(int vPort)
         {
             try
             {
-                Port = vPort;
-                if (mListener != null)
+                if (mListener != null && vPort != Port)
                 {
                     mListener.Close();
                 }
-                BrainpackAdvertisingListener.UdpState  vState = new BrainpackAdvertisingListener.UdpState();
-                IPEndPoint vEndpoint = new IPEndPoint(IPAddress.Any, Port);
-                vState.Client = mListener;
+                Port = vPort;
+
+                BrainpackAdvertisingListener.UdpState vState = new BrainpackAdvertisingListener.UdpState();
+                var vIpAdd = IPAddress.Parse(mIpAddress);
+                IPEndPoint vEndpoint = new IPEndPoint(vIpAdd, Port);
                 vState.IncomingRawPacket = new RawPacket();
                 vState.EndPoint = vEndpoint;
                 mListener = new UdpClient(Port);
-
+                vState.Client = mListener;
                 mListener.BeginReceive(new AsyncCallback(ReceiveCallback), vState);
 
             }
@@ -62,50 +78,58 @@ namespace Assets.Scripts.Communication.Communicators
                 UnityEngine.Debug.Log("Line: 81 Error occured while binding socket, check inner exception" + vException);
                 // throw new ApplicationException("Error occured while binding socket, check inner exception", vException);
             }
-             
+
         }
 
         private void ReceiveCallback(IAsyncResult vAr)
         {
-            BrainpackAdvertisingListener.UdpState vIncomingConnection = (BrainpackAdvertisingListener.UdpState) vAr.AsyncState;
-            var vClient = vIncomingConnection.Client;
-            byte[] vBuffer = vClient.EndReceive(vAr, ref vIncomingConnection.EndPoint);
-            //Process message
-            int vBytesRead = vBuffer.Length;
-             if (vBytesRead > 0)
+            try
             {
-                //invoke data received event 
-                //add the bytes to the state object's raw packet
-                PacketStatus vPacketStatus = PacketStatus.Processing;
-                for (int i = 0; i < vBytesRead; i++)
+                BrainpackAdvertisingListener.UdpState vIncomingConnection = (BrainpackAdvertisingListener.UdpState)vAr.AsyncState;
+                var vClient = vIncomingConnection.Client;
+                byte[] vBuffer = vClient.EndReceive(vAr, ref vIncomingConnection.EndPoint);
+                //Process message
+                int vBytesRead = vBuffer.Length;
+                if (vBytesRead > 0)
                 {
-                    vPacketStatus = vIncomingConnection.IncomingRawPacket.ProcessByte(vBuffer[i]);
-                    if (vPacketStatus == PacketStatus.PacketComplete)
+                    //invoke data received event 
+                    //add the bytes to the state object's raw packet
+                    PacketStatus vPacketStatus = PacketStatus.Processing;
+                    for (int i = 0; i < vBytesRead; i++)
                     {
-                        if (DataReceivedEvent != null)
+                        vPacketStatus = vIncomingConnection.IncomingRawPacket.ProcessByte(vBuffer[i]);
+                        if (vPacketStatus == PacketStatus.PacketComplete)
                         {
-                            //has been processed and is ready to be processed internally.
-                            //clear out buffer and state objects raw packet.
-                            RawPacket vDeepCopy = new RawPacket(vIncomingConnection.IncomingRawPacket);
-                            //deserialize the packet 
-                            MemoryStream vMemorySteam = new MemoryStream();
-                            if (vDeepCopy.Payload[0] == 0x04)
+                            if (DataReceivedEvent != null)
                             {
-                                //reset the stream pointer, write and reset.
-                                vMemorySteam.Seek(0, SeekOrigin.Begin);
-                                vMemorySteam.Write(vDeepCopy.Payload, 1, (int)vDeepCopy.PayloadSize - 1);
-                                vMemorySteam.Seek(0, SeekOrigin.Begin);
-                                Packet vProtoPacket = Serializer.Deserialize<Packet>(vMemorySteam);
-                                DataReceivedEvent(vProtoPacket);
+                                //has been processed and is ready to be processed internally.
+                                //clear out buffer and state objects raw packet.
+                                RawPacket vDeepCopy = new RawPacket(vIncomingConnection.IncomingRawPacket);
+                                //deserialize the packet 
+                                MemoryStream vMemorySteam = new MemoryStream();
+                                if (vDeepCopy.Payload[0] == 0x04)
+                                {
+                                    //reset the stream pointer, write and reset.
+                                    vMemorySteam.Seek(0, SeekOrigin.Begin);
+                                    vMemorySteam.Write(vDeepCopy.Payload, 1, (int)vDeepCopy.PayloadSize - 1);
+                                    vMemorySteam.Seek(0, SeekOrigin.Begin);
+                                    Packet vProtoPacket = Serializer.Deserialize<Packet>(vMemorySteam);
+                                    DataReceivedEvent(vProtoPacket);
+                                }
+                            }
+                            if (vPacketStatus == PacketStatus.PacketError)
+                            {
+                                vIncomingConnection.IncomingRawPacket.Clear();
                             }
                         }
-                        if (vPacketStatus == PacketStatus.PacketError)
-                        {
-                            vIncomingConnection.IncomingRawPacket.Clear();
-                        }
                     }
+                    vIncomingConnection.Client.BeginReceive(new AsyncCallback(ReceiveCallback), vIncomingConnection);
                 }
-                vIncomingConnection.Client.BeginReceive(new AsyncCallback(ReceiveCallback), vIncomingConnection);
+            }
+            catch (Exception vE)
+            {
+                string vmsg = vE.Message;
+                Debug.Log(vmsg);
             }
         }
 
