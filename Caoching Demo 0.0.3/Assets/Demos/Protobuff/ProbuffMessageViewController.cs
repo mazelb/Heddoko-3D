@@ -146,8 +146,8 @@ namespace Assets.Demos
 
                 int vID = (int)vImuDataFrame[vI].imuId;
                 float vTimeStamp = vPacket.fullDataFrame.timeStamp;
-                var vCalStableStatus = (vImuDataFrame[vID].sensorMask >> 19) & 0x01;
-                var vMagTransient = (vImuDataFrame[vID].sensorMask >> 20) & 0x01;
+                var vCalStableStatus = (vImuDataFrame[vI].sensorMask >> 19) & 0x01;
+                var vMagTransient = (vImuDataFrame[vI].sensorMask >> 20) & 0x01;
                 float vMx = vImuDataFrame[vI].Mag_x;
                 float vMy = vImuDataFrame[vI].Mag_y;
                 float vMz = vImuDataFrame[vI].Mag_z;
