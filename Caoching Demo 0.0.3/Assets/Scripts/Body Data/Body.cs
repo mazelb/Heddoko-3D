@@ -481,7 +481,7 @@ public class Body
 
             vBodySegment.Value.UpdateSegment(vFilteredDictionary);
         }
-        
+
 
     }
     /**
@@ -579,6 +579,10 @@ public class Body
             vBodySegment.Value.UpdateRenderedSegment(vRendered);
         }
         RenderedBody.AssociatedBodyView = View;
+        RenderedBody.AssociatedBodyView = View;
+        TorsoAnalysis.HipGlobalTransform = vRendered.GetSubSegmentTransform(BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine);
+        TorsoAnalysis.TrunkTransform = vRendered.GetSubSegmentTransform(BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine);
+
     }
 
     /// <summary>
