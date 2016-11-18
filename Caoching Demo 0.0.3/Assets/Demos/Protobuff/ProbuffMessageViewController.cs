@@ -35,7 +35,7 @@ namespace Assets.Demos
         public Vector3 SecondVector;
         public int vVal;
         public bool IsPaused = false;
-         public bool CollectData;
+        public bool CollectData;
         public Text DataCollectionLabel;
         void Update()
         {
@@ -161,6 +161,10 @@ namespace Assets.Demos
                 float vQz = vImuDataFrame[vI].quat_z_roll;
                 float vQw = vImuDataFrame[vI].quat_w;
 
+                float vRx = vImuDataFrame[vI].Rot_x;
+                float vRy = vImuDataFrame[vI].Rot_y;
+                float vRz = vImuDataFrame[vI].Rot_z;
+
                 float vYaw = 57.29578f * Mathf.Atan2((2.0f * vQx * vQy + 2.0f * vQw * vQz), (2.0f * vQw * vQw + 2.0f * vQx - 1.0f));
                 float vPitch = 57.29578f * Mathf.Asin(-(2.0f * vQx * vQz - 2.0f * vQw * vQy));
                 float vRoll = 57.29578f * Mathf.Atan2((2.0f * vQy * vQz + 2.0f * vQw * vQx), (float)(2.0 * vQw * vQw + 2.0 * vQw * vQw - 1.0f));
@@ -187,7 +191,7 @@ namespace Assets.Demos
                 string vMappedQuat = string.Format("{0} ; {1} ; {2} ; {3} ", FormatFloatTo2Decimals(vQuatRot.x), FormatFloatTo2Decimals(vQuatRot.y), FormatFloatTo2Decimals(vQuatRot.z), FormatFloatTo2Decimals(vQuatRot.w));
                 string vMagData = string.Format("{0} ; {1} ; {2} ", FormatFloatTo2Decimals(vMx), FormatFloatTo2Decimals(vMy), FormatFloatTo2Decimals(vMz));
                 string vAccelData = string.Format("{0} ; {1} ; {2} ", FormatFloatTo2Decimals(vAccelx), FormatFloatTo2Decimals(vAccely), FormatFloatTo2Decimals(vAccelz));
-                
+
                 ListView.DataSource[vIndex].RawQuat = vRawQuat;
                 ListView.DataSource[vIndex].RawEuler = vRawEuler;
                 vDescription.MappedEuler = vMappedEuler;
@@ -198,7 +202,7 @@ namespace Assets.Demos
                 UpdateSensorState(vIndex, vImuDataFrame[vI]);
                 if (CollectData)
                 {
-                    mCollector.UpdateCollection(vID, vTimeStamp,vRawQuat,vRawEuler,vMappedEuler,vMappedQuat,vMagData, vAccelData,vMagTransient == 1,vCalStableStatus ==1);
+                    mCollector.UpdateCollection(vID, vTimeStamp, vQx, vQy, vQz, vQw, vMx, vMy, vMz, vAccelx, vAccely, vAccelz, vRx, vRy, vRz, vYaw, vPitch, vRoll, vCalStableStatus, vMagTransient);
                 }
 
             }
@@ -233,7 +237,6 @@ namespace Assets.Demos
                 var vCalStableStatus = (vImuDataFrame.sensorMask >> 19) & 0x01;
                 var vMagTransient = (vImuDataFrame.sensorMask >> 20) & 0x01;
                 Body.RenderedBody.SensorTransformContainer.ChangeState(vIndex, vCalStableStatus == 1, vMagTransient == 1);
-
             }
         }
         private string FormatFloatTo2Decimals(float vValue)

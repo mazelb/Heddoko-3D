@@ -53,7 +53,7 @@ namespace Assets.Demos.Protobuff
         public override string ToString()
 
         {
-            AddPadding();
+            //AddPadding();
             StringBuilder vReturn = new StringBuilder();
             vReturn.Append(TimeStamp + ",");
             foreach (var vFrameContent in mFrameContents)
@@ -63,6 +63,16 @@ namespace Assets.Demos.Protobuff
             }
             return vReturn.ToString();
 
+        }
+
+        public string ReturnSensorValues(int vKey)
+        {
+            string vValue = "";
+            if (mFrameContents.ContainsKey(vKey))
+            {
+                vValue = mFrameContents[vKey];
+            }
+            return vValue;
         }
     }
 }

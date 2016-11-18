@@ -65,7 +65,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameEncryption.Decryption
 
                 FileInfo vFileInfo = new FileInfo(vFilepath);
                  
-               byte[] vByteArr = new byte[vFileInfo.Length- vStartIndex];//File.ReadAllBytes(vFilepath);
+               byte[] vByteArr = new byte[vFileInfo.Length- vStartIndex]; 
                 FileStream vFileStream = new FileStream(vFilepath, FileMode.Open, FileAccess.Read);
                 vFileStream.Seek(vStartIndex, SeekOrigin.Begin);
                 vFileStream.Read(vByteArr, 0, vByteArr.Length);
