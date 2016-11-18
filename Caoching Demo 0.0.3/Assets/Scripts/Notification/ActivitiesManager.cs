@@ -94,7 +94,7 @@ namespace Assets.Scripts.Notification
         /// </summary>
         public void Start()
         {
-            mModel.Client.OpenStreamConnection();
+            mModel.Client.OpenConnection();
             mModel.Client.SubscribeOnGettingNotification(mClientToken, OnNotificationReceived);
         }
     }
