@@ -29,7 +29,7 @@ namespace Assets.Scripts.Notification
         {
             mModel = vModel;
             mClientToken = vClientToken;
-            mModel.Client.OpenStreamConnection();
+            mModel.Client.OpenConnection();
             mModel.Client.SubscribeOnGettingNotification(mClientToken, OnNotificationReceived);
         }
 
@@ -37,7 +37,7 @@ namespace Assets.Scripts.Notification
         {
             if (mModel != null && mModel.Client != null)
             {
-                mModel.Client.CloseStreamConnection();
+                mModel.Client.CloseConnection();
             }
         }
 

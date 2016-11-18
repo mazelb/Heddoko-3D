@@ -54,14 +54,10 @@ namespace Assets.Scripts.Licensing.Controller
             mUrl = GlobalConfig.MainServer;
             mSecret = GlobalConfig.MainServerKey;
 
-#if DEBUG 
-<<<<<<< HEAD
-            mUrl = "http://dev.app.heddoko.com/";
-            mSecret = "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk";
-=======
+#if DEBUG
+
             mUrl = GlobalConfig.DevServer;
             mSecret = GlobalConfig.DevServerKey;
->>>>>>> feature_experimental_brainpack_uploading
 #endif
             HeddokoConfig vConfig = new HeddokoConfig(mUrl, mSecret);
             mClient = new HeddokoClient(vConfig);
@@ -184,7 +180,7 @@ namespace Assets.Scripts.Licensing.Controller
                     string message = mClient.AddDevice(token)
              ? "Device was added successfully"
              : "Something went wrong on adding device";
-                  //  mClient.SetToken(vUser.Token);
+                    //  mClient.SetToken(vUser.Token);
                     OutterThreadToUnityThreadIntermediary.QueueActionInUnity(EnableControls);
                     var vErrorMsg = FormatLoginNoOkError(vUser.Errors);
                     string vMsg = LocalizationBinderContainer.GetString(KeyMessage.LoginFailureMsg);
@@ -284,11 +280,7 @@ namespace Assets.Scripts.Licensing.Controller
                     LoginView.EnableButtonControls();
                     LoginView.SetLoadingIconAsActive(false);
                 });
-<<<<<<< HEAD
-                  UnityEngine.Debug.Log("error "+vE);
-=======
                 UnityEngine.Debug.Log("error " + vE);
->>>>>>> feature_experimental_brainpack_uploading
             }
 
         }

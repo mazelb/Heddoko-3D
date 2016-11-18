@@ -6,13 +6,9 @@
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
 
-<<<<<<< HEAD
-using System.Collections; 
-=======
+
 using System.Collections;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
-using UnityEditor;
->>>>>>> feature_experimental_brainpack_uploading
 using UnityEngine;
 
 namespace Assets.Scripts.UI
@@ -97,5 +93,5 @@ namespace Assets.Scripts.UI
 
     }
 
-  
+
 }

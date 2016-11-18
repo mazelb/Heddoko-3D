@@ -155,7 +155,11 @@ namespace Assets.Scripts.UI.RecordingLoading
             mWorkerThread = new Thread(WorkingFunction);
             mWorkerThread.IsBackground = true;
             mWorkerThread.Start();
+        }
 
+        private void FetchInitialList()
+        {
+            
         }
 
         public void Clear()
