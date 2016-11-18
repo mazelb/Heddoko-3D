@@ -1159,7 +1159,7 @@ namespace UIWidgets
 		/// Gets the index of the nearest item.
 		/// </summary>
 		/// <returns>The nearest item index.</returns>
-		/// <param name="point">Point.</param>
+		/// <param name="point">AdvertisingEndPoint.</param>
 		public virtual int GetNearestIndex(Vector2 point)
 		{
 			if (IsSortEnabled())

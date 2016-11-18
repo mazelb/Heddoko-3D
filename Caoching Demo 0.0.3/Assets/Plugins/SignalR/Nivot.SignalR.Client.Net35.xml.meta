@@ -1,6 +1,10 @@
 fileFormatVersion: 2
 guid: d397b99d982686c4f80b37243ea2da64
+<<<<<<< HEAD
 timeCreated: 1479155896
+=======
+timeCreated: 1479327551
+>>>>>>> feature_experimental_brainpack_uploading
 licenseType: Pro
 TextScriptImporter:
   userData: 

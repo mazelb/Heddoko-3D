@@ -40,7 +40,7 @@ namespace Assets.Scripts.Communication.Communicators
         public BrainpackAdvertisingListener(double vTimer)
         {
             mTimer = vTimer;
-            mBrainpackTimer = new Timer(1000);
+            mBrainpackTimer = new Timer(10000);
             mBrainpackTimer.AutoReset = true;
             mBrainpackTimer.Elapsed += VerifyBrainpackCallTime;
             mBrainpackTimer.Start();
@@ -87,10 +87,7 @@ namespace Assets.Scripts.Communication.Communicators
         private void OnReceive(IAsyncResult vAr)
         {
             UdpState vIncomingConnection = (UdpState)vAr.AsyncState;
-            IPEndPoint vEndpoint = new IPEndPoint(IPAddress.Any,  6668);
-            //Filter message and continue receiving data
-        //    IPEndPoint vEndpoint = vIncomingConnection.Client.Client.LocalEndPoint as IPEndPoint;
-            //continue receiving messages
+            IPEndPoint vEndpoint = new IPEndPoint(IPAddress.Any,  mPort); 
             try
             {
                 byte[] vBuffer = vIncomingConnection.Client.EndReceive(vAr, ref vEndpoint);
@@ -130,6 +127,7 @@ namespace Assets.Scripts.Communication.Communicators
                                             vBp.Id = vProtoPacket.serialNumber;
                                             vBp.Point = vEndpoint;
                                             vBp.TcpControlPort = (int)vProtoPacket.configurationPort;
+                                       
                                             if (BrainpackFoundEvent != null)
                                             {
                                                 BrainpackFoundEvent(vBp);
@@ -172,7 +170,7 @@ namespace Assets.Scripts.Communication.Communicators
             mClient.Close();
         }
 
-        private class UdpState
+        public class UdpState
         {
             public UdpClient Client;
             public IPEndPoint EndPoint;

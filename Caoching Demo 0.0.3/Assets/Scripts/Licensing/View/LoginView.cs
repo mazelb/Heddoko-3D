@@ -7,6 +7,7 @@
 */
 
 using System.Collections;
+using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

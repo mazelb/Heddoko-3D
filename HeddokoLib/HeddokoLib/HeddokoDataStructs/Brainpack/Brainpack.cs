@@ -25,14 +25,22 @@ namespace HeddokoLib.HeddokoDataStructs.Brainpack
         private string mPowerBoardId;
         private string mDataBoardId;
         private string mKitId;
-        private EndPoint mEndPoint;
+        private EndPoint mEndAdvertisingEndPoint;
         public int TcpControlPort;
+        public string TcpIpEndPoint;
+
+        /// <summary>
+        /// The kit Id associated with this brainpacks
+        /// </summary>
         public string KitId
         {
             get { return mKitId; }
             set { mKitId = value; }
         }
 
+        /// <summary>
+        /// The databoard ID associated with this brainpack
+        /// </summary>
         public string DataBoardId
         {
             get { return mDataBoardId; }
@@ -45,6 +53,9 @@ namespace HeddokoLib.HeddokoDataStructs.Brainpack
             set { mQAStatus = value; }
         }
 
+        /// <summary>
+        /// The powerboard id associated with this brainpack
+        /// </summary>
         public string PowerBoardId
         {
             get { return mPowerBoardId; }
@@ -57,6 +68,9 @@ namespace HeddokoLib.HeddokoDataStructs.Brainpack
             set { mStatus = value; }
         }
 
+        /// <summary>
+        /// The version of the firmware
+        /// </summary>
         public string Version
         {
             get { return mVersion; }
@@ -75,11 +89,13 @@ namespace HeddokoLib.HeddokoDataStructs.Brainpack
             set { mId = value; }
         }
 
-
+        /// <summary>
+        /// The remote end point of the brainpack found at advertising time
+        /// </summary>
         public EndPoint Point
         {
-            get { return mEndPoint; }
-            set { mEndPoint = value; }
+            get { return mEndAdvertisingEndPoint; }
+            set { mEndAdvertisingEndPoint = value; }
         }
 
         /// <summary>

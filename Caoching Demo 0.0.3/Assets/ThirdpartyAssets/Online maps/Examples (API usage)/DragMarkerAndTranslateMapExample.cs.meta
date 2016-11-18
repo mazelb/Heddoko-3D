@@ -1,0 +1,20 @@
+fileFormatVersion: 2
+guid: 1da029d02d7749244bcab970b48e2d23
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+)/DragMarkerAndTranslateMapExample")]
+    public class DragMarkerAndTranslateMapExample : MonoBehaviour
+    {
+        /// <summary>
+        /// Prefab of 3D marker.
+        /// </summary>
+        public GameObject prefab;
+
+        /// <summary>
+        /// The minimum speed of move

@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 81b795929d89a489fba0ec67e1763a06
+folderAsset: yes
+timeCreated: 1458914955
+licenseType: Free
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+ame: 
+  assetBundleVariant: 
+ic;
+
+using RawImage = UnityEngine.UI.RawImage;
+using RenderMode = UnityEngine.RenderMode;
+
+/// <summary>
+/// Class control the map for the uGUI UI RawImage.
+/// </summary>
+[AddComponentMenu("Infinity Code/Online Maps/Controls/UI RawImage")]
+// ReSharper disable once UnusedMember.Gl

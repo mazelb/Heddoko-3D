@@ -8,6 +8,7 @@
 
 using System.Collections;
 using Assets.Scripts.UI;
+using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,7 +39,7 @@ namespace Assets.Scripts.Tests
             {
 
                 float vDeltaTime = Time.time - vLastCallTime;
-                float vValue = AnimCurveUtilities.CircIn(vStart, vDistance, vDuration, vTimeToComplete);
+                float vValue = AnimationHelpers.CircIn(vStart, vDistance, vDuration, vTimeToComplete);
                 vDuration += vDeltaTime; 
                 vColor.a = vValue;
                 Image.color = vColor;
