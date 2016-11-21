@@ -38,14 +38,10 @@ namespace Assets.Scripts.Body_Data.View
         }
         public void UpdateRotatation(Quaternion vNewRot)
         {
-            AbsoluteRotation.x = vNewRot.x;
-            AbsoluteRotation.y = vNewRot.y;
-            AbsoluteRotation.z = vNewRot.z;
+            AbsoluteRotation.x = -vNewRot.y;
+            AbsoluteRotation.y = vNewRot.z;
+            AbsoluteRotation.z = -vNewRot.x;
             AbsoluteRotation.w = vNewRot.w;
-            if (UseCorrection)
-            {
-                AbsoluteRotation *= Quaternion.Euler(OrientationCorrection);
-            }
             RelativeRotation = InitialRotation * AbsoluteRotation;
         }
 
