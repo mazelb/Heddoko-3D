@@ -693,53 +693,52 @@ public class BodySegment
 		Quaternion vThighQuat = Quaternion.identity;
 		Quaternion vKneeQuat =  Quaternion.identity;
 
-		//if(Flags.IsFusingSubSegments)
-		//{
-		//	//////////////////////////////////////////////////////////////////////////
-		//	// upper
-		//	//////////////////////////////////////////////////////////////////////////
-		//	// init frame
-		//	Quaternion vThighInitQuatX = Quaternion.Euler(0, -vULInitEuler.z, 0);
-		//	Quaternion vThighInitQuatY = Quaternion.Euler(-vULInitEuler.x, 0, 0);
-		//	Quaternion vThighInitQuatZ = Quaternion.Euler(0, 0, vULInitEuler.y);
-		//	Quaternion vThighInitQuat = vThighInitQuatY * vThighInitQuatX * vThighInitQuatZ;
-		//	Quaternion vThighInitInverse = Quaternion.Inverse(vThighInitQuat);
+        //if (Flags.IsFusingSubSegments)
+        //{
+            
+            ////////////////////////////////////////////////////////////////////////////
+            //// upper
+            ////////////////////////////////////////////////////////////////////////////
+            //// init frame
+            //Quaternion vThighInitQuatX = Quaternion.Euler(0, -vULInitEuler.z, 0);
+            //Quaternion vThighInitQuatY = Quaternion.Euler(-vULInitEuler.x, 0, 0);
+            //Quaternion vThighInitQuatZ = Quaternion.Euler(0, 0, vULInitEuler.y);
+            //Quaternion vThighInitQuat = vThighInitQuatY * vThighInitQuatX * vThighInitQuatZ;
+            //Quaternion vThighInitInverse = Quaternion.Inverse(vThighInitQuat);
 
-		//	// current frame
-		//	Quaternion vThighQuatY = Quaternion.Euler(0, -vULCurEuler.z, 0);
-		//	Quaternion vThighQuatX = Quaternion.Euler(-vULCurEuler.x, 0, 0);
-		//	Quaternion vThighQuatZ = Quaternion.Euler(0, 0, vULCurEuler.y);
+            //// current frame
+            //Quaternion vThighQuatY = Quaternion.Euler(0, -vULCurEuler.z, 0);
+            //Quaternion vThighQuatX = Quaternion.Euler(-vULCurEuler.x, 0, 0);
+            //Quaternion vThighQuatZ = Quaternion.Euler(0, 0, vULCurEuler.y);
 
-		//	// computing
-		//	Quaternion vThighCurrentQuat = vThighQuatY * vThighQuatX * vThighQuatZ;
-		//	vThighQuat = vThighInitInverse * vThighCurrentQuat;
+            //// computing
+            //Quaternion vThighCurrentQuat = vThighQuatY * vThighQuatX * vThighQuatZ;
+            //vThighQuat = vThighInitInverse * vThighCurrentQuat;
 
 
-		//	//////////////////////////////////////////////////////////////////////////
-		//	// lower
-		//	//////////////////////////////////////////////////////////////////////////
-		//	// init frame
-		//	Quaternion vKneeInitQuatX = Quaternion.Euler(0, -vLLInitEuler.z, 0);
-		//	Quaternion vKneeInitQuatY = Quaternion.Euler(-vLLInitEuler.x, 0, 0);
-		//	Quaternion vKneeInitQuatZ = Quaternion.Euler(0, 0, vLLInitEuler.y);
-		//	Quaternion vKneeInitQuat = vKneeInitQuatY * vKneeInitQuatX * vKneeInitQuatZ;
-		//	Quaternion vKneeInitInverse = Quaternion.Inverse(vKneeInitQuat);
+            ////////////////////////////////////////////////////////////////////////////
+            //// lower
+            ////////////////////////////////////////////////////////////////////////////
+            //// init frame
+            //Quaternion vKneeInitQuatX = Quaternion.Euler(0, -vLLInitEuler.z, 0);
+            //Quaternion vKneeInitQuatY = Quaternion.Euler(-vLLInitEuler.x, 0, 0);
+            //Quaternion vKneeInitQuatZ = Quaternion.Euler(0, 0, vLLInitEuler.y);
+            //Quaternion vKneeInitQuat = vKneeInitQuatY * vKneeInitQuatX * vKneeInitQuatZ;
+            //Quaternion vKneeInitInverse = Quaternion.Inverse(vKneeInitQuat);
 
-		//	// current frame
-		//	Quaternion vKneeQuatY = Quaternion.Euler(0, -vLLCurEuler.z, 0);
-		//	Quaternion vKneeQuatX = Quaternion.Euler(-vLLCurEuler.x, 0, 0);
-		//	Quaternion vKneeQuatZ = Quaternion.Euler(0, 0, vLLCurEuler.y);
+            //// current frame
+            //Quaternion vKneeQuatY = Quaternion.Euler(       0,       -vLLCurEuler.z,      0         );
+            //Quaternion vKneeQuatX = Quaternion.Euler(-vLLCurEuler.x,        0,            0         );
+            //Quaternion vKneeQuatZ = Quaternion.Euler(       0,              0,       vLLCurEuler.y  );
 
-		//	// computing
-		//	Quaternion vKneeCurrentQuat = vKneeQuatY * vKneeQuatX * vKneeQuatZ;
-		//	vKneeQuat = vKneeInitInverse * vKneeCurrentQuat;
-
-		//}
-		//else
-		{
-
-			//Upper Leg
-			Quaternion vThighInitQuat = Quaternion.Euler(0, -vULInitEuler.z, 0);
+            //// computing
+            //Quaternion vKneeCurrentQuat = vKneeQuatY * vKneeQuatX * vKneeQuatZ;
+            //vKneeQuat = vKneeInitInverse * vKneeCurrentQuat;
+        //}
+        //else
+        {
+            //Upper Leg
+            Quaternion vThighInitQuat = Quaternion.Euler(0, -vULInitEuler.z, 0);
 			Quaternion vThighQuatY = Quaternion.Euler(0, -vULCurEuler.z, 0);
 			vThighQuatY = Quaternion.Inverse(vThighInitQuat) * vThighQuatY;
 
@@ -765,9 +764,26 @@ public class BodySegment
 			vKneeQuatZ = Quaternion.Inverse(vKneeInitQuat) * vKneeQuatZ;
 
 			//Apply results
-		   vThighQuat = vThighQuatY * vThighQuatX * vThighQuatZ;
-		   vKneeQuat = vKneeQuatY * vKneeQuatX * vKneeQuatZ;
-		}
+            vThighQuat = vThighQuatY * vThighQuatX * vThighQuatZ;
+            vKneeQuat = vKneeQuatY * vKneeQuatX * vKneeQuatZ;
+
+//             Vector3 refThigh = vThighQuat.eulerAngles;
+//             Vector3 refKnee = vKneeQuat.eulerAngles;
+// 
+//             if (Flags.IsCalibrating)
+//             {
+//                 if (vIsRight)
+//                 {
+//                     mROM.capIMURotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_RightThigh, vULSubsegment, vULCurEuler - vULInitEuler, vThighQuat);
+//                     mROM.capIMURotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_RightCalf, vLLSubsegment, vLLCurEuler  - vLLInitEuler, vKneeQuat);
+//                 }
+//                 else
+//                 {
+//                     mROM.capIMURotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh, vULSubsegment, vULCurEuler  - vULInitEuler, vThighQuat);
+//                     mROM.capIMURotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf, vLLSubsegment, vLLCurEuler   - vLLInitEuler, vKneeQuat);
+//                 }
+//             }
+        }
 
 
 		//Get necessary Axis info
@@ -836,11 +852,10 @@ public class BodySegment
 // 			{
 		vNewThighQuat = vThighQuat;
 		vNewKneeQuat = vKneeQuat;
-//			}
-//		}
-        //if (Flags.IsCalibrating)
+        //			}
+        //		}
+        if (!Flags.IsCalibrating)
         {
-
             if (vIsRight)
             {
                 mROM.capRotation(SegmentType, BodyStructureMap.SubSegmentTypes.SubsegmentType_RightThigh, vULSubsegment, ref vNewThighQuat);

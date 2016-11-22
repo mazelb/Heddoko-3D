@@ -18,7 +18,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
 
 		private Camera viewerCam = null;
 
-		private void TempCameraSettings()
+        private void TempCameraSettings()
 		{
 			Camera[] alls = Camera.allCameras;
 			for (int i = 0; i < alls.Length; ++i)
@@ -70,7 +70,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm] = t_LeftUpperArm;
             SimpleROM t_LeftForeArm = new SimpleROM();
 			t_LeftForeArm.SetXMinMax(0,0);   // 
-			t_LeftForeArm.SetYMinMax(-80, 5);  // flex 
+			t_LeftForeArm.SetYMinMax(-5, 120);  // flex 
 			t_LeftForeArm.SetZMinMax(-20, 150);   // twist
             t_LeftForeArm.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm);
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm] = t_LeftForeArm;
@@ -84,9 +84,9 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_RightThigh] = t_RightThigh;
 
             SimpleROM t_RightCalf = new SimpleROM();
-			t_RightCalf.SetXMinMax(0,0);   // 
-			t_RightCalf.SetYMinMax(-80, 80);  // flex 
-			t_RightCalf.SetZMinMax(-90, 90);   // twist
+			t_RightCalf.SetXMinMax(0,150);   // 
+			t_RightCalf.SetYMinMax(-20, 20);  // flex 
+			t_RightCalf.SetZMinMax(0, 0);   // twist
             t_RightCalf.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_RightCalf);
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_RightCalf] = t_RightCalf;
 
@@ -97,9 +97,9 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             t_LeftThigh.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh);
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh] = t_LeftThigh;
             SimpleROM t_LeftCalf = new SimpleROM();
-			t_LeftCalf.SetXMinMax(0,0);   // twist
-			t_LeftCalf.SetYMinMax(-80, 80);  // flex
-			t_LeftCalf.SetZMinMax(-90, 90);   // twist
+			t_LeftCalf.SetXMinMax(0,150);   // twist
+			t_LeftCalf.SetYMinMax(-20, 20);  // flex
+			t_LeftCalf.SetZMinMax(0, 0);   // twist
             t_LeftCalf.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf);
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf] = t_LeftCalf;
         }
@@ -131,6 +131,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
 			}
 		}
 
+
 		private void ExtractAngles(Quaternion tQuatLocal, ref Vector3 tAngles)
 		{
 			tAngles = (tQuatLocal.eulerAngles);
@@ -139,8 +140,31 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
 			if (tAngles.y > 180) tAngles.y -= 360;
 			if (tAngles.z > 180) tAngles.z -= 360;
 		}
+        public void capIMURotation(BodyStructureMap.SegmentTypes aSegType, BodyStructureMap.SubSegmentTypes aSubType, BodySubSegment aSubSeg, Vector3 Eulers, Quaternion refquat)
+        {
+            Quaternion qcomp = Quaternion.Euler(Eulers);
+            float angle = Quaternion.Angle(refquat, qcomp);
+            if (Mathf.Abs(angle) > 1.5f)
+            {
+                Debug.LogError("not same angles, dif is: " + angle);
+            }
 
-		public void capRotation(BodyStructureMap.SegmentTypes aSegType, BodyStructureMap.SubSegmentTypes aSubType, BodySubSegment aSubSeg,ref Quaternion aQuat, bool local = false)
+            AngleConstraint Xconstraint = squeletteRom[(int)aSubType].XMinMax.NegateForIMU(Vector3.right);
+            AngleConstraint Yconstraint = squeletteRom[(int)aSubType].ZMinMax.NegateForIMU(Vector3.up);
+            AngleConstraint Zconstraint = squeletteRom[(int)aSubType].YMinMax;
+
+
+            ClampAngles(ref Eulers, Xconstraint, Yconstraint, Zconstraint);
+            Quaternion tQuat = Quaternion.Euler(-Eulers.x, -Eulers.z, Eulers.y);
+
+            if (Reference != null)
+            {
+                BodySubSegment refsubSeg = Reference.BodySegments.Find(x => x.SegmentType == aSegType).BodySubSegmentsDictionary[(int)aSubType];
+                refsubSeg.UpdateSubsegmentOrientation(tQuat, 0, true);
+            }
+        }
+
+        public void capRotation(BodyStructureMap.SegmentTypes aSegType, BodyStructureMap.SubSegmentTypes aSubType, BodySubSegment aSubSeg,ref Quaternion aQuat, bool local = false)
 		{
 			if (viewerCam == null)
 			{
@@ -157,10 +181,14 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
 			else
 				tQuat = aQuat;
 
-			AngleConstraint Xconstraint = squeletteRom[(int)aSubType].XMinMax;
-			AngleConstraint Yconstraint = squeletteRom[(int)aSubType].YMinMax;
-			AngleConstraint Zconstraint = squeletteRom[(int)aSubType].ZMinMax;
-			Vector3 tAngles = Vector3.zero;
+            AngleConstraint Xconstraint = null;
+            AngleConstraint Yconstraint = null;
+            AngleConstraint Zconstraint = null;
+
+            Xconstraint = squeletteRom[(int)aSubType].XMinMax;
+            Yconstraint = squeletteRom[(int)aSubType].YMinMax;
+            Zconstraint = squeletteRom[(int)aSubType].ZMinMax;
+            Vector3 tAngles = Vector3.zero;
 			//Vector3 tEuler = tQuat.eulerAngles;
 
 			ExtractAngles(tQuat, ref tAngles);
@@ -199,7 +227,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
 			if (Reference != null)
 			{
 				BodySubSegment refsubSeg = Reference.BodySegments.Find(x => x.SegmentType == aSegType).BodySubSegmentsDictionary[(int)aSubType];
-				refsubSeg.UpdateSubsegmentOrientation(tQuat, 0/*local ? 0 : 3*/, true);
+				refsubSeg.UpdateSubsegmentOrientation(tQuat, 2/*local ? 0 : 3*/, false);
 			}
 
 
