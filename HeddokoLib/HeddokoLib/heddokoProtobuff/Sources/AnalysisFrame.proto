@@ -1,0 +1,118 @@
+// @file heddokoPacket.proto
+// @brief Contains the heddokoPacket protobuffer file definition
+// @author Mohammed Haider (mohammed@heddoko.com)
+// @date November 2016
+// @version 1.0
+// Copyright Heddoko(TM) 2016, all rights reserved
+syntax = "proto2";
+package Heddoko;
+message AnalysisFrame
+{
+	required float TrunkFlexionAngle = 101;
+	required float TrunkLateralAngle = 1;
+	required float TrunkRotationAngle = 2 ;
+	required float TrunkLateralSignedAngle = 3;
+	required float TrunkRotationSignedAngle = 4;
+	required float TrunkFlexionSignedAngle= 5;
+	required float TorsoFlexionAngularAcceleration = 6;
+	required float TorsoFlexionAngularVelocity = 7;
+	required float TorsoLateralAngularAcceleration= 8;
+	required float TorsoLateralAngularVelocity= 9;
+	required float TorsoRotationAngularAcceleration= 10;
+	required float TorsoRotationAngularVelocity= 11;
+	required float RightElbowFlexionAngle = 12;
+	required float RightElbowFlexionSignedAngle = 13;
+	required float RightForeArmPronationSignedAngle = 14;
+
+	required        float RightShoulderFlexionAngle = 15;
+	required        float RightShoulderFlexionSignedAngle = 16;
+	required      float RightShoulderVertAbductionAngle = 17;
+	required        float RightShoulderVerticalAbductionSignedAngle = 18;
+	required       float RightShoulderHorAbductionAngle = 19;
+	required        float RightShoulderHorizontalAbductionSignedAngle = 20;
+	required         float RightShoulderRotationSignedAngle = 21;
+
+	required        float RightElbowFlexionAngularVelocity =22;
+	required        float RightElbowFlexionPeakAngularVelocity = 23;
+	required      float RightElbowFlexionAngularAcceleration = 24;
+	required        float RightForeArmPronationAngularVelocity = 25;
+	required        float RightForeArmPronationAngularAcceleration = 26;
+	required       float RightShoulderFlexionAngularVelocity = 27;
+	required       float RightShoulderFlexionAngularAcceleration = 28;
+	required         float RightShoulderVertAbductionAngularVelocity = 29;
+	required         float RightShoulderVertAbductionAngularAcceleration = 30;
+	required       float RightShoulderHorAbductionAngularVelocity = 31;
+	required        float RightShoulderHorAbductionAngularAcceleration = 32;
+	required         float RightShoulderRotationAngularVelocity = 33;
+	required        float RightShoulderRotationAngularAcceleration = 34;
+	required        float LeftElbowFlexionAngle = 35;
+	required         float LeftElbowFlexionSignedAngle = 36;
+	required         float LeftForeArmPronationSignedAngle = 37;
+
+	required        float LeftShoulderFlexionAngle = 38;
+	required       float LeftShoulderFlexionSignedAngle = 39;
+	required       float LeftShoulderVertAbductionAngle = 40;
+	required      float LeftShoulderVerticalAbductionSignedAngle = 41;
+	required       float LeftShoulderHorAbductionAngle = 42;
+	required       float LeftShoulderHorizontalAbductionSignedAngle = 43;
+	required        float LeftShoulderRotationSignedAngle = 44;
+
+
+	required         float LeftElbowFlexionAngularVelocity = 45;
+	required       float LeftElbowFlexionPeakAngularVelocity = 46;
+	required        float LeftElbowFlexionAngularAcceleration = 47;
+	required       float LeftForeArmPronationAngularVelocity = 48;
+	required      float LeftElbowPronationAngularAcceleration = 49;
+	required         float LeftShoulderFlexionAngularVelocity = 50;
+	required    float LeftShoulderFlexionAngularAcceleration = 51;
+	required       float LeftShoulderVertAbductionAngularVelocity = 52;
+	required       float LeftShoulderVertAbductionAngularAcceleration = 53;
+	required        float LeftShoulderHorAbductionAngularVelocity = 54;
+	required       float LeftShoulderHorAbductionAngularAcceleration = 55;
+	required     float LeftShoulderRotationAngularVelocity = 56;
+	required       float LeftShoulderRotationAngularAcceleration = 57;
+	required       float RightKneeFlexionAngle = 58;
+	required       float RightKneeFlexionSignedAngle =59;
+	required        float RightKneeRotationSignedAngle=60;
+	required      float RightHipFlexionAngle=61;
+	required      float RightHipFlexionSignedAngle=62;
+	required      float RightHipAbductionAngle=63;
+	required        float RightHipAbductionSignedAngle=64;
+	required      float RightHipRotationSignedAngle=65;
+	required       float RightKneeFlexionAngularVelocity = 66;
+	required       float RightKneeFlexionAngularAcceleration = 67;
+	required      float RightKneeRotationAngularVelocity = 68;
+	required       float RightKneeRotationAngularAcceleration = 69;
+	required     float RightHipFlexionAngularVelocity = 70;
+	required      float RightHipFlexionAngularAcceleration = 71;
+	required      float RightHipAbductionAngularVelocity = 72;
+	required     float RightHipAbductionAngularAcceleration = 73;
+	required      float RightHipRotationAngularVelocity = 74;
+	required     float RightHipRotationAngularAcceleration =75;
+	required      float RightLegHeight=76;
+	required      float RightInitThighHeight =  77;
+	required       float RightInitTibiaHeight = 78;
+	required   float LeftKneeFlexionAngle = 79;
+	required      float LeftKneeFlexionSignedAngle=80;
+	required     float LeftKneeRotationSignedAngle=81;
+	required      float LeftHipFlexionAngle=82;
+	required      float LeftHipFlexionSignedAngle=83;
+	required      float LeftHipAbductionAngle=84;
+	required     float LeftHipAbductionSignedAngle=85;
+	required      float LeftHipRotationSignedAngle=86;
+	required       float LeftKneeFlexionAngularVelocity = 87;
+	required     float LeftKneeFlexionAngularAcceleration = 88;
+	required        float LeftKneeRotationAngularVelocity = 89;
+	required      float LeftKneeRotationAngularAcceleration = 90;
+	required      float LeftHipFlexionAngularVelocity = 91;
+	required     float LeftHipFlexionAngularAcceleration = 92;
+	required    float LeftHipAbductionAngularVelocity = 93;
+	required     float LeftHipAbductionAngularAcceleration = 94;
+	required      float LeftHipRotationAngularVelocity = 95;
+	required      float LeftHipRotationAngularAcceleration = 96;
+
+	required       float LeftLegHeight=97;
+	required        float LeftInitThighHeight =98;
+	required        float LeftInitTibiaHeight = 99;
+	required	     float ErgoScore=100;	
+}
