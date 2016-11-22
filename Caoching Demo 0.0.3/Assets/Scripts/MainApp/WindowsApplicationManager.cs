@@ -11,6 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Licensing.Model;
+using Assets.Scripts.Localization;
 using Assets.Scripts.Notification;
 using Assets.Scripts.UI.AbstractViews.Permissions;
 using Assets.Scripts.UI.RecordingLoading;
@@ -20,6 +21,7 @@ using HeddokoSDK.Models;
 using HeddokoSDK.Models.Activity;
 using HeddokoSDK.Models.Enum;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using UnityEngine.EventSystems;
 
 namespace Assets.Scripts.MainApp
@@ -79,67 +81,143 @@ namespace Assets.Scripts.MainApp
             {
                 OnLoginEvent();
             }
-            string vToken = mCurrentProfileModel.Client.GenerateDeviceToken();
+            RegisterNotificationEvents();
+        }
+
+        /// <summary>
+        /// Register notification events 
+        /// </summary>
+        private void RegisterNotificationEvents()
+        {
             if (mActivitiesManager == null)
             {
-                mActivitiesManager = new ActivitiesManager(mCurrentProfileModel, vToken);
-                mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.StreamChannelOpened, StreamChannelOpened);
-                mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.StreamChannelClosed, StreamChannelClosed);
-                mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseAddedToOrganization, LicenseAddedToOrganization);
-                mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseAddedToUser, LicenseAddedToUser);
-                mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseRemovedFromUser, LicenseRemovedFromUser);
-                mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseChangedForUser, LicenseChangedForUser);
-                mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseExpiring, LicenseExpiring);
-                mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseExpired, LicenseExpired);
-
+                mActivitiesManager = new ActivitiesManager(mCurrentProfileModel);
             }
-            else
-            {
-                mActivitiesManager.Start();
-            }
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.StreamChannelOpened, StreamChannelOpened);
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.StreamChannelClosed, StreamChannelClosed);
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseAddedToOrganization, LicenseAddedToOrganization);
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseAddedToUser, LicenseAddedToUser);
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseRemovedFromUser, LicenseRemovedFromUser);
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseChangedForUser, LicenseChangedForUser);
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseExpiring, LicenseExpiring);
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseExpired, LicenseExpired);
+            mActivitiesManager.Start();
         }
 
+        /// <summary>
+        /// Unregister from notification events.
+        /// </summary>
+        private void RenoveNotificationEvents()
+        {
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.StreamChannelOpened, StreamChannelOpened);
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.StreamChannelClosed, StreamChannelClosed);
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseAddedToOrganization, LicenseAddedToOrganization);
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseAddedToUser, LicenseAddedToUser);
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseRemovedFromUser, LicenseRemovedFromUser);
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseChangedForUser, LicenseChangedForUser);
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseExpiring, LicenseExpiring);
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseExpired, LicenseExpired);
+            mActivitiesManager.Dispose();
+
+        }
+
+        /// <summary>
+        /// License expired notification handler
+        /// </summary>
+        /// <param name="vObj"></param>
         private void LicenseExpired(NotificationMessage vObj)
         {
-            Debug.Log(vObj.Text);
+            WriteToDebugLog(vObj);
         }
 
+        /// <summary>
+        /// License expiring notification handler
+        /// </summary>
+        /// <param name="vObj"></param>
         private void LicenseExpiring(NotificationMessage vObj)
         {
-            Debug.Log(vObj.Text);
-
+            DispatchNotification(vObj);
         }
 
+
+        /// <summary>
+        /// License changed for user notication handler
+        /// </summary>
+        /// <param name="vObj"></param>
         private void LicenseChangedForUser(NotificationMessage vObj)
         {
-            Debug.Log(vObj.Text);
+            DispatchNotification(vObj);
+OutterThreadToUnityThreadIntermediary.QueueActionInUnity(ReturnToLoginView);
         }
 
+        private void DispatchNotification(NotificationMessage vObj)
+        {
+
+            string vMsg = LocalizationBinderContainer.GetString(KeyMessage.MessageFromServerReceived);
+            vMsg += @"\r\n";
+            vMsg += vObj.Text;
+            vMsg += @"\r\n";
+            vMsg += LocalizationBinderContainer.GetString(KeyMessage.ReturnToLoginScreen);
+            NotificationManager.CreateNotification(vObj.Text, NotificationManager.NotificationUrgency.Medium);
+        }
+
+
+        /// <summary>
+        /// License removed from user  notication handler
+        /// </summary>
+        /// <param name="vObj"></param>
         private void LicenseRemovedFromUser(NotificationMessage vObj)
         {
-            Debug.Log(vObj.Text);
+            DispatchNotification(vObj);
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
+                      ReturnToLoginView);
         }
 
+        /// <summary>
+        /// License added to user notification handler
+        /// </summary>
+        /// <param name="vObj"></param>
         private void LicenseAddedToUser(NotificationMessage vObj)
         {
-            Debug.Log(vObj.Text);
+            DispatchNotification(vObj);
         }
 
+        /// <summary>
+        /// License added to organization notication handler
+        /// </summary>
+        /// <param name="vObj"></param>
         private void LicenseAddedToOrganization(NotificationMessage vObj)
         {
-            Debug.Log(vObj.Text);
+            DispatchNotification(vObj);
         }
-
+        /// <summary>
+        /// Stream channel closed notication handler
+        /// </summary>
+        /// <param name="vObj"></param>
         private void StreamChannelClosed(NotificationMessage vObj)
         {
-            Debug.Log(vObj.Text);
+            WriteToDebugLog(vObj);
         }
 
+        /// <summary>
+        /// Stream channel opened  notication handler
+        /// </summary>
+        /// <param name="vObj"></param>
         private void StreamChannelOpened(NotificationMessage vObj)
         {
-            Debug.Log(vObj.Text);
+            WriteToDebugLog(vObj);
         }
 
+        public static void WriteToDebugLog(NotificationMessage vObj)
+        {
+            WriteToDebugLog(vObj.Text);
+        }
+
+        public static void WriteToDebugLog(string vMsg)
+        {
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
+                       () => Debug.Log(vMsg));
+        }
         /// <summary>
         /// Flips the event system state, between inactive and active. 
         /// </summary>
@@ -161,6 +239,7 @@ namespace Assets.Scripts.MainApp
 
         public void ReturnToLoginView()
         {
+
             ApplicationRoot.gameObject.SetActive(false);
             LoginViewRoot.gameObject.SetActive(true);
             foreach (var vDisableWorkerRoleObject in DisableWorkerRoleObjects)
@@ -170,7 +249,7 @@ namespace Assets.Scripts.MainApp
             if (OnLogoutEvent != null)
             {
                 OnLogoutEvent();
-                mActivitiesManager.Dispose();
+                RenoveNotificationEvents();
             }
         }
 

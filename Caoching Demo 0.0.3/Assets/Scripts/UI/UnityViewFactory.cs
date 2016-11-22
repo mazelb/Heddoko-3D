@@ -9,6 +9,7 @@
 using System.Collections;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
+using Assets.Scripts.Tests;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -26,9 +27,7 @@ namespace Assets.Scripts.UI
         /// <param name="vPlatformType"> The platform the construct a scene.</param>
         public void Construct(UserProfileModel vUserProfile, PlatformType vPlatformType)
         {
-            //  StartCoroutine(Load(vUserProfile, vPlatformType));
             MainAppRootView.SetActive(true);
-
             var vGo = GameObject.FindGameObjectWithTag("ApplicationManagement");
             if (vGo != null)
             {

@@ -21,11 +21,10 @@ using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.Utils;
 using HeddokoSDK;
 using HeddokoSDK.Models;
-using UIWidgets;
+ using UIWidgets;
 using UnityEngine;
 
-// ReSharper disable DelegateSubtraction
-
+ 
 namespace Assets.Scripts.Licensing.Controller
 {
     public delegate void OnLoginSuccess(UserProfileModel vModel);
@@ -53,7 +52,6 @@ namespace Assets.Scripts.Licensing.Controller
         {
             mUrl = GlobalConfig.MainServer;
             mSecret = GlobalConfig.MainServerKey;
-
 #if DEBUG
 
             mUrl = GlobalConfig.DevServer;
@@ -74,8 +72,6 @@ namespace Assets.Scripts.Licensing.Controller
             mLoginController.AddErrorHandler(LoginErrorType.Other, DisplayErrorNotification);
             mLoginController.AddErrorHandler(LoginErrorType.Other, vX => EnableControls());
             mLoginController.AddLoginSubmissionHandler(SubmitLogin);
-            OutterThreadToUnityThreadIntermediary.Instance.Init();
-
         }
 
         /// <summary>
@@ -87,8 +83,7 @@ namespace Assets.Scripts.Licensing.Controller
             DisplayErrorNotification(vVmsg);
             EnableControls();
         }
-
-
+        
         /// <summary>
         /// enable login controls
         /// </summary>
@@ -105,6 +100,7 @@ namespace Assets.Scripts.Licensing.Controller
         {
             LoginSuccessEvent += vHandler;
         }
+
         /// <summary>
         /// Removes handler to user's on login success.
         /// </summary>
@@ -117,7 +113,6 @@ namespace Assets.Scripts.Licensing.Controller
             }
         }
 
-
         /// <summary>
         /// Displays an error notification
         /// </summary>
@@ -126,7 +121,6 @@ namespace Assets.Scripts.Licensing.Controller
         {
             Notify.Template("fade").Show(vMsg);
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(false));
-
         }
 
         void SubmitLogin(LoginModel vModel)
@@ -135,8 +129,6 @@ namespace Assets.Scripts.Licensing.Controller
             LoginView.DisableSubmissionControls();
             StartCoroutine(VerifyInternetConnection(vModel));
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(true));
-
-
         }
 
         /// <summary>
@@ -172,14 +164,11 @@ namespace Assets.Scripts.Licensing.Controller
             try
             {
                 UserRequest vRequest = vModel.UserRequest;
-
+                string token = "";
                 User vUser = mClient.SignIn(vRequest);
                 if (!vUser.IsOk)
                 {
-                    string token = mClient.GenerateDeviceToken();
-                    string message = mClient.AddDevice(token)
-             ? "Device was added successfully"
-             : "Something went wrong on adding device";
+
                     //  mClient.SetToken(vUser.Token);
                     OutterThreadToUnityThreadIntermediary.QueueActionInUnity(EnableControls);
                     var vErrorMsg = FormatLoginNoOkError(vUser.Errors);
@@ -197,11 +186,13 @@ namespace Assets.Scripts.Licensing.Controller
 
                 if (vUser.IsOk)
                 {
-                    UserProfileModel vProfileModel = new UserProfileModel()
+                    token = mClient.GenerateDeviceToken();
+                     UserProfileModel vProfileModel = new UserProfileModel()
                     {
                         User = vUser,
                         LicenseInfo = vLicense,
-                        Client = mClient
+                        Client = mClient,
+                        DeviceToken = token
                     };
                     //if user is an analyst
                     if (vUser.RoleType == UserRoleType.Analyst)
@@ -279,10 +270,12 @@ namespace Assets.Scripts.Licensing.Controller
                 {
                     LoginView.EnableButtonControls();
                     LoginView.SetLoadingIconAsActive(false);
+                    mLoginController.RaiseErrorEvent(LoginErrorType.Other,
+                        LocalizationBinderContainer.GetString(KeyMessage.ReportErrorCodeMsg) +
+                        " " + vE.Message);
                 });
-                UnityEngine.Debug.Log("error " + vE);
+           
             }
-
         }
 
 

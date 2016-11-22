@@ -31,6 +31,7 @@ public class BodyFrame
     [JsonProperty]
     private float mTimeStamp;
 
+   
     /// <summary>
     /// Index of the item
     /// </summary>
@@ -58,7 +59,7 @@ public class BodyFrame
         set { mTimeStamp = value; }
     }
 
-
+    public float ErgoScore { get; set; }
     /**
     * ToString()
     * @brief Prepares the current body frame as a string 

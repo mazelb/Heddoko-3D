@@ -219,11 +219,11 @@ namespace UIWidgets
 			Templates.Add(template, notifyTemplate, replace);
 		}
 
-		/// <summary>
-		/// Return notification by the specified template name.
-		/// </summary>
-		/// <param name="template">Template name.</param>
-		static public Notify Template(string template)
+        /// <summary>
+        /// Return notification by the specified template name.
+        /// </summary>
+        /// <param name="template">Template name.</param>
+        public static  Notify Template(string template)
 		{
 			return Templates.Instance(template);
 		}

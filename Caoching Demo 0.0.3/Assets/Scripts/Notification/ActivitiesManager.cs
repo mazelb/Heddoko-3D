@@ -8,36 +8,89 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Assets.Scripts.Licensing.Model;
+using Assets.Scripts.MainApp;
 using HeddokoSDK.Models.Activity;
 using HeddokoSDK.Models.Enum;
+using Microsoft.AspNet.SignalR.Client;
 
 namespace Assets.Scripts.Notification
 {
     public class ActivitiesManager
     {
         private UserProfileModel mModel;
-        private string mClientToken;
-        private Dictionary<UserEventType, List<Action<NotificationMessage>>> mEventTypeHandlers = new Dictionary<UserEventType, List<Action<NotificationMessage>>>();
+
+        private Dictionary<UserEventType, List<Action<NotificationMessage>>> mEventTypeHandlers =
+            new Dictionary<UserEventType, List<Action<NotificationMessage>>>();
 
         /// <summary>
         /// Create an instance of an Activities manager
         /// </summary>
         /// <param name="vModel"></param>
         /// <param name="vClientToken"></param>
-        public ActivitiesManager(UserProfileModel vModel, string vClientToken)
+        public ActivitiesManager(UserProfileModel vModel)
         {
             mModel = vModel;
-            mClientToken = vClientToken;
-            mModel.Client.OpenConnection();
-            mModel.Client.SubscribeOnGettingNotification(mClientToken, OnNotificationReceived);
+            mModel.Client.AddStateChangeListener(Client_HubConnectionStateChanged);
         }
+ 
+        /// <summary>
+        /// Handler for state changes
+        /// </summary>
+        /// <param name="vObj"></param>
+        private void Client_HubConnectionStateChanged(StateChange vObj)
+        {
+            try
+            {
+                switch (vObj.NewState)
+                {
+                    case ConnectionState.Connected:
+                        if (vObj.OldState == ConnectionState.Connected)
+                        {
+                            break;
+                        }
+                        ThreadPool.QueueUserWorkItem(SetSubScription);
+                        break;
+                    case ConnectionState.Connecting:
+
+                        break;
+                    case ConnectionState.Disconnected:
+                        //Stream disconnected
+
+                        break;
+                    case ConnectionState.Reconnecting:
+                        //todo
+                        //Stream reconnecting
+                        break;
+                }
+            }
+            catch (Exception vE)
+            {
+                 
+            }
+
+        }
+
+        public void SetSubScription(object vObject)
+        {
+            try
+            {
+                mModel.Client.SubscribeOnGettingNotification(mModel.DeviceToken, OnNotificationReceived);
+            }
+            catch (Exception vE)
+            {
+                WindowsApplicationManager.WriteToDebugLog("Exception in SetSubScription "+ vE.Message);  
+            }
+        }
+
 
         public void Dispose()
         {
             if (mModel != null && mModel.Client != null)
-            {
-                mModel.Client.CloseConnection();
+            { 
+                mModel.Client.RemoveStateChangeListener(Client_HubConnectionStateChanged);
+                mModel.Client.RemoveDevice(mModel.DeviceToken);
             }
         }
 
@@ -47,6 +100,8 @@ namespace Assets.Scripts.Notification
         /// <param name="vObj"></param>
         private void OnNotificationReceived(NotificationMessage vObj)
         {
+            WindowsApplicationManager.WriteToDebugLog("OnNotificationReceived " + vObj.Text);
+ 
             if (vObj != null)
             {
                 if (mEventTypeHandlers.ContainsKey(vObj.Type))
@@ -94,8 +149,18 @@ namespace Assets.Scripts.Notification
         /// </summary>
         public void Start()
         {
-            mModel.Client.OpenConnection();
-            mModel.Client.SubscribeOnGettingNotification(mClientToken, OnNotificationReceived);
+            try
+            {
+                mModel.Client.AddDevice(mModel.DeviceToken);
+                mModel.Client.OpenConnection();
+            }
+            catch (Exception e)
+            {
+            }
+
         }
+
+
+
     }
 }

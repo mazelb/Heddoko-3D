@@ -12,25 +12,26 @@ MonoBehaviour:
   m_Name: EnUSBinder.binder
   m_EditorClassIdentifier: 
   Path: E:/Code/Heddoko3D/Caoching Demo 0.0.3/Assets/Resources/EnUSBinder.binder
-  ParsedContent: "{\n\t\"mContainer\": {\n\t\t\"En-Us\": {\n\t\t\t\"StringContainer\":
-    {\n\t\t\t\t\"DownloadCompleteMsg\": {\n\t\t\t\t\t\"SingularForm\": \"Download
-    has been completed\",\n\t\t\t\t\t\"PluralForm\": \"All downloads have been completed\"\n\t\t\t\t},\n\t\t\t\t\"Greet\":
-    {\n\t\t\t\t\t\"SingularForm\": null,\n\t\t\t\t\t\"PluralForm\": \"Hello\"\n\t\t\t\t},\n\t\t\t\t\"NewRecordingFoundMsg\":
-    {\n\t\t\t\t\t\"SingularForm\": \"A new recording has been found on the Heddoko
-    SD card\",\n\t\t\t\t\t\"PluralForm\": \"New recordings have been found on the
-    SD card\"\n\t\t\t\t},\n\t\t\t\t\"UploadCompleteMsg\": {\n\t\t\t\t\t\"SingularForm\":
-    \"Your upload has been finished\",\n\t\t\t\t\t\"PluralForm\": \"All uploads have
-    finished\"\n\t\t\t\t},\n\t\t\t\t\"BrainpackServiceMsgTimedOut\": {\n\t\t\t\t\t\"SingularForm\":
+  ParsedContent: "{\r\n\t\"mContainer\": {\r\n\t\t\"En-Us\": {\r\n\t\t\t\"StringContainer\":
+    {\r\n\t\t\t\t\"DownloadCompleteMsg\": {\r\n\t\t\t\t\t\"SingularForm\": \"Download
+    has been completed\",\r\n\t\t\t\t\t\"PluralForm\": \"All downloads have been completed\"\r\n\t\t\t\t},\r\n\t\t\t\t\"Greet\":
+    {\r\n\t\t\t\t\t\"SingularForm\": null,\r\n\t\t\t\t\t\"PluralForm\": \"Hello\"\r\n\t\t\t\t},\r\n\t\t\t\t\"NewRecordingFoundMsg\":
+    {\r\n\t\t\t\t\t\"SingularForm\": \"A new recording has been found on the Heddoko
+    SD card\",\r\n\t\t\t\t\t\"PluralForm\": \"New recordings have been found on the
+    SD card\"\r\n\t\t\t\t},\r\n\t\t\t\t\"UploadCompleteMsg\": {\r\n\t\t\t\t\t\"SingularForm\":
+    \"Your upload has been finished\",\r\n\t\t\t\t\t\"PluralForm\": \"All uploads
+    have finished\"\r\n\t\t\t\t},\r\n\t\t\t\t\"BrainpackServiceMsgTimedOut\": {\r\n\t\t\t\t\t\"SingularForm\":
     \"Connection to the brainpack service timed out. You can try to connect again
-    or restart the brainpack service\",\n\t\t\t\t\t\"PluralForm\": null\n\t\t\t\t},\n\t\t\t\t\"BannedAccountMsg\":
-    {\n\t\t\t\t\t\"SingularForm\": \"This account has been banned.\",\n\t\t\t\t\t\"PluralForm\":
-    null\n\t\t\t\t},\n\t\t\t\t\"InactiveAccountMsg\": {\n\t\t\t\t\t\"SingularForm\":
+    or restart the brainpack service\",\r\n\t\t\t\t\t\"PluralForm\": null\r\n\t\t\t\t},\r\n\t\t\t\t\"BannedAccountMsg\":
+    {\r\n\t\t\t\t\t\"SingularForm\": \"This account has been banned.\",\r\n\t\t\t\t\t\"PluralForm\":
+    null\r\n\t\t\t\t},\r\n\t\t\t\t\"InactiveAccountMsg\": {\r\n\t\t\t\t\t\"SingularForm\":
     \"This account is not active. Please contact your license administrator for further
-    support.\",\n\t\t\t\t\t\"PluralForm\": null\n\t\t\t\t},\n\t\t\t\t\"InactiveLicenseMsg\":
-    {\n\t\t\t\t\t\"SingularForm\": \"The provided license is inactive. Please contact
-    your license administator for further support.\",\n\t\t\t\t\t\"PluralForm\": null\n\t\t\t\t},\n\t\t\t\t\"ExpiredLicenseMsg\":
-    {\n\t\t\t\t\t\"SingularForm\": \"The provided license has expired. Please contact
-    your license administator for further support.\",\n\t\t\t\t\t\"PluralForm\": null\n\t\t\t\t},\r\n\t\t\t\t\"DeletedLicenseMsg\":
+    support.\",\r\n\t\t\t\t\t\"PluralForm\": null\r\n\t\t\t\t},\r\n\t\t\t\t\"InactiveLicenseMsg\":
+    {\r\n\t\t\t\t\t\"SingularForm\": \"The provided license is inactive. Please contact
+    your license administator for further support.\",\r\n\t\t\t\t\t\"PluralForm\":
+    null\r\n\t\t\t\t},\r\n\t\t\t\t\"ExpiredLicenseMsg\": {\r\n\t\t\t\t\t\"SingularForm\":
+    \"The provided license has expired. Please contact your license administator for
+    further support.\",\r\n\t\t\t\t\t\"PluralForm\": null\r\n\t\t\t\t},\r\n\t\t\t\t\"DeletedLicenseMsg\":
     {\r\n\t\t\t\t\t\"SingularForm\": \"We could not find a license associated with
     your account. Please contact your license administator for further support.\",\r\n\t\t\t\t\t\"PluralForm\":
     null\r\n\t\t\t\t},\r\n\t\t\t\t\"AnalysisCollectionMsg\": {\r\n\t\t\t\t\t\"SingularForm\":
@@ -73,15 +74,18 @@ MonoBehaviour:
     \ \",\r\n\t\t\t\t\t\"PluralForm\":  null\r\n\t\t\t\t},\r\n\t\t\t\t\"NoInternetConnectionMsg\"
     : {\r\n\t\t\t\t\"SingularForm\": \" connection to the internet could not be established.
     Try again by clicking on the submit button.  \",\r\n\t\t\t\t\t\"PluralForm\":
-    \ null\r\n\t\t\t\t},\r\n\t\t\t\t\"BadKitUpload1\" : {\n\t\t\t\t\"SingularForm\":
-    \"You were unable to upload the following recording: \",\n\t\t\t\t\"PluralForm\":
-    \ \"You were unable to upload the following recordings:\"\n\t\t\t\t},\r\n\t\t\t\t\n\t\t\t\t\"BadKitUpload2\"
-    : {\n\t\t\t\t\"SingularForm\": \"This is likely caused by a uploading a recording
+    \ null\r\n\t\t\t\t},\r\n\t\t\t\t\"BadKitUpload1\" : {\r\n\t\t\t\t\"SingularForm\":
+    \"You were unable to upload the following recording: \",\r\n\t\t\t\t\"PluralForm\":
+    \ \"You were unable to upload the following recordings:\"\r\n\t\t\t\t},\r\n\t\t\t\t\r\n\t\t\t\t\"BadKitUpload2\"
+    : {\r\n\t\t\t\t\"SingularForm\": \"This is likely caused by a uploading a recording
     that belongs to a user who is in another team. If you are certain this is not
     the case, please log into app.heddoko.com and verify that the current user has
-    the correct kit assigned to them.\",\n\t\t\t\t\"PluralForm\":  null\n\t\t\t\t},\n\t\t\t\t\"RecordingFileLessThanSkippableFrames\":{\n\t\t\t\t\"SingularForm\":
+    the correct kit assigned to them.\",\r\n\t\t\t\t\"PluralForm\":  null\r\n\t\t\t\t},\r\n\t\t\t\t\"RecordingFileLessThanSkippableFrames\":{\r\n\t\t\t\t\"SingularForm\":
     \"Cannot load recording file because there are not enough frames to analyze.Please
-    try a longer recording.\",\n\t\t\t\t\"PluralForm\":  null\n\t\t\t\t},\n\t\t\t\t\"CannotLoadRecording\"
-    : {\n\t\t\t\t\"SingularForm\": \"There was an issue loading this recording file.
-    Please try another file or report this problem to support\",\n\t\t\t\t\"PluralForm\":
-    \ null\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\t\n\t\t\t}\n\t\t}\n\t}\n}"
+    try a longer recording.\",\r\n\t\t\t\t\"PluralForm\":  null\r\n\t\t\t\t},\r\n\t\t\t\t\"CannotLoadRecording\"
+    : {\r\n\t\t\t\t\"SingularForm\": \"There was an issue loading this recording file.
+    Please try another file or report this problem to support\",\r\n\t\t\t\t\"PluralForm\":
+    \ null\r\n\t\t\t\t},\t\t\t\t\r\n\t\t\t\t\"MessageFromServerReceived\" : {\r\n\t\t\t\t\"SingularForm\":
+    \"Message from server received: \",\r\n\t\t\t\t\"PluralForm\":  null\r\n\t\t\t\t},\r\n\t\t\t\t\"ReturnToLoginScreen\"
+    : {\r\n\t\t\t\t\"SingularForm\": \"You will now be returned to the login screen.\",\r\n\t\t\t\t\"PluralForm\":
+    \ null\r\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\t\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}"

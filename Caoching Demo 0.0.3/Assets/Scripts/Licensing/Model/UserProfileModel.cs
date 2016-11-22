@@ -16,11 +16,15 @@ namespace Assets.Scripts.Licensing.Model
     /// </summary>
     public class UserProfileModel
     {
-         public User User { get; set; }
+        private string mDeviceToken="";
+
+        public User User { get; set; }
         public LicenseInfo LicenseInfo { get; set; }
 
         public HeddokoClient Client { get; set; }
         public ListCollection<User> UserList { get; set; }
+
+        public string DeviceToken { get; set; }
 
         //todo: add a the current kit to be used(for uploading)
     }
