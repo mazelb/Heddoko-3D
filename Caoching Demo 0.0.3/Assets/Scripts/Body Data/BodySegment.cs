@@ -122,6 +122,15 @@ public partial class BodySegment
     }
 
     /// <summary>
+    /// UpdateSegment: Depending on the segment type, apply transformation matrices.
+    /// </summary>
+    /// <param name="vFilteredDictionary">Dictionnary of tracked segments and their transformations.</param>
+    internal void UpdateSegmentAnalysis(Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vFilteredDictionary)
+    {
+        
+    }
+
+    /// <summary>
     /// UpdateInitialSensorsData: The function will update the sensors data with the passed in BodyFrame. Iterates through the list of sensor tuples and updates the initial sensor's information.
     /// </summary>
     /// <param name="vFrame">the body frame whose subframes will updates to initial sensors.</param>
@@ -129,6 +138,7 @@ public partial class BodySegment
     public void UpdateInitialSensorsData(BodyFrame vFrame)     
     {
         IsReseting = true;
+
         List<BodyStructureMap.SensorPositions> vSensorPos = BodyStructureMap.Instance.SegmentToSensorPosMap[SegmentType];
         foreach (BodyStructureMap.SensorPositions vPos in vSensorPos)
         {
@@ -247,8 +257,73 @@ public partial class BodySegment
     /// <param name="vTransformatricies">transformation matrices mapped to sensor positions.</param>
     internal void MapTorsoSegment(Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vTransformatricies)
     {
-        TrunkAnalysis vTorsoAnalysis = (TrunkAnalysis)mCurrentAnalysisSegment;
+        TrunkAnalysis vTrunkAnalysis = (TrunkAnalysis)mCurrentAnalysisSegment;
+        BodySubSegment vUSSubsegment = BodySubSegmentsDictionary[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine];
+        BodySubSegment vLSSubsegment = BodySubSegmentsDictionary[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine];
 
+        ////////////////////////////////////////////////////////  Mapping /////////////////////////////////////////////////////////////////////
+        BodyFrame.Vect4 vTrunkInitRawQuat = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler;
+        BodyFrame.Vect4 vTrunkCurRawQuat = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].CurrRawEuler;// * 180f / Mathf.PI;
+
+        Quaternion vTrunkQuat = Quaternion.identity;
+        Quaternion vHipQuat = Quaternion.identity;
+
+        if (GBodyFrameUsingQuaternion)
+        {
+            //Upper torso
+            Quaternion vTrunkInitQuat = new Quaternion(vTrunkInitRawQuat.x, vTrunkInitRawQuat.y, vTrunkInitRawQuat.z, vTrunkInitRawQuat.w);
+            vTrunkQuat = new Quaternion(vTrunkCurRawQuat.x, vTrunkCurRawQuat.y, vTrunkCurRawQuat.z, vTrunkCurRawQuat.w);
+            vTrunkQuat = Quaternion.Inverse(vTrunkInitQuat) * vTrunkQuat;
+        }
+
+        if (!GBodyFrameUsingQuaternion)
+        {
+            Vector3 vTrunkInitialRawEuler = new Vector3(vTrunkInitRawQuat.x, vTrunkInitRawQuat.y, vTrunkInitRawQuat.z) * 180f / Mathf.PI;
+            Vector3 vTrunkCurrentRawEuler = new Vector3(vTrunkCurRawQuat.x, vTrunkCurRawQuat.y, vTrunkCurRawQuat.z) * 180f / Mathf.PI;
+
+            //Upper torso
+            Quaternion vTrunkInitQuat = Quaternion.Euler(0, -vTrunkInitialRawEuler.z, 0);
+            Quaternion vTrunkQuatY = Quaternion.Euler(0, -vTrunkCurrentRawEuler.z, 0);
+            vTrunkQuatY = Quaternion.Inverse(vTrunkInitQuat) * vTrunkQuatY;
+
+            vTrunkInitQuat = Quaternion.Euler(-vTrunkInitialRawEuler.x, 0, 0);
+            Quaternion vTrunkQuatX = Quaternion.Euler(-vTrunkCurrentRawEuler.x, 0, 0);
+            vTrunkQuatX = Quaternion.Inverse(vTrunkInitQuat) * vTrunkQuatX;
+
+            vTrunkInitQuat = Quaternion.Euler(0, 0, vTrunkInitialRawEuler.y);
+            Quaternion vTrunkQuatZ = Quaternion.Euler(0, 0, vTrunkCurrentRawEuler.y);
+            vTrunkQuatZ = Quaternion.Inverse(vTrunkInitQuat) * vTrunkQuatZ;
+
+            ////////////////////////////////////////////////////////  Apply Results To Trunk /////////////////////////////////////////////////////////////////////
+            if (IsUsingInterpolation)
+            {
+                vTrunkQuat = Quaternion.Slerp(vUSSubsegment.SubsegmentOrientation, vTrunkQuatY * vTrunkQuatX * vTrunkQuatZ, InterpolationSpeed);
+            }
+            else
+            {
+                vTrunkQuat = vTrunkQuatY * vTrunkQuatX * vTrunkQuatZ;
+            }
+        }
+
+        vUSSubsegment.UpdateSubsegmentOrientation(vTrunkQuat, 1, true);
+
+        ////////////////////////////////////////////////////////  Analysis /////////////////////////////////////////////////////////////////////
+        //Update the analysis inputs
+        vTrunkAnalysis.TrunkTransform = vUSSubsegment.AssociatedView.SubsegmentTransform;
+        vTrunkAnalysis.HipGlobalTransform = vLSSubsegment.AssociatedView.SubsegmentTransform;
+        vTrunkAnalysis.DeltaTime = DeltaTime;
+        vTrunkAnalysis.AngleExtraction();
+
+        //UpdateHipPosition(vLSSubsegment);//*/
+    }
+
+
+    /// <summary>
+    /// MapTorsoSegment: Performs mapping on the torso subsegment from the available sensor data.
+    /// </summary>
+    /// <param name="vTransformatricies">transformation matrices mapped to sensor positions.</param>
+    internal void MapHipSegment(Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vTransformatricies)
+    {
         BodySubSegment vUSSubsegment = BodySubSegmentsDictionary[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine];
         BodySubSegment vLSSubsegment = BodySubSegmentsDictionary[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine];
 
@@ -262,44 +337,10 @@ public partial class BodySegment
         vLLLSubsegment = vLeftLegSegment.BodySubSegmentsDictionary.FirstOrDefault(x => x.Key == (int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf).Value;
         vLULSubSegment = vLeftLegSegment.BodySubSegmentsDictionary.FirstOrDefault(x => x.Key == (int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh).Value;
 
-        ////////////////////////////////////////////////////////  Mapping /////////////////////////////////////////////////////////////////////
-        BodyFrame.Vect4 vTorsoInitRawQuat = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler;
-        BodyFrame.Vect4 vTorsoCurRawQuat = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].CurrRawEuler;// * 180f / Mathf.PI;
-
-        Quaternion vTorsoQuat = Quaternion.identity;
         Quaternion vHipQuat = Quaternion.identity;
-
-        if (GBodyFrameUsingQuaternion)
-        {
-            //Upper torso
-            Quaternion vTorsoInitQuat = new Quaternion(vTorsoInitRawQuat.x, vTorsoInitRawQuat.y, vTorsoInitRawQuat.z, vTorsoInitRawQuat.w);
-            vTorsoQuat = new Quaternion(vTorsoCurRawQuat.x, vTorsoCurRawQuat.y, vTorsoCurRawQuat.z, vTorsoCurRawQuat.w);
-            vTorsoQuat = Quaternion.Inverse(vTorsoInitQuat) * vTorsoQuat;
-        }
 
         if (!GBodyFrameUsingQuaternion)
         {
-            Vector3 vTorsoInitialRawEuler = new Vector3(vTorsoInitRawQuat.x, vTorsoInitRawQuat.y, vTorsoInitRawQuat.z) * 180f / Mathf.PI;//vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler * 180f / Mathf.PI;
-            Vector3 vTorsoCurrentRawEuler = new Vector3(vTorsoCurRawQuat.x, vTorsoCurRawQuat.y, vTorsoCurRawQuat.z) * 180f / Mathf.PI;
-
-            //Upper torso
-            Quaternion vTorsoInitQuat = Quaternion.Euler(0, -vTorsoInitialRawEuler.z, 0);
-            Quaternion vTorsoQuatY = Quaternion.Euler(0, -vTorsoCurrentRawEuler.z, 0);
-            vTorsoQuatY = Quaternion.Inverse(vTorsoInitQuat) * vTorsoQuatY;
-
-            vTorsoInitQuat = Quaternion.Euler(-vTorsoInitialRawEuler.x, 0, 0);
-            Quaternion vTorsoQuatX = Quaternion.Euler(-vTorsoCurrentRawEuler.x, 0, 0);
-            vTorsoQuatX = Quaternion.Inverse(vTorsoInitQuat) * vTorsoQuatX;
-            //Quaternion vTorsoQuatX = Quaternion.Euler(-Mathf.DeltaAngle(vTorsoInitialRawEuler.x, vTorsoCurrentRawEuler.x), 0, 0);
-
-            vTorsoInitQuat = Quaternion.Euler(0, 0, vTorsoInitialRawEuler.y);
-            Quaternion vTorsoQuatZ = Quaternion.Euler(0, 0, vTorsoCurrentRawEuler.y);
-            vTorsoQuatZ = Quaternion.Inverse(vTorsoInitQuat) * vTorsoQuatZ;
-
-            //vUSSubsegment.UpdateSubsegmentOrientation(Quaternion.identity, 0, true);
-            //vUSSubsegment.AssociatedView.SubsegmentTransform.RotateAround(vUSSubsegment.AssociatedView.SubsegmentTransform.position, vUSSubsegment.AssociatedView.SubsegmentTransform.right, testAngle++);
-            //vUSSubsegment.AssociatedView.SubsegmentTransform.RotateAround(vUSSubsegment.AssociatedView.SubsegmentTransform.position, vUSSubsegment.AssociatedView.SubsegmentTransform.right, -Mathf.DeltaAngle(vTorsoInitialRawEuler.x, vTorsoCurrentRawEuler.x));
-
             ////////////////////////////////////////////////////////  Apply Results To Trunk /////////////////////////////////////////////////////////////////////
             float vForwardAngle = 0;
             float vUpAngle = 0;
@@ -321,28 +362,14 @@ public partial class BodySegment
             if (IsUsingInterpolation)
             {
                 vHipQuat = Quaternion.Slerp(vLSSubsegment.SubsegmentOrientation, Quaternion.Euler(vUpAngle, 0, 0) * Quaternion.Euler(0, vForwardAngle, 0), InterpolationSpeed);
-                vTorsoQuat = Quaternion.Slerp(vUSSubsegment.SubsegmentOrientation, Quaternion.Inverse(vHipQuat) * vTorsoQuatY * vTorsoQuatX * vTorsoQuatZ, InterpolationSpeed);
             }
             else
             {
                 vHipQuat = Quaternion.Euler(vUpAngle, 0, 0) * Quaternion.Euler(0, vForwardAngle, 0);
-                vTorsoQuat = Quaternion.Inverse(vHipQuat) * vTorsoQuatY * vTorsoQuatX * vTorsoQuatZ;
             }
-
-            //Apply results
         }
 
-        vUSSubsegment.UpdateSubsegmentOrientation(vTorsoQuat, 0, true);
         vLSSubsegment.UpdateSubsegmentOrientation(vHipQuat, 3, true);
-
-        ////////////////////////////////////////////////////////  Analysis /////////////////////////////////////////////////////////////////////
-        //Update the analysis inputs
-        vTorsoAnalysis.TrunkTransform = vUSSubsegment.AssociatedView.SubsegmentTransform;
-        vTorsoAnalysis.HipGlobalTransform = vLSSubsegment.AssociatedView.SubsegmentTransform;
-        vTorsoAnalysis.DeltaTime = DeltaTime;
-        vTorsoAnalysis.AngleExtraction();
-
-        //UpdateHipPosition(vLSSubsegment);//*/
     }
 
     internal float EstimateHipsForwardAngle(Transform vLSTransform, Transform vUSTransform, Transform vRULTransform, Transform vLULTransform, Transform vRLLTransform, Transform vLLLTransform)
@@ -375,7 +402,7 @@ public partial class BodySegment
     {
         BodySubSegment vULSubsegment = BodySubSegmentsDictionary[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_RightThigh];
         BodySubSegment vLLSubsegment = BodySubSegmentsDictionary[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_RightCalf];
-        BodySegment vHipsSegment = ParentBody.GetSegmentFromSegmentType(BodyStructureMap.SegmentTypes.SegmentType_Torso);
+        BodySegment vHipsSegment = ParentBody.GetSegmentFromSegmentType(BodyStructureMap.SegmentTypes.SegmentType_Trunk);
         BodySubSegment vHipsSubsegment = vHipsSegment.BodySubSegmentsDictionary.FirstOrDefault(x => x.Key == (int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine).Value;
 
         ////////////////////////////////////////////////////////  Mapping /////////////////////////////////////////////////////////////////////
@@ -384,10 +411,6 @@ public partial class BodySegment
         BodyFrame.Vect4 vKneeInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightCalf].InitRawEuler;
         BodyFrame.Vect4 vKneeCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightCalf].CurrRawEuler;
 
-        //Vector3 vThighInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightThigh].InitRawEuler * 180f / Mathf.PI;
-        //Vector3 vThighCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightThigh].CurrRawEuler * 180f / Mathf.PI;
-        //Vector3 vKneeInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightCalf].InitRawEuler * 180f / Mathf.PI;
-        //Vector3 vKneeCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightCalf].CurrRawEuler * 180f / Mathf.PI;
         Vector3 vThighInitialRawEuler = new Vector3(vThighInit.x, vThighInit.y, vThighInit.z) * 180f / Mathf.PI;
         Vector3 vThighCurrentRawEuler = new Vector3(vThighCurr.x, vThighCurr.y, vThighCurr.z) * 180f / Mathf.PI;
         Vector3 vKneeInitialRawEuler = new Vector3(vKneeInit.x, vKneeInit.y, vKneeInit.z) * 180f / Mathf.PI;
@@ -427,19 +450,14 @@ public partial class BodySegment
     {
         BodySubSegment vULSubsegment = BodySubSegmentsDictionary[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh];
         BodySubSegment vLLSubsegment = BodySubSegmentsDictionary[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf];
-        BodySegment vHipsSegment = ParentBody.GetSegmentFromSegmentType(BodyStructureMap.SegmentTypes.SegmentType_Torso);
+        BodySegment vHipsSegment = ParentBody.GetSegmentFromSegmentType(BodyStructureMap.SegmentTypes.SegmentType_Trunk);
         BodySubSegment vHipsSubsegment = vHipsSegment.BodySubSegmentsDictionary.FirstOrDefault(x => x.Key == (int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine).Value;
 
         ////////////////////////////////////////////////////////  Mapping /////////////////////////////////////////////////////////////////////
-
         BodyFrame.Vect4 vThighInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftThigh].InitRawEuler;
         BodyFrame.Vect4 vThighCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftThigh].CurrRawEuler;
         BodyFrame.Vect4 vKneeInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftCalf].InitRawEuler;
         BodyFrame.Vect4 vKneeCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftCalf].CurrRawEuler;
-        //Vector3 vThighInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftThigh].InitRawEuler * 180f / Mathf.PI;
-        //Vector3 vThighCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftThigh].CurrRawEuler * 180f / Mathf.PI;
-        //Vector3 vKneeInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftCalf].InitRawEuler * 180f / Mathf.PI;
-        //Vector3 vKneeCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftCalf].CurrRawEuler * 180f / Mathf.PI;
 
         Vector3 vThighInitialRawEuler = new Vector3(vThighInit.x, vThighInit.y, vThighInit.z) * 180f / Mathf.PI; 
         Vector3 vThighCurrentRawEuler = new Vector3(vThighCurr.x, vThighCurr.y, vThighCurr.z) * 180f / Mathf.PI; 
@@ -459,7 +477,6 @@ public partial class BodySegment
         {
             MapLegsOrientations(vThighInitialRawEuler, vThighCurrentRawEuler, vKneeInitialRawEuler, vKneeCurrentRawEuler, vULSubsegment, vLLSubsegment, vHipsSubsegment, false);
         }
-
 
         ////////////////////////////////////////////////////////  Analysis /////////////////////////////////////////////////////////////////////
         //Update the analysis inputs
@@ -539,74 +556,18 @@ public partial class BodySegment
         Quaternion vThighQuat = vThighQuatY * vThighQuatX * vThighQuatZ;
         Quaternion vKneeQuat = vKneeQuatY * vKneeQuatX * vKneeQuatZ;
 
-
-        //Get necessary Axis info
-        Vector3 vULAxisUp, vULAxisRight, vULAxisForward;
-        Vector3 vLLAxisUp, vLLAxisRight, vLLAxisForward;
-        Vector3 vNewRight1 = Vector3.up;
-        // ReSharper disable once UnusedVariable
-        Vector3 vNewRight2 = Vector3.up;
-        Vector3 vULNewForward = Vector3.forward;
-        Vector3 vLLNewForward = Vector3.forward;
-
-        vULAxisUp = vThighQuat * Vector3.up;
-        vULAxisRight = vThighQuat * Vector3.right;
-        vULAxisForward = vThighQuat * Vector3.forward;
-        Vector3 vNewULAxisUp = vULAxisUp;
-
-        vLLAxisUp = vKneeQuat * Vector3.up;
-        vLLAxisRight = vKneeQuat * Vector3.right;
-        vLLAxisForward = vKneeQuat * Vector3.forward;
-
-        vNewRight1 = Vector3.Cross(vULAxisUp, vLLAxisUp).normalized;
-
-        if (Mathf.Abs(Vector3.Angle(vLLAxisUp, vULAxisUp)) < 10)
-        {
-            vNewRight1 = vULAxisRight;
-        }
-
-        //if (IsFusingSubSegments)
-        //{
-        //    Vector3 vULAxisUpProjected = Vector3.ProjectOnPlane(vULAxisUp, vULAxisRight);
-        //    Vector3 vLLAxisUpProjected = Vector3.ProjectOnPlane(vULAxisUp, vULAxisRight);
-
-        //    float vULAdjustAngle = SegmentAnalysis.GetSignedAngle(vULAxisUpProjected, vLLAxisUpProjected, vULAxisRight);
-
-        //    vULNewForward = Vector3.Cross(vNewRight1, vNewULAxisUp).normalized;
-        //    vLLNewForward = Vector3.Cross(vNewRight1, vLLAxisUp).normalized;
-
-        //    vThighQuat = Quaternion.LookRotation(vULNewForward, vNewULAxisUp);
-        //    vKneeQuat = Quaternion.LookRotation(vLLNewForward, vLLAxisUp);
-        //}
-
         Quaternion vNewThighQuat = Quaternion.identity;
         Quaternion vNewKneeQuat = Quaternion.identity;
 
         if (IsUsingInterpolation)
         {
-            //if (IsAdjustingSegmentAxis)
-            //{
-            //    vNewThighQuat = Quaternion.Slerp(vULSubsegment.SubsegmentOrientation, vThighQuat * vThighQuatY, InterpolationSpeed);
-            //    vNewKneeQuat = Quaternion.Slerp(vLLSubsegment.SubsegmentOrientation, vKneeQuat * vKneeQuatY, InterpolationSpeed);
-            //}
-            //else
-            {
-                vNewThighQuat = Quaternion.Slerp(vULSubsegment.SubsegmentOrientation, vThighQuat, InterpolationSpeed);
-                vNewKneeQuat = Quaternion.Slerp(vLLSubsegment.SubsegmentOrientation, vKneeQuat, InterpolationSpeed);
-            }
+            vNewThighQuat = Quaternion.Slerp(vULSubsegment.SubsegmentOrientation, vThighQuat, InterpolationSpeed);
+            vNewKneeQuat = Quaternion.Slerp(vLLSubsegment.SubsegmentOrientation, vKneeQuat, InterpolationSpeed);
         }
         else
         {
-            //if (IsAdjustingSegmentAxis)
-            //{
-            //    vNewThighQuat = vThighQuat * vThighQuatY;
-            //    vNewKneeQuat = vKneeQuat * vKneeQuatY;
-            //}
-            //else
-            {
-                vNewThighQuat = vThighQuat;
-                vNewKneeQuat = vKneeQuat;
-            }
+            vNewThighQuat = vThighQuat;
+            vNewKneeQuat = vKneeQuat;
         }
 
         vULSubsegment.UpdateSubsegmentOrientation(vNewThighQuat, 1, true);
@@ -623,7 +584,7 @@ public partial class BodySegment
 
         BodySubSegment vUASubsegment = BodySubSegmentsDictionary[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_RightUpperArm];
         BodySubSegment vLASubsegment = BodySubSegmentsDictionary[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm];
-        BodySegment vTorsoSegment = ParentBody.GetSegmentFromSegmentType(BodyStructureMap.SegmentTypes.SegmentType_Torso);
+        BodySegment vTorsoSegment = ParentBody.GetSegmentFromSegmentType(BodyStructureMap.SegmentTypes.SegmentType_Trunk);
         BodySubSegment vTorsoSubSegment = vTorsoSegment.BodySubSegmentsDictionary.FirstOrDefault(x => x.Key == (int)BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine).Value;
         BodySubSegment vHipsSubsegment = vTorsoSegment.BodySubSegmentsDictionary.FirstOrDefault(x => x.Key == (int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine).Value; 
 
@@ -643,14 +604,6 @@ public partial class BodySegment
         Vector3 vLoArmCurrentRawEuler = new Vector3(vLoArmCurr.x, vLoArmCurr.y, vLoArmCurr.z) * Mathf.Rad2Deg;
         Vector3 vTorsoInitialRawEuler = new Vector3(vTorsoInit.x, vTorsoInit.y, vTorsoInit.z) * Mathf.Rad2Deg;
         Vector3 vTorsoCurrentRawEuler = new Vector3(vTorsoCurr.x, vTorsoCurr.y, vTorsoCurr.z) * Mathf.Rad2Deg;
-
-
-        //Vector3 vUpArmInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightUpperArm].InitRawEuler * Mathf.Rad2Deg;
-        //Vector3 vUpArmCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightUpperArm].CurrRawEuler * Mathf.Rad2Deg;
-        //Vector3 vLoArmInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightForeArm].InitRawEuler * Mathf.Rad2Deg;
-        //Vector3 vLoArmCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightForeArm].CurrRawEuler * Mathf.Rad2Deg;
-        //Vector3 vTorsoInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawEuler * Mathf.Rad2Deg;
-        //Vector3 vTorsoCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].CurrRawEuler * Mathf.Rad2Deg;
 
         if (GBodyFrameUsingQuaternion)
         {
@@ -685,7 +638,7 @@ public partial class BodySegment
     {
         BodySubSegment vUASubsegment = BodySubSegmentsDictionary[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm];
         BodySubSegment vLASubsegment = BodySubSegmentsDictionary[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm];
-        BodySegment vTorsoSegment = ParentBody.GetSegmentFromSegmentType(BodyStructureMap.SegmentTypes.SegmentType_Torso);
+        BodySegment vTorsoSegment = ParentBody.GetSegmentFromSegmentType(BodyStructureMap.SegmentTypes.SegmentType_Trunk);
         BodySubSegment vTorsoSubSegment = vTorsoSegment.BodySubSegmentsDictionary.FirstOrDefault(x => x.Key == (int)BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine).Value;
         BodySubSegment vHipsSubsegment = vTorsoSegment.BodySubSegmentsDictionary.FirstOrDefault(x => x.Key == (int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine).Value;
 
@@ -756,19 +709,10 @@ public partial class BodySegment
     /// <summary>
     /// MapArmsOrientations: Updates the arm orientations from the initial and current eulerangles.
     /// </summary>
-    float vCurrentAngle = 0;
-    bool vIsIncreasingAngle = true;
-
     public void MapArmsOrientations(Vector3 vUAInitEuler, Vector3 vUACurEuler, Vector3 vLAInitEuler, Vector3 vLACurEuler, Vector3 vTorsoInitEuler, Vector3 vTorsoCurEuler,
                                     BodySubSegment vUASubsegment, BodySubSegment vLASubsegment, BodySubSegment vTorsoSubSegment, BodySubSegment vHipsSubsegment, bool vIsRight = true)
     {
-
         //Upper arm
-        //Quaternion vUpArmInitQuatY = Quaternion.Euler(0, 0, 0);
-        //Quaternion vUpArmQuatY = Quaternion.Euler(0, (vIsRight) ? 100 * Mathf.Sin(vCurrentAngle) : -100 * Mathf.Sin(vCurrentAngle), 0);
-        //vUpArmQuatY = Quaternion.Inverse(vUpArmInitQuatY) * vUpArmQuatY;
-        //vUpArmQuatY = Quaternion.Inverse(vUpArmQuatY);
-
         Quaternion vUpArmInitQuatY = Quaternion.Euler(0, (vIsRight) ? vUAInitEuler.z : (vUAInitEuler.z), 0);
         Quaternion vUpArmQuatY = Quaternion.Euler(0, (vIsRight) ? vUACurEuler.z : (vUACurEuler.z), 0);
         vUpArmQuatY = Quaternion.Inverse(vUpArmInitQuatY) * vUpArmQuatY;
@@ -784,11 +728,6 @@ public partial class BodySegment
         vUpArmQuatZ = Quaternion.Inverse(vUpArmQuatZ);
 
         //Lower arm
-        //Quaternion vLoArmInitQuatY = Quaternion.Euler(0, 0, 0);
-        //Quaternion vLoArmQuatY = Quaternion.Euler(0, (vIsRight) ? 100 * Mathf.Sin(vCurrentAngle) : -100 * Mathf.Sin(vCurrentAngle), 0);
-        //vLoArmQuatY = Quaternion.Inverse(vLoArmInitQuatY) * vLoArmQuatY;
-        //vLoArmQuatY = Quaternion.Inverse(vLoArmQuatY);
-
         Quaternion vLoArmInitQuatY = Quaternion.Euler(0, (vIsRight) ? vLAInitEuler.z : (vLAInitEuler.z), 0);
         Quaternion vLoArmQuatY = Quaternion.Euler(0, (vIsRight) ? vLACurEuler.z : (vLACurEuler.z), 0);
         vLoArmQuatY = Quaternion.Inverse(vLoArmInitQuatY) * vLoArmQuatY;
@@ -806,8 +745,6 @@ public partial class BodySegment
         Quaternion vUpArmQuat = vUpArmQuatY * vUpArmQuatX * vUpArmQuatZ;
         Quaternion vLoArmQuat = vLoArmQuatY * vLoArmQuatX * vLoArmQuatZ;
 
-        vCurrentAngle += 0.01f;
-        
         //Get necessary Axis info
         Vector3 vUAAxisUp, vUAAxisRight, vUAAxisForward;
         Vector3 vLAAxisUp, vLAAxisRight, vLAAxisForward;
@@ -998,30 +935,29 @@ public partial class BodySegment
     /// <param name="vFilteredDictionary">Dictionnary of tracked segments and their transformations.</param>
     private void MapSubSegments(Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vFilteredDictionary)
     {
-        if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_Torso)
+        if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_Trunk)
         {
-            //Debug.Log("TORSO");
             MapTorsoSegment(vFilteredDictionary);
         }
         if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_RightArm)
         {
-            //Debug.Log("RIGHT ARM");
             MapRightArmSubsegment(vFilteredDictionary);
         }
         if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_LeftArm)
         {
-            //Debug.Log("LEFT ARM");
             MapLeftArmSubsegment(vFilteredDictionary);
         }
         if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_RightLeg)
         {
-            //Debug.Log("RIGHT LEG");
             MapRightLegSegment(vFilteredDictionary);
         }
         if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_LeftLeg)
         {
-            //Debug.Log("LEFT LEG");
             MapLeftLegSegment(vFilteredDictionary);
+        }
+        if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_Hips)
+        {
+            MapHipSegment(vFilteredDictionary);
         }
     }
 
