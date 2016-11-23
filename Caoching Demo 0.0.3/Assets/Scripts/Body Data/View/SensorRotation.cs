@@ -19,16 +19,15 @@ namespace Assets.Scripts.Body_Data.View
         public Quaternion RelativeRotation = Quaternion.identity;
         public Quaternion InitialRotation = Quaternion.identity;
         public Quaternion UpAxisRotation;
+
         [SerializeField]
         public Vector3 OrientationCorrection;
-
         public bool UseCorrection = false;
 
         void Awake()
         {
             SetAxisOfRotation();
             InputHandler.RegisterKeyboardAction(KeyCode.Home, Reset);
-            InputHandler.RegisterKeyboardAction(KeyCode.End, SetAxisOfRotation);
         }
 
         void SetAxisOfRotation()
@@ -53,10 +52,6 @@ namespace Assets.Scripts.Body_Data.View
         void Update()
         {
             transform.rotation = RelativeRotation;
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                UseCorrection = !UseCorrection;
-            }
         }
 
     }

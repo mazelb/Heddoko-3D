@@ -8,8 +8,6 @@
 
 
 using heddoko;
-using HeddokoLib.body_pipeline;
-using HeddokoLib.genericPatterns;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -29,9 +27,8 @@ namespace Assets.Scripts.Body_Data.View
         public GameObject[] ListenerLayerobjects;
         public Vector3[] Positions;
         private int mSpatialPos = 0;
-        public int SensorPos; 
+        public int SensorPos;
         public UnityAction<int> SensorClicked;
-
         public GameObject[] HighlightedGameObjects;
         private bool mIsHighlighted;
         private bool mPreviousCalState = false;
@@ -40,9 +37,11 @@ namespace Assets.Scripts.Body_Data.View
         private ParticlePoolManager mWhitePool;
         public AirplaneSensorColor Wings;
         public AirplaneSensorColor Fuselage;
-
         [SerializeField]
         private SensorRotation mRotation;
+
+        [SerializeField]
+        private bool mUseParticles = false;
 
         private SensorRotation Rotation
         {
@@ -162,16 +161,19 @@ namespace Assets.Scripts.Body_Data.View
             {
                 return;
             }
-            if (vCalStatus != mPreviousCalState)
+            if (mUseParticles)
             {
-                TriggerCalStateChange(vCalStatus);
-                mPreviousCalState = vCalStatus;
-            }
+                if (vCalStatus != mPreviousCalState)
+                {
+                    TriggerCalStateChange(vCalStatus);
+                    mPreviousCalState = vCalStatus;
+                }
 
-            if (vMagneticTransience != mPreviousMagState)
-            {
-                TriggerMagTransStateChange(vMagneticTransience);
-                mPreviousMagState = vMagneticTransience;
+                if (vMagneticTransience != mPreviousMagState)
+                {
+                    TriggerMagTransStateChange(vMagneticTransience);
+                    mPreviousMagState = vMagneticTransience;
+                }
             }
         }
 
