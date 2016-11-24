@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Communication;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.UI.AbstractViews.Permissions;
 using Assets.Scripts.UI.RecordingLoading;
@@ -46,6 +47,7 @@ namespace Assets.Scripts.MainApp
         public RecordingPlayerView RecordingPlayer ;
         public ControlPanel ControlPanel;
         private UserProfileModel mCurrentProfileModel;
+        private AuthorizationManager mAuthorizationManager = new AuthorizationManager();
 
         void Awake()
         {
@@ -78,7 +80,12 @@ namespace Assets.Scripts.MainApp
                 OnLoginEvent();
             }
         }
- 
+
+        public AuthorizationManager AuthorizationManager
+        {
+            get { return mAuthorizationManager; } 
+        }
+
         /// <summary>
         /// Flips the event system state, between inactive and active. 
         /// </summary>

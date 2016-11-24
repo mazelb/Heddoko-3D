@@ -18,12 +18,12 @@ namespace Assets.Scripts.UI
 {
     public class BrainpackModelView: MonoBehaviour
     {
-        private Brainpack mBrainpack;
+        private BrainpackNetworkingModel mBrainpack;
         public Button Button;
         public Text BrainpackIdText;
-        private Action<Brainpack> mCallbackAction;
+        private Action<BrainpackNetworkingModel> mCallbackAction;
         public ShineEffector Shine;
-        public void Initialize(Brainpack vBrainpack, Action<Brainpack> vCallbackAction)
+        public void Initialize(BrainpackNetworkingModel vBrainpack, Action<BrainpackNetworkingModel> vCallbackAction)
         {
             mBrainpack = vBrainpack;
             mCallbackAction = vCallbackAction;

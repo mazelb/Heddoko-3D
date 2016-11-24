@@ -9,10 +9,10 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Net.Sockets; 
+using System.Net.Sockets;
 using heddoko;
 using HeddokoLib.heddokoProtobuff.Decoder;
-using ProtoBuf; 
+using ProtoBuf;
 
 namespace Assets.Scripts.Communication.Communicators
 {
@@ -24,7 +24,8 @@ namespace Assets.Scripts.Communication.Communicators
     {
 
         public event OnSuitDataReceivedEvent DataReceivedEvent;
-        public event OnSuitConnectionEvent SuitConnectionEvent;
+        public event Action<BrainpackConnectionStateChange> ConnectionStateChangeEvent;
+        private BrainpackConnectionState mPreviousState = BrainpackConnectionState.Disconnected;
         private object mLockIsConectedLock = new object();
         private Socket mSocket;
         public int Port = 8845;
@@ -95,17 +96,15 @@ namespace Assets.Scripts.Communication.Communicators
             {
                 Socket vSocket = (Socket)vAr.AsyncState;
                 //setup current socket
-
                 StateObject vSocketConnection = new StateObject();
                 vSocketConnection.Socket = vSocket;
                 vSocketConnection.Buffer = new byte[1024];
                 vSocket.EndConnect(vAr);
-                if (SuitConnectionEvent != null)
-                {
-                    SuitConnectionEvent();
-                }
+                mPreviousState = BrainpackConnectionState.Disconnected;
+                InvokeStateChange(BrainpackConnectionState.Disconnected, BrainpackConnectionState.Connected);
+              
                 vSocket.BeginReceive(vSocketConnection.Buffer, 0, vSocketConnection.Buffer.Length,
-                                   SocketFlags.None, new AsyncCallback(ReceiveCallback), vSocketConnection);
+                                  SocketFlags.None, new AsyncCallback(ReceiveCallback), vSocketConnection);
             }
             catch (SocketException vSocketException)
             {
@@ -117,6 +116,9 @@ namespace Assets.Scripts.Communication.Communicators
                     vInnerExceptionMsg = vSocketException.InnerException.ToString();
                 }
                 UnityEngine.Debug.Log(vMsg + " \r\n" + vInnerExceptionMsg);
+                mPreviousState = BrainpackConnectionState.Disconnected;
+                InvokeStateChange(BrainpackConnectionState.Disconnected, BrainpackConnectionState.Disconnected);
+
             }
             catch (Exception vE)
             {
@@ -129,33 +131,32 @@ namespace Assets.Scripts.Communication.Communicators
                     vInnerExceptionMsg = vE.InnerException.ToString();
                 }
                 UnityEngine.Debug.Log(vMsg + " \r\n" + vInnerExceptionMsg);
-                //throw new ApplicationException("Error occured starting listener, check inner exception", vE);
+                InvokeStateChange(BrainpackConnectionState.Disconnected, BrainpackConnectionState.Disconnected);
+                mPreviousState = BrainpackConnectionState.Disconnected;
+ 
             }
 
             //on start connection begin to listen to incoming data
 
         }
 
-        private void AcceptCallback(IAsyncResult vAr)
+        /// <summary>
+        /// Invokes a connection state change event
+        /// </summary>
+        /// <param name="vOld"></param>
+        /// <param name="vNew"></param>
+        private void InvokeStateChange(BrainpackConnectionState vOld, BrainpackConnectionState vNew)
         {
-            StateObject vIncomingConnection = new StateObject();
-            try
+            if (ConnectionStateChangeEvent != null)
             {
-                Socket vSocket = (Socket)vAr.AsyncState;
-                vIncomingConnection.Socket = vSocket.EndAccept(vAr);
-                byte[] vBuffer = new byte[1024];
-
-                vIncomingConnection.Socket.BeginReceive(vBuffer, 0, vBuffer.Length,
-                    SocketFlags.None, new AsyncCallback(ReceiveCallback), vIncomingConnection);
-                mSocket.BeginAccept(new AsyncCallback(AcceptCallback), mSocket);
+                BrainpackConnectionStateChange vState = new BrainpackConnectionStateChange();
+                vState.NewState = vNew;
+                vState.OldState = vOld;
+                ConnectionStateChangeEvent(vState);
             }
-            catch (SocketException vException)
-            {
-                CloseAndRemoveStateObject(vIncomingConnection);
-                //Begin receiving data in case there is more data to be received. 
-                mSocket.BeginAccept(new AsyncCallback(AcceptCallback), mSocket);
-            }
+     
         }
+ 
 
         /// <summary>
         /// Sends data to the suit
@@ -170,7 +171,15 @@ namespace Assets.Scripts.Communication.Communicators
             {
                 lock (vConnection.Socket)
                 {
-                    vConnection.Socket.Send(vData, vData.Length, SocketFlags.None);
+                    try
+                    {
+                        vConnection.Socket.Send(vData, vData.Length, SocketFlags.None);
+                    }
+                    catch (Exception vE)
+                    {
+                        mPreviousState = BrainpackConnectionState.Connected;
+                        InvokeStateChange(mPreviousState, BrainpackConnectionState.Disconnected);
+                    }
                 }
             }
             else
@@ -196,7 +205,15 @@ namespace Assets.Scripts.Communication.Communicators
             {
                 lock (mSocket)
                 {
-                    mSocket.Send(vData, vBuffersize, SocketFlags.None);
+                    try
+                    {
+                        mSocket.Send(vData, vBuffersize, SocketFlags.None);
+                    }
+                    catch (Exception vE)
+                    {
+                        InvokeStateChange(mPreviousState, BrainpackConnectionState.Disconnected);
+                        mPreviousState = BrainpackConnectionState.Connected;
+                    }
 
                 }
             }
@@ -206,11 +223,7 @@ namespace Assets.Scripts.Communication.Communicators
             }
             return true;
         }
-
-        private void SendCallbackBack(IAsyncResult vAr)
-        {
-        }
-
+ 
 
         private void ReceiveCallback(IAsyncResult vAr)
         {
@@ -268,6 +281,9 @@ namespace Assets.Scripts.Communication.Communicators
             {
                 vIncomingConnection.Socket.Shutdown(SocketShutdown.Both);
                 vIncomingConnection.Socket.Close();
+                mPreviousState = BrainpackConnectionState.Connected;
+                InvokeStateChange(mPreviousState, BrainpackConnectionState.Disconnected);
+              
             }
         }
 
@@ -283,6 +299,8 @@ namespace Assets.Scripts.Communication.Communicators
         {
             if (mSocket != null && (mSocket.Connected))
             {
+                mPreviousState = BrainpackConnectionState.Connected;
+                InvokeStateChange(mPreviousState, BrainpackConnectionState.Disconnected);
                 mSocket.Shutdown(SocketShutdown.Both);
                 mSocket.Close();
             }

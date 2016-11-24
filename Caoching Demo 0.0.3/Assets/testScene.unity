@@ -819,8 +819,8 @@ GameObject:
   - 114: {fileID: 711913379}
   - 114: {fileID: 711913378}
   - 114: {fileID: 711913382}
-  - 114: {fileID: 711913381}
   - 114: {fileID: 711913383}
+  - 114: {fileID: 711913381}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -930,7 +930,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 711913376}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21f955faf89c06c47958e206372fb0ab, type: 3}
+  m_Script: {fileID: 11500000, guid: a568312302cb8dc4d8721202f3a3832d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Button: {fileID: 711913378}
@@ -1777,7 +1777,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BrainpackStatusPanel: {fileID: 1212076166}
-  BrainpackContainerPanel: {fileID: 1528925100}
+  BrainpackContainerPanel: {fileID: 0}
   Map: {fileID: 1776722190}
   mTimeToComplete: 3
   StandaloneInputModule: {fileID: 1944483871}
@@ -2114,7 +2114,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1528925097}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1475b888a1abd754fafdaec447b81902, type: 3}
+  m_Script: {fileID: 11500000, guid: efc14941f8cdf284c996a11e7207b5bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   DefaultModelView: {fileID: 711913381}

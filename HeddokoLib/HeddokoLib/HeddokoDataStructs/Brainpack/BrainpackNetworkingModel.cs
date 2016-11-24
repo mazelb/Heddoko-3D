@@ -7,6 +7,7 @@
 // */
 
 using System;
+using System.Collections;
 using System.Net;
 
 namespace HeddokoLib.HeddokoDataStructs.Brainpack
@@ -15,13 +16,13 @@ namespace HeddokoLib.HeddokoDataStructs.Brainpack
     /// <summary>
     /// An abstract model of a brainpack.
     /// </summary>
-    public class Brainpack
+    public class BrainpackNetworkingModel:  IEqualityComparer
     {
         private string mId = "";
         private string mLocation;
         private string mVersion;
         private string mStatus;
-        private string mQAStatus;
+        private string mQaStatus;
         private string mPowerBoardId;
         private string mDataBoardId;
         private string mKitId;
@@ -49,8 +50,8 @@ namespace HeddokoLib.HeddokoDataStructs.Brainpack
 
         public string QaStatus
         {
-            get { return mQAStatus; }
-            set { mQAStatus = value; }
+            get { return mQaStatus; }
+            set { mQaStatus = value; }
         }
 
         /// <summary>
@@ -83,6 +84,9 @@ namespace HeddokoLib.HeddokoDataStructs.Brainpack
             set { mLocation = value; }
         }
 
+        /// <summary>
+        /// The brainpacks unique identifier found at advertising time.
+        /// </summary>
         public string Id
         {
             get { return mId; }
@@ -111,6 +115,27 @@ namespace HeddokoLib.HeddokoDataStructs.Brainpack
 
             int vComparison = vVersionFirst.CompareTo(vVersionSecond);
             return vComparison;
+        }
+
+        public bool Equals(object vX, object vY)
+        {
+            if (vX == null || vY == null)
+            {
+                return false;
+            }
+            if (vX.GetType() != typeof (BrainpackNetworkingModel) || vX.GetType() != typeof (BrainpackNetworkingModel))
+            {
+                return false;
+            }
+            BrainpackNetworkingModel vModelX = (BrainpackNetworkingModel) vX;
+            BrainpackNetworkingModel vModelY = (BrainpackNetworkingModel) vY;
+            return vModelX.Id.Equals(vModelY.Id);
+        }
+
+        public int GetHashCode(object vObj)
+        {
+            BrainpackNetworkingModel vModel = (BrainpackNetworkingModel)vObj;
+            return vModel.Id.GetHashCode();
         }
     }
 }

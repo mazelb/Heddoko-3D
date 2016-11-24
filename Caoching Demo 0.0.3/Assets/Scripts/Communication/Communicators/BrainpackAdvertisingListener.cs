@@ -20,9 +20,9 @@ using Timer = System.Timers.Timer;
 
 namespace Assets.Scripts.Communication.Communicators
 {
-    public delegate void BrainpackFound(Brainpack vBrainpack);
+    public delegate void BrainpackFound(BrainpackNetworkingModel vBrainpack);
 
-    public delegate void BrainpackLost(Brainpack vBrainpack);
+    public delegate void BrainpackLost(BrainpackNetworkingModel vBrainpack);
     public class BrainpackAdvertisingListener
     {
         private UdpClient mClient;
@@ -122,7 +122,7 @@ namespace Assets.Scripts.Communication.Communicators
                                         //get the serial number of the advertising brainpack
                                         if (!mFoundBrainpacks.ContainsKey(vProtoPacket.serialNumber))
                                         {
-                                            Brainpack vBp = new Brainpack();
+                                            BrainpackNetworkingModel vBp = new BrainpackNetworkingModel();
                                             vBp.Version = vProtoPacket.firmwareVersion;
                                             vBp.Id = vProtoPacket.serialNumber;
                                             vBp.Point = vEndpoint;
@@ -184,7 +184,7 @@ namespace Assets.Scripts.Communication.Communicators
         private class BrainpackItemStructure
         {
             public DateTime LastTimeFound;
-            public Brainpack BrainpackModel;
+            public BrainpackNetworkingModel BrainpackModel;
         }
     }
 }
