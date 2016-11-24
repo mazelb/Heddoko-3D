@@ -9,8 +9,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
@@ -20,7 +18,7 @@ using HeddokoSDK.Models;
 namespace Assets.Scripts.UI.RecordingLoading
 {
     public delegate void ContentsCompletedUpload();
-    public delegate void ProblemUploadingContent(ErrorUploadEventArgs vArgs);
+    public delegate void ProblemUploadingContent(List<ErrorUploadEventArgs> vArgs);
 
     public delegate void SingleUploadingStartEvent(UploadableListItem vItem);
 
@@ -76,6 +74,11 @@ namespace Assets.Scripts.UI.RecordingLoading
 
         public bool CanUpload { get; set; }
 
+        public List<FileInfo> FoundRecordingsList
+        {
+            get { return mFoundRecordingsList; }
+        }
+
         /// <summary>
         /// Constructor accepting a profile model. This constructor builds the recordingsuploader and sets a set of
         /// rules for fetching files from the sd card
@@ -102,7 +105,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             UploadableListItem vItem = vArgs.Object;
             if (vItem != null)
             {
-                mUploadRecordingStatus.ProblematicUploads = vArgs;
+                mUploadRecordingStatus.ProblematicUploads.Add(vArgs);
             }
         }
 
@@ -153,6 +156,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             //delete file
             FileInfo vBpLogFileItem = new FileInfo(BrainpackLogFileItem.RelativePath);
+
             var vBackupDirPath = vBpLogFileItem.DirectoryName + Path.DirectorySeparatorChar + "Backup";
             if (!Directory.Exists(vBackupDirPath))
             {
@@ -213,11 +217,38 @@ namespace Assets.Scripts.UI.RecordingLoading
         public void StartContentUpload()
         {
             mIsWorking = false;
+            mUploadRecordingStatus.ProblematicUploads.Clear();
             mWorker = new Thread(UploadFoundContent);
             mWorker.IsBackground = true;
             mWorker.Start();
         }
+        public void FilterFileInfo(ref List<FileInfo> vFileInfos)
+        {
+            //remove files, use a stack to insert largest indices last.
+            Stack<int> vIndices = new Stack<int>();
+            for (int i = 0; i < vFileInfos.Count; i++)
+            {
+                if (vFileInfos[i].Name.Contains("logIndex.dat") || vFileInfos[i].Name.Contains("logindex.dat"))
+                {
+                    vIndices.Push(i);
+                }
+                //remove directories
+                else
+                {
+                    FileAttributes vAttr = File.GetAttributes(vFileInfos[i].FullName);
+                    if ((vAttr & FileAttributes.Directory) == FileAttributes.Directory)
+                    {
+                        vIndices.Push(i);
+                    }
+                }
 
+            }
+            while (vIndices.Count > 0)
+            {
+                int vIndex = vIndices.Pop();
+                vFileInfos.RemoveAt(vIndex);
+            }
+        }
         /// <summary>
         /// uploads the current list of found recordings items, a blocking operation
         /// </summary>
@@ -225,6 +256,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             mIsWorking = true;
             //upload recordings
+            FilterFileInfo(ref mFoundRecordingsList);
             if (mFoundRecordingsList.Count != 0)
             {
                 for (int vI = 0; vI < mFoundRecordingsList.Count; vI++)
@@ -252,20 +284,20 @@ namespace Assets.Scripts.UI.RecordingLoading
 
             }
 
-            //On completion handle errors and succesful  uploads
-            if (mUploadRecordingStatus.ProblematicUploads != null && mUploadRecordingStatus.ProblematicUploads.ErrorCollection.Errors.Count > 0)
+            //On completion handle errors and succesful uploads
+            bool vHasProblematicResults = mUploadRecordingStatus.ProblematicUploads != null;
+            if (vHasProblematicResults)
             {
                 if (ProblemUploadingContentEvent != null)
                 {
                     ProblemUploadingContentEvent(mUploadRecordingStatus.ProblematicUploads);
                 }
             }
-            else
+
+            
+            if (ContentsCompletedUploadEvent != null)
             {
-                if (ContentsCompletedUploadEvent != null)
-                {
-                    ContentsCompletedUploadEvent();
-                }
+                ContentsCompletedUploadEvent();
             }
         }
 
@@ -274,7 +306,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         void UploadBrainpackLogData()
         {
-            if (BrainpackLogFileItem != null)
+            if (BrainpackLogFileItem != null && mSearcher.HeddokoSdCardStruct.LogFileInRootDir )
             {
                 mUploader.UploadSingleItem(BrainpackLogFileItem);
             }
@@ -321,37 +353,41 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             //get brainpack serial number
             string vBpSerial = mSearcher.GetSerialNumFromSdCard();
-            if (vBpSerial != null)
-            {
+            var vLogFileInfo = new FileInfo(mSearcher.HeddokoSdCardStruct.LogFileDirectoryPath);
+
+            if (vBpSerial != null  )
+            { 
                 BrainpackLogFileItem = new UploadableListItem()
                 {
-                    FileName = "sysHdk.bin",
-                    RelativePath = vDrive.Name + Path.DirectorySeparatorChar + "sysHdk.bin",
+                    FileName = vLogFileInfo.Name,
+                    RelativePath = vLogFileInfo.FullName,
                     BrainpackSerialNumber = vBpSerial,
                     AssetType = AssetType.Log
                 };
             }
-            var vFiles = vDrive.GetFiles();
-            var vLogFile = vFiles.First(vX => vX.Name.Contains("sysHdk.bin"));
-            if (vLogFile != null)
-            {
-                //get brainpack name
-                string vBrainpackSerial = null;
-                using (StreamReader vSr = new StreamReader(vDrive.Name + Path.DirectorySeparatorChar + "sysHdk.bin"))
-                {
-                    string vLine;
-                    while ((vLine = vSr.ReadLine()) != null)
-                    {
-                        var vMatch = Regex.Match(vLine, @"S\\d\\d\\d\\d\\d_");
-                        if (vMatch.Index >= 0)
-                        {
-                            vBrainpackSerial = vLine.Substring(vMatch.Index, 6);
-                            break;
-                        }
-                    }
-                }
+            //var vFiles = vDrive.GetFiles();
+
+            ////var vLogFile = vFiles.First(vX => vX.Name.Contains("sysHdk.bin"));
+            
+            //if (vLogFile != null)
+            //{
+            //    //get brainpack name
+            //    string vBrainpackSerial = null;
+            //    using (StreamReader vSr = new StreamReader(vDrive.Name + Path.DirectorySeparatorChar + "sysHdk.bin"))
+            //    {
+            //        string vLine;
+            //        while ((vLine = vSr.ReadLine()) != null)
+            //        {
+            //            var vMatch = Regex.Match(vLine, @"S\\d\\d\\d\\d\\d_");
+            //            if (vMatch.Index >= 0)
+            //            {
+            //                vBrainpackSerial = vLine.Substring(vMatch.Index, 6);
+            //                break;
+            //            }
+            //        }
+            //    }
                 
-            }
+            //}
         }
     }
 
@@ -361,7 +397,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <summary>
         /// a list of recordings who have had problems uploading
         /// </summary>
-        public ErrorUploadEventArgs ProblematicUploads;
+        public List<ErrorUploadEventArgs> ProblematicUploads = new List<ErrorUploadEventArgs>();
         public List<UploadableListItem> SucessfullyUploadedRecordings = new List<UploadableListItem>();
     }
 }

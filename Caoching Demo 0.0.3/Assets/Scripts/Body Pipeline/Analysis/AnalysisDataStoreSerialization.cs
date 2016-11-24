@@ -105,13 +105,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                     }
 
                     vPrevIndex = vFrameIndex;
-                    //  vFileOut.Write(vFrameIndex + ",");
                     vOut.Append(vFrameIndex + ",");
-                    //write tpose value at the given frame index,
-                    // vFileOut.Write(vAnalysisDataStore.PoseSelectionIndicies[vFrameIndex] + ",");
                     vOut.Append(vAnalysisDataStore.PoseSelectionIndicies[vFrameIndex] + ",");
-                    //Write timestamp
-                    //  vFileOut.Write(vAnalysisDataStore.TimeStamps[i] + ",");
                     vOut.Append(vAnalysisDataStore.TimeStamps[i] + ",");
 
                     var vSerializedList = vAnalysisDataStore.SerializedList[i];
@@ -120,7 +115,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                         if ((vSerializedList.ContainsKey(vItem)))
                         {
                             var vSerializedItem = vSerializedList[vItem];
-                            // vFileOut.Write(vSerializedList[vItem] + ",");
                             vOut.Append(vSerializedList[vItem] + ",");
                         }
                         else
@@ -130,12 +124,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
 
                     }
 
-                    // vFileOut.Write(vOut.ToString()+"\r\n");
                     vOut.AppendLine();
                     vToBeWritten.Add(vOut.ToString());
                     if (vPrevFrameFlaggedForRemoval)
                     {
-                       // vToBeWritten.RemoveAt(vToBeWritten.Count - 1);
                         vPrevFrameFlaggedForRemoval = false;
                     }
                 }
@@ -144,9 +136,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                     vFileOut.Write(vLine);
                 }
             }
-
-            //to file out
-
+            
             // associated raw data output
             if (vPath.Contains(".csv"))
             {

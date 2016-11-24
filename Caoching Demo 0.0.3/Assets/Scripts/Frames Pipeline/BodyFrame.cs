@@ -148,18 +148,58 @@ public class BodyFrame
     {
         Timestamp = vPacket.fullDataFrame.timeStamp/1000f;
          var vDataList = vPacket.fullDataFrame.imuDataFrame;
+        foreach (var vKv in FrameData)
+        {
+            
+        }
         for (int i = 0; i < vDataList.Count; i++)
         {
             var vDataFrame = vDataList[i];
-            var vSensorId = ImuSensorFromPos(i);
+            int vId = (int) vPacket.fullDataFrame.imuDataFrame[i].imuId;
+            var vSensorId = ImuSensorFromPos(vId);
             Vect4 vVect = new Vect4();
-            vVect.x = vDataFrame.quat_x_yaw;
-            vVect.y = vDataFrame.quat_y_pitch;
-            vVect.z = vDataFrame.quat_z_roll;
+            if (vVal == 0)
+            {
+                vVect.x = vDataFrame.quat_x_yaw;
+                vVect.y = vDataFrame.quat_y_pitch;
+                vVect.z = vDataFrame.quat_z_roll;
+            }
+            if (vVal == 1)
+            {
+                vVect.x = vDataFrame.quat_y_pitch;
+                vVect.y = vDataFrame.quat_x_yaw;
+                vVect.z = vDataFrame.quat_z_roll;
+            }
+            if (vVal == 2)
+            {
+                vVect.x = vDataFrame.quat_z_roll;
+                vVect.y = vDataFrame.quat_x_yaw;
+                vVect.z = vDataFrame.quat_y_pitch;
+            }
+            if (vVal == 3)
+            {
+                vVect.x = vDataFrame.quat_y_pitch;
+                vVect.y = vDataFrame.quat_z_roll;
+                vVect.z = vDataFrame.quat_x_yaw;
+            }
+            if (vVal == 4)
+            {
+                vVect.x = vDataFrame.quat_z_roll;
+                vVect.y = vDataFrame.quat_y_pitch;
+                vVect.z = vDataFrame.quat_x_yaw;
+            }
+            if (vVal == 5)
+            {
+                vVect.x = vDataFrame.quat_x_yaw ;
+                vVect.y = vDataFrame.quat_z_roll;
+                vVect.z = vDataFrame.quat_y_pitch;
+            }
             vVect.w = vDataFrame.quat_w;
             FrameData.Add(vSensorId, vVect);
         }
     }
+
+    public static int vVal = 0;
     /**
     * ConvertRawFrame(BodyRawFrame rawData)
     * @brief Pass in a BodyRawFrame and convert it to a body frame

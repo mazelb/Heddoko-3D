@@ -11,6 +11,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using Assets.Scripts.Communication.View;
 using HeddokoLib.adt;
 using HeddokoLib.heddokoProtobuff.Decoder;
 using RawPacket = HeddokoLib.heddokoProtobuff.Decoder.RawPacket;
@@ -25,13 +26,13 @@ namespace Assets.Scripts.Communication
     {
         public static bool UseProtoBuff = true;
         private StreamToRawPacketDecoder mProtoStreamDecoder;
+        private Socket mSocket;
         public ProtobuffFrameRouter FrameRouter;
         public CircularQueue<RawPacket> RawPacketBuffer { get; private set; }
         public int Port;
         private bool mIsWorking;
 
-        private ReaderWriterLock mLocker = new ReaderWriterLock();
-        private object mLockObj = new object();
+         private object mLockObj = new object();
         private StreamToRawPacketDecoder mDecoder;
          private UdpClient mUdpClient;
 
@@ -44,6 +45,7 @@ namespace Assets.Scripts.Communication
         public UdpSocketListener(int vPortNumber = 6669)
         {
             Port = vPortNumber;
+       
             mDecoder = new StreamToRawPacketDecoder(new MemoryStream());
             RawPacketBuffer = mDecoder.OutputBuffer;
             BodyFrameBuffer vBodyframebuffer = new BodyFrameBuffer(256);
@@ -107,6 +109,7 @@ namespace Assets.Scripts.Communication
                     {
                         continue;
                     }
+                    
                     // Blocks until a message returns on this socket from a remote host.
                     byte[] vReceivedBytes = mUdpClient.Receive(ref vRemoteEp);
                     //write to memory stream
@@ -121,13 +124,13 @@ namespace Assets.Scripts.Communication
             }
             catch (Exception vE)
             {
-                ExceptionHandler(vE);
-
+                ExceptionHandler(vE); 
             }
         }
         bool mPacketProcessed = true;
         private void ActionCompleted()
         {
+            
             mPacketProcessed = true;
         }
 

@@ -11,15 +11,16 @@ using Assets.Scripts.UI.AbstractViews.Layouts;
 using Assets.Scripts.UI.RecordingLoading;
 using UnityEngine;
 using System.Collections.Generic;
-using Assets.Scripts.Communication;
-using Assets.Scripts.Communication.Controller;
+using Assets.Scripts.Communication; 
+using heddoko;
 
 namespace Assets.Demos
 {
     public class ProtoLanLiveView : LiveSuitFeedView
     {
-        public UdpSocketListener mSocketListener; 
-        void Awake()
+        public UdpSocketListener mSocketListener;
+        public ProbuffMessageViewController ProbuffMessageViewController;
+         void Awake()
         {
             mSocketListener = new UdpSocketListener();
                BodySegment.GBodyFrameUsingQuaternion = true;
@@ -57,9 +58,9 @@ namespace Assets.Demos
             mLiveFeedViewControlPanel.gameObject.SetActive(true);
             mLiveFeedViewControlPanel.Show();
             mIsInitialized = true;
-           
+            ProbuffMessageViewController.UpdateBody(BrainpackBody);
         }
- 
+
 
         /// <summary>
         /// Display the suit feed view and set contextual info
@@ -77,8 +78,11 @@ namespace Assets.Demos
                 mPanelNodes[0].PanelSettings.RequestResources();
             }
             BodySegment.GBodyFrameUsingQuaternion = true;
-            BrainpackBody.PlayFromDataStream(mSocketListener.FrameRouter);
             mSocketListener.Start();
+            BrainpackBody.PlayFromDataStream(mSocketListener.FrameRouter);
+            mSocketListener.FrameRouter.DataFrameMessageReceivedEvent -= ProbuffMessageViewController.ProcessMessage;
+            ProbuffMessageViewController.BrainpackMessagePerSecond.Initialized = false;
+            mSocketListener.FrameRouter.DataFrameMessageReceivedEvent += ProbuffMessageViewController.ProcessMessage;
             try
             {
                 BodySegment.IsUsingInterpolation = false;
@@ -94,13 +98,15 @@ namespace Assets.Demos
             
         }
 
+  
+
         /// <summary>
         /// Set information relative to the context of this view
         /// </summary>
         private void SetContextualInfo()
         {
             BodyFrameDataControl.SetBody(BrainpackBody);
-            FrameGraphControl.SetBody(BrainpackBody);
+        //    FrameGraphControl.SetBody(BrainpackBody);
             AnaylsisTextContainer.BodyToAnalyze = BrainpackBody;
         }
 
