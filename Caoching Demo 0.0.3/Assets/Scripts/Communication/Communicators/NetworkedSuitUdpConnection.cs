@@ -28,7 +28,7 @@ namespace Assets.Scripts.Communication.Communicators
         public int Port = 0;
         public IPAddress SuitIp;
         private string mIpAddress;
-
+        private bool mSuccesfullyInitialized = false;
         /// <summary>
         /// Start an instance of a networked suit udp connection with a given ip address to listen to 
         /// </summary>
@@ -39,6 +39,14 @@ namespace Assets.Scripts.Communication.Communicators
         }
 
         /// <summary>
+        /// is the current connection succesfully initialized?
+        /// </summary>
+        public bool SuccesfullyInitialized
+        {
+            get { return mSuccesfullyInitialized; }
+        }
+
+        /// <summary>
         /// begin listening on the specified port.
         /// </summary>
         /// <param name="vPort"></param>
@@ -46,12 +54,19 @@ namespace Assets.Scripts.Communication.Communicators
         {
             try
             {
-                if (mListener != null && vPort != Port)
+                if (mListener != null)
                 {
-                    mListener.Close();
+                    if (vPort != Port)
+                    {
+                        mListener.Close();
+                    }
+                    if (vPort == Port && mSuccesfullyInitialized)
+                    {
+                        return;
+                    }
                 }
+                  
                 Port = vPort;
-
                 BrainpackAdvertisingListener.UdpState vState = new BrainpackAdvertisingListener.UdpState();
                 var vIpAdd = IPAddress.Parse(mIpAddress);
                 IPEndPoint vEndpoint = new IPEndPoint(vIpAdd, Port);
@@ -60,21 +75,23 @@ namespace Assets.Scripts.Communication.Communicators
                 mListener = new UdpClient(Port);
                 vState.Client = mListener;
                 mListener.BeginReceive(new AsyncCallback(ReceiveCallback), vState);
-
+                mSuccesfullyInitialized = true;
             }
             catch (ArgumentOutOfRangeException vException)
             {
+                mSuccesfullyInitialized = false;
                 UnityEngine.Debug.Log("Line: 70 ServerListener_StartServer_Port_number_is_invalid" + vException);
                 //throw new ArgumentOutOfRangeException(Resources.ServerListener_StartServer_Port_number_is_invalid, vArgument);
             }
             catch (SocketException vException)
             {
+                mSuccesfullyInitialized = false;
                 UnityEngine.Debug.Log("Line: 75 Could not create socket, check to make sure that port is not being used by another socket " + vException);
-
-                //   throw new ApplicationException("Could not create socket, check to make sure that port is not being used by another socket", vException);
+                throw;
             }
             catch (Exception vException)
             {
+                mSuccesfullyInitialized = false;
                 UnityEngine.Debug.Log("Line: 81 Error occured while binding socket, check inner exception" + vException);
                 // throw new ApplicationException("Error occured while binding socket, check inner exception", vException);
             }

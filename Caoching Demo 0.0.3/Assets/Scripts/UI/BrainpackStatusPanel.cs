@@ -26,7 +26,7 @@ namespace Assets.Scripts.UI
         public Text BatteryLevelText;
         private BrainpackNetworkingModel mCurrentBrainpack;
         public Text LatestVersionText;
-        public Button ConnectToBrainpackButton;
+        private Button mConnectToBrainpackButton;
         public Button StartStreamingButton;
         public Text StartStreamText;
         private bool StreamEnabled;
@@ -42,6 +42,8 @@ namespace Assets.Scripts.UI
         public void RegisterFirmwareSubPanelUpdateCallback(Action vCallbackAction)
         {
             FirmwareSubPanel.RegisterUpdateAction(vCallbackAction);
+            StartStreamText.text = "";
+            StartStreamingButton.enabled = false;
         }
 
         void Start()
@@ -52,20 +54,12 @@ namespace Assets.Scripts.UI
 
         private void SetBrainpackStream()
         {
+            Debug.Log("Set stream " +Time.time);
             StreamEnabled = !StreamEnabled;
             if (RequestStreamStartEvent != null)
             {
                 RequestStreamStartEvent(StreamEnabled);
-            }
-            if (StreamEnabled)
-            {
-                StartStreamText.text = LocalizationBinderContainer.GetString(KeyMessage.StartStreamingControl);
-            }
-            else
-            {
-                StartStreamText.text = LocalizationBinderContainer.GetString(KeyMessage.StopStreamingControl);
-
-            }
+            } 
         }
 
         public void UpdateLatestVersionText(string vText)
@@ -126,21 +120,51 @@ namespace Assets.Scripts.UI
         /// <param name="vArg1"></param>
         public void SetBrainpackTcpControlState(BrainpackConnectionStateChange vArg1)
         {
-            if (vArg1.NewState == BrainpackConnectionState.Connected)
+            //if (vArg1.NewState == BrainpackConnectionState.Connected)
+            //{
+            //    StartStreamingButton.enabled = true;
+            //    StartStreamText.text = LocalizationBinderContainer.GetString(KeyMessage.StartStreamingControl);
+            //}
+            //else if (vArg1.NewState == BrainpackConnectionState.Disconnected)
+            //{
+            //    StartStreamingButton.enabled = false;
+            //    StartStreamText.text = LocalizationBinderContainer.GetString(KeyMessage.BrainpackDisconnected);
+            //}
+            //else if (vArg1.NewState == BrainpackConnectionState.Connecting)
+            //{
+            //    StartStreamingButton.enabled = false;
+            //    StartStreamText.text = LocalizationBinderContainer.GetString(KeyMessage.BrainpackConnecting);
+            //}
+        }
+        /// <summary>
+        /// update the status of the brainpack panel
+        /// </summary>
+        /// <param name="vBatteryLevel"></param>
+        /// <param name="vBatteryChargeState"></param>
+        /// <param name="vBrainpackState"></param>
+        public void UpdateStatus(int vBatteryLevel, ChargeState vBatteryChargeState, BrainpackState vBrainpackState)
+        {
+            Debug.Log("response " + Time.time);
+
+            if (vBatteryChargeState == ChargeState.Charging)
             {
+                BatteryLevelText.text = "CHRG";
+            }
+            else
+            {
+                BatteryLevelText.text = vBatteryLevel.ToString();
+            }
+            if (vBrainpackState == BrainpackState.Streaming)
+            {
+                StartStreamText.text = LocalizationBinderContainer.GetString(KeyMessage.StopStreamingControl);
                 StartStreamingButton.enabled = true;
+            }
+            if (vBrainpackState == BrainpackState.Idle)
+            {
                 StartStreamText.text = LocalizationBinderContainer.GetString(KeyMessage.StartStreamingControl);
+                StartStreamingButton.enabled = true;
             }
-            else if (vArg1.NewState == BrainpackConnectionState.Disconnected)
-            {
-                StartStreamingButton.enabled = false;
-                StartStreamText.text = LocalizationBinderContainer.GetString(KeyMessage.BrainpackDisconnected);
-            }
-            else if (vArg1.NewState == BrainpackConnectionState.Connecting)
-            {
-                StartStreamingButton.enabled = false;
-                StartStreamText.text = LocalizationBinderContainer.GetString(KeyMessage.BrainpackConnecting);
-            }
+             
         }
     }
 }

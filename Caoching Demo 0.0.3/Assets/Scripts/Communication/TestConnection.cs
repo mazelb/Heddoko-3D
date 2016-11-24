@@ -9,7 +9,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Net;
 using Assets.Scripts.Communication.Communicators;
 using Assets.Scripts.UI;
@@ -160,8 +159,7 @@ namespace Assets.Scripts.Communication
         public void RequestDataStream()
         {
             SuitConnectionManager.RequestDataStreamFromBrainpack(1258);
-            BrainpackStatusPanel.ConnectToBrainpackButton.gameObject.SetActive(false);
-        }
+         }
 
         public void SendReq()
         {

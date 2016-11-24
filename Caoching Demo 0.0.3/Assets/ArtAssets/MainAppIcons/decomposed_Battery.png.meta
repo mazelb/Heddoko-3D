@@ -1,0 +1,106 @@
+fileFormatVersion: 2
+guid: 2b695ce431d7f96489faa6f24441d76e
+timeCreated: 1480004587
+licenseType: Pro
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: decomposed_Battery_0
+    21300002: decomposed_Battery_1
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 1
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: -1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: 16
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaIsTransparency: 1
+  textureType: 8
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: decomposed_Battery_0
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 68
+        width: 328
+        height: 126
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -148, y: -63}
+        - {x: -148, y: 63}
+        - {x: -164, y: 63}
+        - {x: -164, y: -63}
+      - - {x: 121, y: 63}
+        - {x: 121, y: 25}
+        - {x: 123, y: 23}
+        - {x: 121, y: -29}
+        - {x: 121, y: -63}
+        - {x: 159, y: -63}
+        - {x: 162, y: -45}
+        - {x: 162, y: 55}
+        - {x: 145, y: 63}
+    - name: decomposed_Battery_1
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 9
+        width: 477
+        height: 239
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -177.5, y: 94.5}
+        - {x: -188.5, y: 81.5}
+        - {x: -188.5, y: -82.5}
+        - {x: -173.5, y: -93.5}
+        - {x: 143.5, y: -93.5}
+        - {x: 145.5, y: -85.5}
+        - {x: 145.5, y: 69.5}
+        - {x: 121.5, y: 94.5}
+      - - {x: -163.5, y: 69.5}
+        - {x: 88.5, y: 57.5}
+        - {x: 85.5, y: -53.5}
+        - {x: -161.5, y: -69.5}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

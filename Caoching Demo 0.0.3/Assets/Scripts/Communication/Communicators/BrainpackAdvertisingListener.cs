@@ -12,6 +12,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Timers;
+using Assets.Scripts.UI.Metrics;
 using heddoko;
 using HeddokoLib.heddokoProtobuff.Decoder;
 using HeddokoLib.HeddokoDataStructs.Brainpack;
@@ -80,7 +81,6 @@ namespace Assets.Scripts.Communication.Communicators
 
             vState.Client = mClient;
             vState.EndPoint = vEp;
-
             mClient.BeginReceive(new AsyncCallback(OnReceive), vState);
         }
 
@@ -127,7 +127,7 @@ namespace Assets.Scripts.Communication.Communicators
                                             vBp.Id = vProtoPacket.serialNumber;
                                             vBp.Point = vEndpoint;
                                             vBp.TcpControlPort = (int)vProtoPacket.configurationPort;
-                                       
+                                            vBp.TcpIpEndPoint = vEndpoint.Address.ToString();
                                             if (BrainpackFoundEvent != null)
                                             {
                                                 BrainpackFoundEvent(vBp);

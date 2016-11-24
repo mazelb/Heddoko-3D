@@ -31,11 +31,14 @@ namespace Assets.Scripts.Communication.Controller
             {
                 throw new Exception("Container already contains Brainpack Id " + vBrainpack.Id);
             }
-            if (AuthorizationManager.BrainpackIsAuthorized(vBrainpack))
-            {
-                ContainerView.AddBrainpackModel(vBrainpack);
-                BrainpackSet.Add(vBrainpack);
-            }
+
+            BrainpackSet.Add(vBrainpack);
+            ContainerView.AddBrainpackModel(vBrainpack);
+            //if (AuthorizationManager.BrainpackIsAuthorized(vBrainpack))
+            //{
+            //    ContainerView.AddBrainpackModel(vBrainpack);
+            //    BrainpackSet.Add(vBrainpack);
+            //}
         }
 
         /// <summary>

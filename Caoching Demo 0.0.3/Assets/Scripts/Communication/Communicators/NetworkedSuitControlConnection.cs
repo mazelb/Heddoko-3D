@@ -20,7 +20,7 @@ namespace Assets.Scripts.Communication.Communicators
 
 
     public delegate void OnSuitConnectionEvent();
-    public class NetworkedSuitControlConnection : IDisposable
+    public class NetworkedSuitControlConnection 
     {
 
         public event OnSuitDataReceivedEvent DataReceivedEvent;
@@ -53,17 +53,19 @@ namespace Assets.Scripts.Communication.Communicators
         /// <summary>
         /// Start the network connection to the suit
         /// </summary>
-        public bool Start(string vIpEndPoint, int vPortNum = 8844)
+        public bool StartConnection(string vIpEndPoint, int vPortNum = 8844)
         {
             try
             {
                 Port = vPortNum;
                 IPAddress vIpAddress = IPAddress.Parse(vIpEndPoint);
                 SuitIp = vIpAddress;
-                IPEndPoint vRemoteEp = new IPEndPoint(vIpAddress, Port);
+                IPEndPoint vRemoteEp = new IPEndPoint(SuitIp, Port);
 
                 mSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 //begin to connect to the suit
+                mPreviousState = BrainpackConnectionState.Disconnected;
+                InvokeStateChange(mPreviousState,BrainpackConnectionState.Connecting);
                 mSocket.BeginConnect(vRemoteEp, new AsyncCallback(ConnectCallback), mSocket);
             }
             catch (ArgumentOutOfRangeException vException)
@@ -214,7 +216,6 @@ namespace Assets.Scripts.Communication.Communicators
                         InvokeStateChange(mPreviousState, BrainpackConnectionState.Disconnected);
                         mPreviousState = BrainpackConnectionState.Connected;
                     }
-
                 }
             }
             else

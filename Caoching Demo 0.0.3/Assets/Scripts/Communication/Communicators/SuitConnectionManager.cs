@@ -9,6 +9,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.UI.Settings;
@@ -32,7 +33,7 @@ namespace Assets.Scripts.Communication.Communicators
         /// <summary>
         /// Event triggered when the status of a brainpack has been updated
         /// </summary>
-        private event BrainpackStatusUpdated mBrainpackUpdateEvent;
+        private event BrainpackStatusUpdated BrainpackUpdateEvent;
         public event ConcerningReportIncluded ConcerningReportIncludedEvent;
         /// <summary>
         /// Event triggered on the reception of an Imu frame. The full packet is returned
@@ -42,6 +43,10 @@ namespace Assets.Scripts.Communication.Communicators
         /// Event where the TCP control socket connection has changed. 
         /// </summary>
         public event Action<BrainpackConnectionStateChange, BrainpackNetworkingModel> BrainpackConnectionStateChange;
+        /// <summary>
+        /// Event where the brainpack returns a status response message
+        /// </summary>
+        public event Action<Packet> StatusResponseEvent;
         /// <summary>
         /// The network model to base the connection off of. 
         /// </summary>
@@ -61,7 +66,7 @@ namespace Assets.Scripts.Communication.Communicators
         /// <param name="vBrainpackUpdatedHandle"></param>
         public void AddBrainpackUpdatedHandler(BrainpackStatusUpdated vBrainpackUpdatedHandle)
         {
-            mBrainpackUpdateEvent += vBrainpackUpdatedHandle;
+            BrainpackUpdateEvent += vBrainpackUpdatedHandle;
         }
 
 
@@ -71,7 +76,7 @@ namespace Assets.Scripts.Communication.Communicators
         /// <param name="vBrainpackUpdatedHandle"></param>
         public void RemoveBrainpackUpdatedHandler(BrainpackStatusUpdated vBrainpackUpdatedHandle)
         {
-            mBrainpackUpdateEvent -= vBrainpackUpdatedHandle;
+            BrainpackUpdateEvent -= vBrainpackUpdatedHandle;
         }
 
 
@@ -144,7 +149,7 @@ namespace Assets.Scripts.Communication.Communicators
             mBrainpackModel.Point = new IPEndPoint(mNetworkedSuitControlConnection.SuitIp, mNetworkedSuitControlConnection.Port);
             if (BrainpackConnectionStateChange != null)
             {
-                BrainpackConnectionStateChange(vObj,mBrainpackModel);
+                BrainpackConnectionStateChange(vObj, mBrainpackModel);
             }
         }
 
@@ -169,8 +174,22 @@ namespace Assets.Scripts.Communication.Communicators
         {
             mDispatchRouter.Add(PacketType.StatusResponse, SetBrainpackStatus);
             mDispatchRouter.Add(PacketType.DataFrame, ProcessDataFrame);
+            mDispatchRouter.Add(PacketType.StatusResponse, StatusResponseHandler);
         }
 
+        /// <summary>
+        /// Status response handler
+        /// </summary>
+        /// <param name="vVsender"></param>
+        /// <param name="vVargs"></param>
+        private void StatusResponseHandler(object vVsender, object vVargs)
+        {
+            if (StatusResponseEvent != null)
+            {
+                Packet vPacket = (Packet)vVargs;
+                StatusResponseEvent(vPacket);
+            }
+        }
 
 
         /// <summary>
@@ -192,8 +211,6 @@ namespace Assets.Scripts.Communication.Communicators
             {
                 ImuDataFrameReceivedEvent(vPacket);
             }
-
-
         }
 
 
@@ -204,33 +221,40 @@ namespace Assets.Scripts.Communication.Communicators
         /// <param name="vIpAddress"></param>
         public void RequestDataStreamFromBrainpack(int vUdpPort, string vIpAddress = null)
         {
-            //check if the current port is not in use. Throw an exception if in use. 
-            ListenToSuitOnUdp(vUdpPort);
-
             if (string.IsNullOrEmpty(vIpAddress))
             {
-                vIpAddress = GetCurrIpAddress();
+                //get the ip address that is in the same subnet as the brainpack's endpoint
+                vIpAddress = GetIpAddressInRangeOfBrainpackAddress(mBrainpackModel.TcpIpEndPoint);
             }
-            Packet vPacket = new Packet();
-            vPacket.type = PacketType.StartDataStream;
-            vPacket.endpoint = new Endpoint();
-            vPacket.endpoint.address = vIpAddress;
-            vPacket.endpoint.port = (uint)vUdpPort;
-            //set up the udp listener before sending a request to create a data stream start
-            if (mNetworkSuitUdpConnection == null)
-            {
-                mNetworkSuitUdpConnection = new NetworkedSuitUdpConnection(vIpAddress);
-                mNetworkSuitUdpConnection.DataReceivedEvent += UdpDataReceived;
-            }
-            mNetworkedSuitControlConnection.Send(vPacket);
+
+            ListenToSuitOnUdp(vUdpPort, vIpAddress);
+            Packet vProtoPacket = new Packet();
+            Endpoint vProtoEndpoint = new Endpoint();
+            vProtoPacket.type = PacketType.StartDataStream;
+            vProtoPacket.recordingFilename = "defult";
+            vProtoPacket.recordingFilenameSpecified = true;
+            vProtoPacket.sensorMask = 0x1FF; //all sensors
+            vProtoPacket.sensorMaskSpecified = true;
+            vProtoPacket.recordingRateSpecified = true;
+            vProtoPacket.recordingRate = 20;
+            vProtoEndpoint.address = vIpAddress;
+            vProtoEndpoint.port = (uint)vUdpPort;
+            vProtoPacket.endpoint = vProtoEndpoint;
+            mNetworkedSuitControlConnection.Send(vProtoPacket);
         }
 
         /// <summary>
         /// Listen to suit on UDP port. Disconnects an  Note: will throw an exception if the port is already in use by another process. 
         /// </summary>
         /// <param name="vUdpPort"></param>
-        private void ListenToSuitOnUdp(int vUdpPort)
+        private void ListenToSuitOnUdp(int vUdpPort, string vIpAddress)
         {
+            //set up the udp listener before sending a request to create a data stream start
+            if (mNetworkSuitUdpConnection == null)
+            {
+                mNetworkSuitUdpConnection = new NetworkedSuitUdpConnection(vIpAddress);
+                mNetworkSuitUdpConnection.DataReceivedEvent += UdpDataReceived;
+            }
             mNetworkSuitUdpConnection.StartListen(vUdpPort);
         }
 
@@ -253,37 +277,58 @@ namespace Assets.Scripts.Communication.Communicators
             var vPacket = (Packet)vArgs;
             var vBrainpackVersion = vPacket.firmwareVersion;
             mBrainpackModel.Version = vBrainpackVersion;
-            if (mBrainpackUpdateEvent != null)
+            if (BrainpackUpdateEvent != null)
             {
-                mBrainpackUpdateEvent(vPacket);
+                BrainpackUpdateEvent(vPacket);
             }
         }
-
-         
-
 
         /// <summary>
         /// Starts a connection to the suit via the given BrainpackNetworkingModel
         /// </summary> 
-        public void ConnectToSuitControlSocket(BrainpackNetworkingModel vModel)
+        public bool ConnectToSuitControlSocket(BrainpackNetworkingModel vModel)
         {
-            SuitControlConnection.Start(vModel.TcpIpEndPoint, vModel.TcpControlPort);
+            SetBrainpack(vModel);
+            return SuitControlConnection.StartConnection(vModel.TcpIpEndPoint, vModel.TcpControlPort);
         }
 
         private string GetCurrIpAddress()
         {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
+            var vHost = Dns.GetHostEntry(Dns.GetHostName());
             string vCurrentEndPoint = "";
-            foreach (var ip in host.AddressList)
+            foreach (var vIp in vHost.AddressList)
             {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                if (vIp.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    vCurrentEndPoint = ip.ToString();
+                    vCurrentEndPoint = vIp.ToString();
                     break;
                 }
             }
             return vCurrentEndPoint;
         }
+
+        private string GetIpAddressInRangeOfBrainpackAddress(string vBrainpackAddress)
+        {
+            var vBpAdd = IPAddress.Parse(vBrainpackAddress);
+
+            var vHost = Dns.GetHostEntry(Dns.GetHostName());
+            string vCurrentEndPoint = "";
+            foreach (var vIp in vHost.AddressList)
+            {
+                if (vIp.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    var vSubNet = IPAddressExtensions.GetSubnetMask(vIp);
+                    if (vIp.IsInSameSubnet(vBpAdd, vSubNet))
+                    {
+                        vCurrentEndPoint = vIp.ToString();
+                    }
+
+                }
+            }
+            return vCurrentEndPoint;
+        }
+
+
         /// <summary>
         /// Begins the async file transfer process
         /// </summary>
@@ -316,8 +361,6 @@ namespace Assets.Scripts.Communication.Communicators
         /// </summary>
         public void CleanUp()
         {
-
-            SuitControlConnection.ConnectionStateChangeEvent -= SuitConnectionChangeHandler;
             if (mFirmwareUpdater != null)
             {
                 mFirmwareUpdater.CleanUp();
@@ -326,8 +369,12 @@ namespace Assets.Scripts.Communication.Communicators
             {
                 mNetworkSuitUdpConnection.Dispose();
             }
-
-        }
+            if (SuitControlConnection != null)
+            {
+                SuitControlConnection.ConnectionStateChangeEvent -= SuitConnectionChangeHandler;
+                SuitControlConnection.Dispose();
+            }
+       }
 
         /// <summary>
         /// Send a request to the retrieve the state of the suit. 
@@ -339,6 +386,15 @@ namespace Assets.Scripts.Communication.Communicators
             mNetworkedSuitControlConnection.Send(vPacket);
         }
 
+        /// <summary>
+        /// Send a request to the retrieve the state of the suit. 
+        /// </summary>
+        public void RequestStreamFromBrainpackStop()
+        {
+            Packet vPacket = new Packet();
+            vPacket.type = PacketType.StopDataStream;
+            mNetworkedSuitControlConnection.Send(vPacket);
+        }
 
     }
 }
