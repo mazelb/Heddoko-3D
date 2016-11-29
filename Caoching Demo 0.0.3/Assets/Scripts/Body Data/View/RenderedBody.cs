@@ -41,7 +41,7 @@ namespace Assets.Scripts.Body_Data.View
         public Transform UpperSpine;
         public GameObject[] LayerCopyListeners;
 
-		public CalibrationData.RangeOfMotion.StaticROM ROM = null;
+        public CalibrationData.RangeOfMotion.StaticROM ROM;
 
 
 
@@ -88,6 +88,7 @@ namespace Assets.Scripts.Body_Data.View
         /// <param name="vTypes"></param>
         public void Init(BodyStructureMap.BodyTypes vType = BodyStructureMap.BodyTypes.BodyType_FullBody)
         {
+            ROM = new CalibrationData.RangeOfMotion.StaticROM();
             mCurrentBodyType = vType; 
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf, new SegmentInteractibleObjects(LowerLeftLeg, 6, Limbs));
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh, new SegmentInteractibleObjects(UpperLeftLeg, 4, Limbs));

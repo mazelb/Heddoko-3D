@@ -69,7 +69,5 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
         public AngleConstraint XMinMax = null;
         public AngleConstraint YMinMax   = null;
         public AngleConstraint ZMinMax  = null;
-
-
     }
 }
