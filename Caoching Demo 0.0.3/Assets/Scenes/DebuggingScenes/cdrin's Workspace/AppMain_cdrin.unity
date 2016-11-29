@@ -2484,6 +2484,278 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 84172121}
+--- !u!114 &90816820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcad05bdfe9d9014595e5b33a5e94673, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Reference:
+    BodyGuid: 
+    SuitGuid: 
+    BodyType: 0
+    RangeOfMotion: {fileID: 0}
+    LeftArmAnalysis:
+      DeltaTime: 0
+      AngleElbowFlexion: 0
+      SignedShoulderFlexion: 0
+      SignedAngleElbowFlexion: 0
+      AngleElbowPronation: 0
+      AngleShoulderFlexion: 0
+      AngleShoulderVertAbduction: 0
+      SignedShoulderVerticalAbduction: 0
+      AngleShoulderHorAbduction: 0
+      AngleShoulderRotation: 0
+      AngularVelocityElbowFlexion: 0
+      PeakAngularVelocityElbowFlexion: 0
+      AngularAccelerationElbowFlexion: 0
+      AngularVelocityPronation: 0
+      AngularAccelerationElbowPronation: 0
+      AngularVelocityShoulderFlexion: 0
+      AngularAccelerationShoulderFlexion: 0
+      AngularVelocityShoulderVertAbduction: 0
+      AngularAccelerationShoulderVertAbduction: 0
+      AngularVelocityShoulderHorAbduction: 0
+      AngularAccelerationShoulderHorAbduction: 0
+      AngularVelocityShoulderRotation: 0
+      AngularAccelerationShoulderRotation: 0
+    RightArmAnalysis:
+      DeltaTime: 0
+      AngleElbowFlexion: 0
+      SignedAngleElbowFlexion: 0
+      AngleElbowPronation: 0
+      AngleShoulderFlexion: 0
+      SignedShoulderFlexion: 0
+      AngleShoulderVertAbduction: 0
+      SignedShoulderVerticalAbduction: 0
+      AngleShoulderHorAbduction: 0
+      AngleShoulderRotation: 0
+      AngleShoulderReference: 0
+      AngleShoulderReferenceXY: 0
+      AngleShoulderReferenceXZ: 0
+      AngleShoulderReferenceYZ: 0
+      AngularVelocityElbowFlexion: 0
+      PeakAngularVelocityElbowFlexion: 0
+      AngularAccelerationElbowFlexion: 0
+      AngularVelocityPronation: 0
+      AngularAccelerationElbowPronation: 0
+      AngularVelocityShoulderFlexion: 0
+      AngularAccelerationShoulderFlexion: 0
+      AngularVelocityShoulderVertAbduction: 0
+      AngularAccelerationShoulderVertAbduction: 0
+      AngularVelocityShoulderHorAbduction: 0
+      AngularAccelerationShoulderHorAbduction: 0
+      AngularVelocityShoulderRotation: 0
+      AngularAccelerationShoulderRotation: 0
+    LeftLegAnalysis:
+      DeltaTime: 0
+      RightLegStride: {x: 0, y: 0, z: 0}
+      LeftLegStride: {x: 0, y: 0, z: 0}
+      AngleKneeFlexion: 0
+      AngleKneeRotation: 0
+      AngleHipFlexion: 0
+      UseGlobalReference: 0
+      SignedAngleHipFlexion: 0
+      AngleHipAbduction: 0
+      SignedAngleHipAbduction: 0
+      AngleHipRotation: 0
+      AngularVelocityKneeFlexion: 0
+      AngularAccelerationKneeFlexion: 0
+      AngularVelocityKneeRotation: 0
+      AngularAccelerationKneeRotation: 0
+      AngularVelocityHipFlexion: 0
+      AngularAccelerationHipFlexion: 0
+      AngularVelocityHipAbduction: 0
+      AngularAccelerationHipAbduction: 0
+      AngularVelocityHipRotation: 0
+      AngularAccelerationHipRotation: 0
+      NumberofSquats: 0
+      AngleSum: 0
+      LegHeight: 0
+    RightLegAnalysis:
+      DeltaTime: 0
+      RightLegStride: {x: 0, y: 0, z: 0}
+      LeftLegStride: {x: 0, y: 0, z: 0}
+      AngleKneeFlexion: 0
+      AngleKneeRotation: 0
+      UseGlobalReference: 0
+      AngleHipFlexion: 0
+      SignedAngleHipAbduction: 0
+      SignedAngleHipFlexion: 0
+      AngleHipAbduction: 0
+      AngleHipRotation: 0
+      AngularVelocityKneeFlexion: 0
+      AngularAccelerationKneeFlexion: 0
+      AngularVelocityKneeRotation: 0
+      AngularAccelerationKneeRotation: 0
+      AngularVelocityHipFlexion: 0
+      AngularAccelerationHipFlexion: 0
+      AngularVelocityHipAbduction: 0
+      AngularAccelerationHipAbduction: 0
+      AngularVelocityHipRotation: 0
+      AngularAccelerationHipRotation: 0
+      NumberofSquats: 0
+      AngleSum: 0
+      LegHeight: 0
+    TorsoAnalysis:
+      DeltaTime: 0
+      AngleTorsoFlexion: 0
+      AngleTorsoLateral: 0
+      SignedAngleTorsoLateral: 0
+      AngleTorsoRotation: 0
+      SignedAngleTorsoRotation: 0
+      TorsoTransform: {fileID: 0}
+      HipGlobalTransform: {fileID: 0}
+      HipTransform: {fileID: 0}
+      KneeTransform: {fileID: 0}
+      SignedTorsoFlexion: 0
+      AngularAccelerationTorsoFlexion: 0
+      AngularVelocityTorsoFlexion: 0
+      AngularAccelerationTorsoLateral: 0
+      AngularVelocityTorsoLateral: 0
+      AngularAccelerationTorsoRotation: 0
+      AngularVelocityTorsoRotation: 0
+      AngleIntegrationTurns: 0
+      AngleIntegrationFlips: 0
+      NumberOfTurns: 0
+      NumberOfFlips: 0
+    mRenderedBody: {fileID: 0}
+  squeletteRom:
+  - Name: SubsegmentType_UpperSpine
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -40
+      maxAngle: 40
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -40
+      maxAngle: 40
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -40
+      maxAngle: 40
+  - Name: SubsegmentType_LowerSpine
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -40
+      maxAngle: 40
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -40
+      maxAngle: 40
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -40
+      maxAngle: 40
+  - Name: SubsegmentType_RightUpperArm
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -60
+      maxAngle: 100
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -100
+      maxAngle: 100
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -90
+      maxAngle: 90
+  - Name: SubsegmentType_RightForeArm
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: 0
+      maxAngle: 0
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -80
+      maxAngle: 5
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -20
+      maxAngle: 150
+  - Name: SubsegmentType_LeftUpperArm
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -60
+      maxAngle: 100
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -100
+      maxAngle: 100
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -90
+      maxAngle: 90
+  - Name: SubsegmentType_LeftForeArm
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: 0
+      maxAngle: 0
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -5
+      maxAngle: 120
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -20
+      maxAngle: 150
+  - Name: SubsegmentType_RightThigh
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -90
+      maxAngle: 50
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -60
+      maxAngle: 60
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -60
+      maxAngle: 60
+  - Name: SubsegmentType_RightCalf
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: 0
+      maxAngle: 150
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -20
+      maxAngle: 20
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: 0
+      maxAngle: 0
+  - Name: SubsegmentType_LeftThigh
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -90
+      maxAngle: 50
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -60
+      maxAngle: 60
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -60
+      maxAngle: 60
+  - Name: SubsegmentType_LeftCalf
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: 0
+      maxAngle: 150
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -20
+      maxAngle: 20
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: 0
+      maxAngle: 0
 --- !u!1 &93943615
 GameObject:
   m_ObjectHideFlags: 0
@@ -8942,6 +9214,278 @@ MonoBehaviour:
   ZSpeed: 120
   YMinLimit: -20
   YMaxLimit: 80
+--- !u!114 &367475693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcad05bdfe9d9014595e5b33a5e94673, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Reference:
+    BodyGuid: 
+    SuitGuid: 
+    BodyType: 0
+    RangeOfMotion: {fileID: 0}
+    LeftArmAnalysis:
+      DeltaTime: 0
+      AngleElbowFlexion: 0
+      SignedShoulderFlexion: 0
+      SignedAngleElbowFlexion: 0
+      AngleElbowPronation: 0
+      AngleShoulderFlexion: 0
+      AngleShoulderVertAbduction: 0
+      SignedShoulderVerticalAbduction: 0
+      AngleShoulderHorAbduction: 0
+      AngleShoulderRotation: 0
+      AngularVelocityElbowFlexion: 0
+      PeakAngularVelocityElbowFlexion: 0
+      AngularAccelerationElbowFlexion: 0
+      AngularVelocityPronation: 0
+      AngularAccelerationElbowPronation: 0
+      AngularVelocityShoulderFlexion: 0
+      AngularAccelerationShoulderFlexion: 0
+      AngularVelocityShoulderVertAbduction: 0
+      AngularAccelerationShoulderVertAbduction: 0
+      AngularVelocityShoulderHorAbduction: 0
+      AngularAccelerationShoulderHorAbduction: 0
+      AngularVelocityShoulderRotation: 0
+      AngularAccelerationShoulderRotation: 0
+    RightArmAnalysis:
+      DeltaTime: 0
+      AngleElbowFlexion: 0
+      SignedAngleElbowFlexion: 0
+      AngleElbowPronation: 0
+      AngleShoulderFlexion: 0
+      SignedShoulderFlexion: 0
+      AngleShoulderVertAbduction: 0
+      SignedShoulderVerticalAbduction: 0
+      AngleShoulderHorAbduction: 0
+      AngleShoulderRotation: 0
+      AngleShoulderReference: 0
+      AngleShoulderReferenceXY: 0
+      AngleShoulderReferenceXZ: 0
+      AngleShoulderReferenceYZ: 0
+      AngularVelocityElbowFlexion: 0
+      PeakAngularVelocityElbowFlexion: 0
+      AngularAccelerationElbowFlexion: 0
+      AngularVelocityPronation: 0
+      AngularAccelerationElbowPronation: 0
+      AngularVelocityShoulderFlexion: 0
+      AngularAccelerationShoulderFlexion: 0
+      AngularVelocityShoulderVertAbduction: 0
+      AngularAccelerationShoulderVertAbduction: 0
+      AngularVelocityShoulderHorAbduction: 0
+      AngularAccelerationShoulderHorAbduction: 0
+      AngularVelocityShoulderRotation: 0
+      AngularAccelerationShoulderRotation: 0
+    LeftLegAnalysis:
+      DeltaTime: 0
+      RightLegStride: {x: 0, y: 0, z: 0}
+      LeftLegStride: {x: 0, y: 0, z: 0}
+      AngleKneeFlexion: 0
+      AngleKneeRotation: 0
+      AngleHipFlexion: 0
+      UseGlobalReference: 0
+      SignedAngleHipFlexion: 0
+      AngleHipAbduction: 0
+      SignedAngleHipAbduction: 0
+      AngleHipRotation: 0
+      AngularVelocityKneeFlexion: 0
+      AngularAccelerationKneeFlexion: 0
+      AngularVelocityKneeRotation: 0
+      AngularAccelerationKneeRotation: 0
+      AngularVelocityHipFlexion: 0
+      AngularAccelerationHipFlexion: 0
+      AngularVelocityHipAbduction: 0
+      AngularAccelerationHipAbduction: 0
+      AngularVelocityHipRotation: 0
+      AngularAccelerationHipRotation: 0
+      NumberofSquats: 0
+      AngleSum: 0
+      LegHeight: 0
+    RightLegAnalysis:
+      DeltaTime: 0
+      RightLegStride: {x: 0, y: 0, z: 0}
+      LeftLegStride: {x: 0, y: 0, z: 0}
+      AngleKneeFlexion: 0
+      AngleKneeRotation: 0
+      UseGlobalReference: 0
+      AngleHipFlexion: 0
+      SignedAngleHipAbduction: 0
+      SignedAngleHipFlexion: 0
+      AngleHipAbduction: 0
+      AngleHipRotation: 0
+      AngularVelocityKneeFlexion: 0
+      AngularAccelerationKneeFlexion: 0
+      AngularVelocityKneeRotation: 0
+      AngularAccelerationKneeRotation: 0
+      AngularVelocityHipFlexion: 0
+      AngularAccelerationHipFlexion: 0
+      AngularVelocityHipAbduction: 0
+      AngularAccelerationHipAbduction: 0
+      AngularVelocityHipRotation: 0
+      AngularAccelerationHipRotation: 0
+      NumberofSquats: 0
+      AngleSum: 0
+      LegHeight: 0
+    TorsoAnalysis:
+      DeltaTime: 0
+      AngleTorsoFlexion: 0
+      AngleTorsoLateral: 0
+      SignedAngleTorsoLateral: 0
+      AngleTorsoRotation: 0
+      SignedAngleTorsoRotation: 0
+      TorsoTransform: {fileID: 0}
+      HipGlobalTransform: {fileID: 0}
+      HipTransform: {fileID: 0}
+      KneeTransform: {fileID: 0}
+      SignedTorsoFlexion: 0
+      AngularAccelerationTorsoFlexion: 0
+      AngularVelocityTorsoFlexion: 0
+      AngularAccelerationTorsoLateral: 0
+      AngularVelocityTorsoLateral: 0
+      AngularAccelerationTorsoRotation: 0
+      AngularVelocityTorsoRotation: 0
+      AngleIntegrationTurns: 0
+      AngleIntegrationFlips: 0
+      NumberOfTurns: 0
+      NumberOfFlips: 0
+    mRenderedBody: {fileID: 0}
+  squeletteRom:
+  - Name: SubsegmentType_UpperSpine
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -40
+      maxAngle: 40
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -40
+      maxAngle: 40
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -40
+      maxAngle: 40
+  - Name: SubsegmentType_LowerSpine
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -40
+      maxAngle: 40
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -40
+      maxAngle: 40
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -40
+      maxAngle: 40
+  - Name: SubsegmentType_RightUpperArm
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -60
+      maxAngle: 100
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -100
+      maxAngle: 100
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -90
+      maxAngle: 90
+  - Name: SubsegmentType_RightForeArm
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: 0
+      maxAngle: 0
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -80
+      maxAngle: 5
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -20
+      maxAngle: 150
+  - Name: SubsegmentType_LeftUpperArm
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -60
+      maxAngle: 100
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -100
+      maxAngle: 100
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -90
+      maxAngle: 90
+  - Name: SubsegmentType_LeftForeArm
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: 0
+      maxAngle: 0
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -5
+      maxAngle: 120
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -20
+      maxAngle: 150
+  - Name: SubsegmentType_RightThigh
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -90
+      maxAngle: 50
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -60
+      maxAngle: 60
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -60
+      maxAngle: 60
+  - Name: SubsegmentType_RightCalf
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: 0
+      maxAngle: 150
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -20
+      maxAngle: 20
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: 0
+      maxAngle: 0
+  - Name: SubsegmentType_LeftThigh
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -90
+      maxAngle: 50
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -60
+      maxAngle: 60
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -60
+      maxAngle: 60
+  - Name: SubsegmentType_LeftCalf
+    XMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: 0
+      maxAngle: 150
+    YMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -20
+      maxAngle: 20
+    ZMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: 0
+      maxAngle: 0
 --- !u!1 &367592853
 GameObject:
   m_ObjectHideFlags: 0
@@ -12001,6 +12545,76 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 548022480}
+--- !u!1001 &561091903
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 910731571}
+    m_Modifications:
+    - target: {fileID: 400456, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 400456, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400456, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400456, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400456, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400456, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400456, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400456, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 11410946, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: ROM
+      value: 
+      objectReference: {fileID: 90816820}
+    - target: {fileID: 190148, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 467540, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: -0.0077317324
+      objectReference: {fileID: 0}
+    - target: {fileID: 467540, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 0.99997014
+      objectReference: {fileID: 0}
+    - target: {fileID: 467540, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0.096337914
+      objectReference: {fileID: 0}
+    - target: {fileID: 467540, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 467540, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &565376607
 GameObject:
   m_ObjectHideFlags: 0
@@ -24048,6 +24662,7 @@ MonoBehaviour:
     BodyGuid: 
     SuitGuid: 
     BodyType: 0
+    RangeOfMotion: {fileID: 0}
     LeftArmAnalysis:
       DeltaTime: 0
       AngleElbowFlexion: 0
@@ -24177,6 +24792,7 @@ MonoBehaviour:
     BodyGuid: 
     SuitGuid: 
     BodyType: 0
+    RangeOfMotion: {fileID: 0}
     LeftArmAnalysis:
       DeltaTime: 0
       AngleElbowFlexion: 0
@@ -24306,56 +24922,10 @@ MonoBehaviour:
   FrameGraphControl: {fileID: 1395310998}
   LoadRecordingButton: {fileID: 409676876}
   AnaylsisTextContainer: {fileID: 1318448005}
---- !u!1001 &1104408190
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 910731571}
-    m_Modifications:
-    - target: {fileID: 440222, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 440222, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 440222, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 440222, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 440222, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 440222, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 440222, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 440222, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
-      propertyPath: m_RootOrder
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 162584, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
-  m_IsPrefabParent: 0
 --- !u!4 &1104408191 stripped
 Transform:
-  m_PrefabParentObject: {fileID: 440222, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
-  m_PrefabInternal: {fileID: 1104408190}
+  m_PrefabParentObject: {fileID: 400456, guid: feff5772e6e2b0e45b89ffd5661bd88a, type: 2}
+  m_PrefabInternal: {fileID: 561091903}
 --- !u!1 &1112203128
 GameObject:
   m_ObjectHideFlags: 0
@@ -27826,6 +28396,7 @@ MonoBehaviour:
     BodyGuid: 
     SuitGuid: 
     BodyType: 0
+    RangeOfMotion: {fileID: 0}
     LeftArmAnalysis:
       DeltaTime: 0
       AngleElbowFlexion: 0
@@ -28587,6 +29158,126 @@ Prefab:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 474062, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474062, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 459620, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 459620, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 459620, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 459620, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 431760, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 431760, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 446234, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 446234, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 446234, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 446234, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 431760, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 431760, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 446234, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -0.0000008472707
+      objectReference: {fileID: 0}
+    - target: {fileID: 446234, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -0.4173044
+      objectReference: {fileID: 0}
+    - target: {fileID: 446234, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -0.017299509
+      objectReference: {fileID: 0}
+    - target: {fileID: 459620, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -0.00002870493
+      objectReference: {fileID: 0}
+    - target: {fileID: 459620, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -0.41729963
+      objectReference: {fileID: 0}
+    - target: {fileID: 459620, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: -0.017328717
+      objectReference: {fileID: 0}
+    - target: {fileID: 474062, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474062, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474380, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474380, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474380, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 474380, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 449024, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 449024, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 449024, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 449024, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
   m_IsPrefabParent: 0
@@ -29073,7 +29764,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 890272455}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999998
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -32155,7 +32846,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000022888184}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 20.6}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1441013632
@@ -35606,6 +36297,7 @@ MonoBehaviour:
     BodyGuid: 
     SuitGuid: 
     BodyType: 0
+    RangeOfMotion: {fileID: 0}
     LeftArmAnalysis:
       DeltaTime: 0
       AngleElbowFlexion: 0
@@ -40716,6 +41408,33 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 1778729168}
   m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+--- !u!1 &1783792419 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 162532, guid: 975aa5e9a58d0d84b87a56cd0661a864, type: 2}
+  m_PrefabInternal: {fileID: 1327635109}
+--- !u!114 &1783792421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1783792419}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c398a0bd1e19ede4790374629b6689a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ROM: {fileID: 367475693}
+  subSegment:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &1784288899
 GameObject:
   m_ObjectHideFlags: 0
@@ -43884,6 +44603,7 @@ MonoBehaviour:
     BodyGuid: 
     SuitGuid: 
     BodyType: 0
+    RangeOfMotion: {fileID: 0}
     LeftArmAnalysis:
       DeltaTime: 0
       AngleElbowFlexion: 0
@@ -44013,6 +44733,7 @@ MonoBehaviour:
     BodyGuid: 
     SuitGuid: 
     BodyType: 0
+    RangeOfMotion: {fileID: 0}
     LeftArmAnalysis:
       DeltaTime: 0
       AngleElbowFlexion: 0
@@ -45760,7 +46481,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 708447077}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999976
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -47732,6 +48453,7 @@ MonoBehaviour:
     BodyGuid: 
     SuitGuid: 
     BodyType: 0
+    RangeOfMotion: {fileID: 0}
     LeftArmAnalysis:
       DeltaTime: 0
       AngleElbowFlexion: 0
