@@ -15,6 +15,13 @@ namespace Assets.Scripts.Body_Data.View
         {
             mMaterialIndex = vMaterialIndex;
             mSkinnedMeshRenderer = vSkinnedMeshRenderer;
+#if UNITY_EDITOR
+            if (!UnityEditor.EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                mAssociatedMaterial = vSkinnedMeshRenderer.sharedMaterials[mMaterialIndex];
+            }
+            else
+#endif
             mAssociatedMaterial = vSkinnedMeshRenderer.materials[mMaterialIndex];
             mInvisibleShader = Shader.Find("Mobile/Mobile-XrayEffect");
             mRegularShader = Shader.Find("Standard");

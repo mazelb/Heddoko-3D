@@ -64,6 +64,8 @@ namespace Assets.Scripts.Communication.Communicators
         public void Stop()
         {
             mDone = true;
+            if (mClient == null)
+                return;
             try
             {
                 mClient.Close();
