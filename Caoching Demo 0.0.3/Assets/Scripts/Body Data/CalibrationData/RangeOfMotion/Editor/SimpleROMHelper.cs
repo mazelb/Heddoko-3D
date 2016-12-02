@@ -40,6 +40,14 @@ public class SimpleROMHelper : Editor
     float maxY;
     float maxZ;
 
+    SimpleROMMB simpleROMMB;
+    float handleSize;
+    float arrowSize;
+    float offsetSize;
+    float radiusSize;
+    Vector3 t_position;
+    Quaternion localRotation;
+
     private void DrawAngleAxis(ref Quaternion localRotation, Vector3 t_position, float offsetSize, float radiusSize, float arrowSize)
     {
         float angle;
@@ -69,7 +77,6 @@ public class SimpleROMHelper : Editor
     }
     private void DrawConstraints(SimpleROMMB simpleROMMB, Quaternion ParentRotation, Vector3 t_position, float offsetSize, float radiusSize, float arrowSize)
     {
-        Quaternion localRotation = simpleROMMB.transform.localRotation;
         Quaternion XMinQ = Quaternion.Euler(minX, 0, 0);
         Quaternion XMaxQ = Quaternion.Euler(maxX, 0, 0);
         Quaternion YMinQ = Quaternion.Euler(0, minY, 0);
@@ -108,21 +115,28 @@ public class SimpleROMHelper : Editor
         if (ToggleYConstraint.boolValue)
         {
 
-            Handles.color = Handles.yAxisColor;
-            Handles.DrawWireArc(t_position, ParentRotation * Vector3.up, YMinQ * Vector3.right, maxY - minY, arrowSize);
 
-            Handles.color = Ycolor;
             if (ToggleZConstraint.boolValue)
             {
+
+                Quaternion ZMedQ = Quaternion.Euler(0, 0, minZ + (maxZ - minZ) * 0.5f);
+                Handles.color = Handles.yAxisColor;
+                Handles.DrawWireArc(t_position, ParentRotation * Vector3.up, YMinQ * ZMedQ * Vector3.right, maxY - minY, arrowSize);
+                //Handles.DrawWireArc(t_position, ParentRotation * Vector3.up, YMinQ * Vector3.right, maxY - minY, arrowSize);
+
                 YiNormal = ParentRotation * YMinQ * Vector3.forward;
                 YaNormal = ParentRotation * YMaxQ * Vector3.forward;
                 Vector3 YiSart = YiZa * Vector3.right;
                 Vector3 YaSart = YaZa * Vector3.right;
+                Handles.color = Ycolor;
                 Handles.DrawSolidArc(t_position, YiNormal, YiSart, minZ - maxZ, arrowSize);
                 Handles.DrawSolidArc(t_position, YaNormal, YaSart, minZ - maxZ, arrowSize);
             }
             else
             {
+                Handles.color = Handles.yAxisColor;
+                Handles.DrawWireArc(t_position, ParentRotation * Vector3.up, YMinQ * Vector3.right, maxY - minY, arrowSize);
+                Handles.color = Ycolor;
                 Handles.DrawSolidArc(t_position, ParentRotation * YMinQ * Vector3.forward, ParentRotation * Vector3.up, -180, arrowSize);
                 Handles.DrawSolidArc(t_position, ParentRotation * YMaxQ * Vector3.forward, ParentRotation * Vector3.up, -180, arrowSize);
             }
@@ -131,10 +145,13 @@ public class SimpleROMHelper : Editor
         if (ToggleZConstraint.boolValue)
         {
             //Handles.color = Handles.zAxisColor;
-            Handles.color = Zcolor;
-            Handles.DrawWireArc(t_position, ParentRotation * Vector3.forward, ZMinQ * Vector3.right, maxZ - minZ, arrowSize);
             if(ToggleYConstraint.boolValue)
             {
+                Quaternion YMedQ = Quaternion.Euler(0, minY + ( maxY - minY) * 0.5f, 0);
+                Handles.color = Zcolor;
+                Handles.DrawWireArc(t_position, ParentRotation * YMedQ * Vector3.forward, YMedQ * ZMinQ * Vector3.right, maxZ - minZ, arrowSize);
+
+
                 float angleZMax, angleZMin;
                 Vector3 axisZMax, axisZMin;
                 Quaternion YiZaInv = Quaternion.Inverse(YiZa);
@@ -149,12 +166,19 @@ public class SimpleROMHelper : Editor
                 //Handles.DrawSolidArc(t_position, ZiNormal, YiZi * Vector3.right, Vector3.Angle(YiZiVec, YaZiVec), arrowSize);
                 Handles.DrawSolidArc(t_position, axisZMax, YiZa * Vector3.right, angleZMax, arrowSize);
                 Handles.DrawSolidArc(t_position, axisZMin, YiZi * Vector3.right, angleZMin, arrowSize);
-             }
+
+                //Handles.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+                //Handles.DrawSolidArc(t_position, axisZMax, YiZa * Vector3.right, -angleZMax, arrowSize);
+                //Handles.DrawSolidArc(t_position, axisZMin, YiZi * Vector3.right, -angleZMin, arrowSize);
+            }
             else
             {
 
                 //Handles.DrawSolidDisc(t_position + ParentRotation * ZMinQ * (arrowSize * Vector3.up), ParentRotation * Vector3.up, arrowSize);
                 //Handles.DrawSolidDisc(t_position - ParentRotation * ZMaxQ * (arrowSize * Vector3.up), ParentRotation * Vector3.up, arrowSize);
+
+                Handles.color = Zcolor;
+                Handles.DrawWireArc(t_position, ParentRotation * Vector3.forward, ZMinQ * Vector3.right, maxZ - minZ, arrowSize);
 
                 Handles.DrawSolidArc(t_position, ParentRotation * ZMinQ * Vector3.up, ParentRotation * Vector3.forward, 180, arrowSize);
                 Handles.DrawSolidArc(t_position, ParentRotation * ZMaxQ * Vector3.up, ParentRotation * Vector3.forward, 180, arrowSize);
@@ -168,17 +192,17 @@ public class SimpleROMHelper : Editor
 
     private void DrawCustomGizmos()
     {
-        SimpleROMMB simpleROMMB = target as SimpleROMMB;
+        //SimpleROMMB simpleROMMB = target as SimpleROMMB;
         //bool drawOrtho = drawOrthoProp.boolValue;
 
-        float handleSize = HandleUtility.GetHandleSize(simpleROMMB.transform.position) * 2;
-        float arrowSize = handleSize * 1.2f * 0.5f;
-        float offsetSize = handleSize * 1.1f * 0.5f;
-        float radiusSize = handleSize * 0.5f;
-        Vector3 t_position = simpleROMMB.transform.position + Vector3.up * handleSize * 1.5f;
+        //float handleSize = HandleUtility.GetHandleSize(simpleROMMB.transform.position) * 2;
+        //float arrowSize = handleSize * 1.2f * 0.5f;
+        //float offsetSize = handleSize * 1.1f * 0.5f;
+        //float radiusSize = handleSize * 0.5f;
+        //Vector3 t_position = simpleROMMB.transform.position + Vector3.up * handleSize * 1.5f;
 
         Handles.color = sphereCol;
-        Handles.SphereCap(4, t_position, simpleROMMB.transform.localRotation, arrowSize*2);
+        Handles.SphereCap(4, t_position, Quaternion.identity, arrowSize*2);
 
         Quaternion localRotation = simpleROMMB.transform.localRotation;
         Quaternion globalRotation = simpleROMMB.transform.rotation;
@@ -199,15 +223,22 @@ public class SimpleROMHelper : Editor
         Handles.ArrowCap(3, simpleROMMB.transform.position, localRotation * Quaternion.Euler(0, 0, 90), arrowSize / 2);
     }
 
-    void OnSceneGUI()
+
+        void OnSceneGUI()
     {
+        simpleROMMB = target as SimpleROMMB;
+        handleSize        = HandleUtility.GetHandleSize(simpleROMMB.transform.position) * 3;
+        arrowSize         = handleSize * 1.2f * 0.5f;
+        offsetSize        = handleSize * 1.1f * 0.5f;
+        radiusSize        = handleSize * 0.5f;
+        t_position      = simpleROMMB.transform.position + Vector3.up * handleSize * 1.5f;
+        localRotation = simpleROMMB.transform.localRotation;
+
         DrawCustomGizmos();
         ApplyConstraint();
     }
     private void ApplyConstraint()
     {
-        SimpleROMMB simpleROMMB = target as SimpleROMMB;
-        Quaternion localRotation = simpleROMMB.transform.localRotation;
         Quaternion XMinQ = Quaternion.Euler(minX, 0, 0);
         Quaternion XMaxQ = Quaternion.Euler(maxX, 0, 0);
         Quaternion YMinQ = Quaternion.Euler(0, minY, 0);
@@ -226,11 +257,39 @@ public class SimpleROMHelper : Editor
         Vector3 YiZiVec = (YiZi * Vector3.right);
 
 
+
         Vector3 localAxe = localRotation * Vector3.right;
+        Vector3 toYaZa = YaZaVec - localAxe;
+        Vector3 toYaZi = YaZiVec - localAxe;
+        Vector3 toYiZa = YiZaVec - localAxe;
+        Vector3 toYiZi = YiZiVec - localAxe;
+        Vector3 localEnd = t_position + localAxe * arrowSize;
+
+        Handles.color = Color.red;
+        Handles.DrawLine(localEnd, t_position + YaZaVec * arrowSize);
+        Handles.DrawLine(localEnd, t_position + YaZiVec * arrowSize);
+        Handles.DrawLine(localEnd, t_position + YiZaVec * arrowSize);
+        Handles.DrawLine(localEnd, t_position + YiZiVec * arrowSize);
+
+        Vector3 endToYaZa = (t_position + YaZaVec * arrowSize) - localEnd;
+        Vector3 endToYiZa = (t_position + YiZaVec * arrowSize) - localEnd;
+
+        Vector3 endToYaZi = (t_position + YaZiVec * arrowSize) - localEnd;
+        Vector3 endToYiZi = (t_position + YiZiVec * arrowSize) - localEnd;
+
+        Vector3 normalZa = Vector3.Cross(endToYaZa, endToYiZa).normalized;
+        Vector3 normalZi = Vector3.Cross(endToYaZi, endToYiZi).normalized;
+        float tZa = Vector3.Dot(normalZa, localAxe);
+        float tZi = Vector3.Dot(normalZi, localAxe);
 
 
+        if (tZi < 0 && tZa > 0)
+            Handles.color = Color.cyan; // in z bounds
+        else
+            Handles.color = Color.red; // not z bounds
 
-
+        Handles.DrawLine(localEnd, localEnd + normalZa * arrowSize);
+        Handles.DrawLine(localEnd, localEnd + normalZi * arrowSize);
     }
 
     public override void OnInspectorGUI()
