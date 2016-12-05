@@ -149,8 +149,7 @@ public class BodyFrameThread : ThreadedJob
     {
         this.mBuffer = vBuffer;
         mDataSourceType = SourceDataType.Recording;
-        //mPlaybackTask = new RecordingPlaybackTask(vFrames, BodyFrameBuffer);
-    }
+     }
     /**
     * @brief Default constructor
     */
@@ -195,6 +194,8 @@ public class BodyFrameThread : ThreadedJob
         mDataSourceType = SourceDataType.DataStream;
         ProtoframFrameRouter = vRouter;
     }
+
+ 
     public override void Start()
     {
         
@@ -226,7 +227,6 @@ public class BodyFrameThread : ThreadedJob
                 break;
             case SourceDataType.Recording:
                 BodyFrameBuffer.AllowOverflow = false;
-               //  RecordingTask();
               
                 RecordingPlaybackTask();
                 break;
@@ -236,8 +236,16 @@ public class BodyFrameThread : ThreadedJob
             case SourceDataType.DataStream:
                 DataStreamTask();
                 break;
+            case SourceDataType.Buffer:
+                BufferTask();
+                break;
         }
 
+    }
+
+    private void BufferTask()
+    {
+        throw new NotImplementedException();
     }
 
     /**
@@ -457,6 +465,7 @@ public class BodyFrameThread : ThreadedJob
         Recording,
         BrainFrame,
         DataStream,
+        Buffer,
         Other
     }
 

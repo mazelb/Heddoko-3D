@@ -6,10 +6,12 @@
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
 
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.UI;
 using Assets.Scripts.Utils;
 using heddoko;
+using HeddokoLib.adt;
 using HeddokoLib.HeddokoDataStructs.Brainpack;
 using UnityEngine;
 
@@ -28,24 +30,47 @@ namespace Assets.Scripts.Communication.Communicators
         [SerializeField]
         private BrainpackStatusPanel mBrainpackStatusPanel;
 
+        private const int PacketBufferSize = 8;
+        private CircularQueue<Packet> mPacketBuffer;
+
+        private ProtobuffFrameBodyFrameConverter mFrameConverter;
+
+
+
+        public ProtobuffFrameBodyFrameConverter FrameConverter
+        {
+            get { return mFrameConverter; }
+            set { mFrameConverter = value; }
+        }
+
+        public SuitConnectionManager ConnectionManager
+        {
+            get
+            {
+                if (mConnectionManager == null)
+                {
+                    mConnectionManager = new SuitConnectionManager();
+                }
+                return mConnectionManager;
+            }
+        }
+
+
         void Awake()
         {
+
+            mPacketBuffer = new CircularQueue<Packet>(PacketBufferSize, true);
+            mFrameConverter = new ProtobuffFrameBodyFrameConverter(mPacketBuffer, new BodyFrameBuffer(8));
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
                 Debug.Log("Remove this");
             });
-        }
-        /// <summary>
-        /// On Start instantiate local instances
-        /// </summary>
-        void Start()
-        {
-
             ContainerController.ContainerView = mContainerPanel;
-            mConnectionManager = new SuitConnectionManager();
+            
             mAdvertisingListener = new BrainpackAdvertisingListener(3);
             mAdvertisingListener.StartListener(6668);
             RegisterHandlers();
+
         }
 
         /// <summary>
@@ -54,13 +79,28 @@ namespace Assets.Scripts.Communication.Communicators
         private void RegisterHandlers()
         {
             mContainerPanel.BrainpackSelectedEvent += BrainpackSelectedHandler;
-            mAdvertisingListener.BrainpackFoundEvent += NewBrainpackFound;
-            mAdvertisingListener.BrainpackLostEvent += BrainpackLostHandler;
-            mConnectionManager.ConcerningReportIncludedEvent += ConcernReportHandler;
-            mConnectionManager.ImuDataFrameReceivedEvent += ImuDataFrameReceivedHandler;
-            mConnectionManager.BrainpackConnectionStateChange += BrainpackControlSocketConnectedHandler;
+            mAdvertisingListener.RegisterBrainpackFoundEventHandler(NewBrainpackFound);
+            mAdvertisingListener.RegisterBrainpackLostEventHandler(BrainpackLostHandler);
+            ConnectionManager.ConcerningReportIncludedEvent += ConcernReportHandler;
+           ConnectionManager.ImuDataFrameReceivedEvent += ImuDataFrameReceivedHandler;
+            ConnectionManager.BrainpackConnectionStateChange += BrainpackControlSocketConnectedHandler;
             mBrainpackStatusPanel.RequestStreamStartEvent += RequestStreamStartHandler;
-            mConnectionManager.StatusResponseEvent += StatusResponseHandler;
+            ConnectionManager.StatusResponseEvent += StatusResponseHandler;
+        }
+
+        /// <summary>
+        /// Removes all handlers
+        /// </summary>
+        private void RemoveHandlers()
+        {
+            mContainerPanel.BrainpackSelectedEvent -= BrainpackSelectedHandler;
+            mAdvertisingListener.RemoveBrainpackFoundEventHandler(NewBrainpackFound);
+            mAdvertisingListener.RemoveBrainpackLostEventHandler(BrainpackLostHandler);
+           ConnectionManager.ConcerningReportIncludedEvent -= ConcernReportHandler;
+           ConnectionManager.ImuDataFrameReceivedEvent -= ImuDataFrameReceivedHandler;
+           ConnectionManager.BrainpackConnectionStateChange -= BrainpackControlSocketConnectedHandler;
+            mBrainpackStatusPanel.RequestStreamStartEvent -= RequestStreamStartHandler;
+          ConnectionManager.StatusResponseEvent -= StatusResponseHandler;
         }
 
         /// <summary>
@@ -83,13 +123,13 @@ namespace Assets.Scripts.Communication.Communicators
         {
             if (vFlag)
             {
-                mConnectionManager.RequestDataStreamFromBrainpack(1258);
-                mConnectionManager.RequestSuitStatus();
+                ConnectionManager.RequestDataStreamFromBrainpack(1258);
+               ConnectionManager.RequestSuitStatus();
             }
             else
             {
-                mConnectionManager.RequestStreamFromBrainpackStop();
-                mConnectionManager.RequestSuitStatus();
+               ConnectionManager.RequestStreamFromBrainpackStop();
+               ConnectionManager.RequestSuitStatus();
             }
         }
 
@@ -120,6 +160,7 @@ namespace Assets.Scripts.Communication.Communicators
               {
                   Debug.Log("received frame!");
               });
+            mPacketBuffer.Enqueue(vPacket);
         }
 
         /// <summary>
@@ -173,17 +214,20 @@ namespace Assets.Scripts.Communication.Communicators
         private void BrainpackSelectedHandler(BrainpackNetworkingModel vSelected)
         {
             //on succesfull connection ,request suit status
-            if (mConnectionManager.ConnectToSuitControlSocket(vSelected))
+            if (ConnectionManager.ConnectToSuitControlSocket(vSelected))
             {
-                Debug.Log("selected time start suit status request "+ Time.time);
-                mConnectionManager.RequestSuitStatus();
+                Debug.Log("selected time start suit status request " + Time.time);
+                ConnectionManager.RequestSuitStatus();
             }
         }
 
         internal void OnApplicationQuit()
         {
-            mConnectionManager.CleanUp();
+            FrameConverter.StopIfWorking();
+            RemoveHandlers();
+            ConnectionManager.CleanUp();
             mAdvertisingListener.StopListening();
+
         }
     }
 }

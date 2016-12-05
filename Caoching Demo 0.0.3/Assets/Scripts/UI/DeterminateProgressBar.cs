@@ -8,7 +8,7 @@
 
 using System.Collections;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
-using UnityEditor;
+
 using UnityEngine;
 
 namespace Assets.Scripts.UI

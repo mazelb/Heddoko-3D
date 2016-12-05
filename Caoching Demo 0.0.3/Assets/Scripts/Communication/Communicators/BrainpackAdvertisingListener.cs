@@ -12,8 +12,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Timers;
-using Assets.Scripts.UI.Metrics;
-using heddoko;
+ using heddoko;
 using HeddokoLib.heddokoProtobuff.Decoder;
 using HeddokoLib.HeddokoDataStructs.Brainpack;
 using ProtoBuf;
@@ -28,8 +27,8 @@ namespace Assets.Scripts.Communication.Communicators
     {
         private UdpClient mClient;
         private int mPort;
-        public event BrainpackFound BrainpackFoundEvent;
-        public event BrainpackLost BrainpackLostEvent;
+        private event BrainpackFound BrainpackFoundEvent;
+        private event BrainpackLost BrainpackLostEvent;
         private double mTimer;
         private Timer mBrainpackTimer;
         Dictionary<string, BrainpackItemStructure> mFoundBrainpacks = new Dictionary<string, BrainpackItemStructure>();
@@ -46,6 +45,27 @@ namespace Assets.Scripts.Communication.Communicators
             mBrainpackTimer.Elapsed += VerifyBrainpackCallTime;
             mBrainpackTimer.Start();
         }
+
+        public void RegisterBrainpackFoundEventHandler(BrainpackFound vHandler)
+        {
+            BrainpackFoundEvent += vHandler;
+        }
+
+        public void RemoveBrainpackFoundEventHandler(BrainpackFound vHandler)
+        {
+            BrainpackFoundEvent -= vHandler;
+        }
+        public void RegisterBrainpackLostEventHandler(BrainpackLost vHandler)
+        {
+            BrainpackLostEvent += vHandler;
+        }
+
+
+        public void RemoveBrainpackLostEventHandler(BrainpackLost vHandler)
+        {
+            BrainpackLostEvent -= vHandler;
+        }
+
 
         private void VerifyBrainpackCallTime(object vSender, ElapsedEventArgs vE)
         {
@@ -151,7 +171,7 @@ namespace Assets.Scripts.Communication.Communicators
                             }
                         }
                     }
-                    vIncomingConnection.Client.BeginReceive(new AsyncCallback(OnReceive), vIncomingConnection);
+                    mClient.BeginReceive(new AsyncCallback(OnReceive), vIncomingConnection);
                 }
             }
 
@@ -167,15 +187,9 @@ namespace Assets.Scripts.Communication.Communicators
 
         public void StopListening()
         {
+     
             mClient.Close();
-        }
-
-        public class UdpState
-        {
-            public UdpClient Client;
-            public IPEndPoint EndPoint;
-            public RawPacket IncomingRawPacket = new RawPacket();
-
+            
         }
 
         /// <summary>
@@ -186,5 +200,13 @@ namespace Assets.Scripts.Communication.Communicators
             public DateTime LastTimeFound;
             public BrainpackNetworkingModel BrainpackModel;
         }
+    }
+
+    public class UdpState
+    {
+        public UdpClient Client;
+        public IPEndPoint EndPoint;
+        public RawPacket IncomingRawPacket = new RawPacket();
+
     }
 }

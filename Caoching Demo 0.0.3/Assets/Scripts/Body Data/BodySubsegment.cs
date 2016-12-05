@@ -46,6 +46,8 @@ namespace Assets.Scripts.Body_Data
             AssociatedView.UpdateOrientation(vNewOrientation, vApplyLocal, vResetRotation);
         }
 
+   
+
         public Transform GetSubSegmentTransform()
         {
             return AssociatedView.SubsegmentTransform;

@@ -9,7 +9,6 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.UI.Settings;
@@ -86,6 +85,10 @@ namespace Assets.Scripts.Communication.Communicators
             {
                 return mNetworkedSuitControlConnection;
             }
+            set
+            {
+                mNetworkedSuitControlConnection = value;
+            }
         }
 
 
@@ -133,9 +136,9 @@ namespace Assets.Scripts.Communication.Communicators
 
         public SuitConnectionManager()
         {
-            mNetworkedSuitControlConnection = new NetworkedSuitControlConnection();
-            mNetworkedSuitControlConnection.DataReceivedEvent += SuitControlDataReceivedHandler;
-            mNetworkedSuitControlConnection.ConnectionStateChangeEvent += SuitConnectionChangeHandler;
+            SuitControlConnection = new NetworkedSuitControlConnection();
+            SuitControlConnection.DataReceivedEvent += SuitControlDataReceivedHandler;
+            SuitControlConnection.ConnectionStateChangeEvent += SuitConnectionChangeHandler;
             mDispatchRouter = new ProtobuffDispatchRouter();
             RegisterProtobufEvents();
         }
@@ -223,10 +226,9 @@ namespace Assets.Scripts.Communication.Communicators
         {
             if (string.IsNullOrEmpty(vIpAddress))
             {
-                //get the ip address that is in the same subnet as the brainpack's endpoint
                 vIpAddress = GetIpAddressInRangeOfBrainpackAddress(mBrainpackModel.TcpIpEndPoint);
             }
-
+            //todo extract this function
             ListenToSuitOnUdp(vUdpPort, vIpAddress);
             Packet vProtoPacket = new Packet();
             Endpoint vProtoEndpoint = new Endpoint();
@@ -240,15 +242,21 @@ namespace Assets.Scripts.Communication.Communicators
             vProtoEndpoint.address = vIpAddress;
             vProtoEndpoint.port = (uint)vUdpPort;
             vProtoPacket.endpoint = vProtoEndpoint;
-            mNetworkedSuitControlConnection.Send(vProtoPacket);
+            SuitControlConnection.Send(vProtoPacket);
         }
 
         /// <summary>
         /// Listen to suit on UDP port. Disconnects an  Note: will throw an exception if the port is already in use by another process. 
         /// </summary>
         /// <param name="vUdpPort"></param>
-        private void ListenToSuitOnUdp(int vUdpPort, string vIpAddress)
+        public void ListenToSuitOnUdp(int vUdpPort, string vIpAddress)
         {
+            if (string.IsNullOrEmpty(vIpAddress))
+            {
+                //get the ip address that is in the same subnet as the brainpack's endpoint
+                vIpAddress = GetIpAddressInRangeOfBrainpackAddress(mBrainpackModel.TcpIpEndPoint);
+            }
+
             //set up the udp listener before sending a request to create a data stream start
             if (mNetworkSuitUdpConnection == null)
             {
@@ -347,12 +355,12 @@ namespace Assets.Scripts.Communication.Communicators
             {
                 mFirmwareUpdater = new FirmwareUpdateManager(FirmwareLocationPath, vCurrentEndPoint, ApplicationSettings.TftpPort);
             }
-            mNetworkedSuitControlConnection.Send(vPacket);
+            SuitControlConnection.Send(vPacket);
         }
 
         public void SendPacket(Packet vPacket)
         {
-            mNetworkedSuitControlConnection.Send(vPacket);
+            SuitControlConnection.Send(vPacket);
         }
 
 
@@ -374,7 +382,7 @@ namespace Assets.Scripts.Communication.Communicators
                 SuitControlConnection.ConnectionStateChangeEvent -= SuitConnectionChangeHandler;
                 SuitControlConnection.Dispose();
             }
-       }
+        }
 
         /// <summary>
         /// Send a request to the retrieve the state of the suit. 
@@ -383,7 +391,7 @@ namespace Assets.Scripts.Communication.Communicators
         {
             Packet vPacket = new Packet();
             vPacket.type = PacketType.StatusRequest;
-            mNetworkedSuitControlConnection.Send(vPacket);
+            SuitControlConnection.Send(vPacket);
         }
 
         /// <summary>
@@ -393,7 +401,7 @@ namespace Assets.Scripts.Communication.Communicators
         {
             Packet vPacket = new Packet();
             vPacket.type = PacketType.StopDataStream;
-            mNetworkedSuitControlConnection.Send(vPacket);
+            SuitControlConnection.Send(vPacket);
         }
 
     }

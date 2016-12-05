@@ -67,7 +67,7 @@ namespace Assets.Scripts.Communication.Communicators
                 }
                   
                 Port = vPort;
-                BrainpackAdvertisingListener.UdpState vState = new BrainpackAdvertisingListener.UdpState();
+                UdpState vState = new UdpState();
                 var vIpAdd = IPAddress.Parse(mIpAddress);
                 IPEndPoint vEndpoint = new IPEndPoint(vIpAdd, Port);
                 vState.IncomingRawPacket = new RawPacket();
@@ -102,7 +102,7 @@ namespace Assets.Scripts.Communication.Communicators
         {
             try
             {
-                BrainpackAdvertisingListener.UdpState vIncomingConnection = (BrainpackAdvertisingListener.UdpState)vAr.AsyncState;
+                UdpState vIncomingConnection = (UdpState)vAr.AsyncState;
                 var vClient = vIncomingConnection.Client;
                 byte[] vBuffer = vClient.EndReceive(vAr, ref vIncomingConnection.EndPoint);
                 //Process message

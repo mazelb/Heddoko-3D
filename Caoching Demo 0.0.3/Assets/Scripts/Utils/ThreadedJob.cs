@@ -5,6 +5,7 @@
 * @date June 2015
 */
 
+using System;
 using System.Collections;
 
 /**
@@ -14,7 +15,7 @@ using System.Collections;
 public class ThreadedJob
 {
     //Indicates when a thread is done
-    private bool mIsDone = false;
+    protected bool mIsDone = false;
     //Lock handle (mutex)
     private object mThreadLockHandle = new object();
     //the thread
@@ -64,7 +65,11 @@ public class ThreadedJob
     * ThreadFunction()
     * @brief The thread loop, overwrite this in the base class
     */
-    protected virtual void ThreadFunction() { }
+
+    protected virtual void ThreadFunction()
+    {
+
+    }
 
     /**
     * OnFinished()
@@ -97,7 +102,22 @@ public class ThreadedJob
             yield return null;
         }
     }
+    /// <summary>
+    /// Stops pulling data from an inbound buffer
+    /// </summary>
+    public virtual void StopIfWorking()
+    {
+        mIsDone = true;
+        try
+        {
+            mThread.Abort();
+        }
+        catch (Exception vE)
+        {
+            UnityEngine.Debug.Log(vE);
+        }
 
+    }
     /**
     * Run()
     * @brief Run the thread loop

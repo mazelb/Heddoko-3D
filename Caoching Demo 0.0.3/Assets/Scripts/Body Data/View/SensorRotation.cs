@@ -27,7 +27,7 @@ namespace Assets.Scripts.Body_Data.View
         void Awake()
         {
             SetAxisOfRotation();
-            InputHandler.RegisterKeyboardAction(KeyCode.Home, Reset);
+
         }
 
         void SetAxisOfRotation()
@@ -51,7 +51,11 @@ namespace Assets.Scripts.Body_Data.View
 
         void Update()
         {
-            transform.rotation = RelativeRotation;
+            transform.rotation = InitialRotation * AbsoluteRotation;
+            if (Input.GetKeyDown(KeyCode.Home))
+            {
+                Reset();
+            }
         }
 
     }

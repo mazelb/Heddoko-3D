@@ -1,7 +1,7 @@
 ﻿// /**
 // * @file ProtoLanLiveView.cs
 // * @brief Contains the 
-// * @author Mohammed Haider( 
+// * @author Mohammed Haider( mohammed@heddoko.com)
 // * @date 09 2016
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
@@ -11,34 +11,31 @@ using Assets.Scripts.UI.AbstractViews.Layouts;
 using Assets.Scripts.UI.RecordingLoading;
 using UnityEngine;
 using System.Collections.Generic;
-using Assets.Scripts.Communication; 
+using Assets.Scripts.Communication;
+using Assets.Scripts.Communication.Communicators;
 using heddoko;
 
 namespace Assets.Demos
 {
     public class ProtoLanLiveView : LiveSuitFeedView
     {
-        public UdpSocketListener mSocketListener;
+        //   public UdpSocketListener mSocketListener;
         public ProbuffMessageViewController ProbuffMessageViewController;
-         void Awake()
+        [SerializeField]
+        private SuitController mSuitController;
+
+
+        void Awake()
         {
-            mSocketListener = new UdpSocketListener();
-               BodySegment.GBodyFrameUsingQuaternion = true;
+            //  mSocketListener = new UdpSocketListener();
+            BodySegment.GBodyFrameUsingQuaternion = true;
             List<ControlPanelType> vLeftSide = new List<ControlPanelType>();
             vLeftSide.Add(ControlPanelType.LiveBPFeedView);
             ControlPanelTypeList.Add(vLeftSide);
             Hide();
         }
 
-        void Start()
-        {
-         
-        }
 
-        void OnApplicationQuit()
-        {
-            mSocketListener.Stop();
-        }
         /// <summary>
         /// Create a default layout for the live feed view
         /// </summary>
@@ -78,15 +75,19 @@ namespace Assets.Demos
                 mPanelNodes[0].PanelSettings.RequestResources();
             }
             BodySegment.GBodyFrameUsingQuaternion = true;
-            mSocketListener.Start();
-            BrainpackBody.PlayFromDataStream(mSocketListener.FrameRouter);
-            mSocketListener.FrameRouter.DataFrameMessageReceivedEvent -= ProbuffMessageViewController.ProcessMessage;
+
+            BrainpackBody.StartPullFromBuffer(mSuitController.FrameConverter);
             ProbuffMessageViewController.BrainpackMessagePerSecond.Initialized = false;
-            mSocketListener.FrameRouter.DataFrameMessageReceivedEvent += ProbuffMessageViewController.ProcessMessage;
             try
             {
+                // Quaternion vUpAxis = Quaternion.Euler(0, 180, 0);
+
                 BodySegment.IsUsingInterpolation = false;
+                //    BodyFrame vBodyFrame = new BodyFrame(0);
+                //  vBodyFrame.FrameData = new Dictionary<BodyStructureMap.SensorPositions, BodyFrame.Vect4>();
+                //  vBodyFrame.FrameData.Add(BodyStructureMap.SensorPositions.SP_LowerSpine,new BodyFrame.Vect4( vUpAxis.x, vUpAxis.x, vUpAxis.x, vUpAxis.w) ); 
                 BrainpackBody.View.ResetInitialFrame();
+                BodySegment.IsUsingInterpolation = true;
             }
             catch
             {
@@ -94,11 +95,11 @@ namespace Assets.Demos
             }
             BodySegment.IsUsingInterpolation = vIsLerp;
             SetContextualInfo();
-             
-            
+
+
         }
 
-  
+
 
         /// <summary>
         /// Set information relative to the context of this view
@@ -106,7 +107,7 @@ namespace Assets.Demos
         private void SetContextualInfo()
         {
             BodyFrameDataControl.SetBody(BrainpackBody);
-        //    FrameGraphControl.SetBody(BrainpackBody);
+            //    FrameGraphControl.SetBody(BrainpackBody);
             AnaylsisTextContainer.BodyToAnalyze = BrainpackBody;
         }
 
@@ -142,8 +143,7 @@ namespace Assets.Demos
 
             try
             {
-                BrainpackBody.StopThread(); 
-                mSocketListener.Stop();
+                BrainpackBody.StopThread();
             }
             catch
             {
@@ -174,6 +174,13 @@ namespace Assets.Demos
             RenameRecordingText.color = vColorText;
         }
 
-         
+        void OnApplicationQuit()
+        {
+            if (BrainpackBody != null)
+            {
+                BrainpackBody.StopThread();
+            }
+            mSuitController.OnApplicationQuit();
+        }
     }
 }

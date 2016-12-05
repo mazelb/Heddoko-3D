@@ -7,12 +7,13 @@
 // */
 
 using System;
-using System.Collections.Generic;
 using Assets.Demos.Protobuff;
 using Assets.Scripts.Body_Data.View;
+using Assets.Scripts.Communication.Communicators;
 using Assets.Scripts.Communication.View;
 using Assets.Scripts.Utils;
 using heddoko;
+using HeddokoLib.adt;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,15 +34,16 @@ namespace Assets.Demos
         private bool[] mSelectedIntegers = new bool[9];
         public Vector3 FirstVector;
         public Vector3 SecondVector;
-        public int vVal;
+   
         public bool IsPaused = false;
         public bool CollectData;
         public Text DataCollectionLabel;
+        public SuitController SuitController;
+        private CircularQueue<Packet> mBuffer = new CircularQueue<Packet>(8,true); 
+    
         void Update()
         {
-            BodySegment.FirstVector = FirstVector;
-            BodySegment.SecondVector = SecondVector;
-            BodyFrame.vVal = vVal;
+           
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 IsPaused = !IsPaused;
@@ -50,6 +52,28 @@ namespace Assets.Demos
             {
                 ChangeDataCollectionState();
             }
+            if (mBuffer.Count != 0)
+            {
+                var vPacket = mBuffer.Dequeue();
+                if (vPacket == null)
+                {
+                    return;
+                }
+                ProcessMessage(vPacket);
+                if (!mBrainpackMessagePerSecond.Initialized)
+                {
+                    mBrainpackMessagePerSecond.Init(vPacket);
+                    return;
+                }
+                mBrainpackMessagePerSecond.CountFrame(vPacket);
+                BrainpackMessagePerSec.text = mBrainpackMessagePerSecond.BmPs + "";
+                AverageMessagePerSec.text = mBrainpackMessagePerSecond.AverageBmPs + "";
+            }
+            
+            SuitController.ConnectionManager.ImuDataFrameReceivedEvent += (vPacket) =>
+            {
+                ProcessMessage(this, vPacket);
+            };
         }
         public BrainpackMessagePerSecond BrainpackMessagePerSecond
         {
@@ -179,35 +203,39 @@ namespace Assets.Demos
                 {
                     vType = (BodyStructureMap.SubSegmentTypes)(vI + 1);
                 }
-
-                Transform vTransform = Body.RenderedBody.GetSubSegmentTransform(vType);
-                var vQuatRot = vTransform.rotation;
-                var vEulerRot = vTransform.eulerAngles;
-                vIndex = ListView.DataSource.Count < 9 ? 0 : vID;
-
-                string vRawQuat = string.Format("{0} ; {1} ; {2}; {3} ", FormatFloatTo2Decimals(vQx), FormatFloatTo2Decimals(vQy), FormatFloatTo2Decimals(vQz), FormatFloatTo2Decimals(vQw));
-                string vRawEuler = string.Format("{0} ; {1} ; {2} ", FormatFloatTo2Decimals(vYaw), FormatFloatTo2Decimals(vRoll), FormatFloatTo2Decimals(vPitch));
-                string vMappedEuler = string.Format("{0} ; {1} ; {2} ", FormatFloatTo2Decimals(vEulerRot.y), FormatFloatTo2Decimals(vEulerRot.x), FormatFloatTo2Decimals(vEulerRot.z));
-                string vMappedQuat = string.Format("{0} ; {1} ; {2} ; {3} ", FormatFloatTo2Decimals(vQuatRot.x), FormatFloatTo2Decimals(vQuatRot.y), FormatFloatTo2Decimals(vQuatRot.z), FormatFloatTo2Decimals(vQuatRot.w));
-                string vMagData = string.Format("{0} ; {1} ; {2} ", FormatFloatTo2Decimals(vMx), FormatFloatTo2Decimals(vMy), FormatFloatTo2Decimals(vMz));
-                string vAccelData = string.Format("{0} ; {1} ; {2} ", FormatFloatTo2Decimals(vAccelx), FormatFloatTo2Decimals(vAccely), FormatFloatTo2Decimals(vAccelz));
-
-                ListView.DataSource[vIndex].RawQuat = vRawQuat;
-                ListView.DataSource[vIndex].RawEuler = vRawEuler;
-                vDescription.MappedEuler = vMappedEuler;
-                vDescription.MappedQuat = vMappedQuat;
-                vDescription.Magnetometer = vMagData;
-                vDescription.Acceleration = vAccelData;
-
-                UpdateSensorState(vIndex, vImuDataFrame[vI]);
-                if (CollectData)
+                if (Body != null && Body.RenderedBody != null)
                 {
-                    mCollector.UpdateCollection(vID, vTimeStamp, vQx, vQy, vQz, vQw, vMx, vMy, vMz, vAccelx, vAccely, vAccelz, vRx, vRy, vRz, vYaw, vPitch, vRoll, vCalStableStatus, vMagTransient);
+                    Transform vTransform = Body.RenderedBody.GetSubSegmentTransform(vType);
+                    var vQuatRot = vTransform.rotation;
+                    var vEulerRot = vTransform.eulerAngles;
+                    vIndex = ListView.DataSource.Count < 9 ? 0 : vID;
+                    string vMappedEuler = string.Format("{0} ; {1} ; {2} ", FormatFloatTo2Decimals(vEulerRot.y), FormatFloatTo2Decimals(vEulerRot.x), FormatFloatTo2Decimals(vEulerRot.z));
+                    string vMappedQuat = string.Format("{0} ; {1} ; {2} ; {3} ", FormatFloatTo2Decimals(vQuatRot.x), FormatFloatTo2Decimals(vQuatRot.y), FormatFloatTo2Decimals(vQuatRot.z), FormatFloatTo2Decimals(vQuatRot.w));
+                    vDescription.MappedEuler = vMappedEuler;
+                    vDescription.MappedQuat = vMappedQuat;
+                    string vRawQuat = string.Format("{0} ; {1} ; {2}; {3} ", FormatFloatTo2Decimals(vQx), FormatFloatTo2Decimals(vQy), FormatFloatTo2Decimals(vQz), FormatFloatTo2Decimals(vQw));
+                    string vRawEuler = string.Format("{0} ; {1} ; {2} ", FormatFloatTo2Decimals(vYaw), FormatFloatTo2Decimals(vRoll), FormatFloatTo2Decimals(vPitch));
+
+                    string vMagData = string.Format("{0} ; {1} ; {2} ", FormatFloatTo2Decimals(vMx), FormatFloatTo2Decimals(vMy), FormatFloatTo2Decimals(vMz));
+                    string vAccelData = string.Format("{0} ; {1} ; {2} ", FormatFloatTo2Decimals(vAccelx), FormatFloatTo2Decimals(vAccely), FormatFloatTo2Decimals(vAccelz));
+
+                    ListView.DataSource[vIndex].RawQuat = vRawQuat;
+                    ListView.DataSource[vIndex].RawEuler = vRawEuler;
+
+                    vDescription.Magnetometer = vMagData;
+                    vDescription.Acceleration = vAccelData;
+
+                    UpdateSensorState(vIndex, vImuDataFrame[vI]);
+                    if (CollectData)
+                    {
+                        mCollector.UpdateCollection(vID, vTimeStamp, vQx, vQy, vQz, vQw, vMx, vMy, vMz, vAccelx, vAccely, vAccelz, vRx, vRy, vRz, vYaw, vPitch, vRoll, vCalStableStatus, vMagTransient);
+                    }
+                    Body.RenderedBody.SensorTransformContainer.UpdateSensorOrientation(vPacket);
+                    ListView.UpdateItems();
+
                 }
 
             }
-            ListView.UpdateItems();
-            Body.RenderedBody.SensorTransformContainer.UpdateSensorOrientation(vPacket);
         }
 
         public void ChangeDataCollectionState()
@@ -246,20 +274,11 @@ namespace Assets.Demos
 
         public void ProcessMessage(object vVsender, object vVargs)
         {
-            Action vAction = () =>
-            {
-                Packet vPacket = (Packet)vVargs;
-                ProcessMessage(vPacket);
-                if (!mBrainpackMessagePerSecond.Initialized)
-                {
-                    mBrainpackMessagePerSecond.Init(vPacket);
-                    return;
-                }
-                mBrainpackMessagePerSecond.CountFrame(vPacket);
-                BrainpackMessagePerSec.text = mBrainpackMessagePerSecond.BmPs + "";
-                AverageMessagePerSec.text = mBrainpackMessagePerSecond.AverageBmPs + "";
-            };
-            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vAction);
+            Packet vPacket = (Packet)vVargs;
+            mBuffer.Enqueue(vPacket);
         }
+
+      
+
     }
 }

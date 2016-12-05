@@ -25,7 +25,7 @@ namespace Assets.Scripts.Body_Data.view
 
         //Initial subsegment position 
         private Vector3 mInitialPosition = Vector3.zero;
-        public Quaternion mInitialRotation;
+        public Quaternion mInitialRotation = Quaternion.identity;
 
         //Sprite Transform2D
         private ISpriteMover mSpriteMover;
@@ -133,13 +133,7 @@ namespace Assets.Scripts.Body_Data.view
         {
             foreach (Transform vObjTransform in SubSegmentTransforms)
             {
-                //Debug.Log(vNewDisplacement - vObjTransform.position);
                 vObjTransform.position = vNewDisplacement;
-            }
-
-            if (mSpriteMover != null)
-            {
-                //mSpriteMover.ApplyTranslations(vNewDisplacement);
             }
         }
 
@@ -155,10 +149,6 @@ namespace Assets.Scripts.Body_Data.view
             {
                 mSpriteMover.ResetOrientations();
             }
-            //if (Camera.main != null && Camera.main.gameObject.activeInHierarchy)
-            //{
-            //    Camera.main.Render();
-            //}
         }
 
         public void ResetPositions()
@@ -166,13 +156,7 @@ namespace Assets.Scripts.Body_Data.view
             foreach (Transform vObjTransform in SubSegmentTransforms)
             {
                 vObjTransform.localPosition = mInitialPosition;
-                //vObjTransform.position = mInitialPosition;
             }
-
-            //if (Camera.main != null)
-            //{
-            //    Camera.main.Render();
-            //}
         }
 
         /**
@@ -232,7 +216,6 @@ namespace Assets.Scripts.Body_Data.view
         {
             foreach (Transform vObjTransform in SubSegmentTransforms)
             {
-                //mInitialRotation = new Quaternion(vObjTransform.localRotation.x, vObjTransform.localRotation.y, vObjTransform.localRotation.z, vObjTransform.localRotation.w);
                 vObjTransform.rotation = Quaternion.identity;
                 vObjTransform.localRotation = Quaternion.identity;
             }

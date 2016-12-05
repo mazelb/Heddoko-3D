@@ -48,9 +48,10 @@ namespace Assets.Scripts.Communication
             mBrainpack = new BrainpackNetworkingModel();
             SuitConnectionManager = new SuitConnectionManager(mBrainpack);
             mAdvertisingListener = new BrainpackAdvertisingListener(10);
-            mAdvertisingListener.BrainpackFoundEvent += NewBrainpackFound;
-            mAdvertisingListener.BrainpackLostEvent += BrainpackLostHandler;
-            mAdvertisingListener.StartListener(6668);
+            mAdvertisingListener.RegisterBrainpackLostEventHandler(NewBrainpackFound);
+            mAdvertisingListener.RegisterBrainpackLostEventHandler(BrainpackLostHandler);
+     
+          //  mAdvertisingListener.StartListener(6668);
             mServerVersion = new Version(1, 5, 8, 0);
             BrainpackContainerPanel.BrainpackSelectedEvent += BrainpackSelected;
             BrainpackStatusPanel.UpdateLatestVersionText(mServerVersion.ToString());
@@ -263,8 +264,8 @@ namespace Assets.Scripts.Communication
             }
             mAdvertisingListener.StopListening();
 
-            mAdvertisingListener.BrainpackFoundEvent -= NewBrainpackFound;
-            mAdvertisingListener.BrainpackLostEvent -= BrainpackLostHandler;
+            mAdvertisingListener.RemoveBrainpackFoundEventHandler(NewBrainpackFound);
+            mAdvertisingListener.RemoveBrainpackLostEventHandler(BrainpackLostHandler); 
             BrainpackContainerPanel.BrainpackSelectedEvent -= BrainpackSelected;
 
         }

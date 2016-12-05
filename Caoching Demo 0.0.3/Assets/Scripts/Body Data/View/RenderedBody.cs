@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Assets.Scripts.Body_Data.view;
 using Assets.Scripts.Body_Data.View.Anaylsis;
+using Assets.Scripts.Utils.DebugContext;
 using UnityEngine;
 
 namespace Assets.Scripts.Body_Data.View
@@ -40,6 +41,7 @@ namespace Assets.Scripts.Body_Data.View
         public Transform Hips;
         public Transform UpperSpine;
         public GameObject[] LayerCopyListeners;
+        public RenderedBodyDebugComponents DebugComponents;
 
 
 
@@ -76,6 +78,7 @@ namespace Assets.Scripts.Body_Data.View
                     }
                 }
                 SensorTransformContainer.SetLayer(mCurrLayerMask);
+                DebugComponents.SetLayer(mCurrLayerMask);
             }
         }
 
@@ -122,6 +125,15 @@ namespace Assets.Scripts.Body_Data.View
             mCurrentBodyType = vType;
         }
 
+        void OnEnable()
+        {
+            InputHandler.RegisterKeyboardAction(KeyCode.I, DebugComponents.FlipVisibility);
+        }
+
+        void OnDisable()
+        {
+            InputHandler.RemoveKeybinding(KeyCode.I, DebugComponents.FlipVisibility);
+        }
 
         /// <summary>
         /// Hides the segment based on the segment passed in
@@ -142,6 +154,11 @@ namespace Assets.Scripts.Body_Data.View
                     Torso.gameObject.SetActive(true);
                     Limbs.gameObject.SetActive(true);
                     SensorTransformContainer.Hide();
+               
+                    if (DebugComponents.DebugModeEnabled)
+                    {
+                        DebugComponents.Show();
+                    }
                     break;
 
                 case ViewType.Sensor:
@@ -149,6 +166,11 @@ namespace Assets.Scripts.Body_Data.View
                     Torso.gameObject.SetActive(false);
                     Limbs.gameObject.SetActive(false);
                     SensorTransformContainer.Show();
+                    if (DebugComponents.DebugModeEnabled)
+                    {
+                        DebugComponents.Hide();
+                    }
+
                     break;
             }
         }

@@ -166,7 +166,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                     for (int i = 0; i < vAnalysisDataStore.SerializedList.Count; i++)
                     {
                         vFileWriter.Write(vRawData[i].Index + ",");
-                        vFileWriter.Write(vRawData[i].ToCSVNoTSNoKeyIncluded());
+                        vFileWriter.Write(vRawData[i].ToCsvnoTsNoKeyIncluded());
                         vFileWriter.Write("\r\n");
                     }
 

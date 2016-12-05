@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using Assets.Scripts.Body_Data.view;
 using Assets.Scripts.Utils;
-using System.Linq;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Data.CalibrationData;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Body_Pipeline.Analysis;
@@ -47,7 +47,7 @@ public class Body
     public BodyStructureMap.BodyTypes BodyType = BodyStructureMap.BodyTypes.BodyType_FullBody;
 
     [SerializeField]
-    public BodyFrame CurrentBodyFrame;
+    public BodyFrame CurrentBodyFrame { get; set; }
     [SerializeField]
     public BodyFrame PreviousBodyFrame;
     //Initial body Frame
@@ -55,6 +55,7 @@ public class Body
     public BodyFrame InitialBodyFrame { get; set; }
 
     private BodyFrameThread mBodyFrameThread = new BodyFrameThread();
+    private ThreadedJob mJobThread;
     public Dictionary<BodyStructureMap.SegmentTypes, SegmentAnalysis> AnalysisSegments = new Dictionary<BodyStructureMap.SegmentTypes, SegmentAnalysis>(5);
     public LeftArmAnalysis LeftArmAnalysis;
     public RightArmAnalysis RightArmAnalysis;
@@ -267,8 +268,10 @@ public class Body
     {
         InitialBodyFrame = vInitialFrame;
         //Reset the body frame calibration container's initial time
-        if (vInitialFrame != null) ;
-        mBodyFrameCalibrationContainer.Reset(vInitialFrame);
+        if (vInitialFrame != null)
+        {
+            mBodyFrameCalibrationContainer.Reset(vInitialFrame);
+        }
         UpdateInitialFrameData();
     }
 
@@ -421,6 +424,20 @@ public class Body
         View.StartUpdating = true;
     }
     /// <summary>
+    /// Initiates the body to start pulling from the given frame converter
+    /// </summary>
+    /// <param name="vThreadedJob"></param>
+    public void StartPullFromBuffer(ProtobuffFrameBodyFrameConverter vThreadedJob)
+    {
+        StopThread();
+        mJobThread = vThreadedJob;
+        mJobThread.Start();
+        View.Init(this, vThreadedJob.OutBoundBuffer);
+        vThreadedJob.OutBoundBuffer.Clear();
+        View.StartUpdating = true;
+    }
+
+    /// <summary>
     /// Listener whos responsibility is to plug the bodyframe thread into controller.
     /// </summary>
     private void BrainPackStreamReadyListener()
@@ -493,7 +510,6 @@ public class Body
     {
         Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic = new Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure>(9);
         List<BodyStructureMap.SensorPositions> vKeyList = new List<BodyStructureMap.SensorPositions>(vBody.CurrentBodyFrame.FrameData.Keys);
-
         for (int i = 0; i < vKeyList.Count; i++)
         {
             BodyStructureMap.SensorPositions vKey = vKeyList[i];
@@ -501,12 +517,11 @@ public class Body
             BodyFrame.Vect4 vInitialRawEuler = vBody.InitialBodyFrame.FrameData[vKey];
             BodyFrame.Vect4 vCurrentRawEuler = vBody.CurrentBodyFrame.FrameData[vKey];
             //Vector3 vPreviousRawEuler = vBody.PreviousBodyFrame.FrameData[vKey];
-
+            
             BodyStructureMap.TrackingStructure vStruct = new BodyStructureMap.TrackingStructure();
             vStruct.InitRawEuler = vInitialRawEuler;
             vStruct.CurrRawEuler = vCurrentRawEuler;
             //vStruct.PrevRawEuler = vPreviousRawEuler;
-
             vDic.Add(vKey, vStruct);
         }
 
@@ -553,7 +568,10 @@ public class Body
         {
             mBodyFrameThread.StopThread();
         }
-
+        if (mJobThread != null)
+        {
+            mJobThread.StopIfWorking();
+        }
     }
 
     /// <summary>

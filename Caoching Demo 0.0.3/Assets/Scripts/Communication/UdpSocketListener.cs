@@ -11,8 +11,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using Assets.Scripts.Communication.View;
-using HeddokoLib.adt;
+ using HeddokoLib.adt;
 using HeddokoLib.heddokoProtobuff.Decoder;
 using RawPacket = HeddokoLib.heddokoProtobuff.Decoder.RawPacket;
 
@@ -42,7 +41,7 @@ namespace Assets.Scripts.Communication
         /// <param name="vPortNumber"></param>
         /// <param name="vInboundBuffer"></param>
         /// <param name="vOutterBuffer"></param>
-        public UdpSocketListener(int vPortNumber = 6669)
+        public UdpSocketListener(int vPortNumber = 1258)
         {
             Port = vPortNumber;
        

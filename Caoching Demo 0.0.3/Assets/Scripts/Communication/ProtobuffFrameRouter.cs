@@ -13,8 +13,7 @@ using heddoko;
 using HeddokoLib.adt; 
 using HeddokoLib.heddokoProtobuff.Decoder;
 using ProtoBuf;
-using UnityEngine;
-using Random = UnityEngine.Random;
+using UnityEngine; 
 
 namespace Assets.Scripts.Communication
 {

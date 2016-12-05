@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Assets.Scripts.Utils;
 using System.IO;
+using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 
 [JsonObject(MemberSerialization.OptIn)]
@@ -43,6 +44,7 @@ public class BodyStructureMap
                 instance.CreateSensorPosToSensorIDMap();
                 instance.CreateSensorPosToSensorTypeMap();
                 instance.CreateSensorPosToSegmentType();
+                instance.CreatePniSensorRotationMatrixMap();
                 instance.isInitialized = true;
 
             }
@@ -56,6 +58,8 @@ public class BodyStructureMap
     {
         public BodyFrame.Vect4 InitRawEuler;
         public BodyFrame.Vect4 CurrRawEuler;
+        public Matrix<float> InitRotationMatrix;
+        public Matrix<float> CurrRotationMatrix;
         public CalibrationStructure CalibrationData;
     };
 
@@ -142,13 +146,14 @@ public class BodyStructureMap
     public Dictionary<SegmentTypes, List<SubSegmentTypes>> SegmentToSubSegmentMap = new Dictionary<SegmentTypes, List<SubSegmentTypes>>();
     [JsonProperty]
     public Dictionary<SegmentTypes, List<SensorPositions>> SegmentToSensorPosMap = new Dictionary<SegmentTypes, List<SensorPositions>>();
-    public Dictionary<SensorPositions,SegmentTypes > SensorPosToSegmentType = new Dictionary<SensorPositions, SegmentTypes>();
+    public Dictionary<SensorPositions, SegmentTypes> SensorPosToSegmentType = new Dictionary<SensorPositions, SegmentTypes>();
 
     [JsonProperty]
     public Dictionary<SensorPositions, SensorTypes> SensorPosToSensorTypeMap = new Dictionary<SensorPositions, SensorTypes>();
     [JsonProperty]
     public Dictionary<SensorPositions, int> SensorPosToSensorIDMap = new Dictionary<SensorPositions, int>();
-
+    [JsonProperty]
+    public Dictionary<SensorPositions, Matrix<float>> PniSensorRotationMatrixMap = new Dictionary<SensorPositions, Matrix<float>>();
     //Build body structure maps
     public void ReadBodyStructureFile()
     {
@@ -166,6 +171,7 @@ public class BodyStructureMap
             CreateSegmentToSubSegmentMap();
             CreateSensorPosToSensorIDMap();
             CreateSensorPosToSensorTypeMap();
+            CreatePniSensorRotationMatrixMap();
             JsonUtilities.ConvertObjectToJson(vPath, this);
             return;
         }
@@ -177,6 +183,42 @@ public class BodyStructureMap
         this.SensorPosToSensorIDMap = vBSm.SensorPosToSensorIDMap;
         vBSm = null; //discard bsm
     }
+
+    private void CreatePniSensorRotationMatrixMap()
+    {
+        //spine
+        Matrix<float> vTorsoMatrix = Matrix<float>.Build.Dense(3, 3);
+        vTorsoMatrix[0, 2] = 1;
+        vTorsoMatrix[0, 0] = -1;
+        vTorsoMatrix[2, 2] = 1;
+        PniSensorRotationMatrixMap.Add(SensorPositions.SP_UpperSpine, Matrix<float>.Build.DenseOfMatrix(vTorsoMatrix));
+        PniSensorRotationMatrixMap.Add(SensorPositions.SP_LowerSpine, Matrix<float>.Build.DenseOfMatrix(vTorsoMatrix));
+
+        //leg
+        Matrix<float> vLegMatrix = Matrix<float>.Build.Dense(3, 3);
+        vLegMatrix[0, 2] = 1;
+        vLegMatrix[1, 1] = 1;
+        vLegMatrix[2, 0] = -1;
+        PniSensorRotationMatrixMap.Add(SensorPositions.SP_RightThigh, Matrix<float>.Build.DenseOfMatrix(vLegMatrix));
+        PniSensorRotationMatrixMap.Add(SensorPositions.SP_RightCalf, Matrix<float>.Build.DenseOfMatrix(vLegMatrix));
+        PniSensorRotationMatrixMap.Add(SensorPositions.SP_LeftThigh, Matrix<float>.Build.DenseOfMatrix(vLegMatrix));
+        PniSensorRotationMatrixMap.Add(SensorPositions.SP_LeftCalf, Matrix<float>.Build.DenseOfMatrix(vLegMatrix));
+        // left arm
+        Matrix<float> vLeftArm = Matrix<float>.Build.Dense(3, 3);
+        vLeftArm[0, 2] = -1;
+        vLeftArm[1, 0] = 0;
+        vLeftArm[2, 1] = -1;
+        PniSensorRotationMatrixMap.Add(SensorPositions.SP_LeftUpperArm, Matrix<float>.Build.DenseOfMatrix(vLegMatrix));
+        PniSensorRotationMatrixMap.Add(SensorPositions.SP_LeftForeArm, Matrix<float>.Build.DenseOfMatrix(vLegMatrix));
+        // right arm
+        Matrix<float> vRightArm = Matrix<float>.Build.Dense(3, 3);
+        vRightArm[0, 0] = -1;
+        vRightArm[1, 1] = 1;
+        vRightArm[2, 2] = 1;
+        PniSensorRotationMatrixMap.Add(SensorPositions.SP_RightUpperArm, Matrix<float>.Build.DenseOfMatrix(vRightArm));
+        PniSensorRotationMatrixMap.Add(SensorPositions.SP_RightForeArm, Matrix<float>.Build.DenseOfMatrix(vRightArm));
+    }
+
 
     /// <summary>
     /// Writes a bodystructure map to file
@@ -203,7 +245,7 @@ public class BodyStructureMap
         SensorPosToSegmentType.Add(SensorPositions.SP_RightElbow, SegmentTypes.SegmentType_RightArm);
         SensorPosToSegmentType.Add(SensorPositions.SP_LeftElbow, SegmentTypes.SegmentType_LeftArm);
         SensorPosToSegmentType.Add(SensorPositions.SP_RightKnee, SegmentTypes.SegmentType_RightLeg);
-         
+
     }
 
     public void CreateBodyToSegmentMap()
