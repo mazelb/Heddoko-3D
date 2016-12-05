@@ -18,10 +18,6 @@ public class SimpleROMHelper : Editor
     Color Ycolor = new Color(0, 1.0f, 0, 0.3f);
     Color Zcolor = new Color(0, 0, 1.0f, 0.3f);
 
-    //     public bool isArm;
-    //     public bool isRight;
-
-
     SerializedProperty ReferenceIsHoriz;
     SerializedProperty InvertReference;
     
@@ -47,6 +43,8 @@ public class SimpleROMHelper : Editor
     float radiusSize;
     Vector3 t_position;
     Quaternion localRotation;
+
+    bool m_IsInBounds;
 
     private void DrawAngleAxis(ref Quaternion localRotation, Vector3 t_position, float offsetSize, float radiusSize, float arrowSize)
     {
@@ -211,7 +209,11 @@ public class SimpleROMHelper : Editor
         DrawConstraints(simpleROMMB, simpleROMMB.transform.parent == null ? Quaternion.identity : simpleROMMB.transform.parent.rotation, t_position, offsetSize, radiusSize, arrowSize);
 
 
-        Handles.color = Color.black;
+        //Handles.color = Color.black;
+        if (m_IsInBounds)
+            Handles.color = Color.cyan; // in z bounds
+        else
+            Handles.color = Color.black; // not z bounds
         Handles.ArrowCap(3, t_position, localRotation * Quaternion.Euler(0, 90, 0), arrowSize);
 
 
@@ -224,7 +226,7 @@ public class SimpleROMHelper : Editor
     }
 
 
-        void OnSceneGUI()
+    void OnSceneGUI()
     {
         simpleROMMB = target as SimpleROMMB;
         handleSize        = HandleUtility.GetHandleSize(simpleROMMB.transform.position) * 3;
@@ -237,6 +239,7 @@ public class SimpleROMHelper : Editor
         DrawCustomGizmos();
         ApplyConstraint();
     }
+
     private void ApplyConstraint()
     {
         Quaternion XMinQ = Quaternion.Euler(minX, 0, 0);
@@ -257,7 +260,6 @@ public class SimpleROMHelper : Editor
         Vector3 YiZiVec = (YiZi * Vector3.right);
 
 
-
         Vector3 localAxe = localRotation * Vector3.right;
         Vector3 toYaZa = YaZaVec - localAxe;
         Vector3 toYaZi = YaZiVec - localAxe;
@@ -265,6 +267,7 @@ public class SimpleROMHelper : Editor
         Vector3 toYiZi = YiZiVec - localAxe;
         Vector3 localEnd = t_position + localAxe * arrowSize;
 
+        // draw axes from main direction to constraint bounds
         Handles.color = Color.red;
         Handles.DrawLine(localEnd, t_position + YaZaVec * arrowSize);
         Handles.DrawLine(localEnd, t_position + YaZiVec * arrowSize);
@@ -276,20 +279,22 @@ public class SimpleROMHelper : Editor
 
         Vector3 endToYaZi = (t_position + YaZiVec * arrowSize) - localEnd;
         Vector3 endToYiZi = (t_position + YiZiVec * arrowSize) - localEnd;
+        if(CheckZConstraint(endToYiZa, endToYaZa, endToYiZi, endToYaZi, localAxe))
+        {
+            if (CheckYConstraint(endToYiZa, endToYaZa, endToYiZi, endToYaZi, localAxe, localEnd, arrowSize))
+                m_IsInBounds = true;
+            else
+                m_IsInBounds = false;
 
-        Vector3 normalZa = Vector3.Cross(endToYaZa, endToYiZa).normalized;
-        Vector3 normalZi = Vector3.Cross(endToYaZi, endToYiZi).normalized;
-        float tZa = Vector3.Dot(normalZa, localAxe);
-        float tZi = Vector3.Dot(normalZi, localAxe);
-
-
-        if (tZi < 0 && tZa > 0)
-            Handles.color = Color.cyan; // in z bounds
+        }
         else
-            Handles.color = Color.red; // not z bounds
+            m_IsInBounds = false;
 
-        Handles.DrawLine(localEnd, localEnd + normalZa * arrowSize);
-        Handles.DrawLine(localEnd, localEnd + normalZi * arrowSize);
+
+
+        //         // draw normal for planes Zmax and Zmin
+        //         Handles.DrawLine(localEnd, localEnd + normalZa * arrowSize);
+        //         Handles.DrawLine(localEnd, localEnd + normalZi * arrowSize);
     }
 
     public override void OnInspectorGUI()
@@ -375,6 +380,71 @@ public class SimpleROMHelper : Editor
         ToggleZConstraint = serializedObject.FindProperty("ToggleZConstraint");
 
 
+    }
+
+    private bool CheckYConstraint(Vector3 endToYiZa, Vector3 endToYaZa, Vector3 endToYiZi, Vector3 endToYaZi, Vector3 localAxe, Vector3 localEnd, float arrowSize)
+    {
+
+        Vector3 normalYi = Vector3.up;
+        Vector3 normalYa = Vector3.up;
+
+        if ( (maxZ < 90 && minZ > -90) ||
+             (maxZ > 90 && minZ < -90))
+        {
+            normalYa = Vector3.Cross(endToYiZa, endToYiZi).normalized;
+            normalYi = Vector3.Cross(endToYaZa, endToYaZi).normalized;
+        }
+        else if (maxZ > 90 && minZ > -90)
+        {
+            normalYa = Vector3.Cross(endToYaZa, endToYiZi).normalized;
+            normalYi = Vector3.Cross(endToYiZa, endToYaZi).normalized;
+        }
+        else // if (maxZ < 90 && minZ < -90)
+        {
+            normalYa = Vector3.Cross(endToYiZa, endToYaZi).normalized;
+            normalYi = Vector3.Cross(endToYaZa, endToYiZi).normalized;
+        }
+
+
+        float tYa = Vector3.Dot(normalYa, localAxe);
+        float tYi = Vector3.Dot(normalYi, localAxe);
+
+        bool YisInBound = false;
+        if (tYi < 0 && tYa > 0)
+            YisInBound = true;
+        else
+            YisInBound = false;
+
+        return YisInBound;
+    }
+
+    private bool CheckZConstraint(Vector3 endToYiZa, Vector3 endToYaZa, Vector3 endToYiZi, Vector3 endToYaZi, Vector3 localAxe)
+    {
+        Vector3 normalZi;
+        Vector3 normalZa;
+
+        if (maxZ > 90)
+            normalZa = Vector3.Cross(endToYiZa, endToYaZa).normalized;
+        else
+            normalZa = Vector3.Cross(endToYaZa, endToYiZa).normalized;
+
+        if (minZ < -90)
+            normalZi = Vector3.Cross(endToYiZi, endToYaZi).normalized;
+        else
+            normalZi = Vector3.Cross(endToYaZi, endToYiZi).normalized;
+
+
+        float tZa = Vector3.Dot(normalZa, localAxe);
+        float tZi = Vector3.Dot(normalZi, localAxe);
+
+
+        bool ZisInBound = false;
+        if (tZi < 0 && tZa > 0)
+            ZisInBound = true;
+        else
+            ZisInBound = false;
+
+        return ZisInBound;
     }
 
 
