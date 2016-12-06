@@ -8,8 +8,7 @@ using Assets.Scripts.Body_Data.View;
 [CanEditMultipleObjects]
 public class SimpleROMHelper : Editor
 {
-    SerializedProperty m_staticROM_ser;
-
+    #region color
     Color m_MainCol = Color.magenta;
     Color m_orthoCol = new Color(0.5f, 0.5f, 0.5f, 1.0f);
     Color m_sphereCol = new Color(0.5f, 0.5f, 0.5f, 0.5f);
@@ -17,6 +16,10 @@ public class SimpleROMHelper : Editor
     Color m_Xcolor = new Color(1.0f, 0, 0, 0.3f);
     Color m_Ycolor = new Color(0, 1.0f, 0, 0.3f);
     Color m_Zcolor = new Color(0, 0, 1.0f, 0.3f);
+    #endregion
+
+    #region SerializedProperty 
+    SerializedProperty m_staticROM_ser;
 
     SerializedProperty m_ReferenceIsHoriz;
     SerializedProperty m_InvertReference;
@@ -29,6 +32,10 @@ public class SimpleROMHelper : Editor
     SerializedProperty m_ToggleYConstraint;
     SerializedProperty m_ToggleZConstraint;
 
+    SimpleROMMB m_simpleROMMB;
+    #endregion
+
+    #region usefull member
     float m_minX;
     float m_minY;
     float m_minZ;
@@ -36,7 +43,6 @@ public class SimpleROMHelper : Editor
     float m_maxY;
     float m_maxZ;
 
-    SimpleROMMB m_simpleROMMB;
     float m_handleSize;
     float m_arrowSize;
     float m_offsetSize;
@@ -45,7 +51,110 @@ public class SimpleROMHelper : Editor
     Quaternion m_localRotation;
 
     bool m_IsInBounds;
+    #endregion
 
+    #region Editor
+
+    void OnSceneGUI()
+    {
+        m_simpleROMMB = target as SimpleROMMB;
+        m_handleSize = HandleUtility.GetHandleSize(m_simpleROMMB.transform.position) * 3;
+        m_arrowSize = m_handleSize * 1.2f * 0.5f;
+        m_offsetSize = m_handleSize * 1.1f * 0.5f;
+        m_radiusSize = m_handleSize * 0.5f;
+        m_positionGizmo = m_simpleROMMB.transform.position + Vector3.up * m_handleSize * 1.5f;
+        m_localRotation = m_simpleROMMB.transform.localRotation;
+
+        DrawCustomGizmos();
+        ApplyConstraint();
+    }
+
+    public override void OnInspectorGUI()
+    {
+        serializedObject.Update();
+
+        m_ReferenceIsHoriz.boolValue = EditorGUILayout.Toggle("Horiz ?", m_ReferenceIsHoriz.boolValue);
+        m_InvertReference.boolValue = EditorGUILayout.Toggle("Invert ?", m_InvertReference.boolValue);
+        // Apply changes to the serializedProperty - always do this in the end of OnInspectorGUI.
+
+        m_minX = m_XConstraint.FindPropertyRelative("minAngle").floatValue;
+        m_minY = m_YConstraint.FindPropertyRelative("minAngle").floatValue;
+        m_minZ = m_ZConstraint.FindPropertyRelative("minAngle").floatValue;
+        m_maxX = m_XConstraint.FindPropertyRelative("maxAngle").floatValue;
+        m_maxY = m_YConstraint.FindPropertyRelative("maxAngle").floatValue;
+        m_maxZ = m_ZConstraint.FindPropertyRelative("maxAngle").floatValue;
+
+        m_ToggleXConstraint.boolValue = EditorGUILayout.BeginToggleGroup("toggle X constraint", m_ToggleXConstraint.boolValue);
+        if (m_ToggleXConstraint.boolValue)
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("min: " + m_minX.ToString());
+            EditorGUILayout.LabelField("max: " + m_maxX.ToString());
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.MinMaxSlider(ref m_minX, ref m_maxX, -180, 180);
+        }
+        EditorGUILayout.EndToggleGroup();
+
+        m_ToggleYConstraint.boolValue = EditorGUILayout.BeginToggleGroup("toggle Y constraint", m_ToggleYConstraint.boolValue);
+        if (m_ToggleYConstraint.boolValue)
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("min: " + m_minY.ToString());
+            EditorGUILayout.LabelField("max: " + m_maxY.ToString());
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.MinMaxSlider(ref m_minY, ref m_maxY, -180, 180);
+        }
+        EditorGUILayout.EndToggleGroup();
+
+
+        if (m_ToggleYConstraint.boolValue && m_ToggleZConstraint.boolValue)
+            m_ToggleZConstraint.boolValue = EditorGUILayout.BeginToggleGroup("toggle Z constraint", m_ToggleZConstraint.boolValue);
+        else
+            m_ToggleZConstraint.boolValue = EditorGUILayout.BeginToggleGroup("toggle Z constraint", m_ToggleZConstraint.boolValue);
+
+        if (m_ToggleZConstraint.boolValue)
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("min: " + m_minZ.ToString());
+            EditorGUILayout.LabelField("max: " + m_maxZ.ToString());
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.MinMaxSlider(ref m_minZ, ref m_maxZ, -90, 90);
+        }
+        EditorGUILayout.EndToggleGroup();
+
+        m_XConstraint.FindPropertyRelative("minAngle").floatValue = m_minX;
+        m_YConstraint.FindPropertyRelative("minAngle").floatValue = m_minY;
+        m_ZConstraint.FindPropertyRelative("minAngle").floatValue = m_minZ;
+        m_XConstraint.FindPropertyRelative("maxAngle").floatValue = m_maxX;
+        m_YConstraint.FindPropertyRelative("maxAngle").floatValue = m_maxY;
+        m_ZConstraint.FindPropertyRelative("maxAngle").floatValue = m_maxZ;
+
+
+        serializedObject.ApplyModifiedProperties();
+    }
+
+    public void OnEnable()
+    {
+        SimpleROMMB simpleROMMB = target as SimpleROMMB;
+
+        m_ReferenceIsHoriz = serializedObject.FindProperty("ReferenceIsHoriz");
+        m_InvertReference = serializedObject.FindProperty("InvertReference");
+
+        m_ROMProp = serializedObject.FindProperty("rom");
+
+        m_XConstraint = m_ROMProp.FindPropertyRelative("XMinMax");
+        m_YConstraint = m_ROMProp.FindPropertyRelative("YMinMax");
+        m_ZConstraint = m_ROMProp.FindPropertyRelative("ZMinMax");
+
+        m_ToggleXConstraint = serializedObject.FindProperty("ToggleXConstraint");
+        m_ToggleYConstraint = serializedObject.FindProperty("ToggleYConstraint");
+        m_ToggleZConstraint = serializedObject.FindProperty("ToggleZConstraint");
+    }
+
+    #endregion
+
+    #region debugDraw
     private void DrawAngleAxis(Vector3 a_position)
     {
         float angle;
@@ -223,22 +332,10 @@ public class SimpleROMHelper : Editor
         Handles.color = Handles.zAxisColor;
         Handles.ArrowCap(3, m_simpleROMMB.transform.position, m_localRotation * Quaternion.Euler(0, 0, 90), m_arrowSize / 2);
     }
+    
+    #endregion
 
-
-    void OnSceneGUI()
-    {
-        m_simpleROMMB = target as SimpleROMMB;
-        m_handleSize        = HandleUtility.GetHandleSize(m_simpleROMMB.transform.position) * 3;
-        m_arrowSize         = m_handleSize * 1.2f * 0.5f;
-        m_offsetSize        = m_handleSize * 1.1f * 0.5f;
-        m_radiusSize        = m_handleSize * 0.5f;
-        m_positionGizmo      = m_simpleROMMB.transform.position + Vector3.up * m_handleSize * 1.5f;
-        m_localRotation = m_simpleROMMB.transform.localRotation;
-
-        DrawCustomGizmos();
-        ApplyConstraint();
-    }
-
+    #region Constraints
     private void ApplyConstraint()
     {
         Quaternion XMinQ = Quaternion.Euler(m_minX, 0, 0);
@@ -280,7 +377,7 @@ public class SimpleROMHelper : Editor
         Vector3 endToYiZi = (m_positionGizmo + YiZiVec * m_arrowSize) - localEnd;
         if(ApproxZConstraint(endToYiZa, endToYaZa, endToYiZi, endToYaZi, localAxe))
         {
-            if (CheckYConstraint(endToYiZa, endToYaZa, endToYiZi, endToYaZi, localAxe, localEnd, m_arrowSize))
+            if (CheckYConstraint(endToYiZa, endToYaZa, endToYiZi, endToYaZi, localAxe, localEnd))
                 m_IsInBounds = true;
             else
                 m_IsInBounds = false;
@@ -289,96 +386,11 @@ public class SimpleROMHelper : Editor
         else
             m_IsInBounds = false;
 
-        DrawDecomposition(localAxe, m_positionGizmo, m_arrowSize);
+        DrawDecomposition(localAxe);
         
     }
-
-    public override void OnInspectorGUI()
-    {
-        serializedObject.Update();
-
-        m_ReferenceIsHoriz.boolValue = EditorGUILayout.Toggle("Horiz ?", m_ReferenceIsHoriz.boolValue);
-        m_InvertReference.boolValue = EditorGUILayout.Toggle("Invert ?", m_InvertReference.boolValue);
-        // Apply changes to the serializedProperty - always do this in the end of OnInspectorGUI.
-
-        m_minX = m_XConstraint.FindPropertyRelative("minAngle").floatValue;
-        m_minY = m_YConstraint.FindPropertyRelative("minAngle").floatValue;
-        m_minZ = m_ZConstraint.FindPropertyRelative("minAngle").floatValue;
-        m_maxX = m_XConstraint.FindPropertyRelative("maxAngle").floatValue;
-        m_maxY = m_YConstraint.FindPropertyRelative("maxAngle").floatValue;
-        m_maxZ = m_ZConstraint.FindPropertyRelative("maxAngle").floatValue;
-
-        m_ToggleXConstraint.boolValue = EditorGUILayout.BeginToggleGroup("toggle X constraint", m_ToggleXConstraint.boolValue);
-        if(m_ToggleXConstraint.boolValue)
-        {
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("min: " + m_minX.ToString());
-            EditorGUILayout.LabelField("max: " + m_maxX.ToString());
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.MinMaxSlider(ref m_minX, ref m_maxX, -180, 180);
-        }
-        EditorGUILayout.EndToggleGroup();
-
-        m_ToggleYConstraint.boolValue = EditorGUILayout.BeginToggleGroup("toggle Y constraint", m_ToggleYConstraint.boolValue);
-        if(m_ToggleYConstraint.boolValue)
-        {
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("min: " + m_minY.ToString());
-            EditorGUILayout.LabelField("max: " + m_maxY.ToString());
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.MinMaxSlider(ref m_minY, ref m_maxY, -180, 180);
-        }
-        EditorGUILayout.EndToggleGroup();
-
-
-        if(m_ToggleYConstraint.boolValue && m_ToggleZConstraint.boolValue)
-            m_ToggleZConstraint.boolValue = EditorGUILayout.BeginToggleGroup("toggle Z constraint", m_ToggleZConstraint.boolValue);
-        else
-            m_ToggleZConstraint.boolValue = EditorGUILayout.BeginToggleGroup("toggle Z constraint", m_ToggleZConstraint.boolValue);
-
-        if (m_ToggleZConstraint.boolValue)
-        {
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("min: " + m_minZ.ToString());
-            EditorGUILayout.LabelField("max: " + m_maxZ.ToString());
-            EditorGUILayout.EndHorizontal();
-            EditorGUILayout.MinMaxSlider(ref m_minZ, ref m_maxZ, -90, 90);
-        }
-        EditorGUILayout.EndToggleGroup();
-
-        m_XConstraint.FindPropertyRelative("minAngle").floatValue = m_minX;
-        m_YConstraint.FindPropertyRelative("minAngle").floatValue = m_minY;
-        m_ZConstraint.FindPropertyRelative("minAngle").floatValue = m_minZ;
-        m_XConstraint.FindPropertyRelative("maxAngle").floatValue = m_maxX;
-        m_YConstraint.FindPropertyRelative("maxAngle").floatValue = m_maxY;
-        m_ZConstraint.FindPropertyRelative("maxAngle").floatValue = m_maxZ;
-
-
-        serializedObject.ApplyModifiedProperties();
-    }
-
-    public void OnEnable()
-    {
-        SimpleROMMB simpleROMMB = target as SimpleROMMB;
-
-        m_ReferenceIsHoriz = serializedObject.FindProperty("ReferenceIsHoriz");
-        m_InvertReference = serializedObject.FindProperty("InvertReference");
-
-        m_ROMProp = serializedObject.FindProperty("rom");
-
-        m_XConstraint = m_ROMProp.FindPropertyRelative("XMinMax");
-        m_YConstraint = m_ROMProp.FindPropertyRelative("YMinMax");
-        m_ZConstraint = m_ROMProp.FindPropertyRelative("ZMinMax");
-
-        m_ToggleXConstraint = serializedObject.FindProperty("ToggleXConstraint");
-        m_ToggleYConstraint = serializedObject.FindProperty("ToggleYConstraint");
-        m_ToggleZConstraint = serializedObject.FindProperty("ToggleZConstraint");
-
-
-    }
-
-    private bool CheckYConstraint(Vector3 endToYiZa, Vector3 endToYaZa, Vector3 endToYiZi, Vector3 endToYaZi, Vector3 localAxe, Vector3 localEnd, float m_arrowSize)
+       
+    private bool CheckYConstraint(Vector3 endToYiZa, Vector3 endToYaZa, Vector3 endToYiZi, Vector3 endToYaZi, Vector3 localAxe, Vector3 localEnd)
     {
 
         Vector3 normalYi = Vector3.up;
@@ -443,7 +455,7 @@ public class SimpleROMHelper : Editor
         return ZisInBound;
     }
 
-    private void DrawDecomposition(Vector3 localAxe, Vector3 t_position, float m_arrowSize)
+    private void DrawDecomposition(Vector3 localAxe)
     {
         Quaternion XMinQ = Quaternion.Euler(m_minX, 0, 0);
         Quaternion XMaxQ = Quaternion.Euler(m_maxX, 0, 0);
@@ -463,17 +475,14 @@ public class SimpleROMHelper : Editor
         Vector3 YiPar = localAxe - YiPerp;
 
         Handles.color = Color.green * 1.3f;
-        Handles.DrawLine(t_position, t_position + YaPerp * m_arrowSize);
-        Handles.DrawLine(t_position + YaPerp * m_arrowSize, t_position + YaPerp * m_arrowSize + YaPar * m_arrowSize);
+        Handles.DrawLine(m_positionGizmo, m_positionGizmo + YaPerp * m_arrowSize);
+        Handles.DrawLine(m_positionGizmo + YaPerp * m_arrowSize, m_positionGizmo + YaPerp * m_arrowSize + YaPar * m_arrowSize);
 
         Handles.color = Color.green * 0.7f;
-        Handles.DrawLine(t_position, t_position + YiPerp * m_arrowSize);
-        Handles.DrawLine(t_position + YiPerp * m_arrowSize, t_position + YiPerp * m_arrowSize + YiPar * m_arrowSize);
-
-
-
-
+        Handles.DrawLine(m_positionGizmo, m_positionGizmo + YiPerp * m_arrowSize);
+        Handles.DrawLine(m_positionGizmo + YiPerp * m_arrowSize, m_positionGizmo + YiPerp * m_arrowSize + YiPar * m_arrowSize);
     }
 
+    #endregion
 
 }
