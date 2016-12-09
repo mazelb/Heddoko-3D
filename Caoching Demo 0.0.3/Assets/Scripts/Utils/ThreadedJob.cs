@@ -108,15 +108,17 @@ public class ThreadedJob
     public virtual void StopIfWorking()
     {
         mIsDone = true;
-        try
+        if (mThread != null)
         {
-            mThread.Abort();
+            try
+            {
+                mThread.Abort();
+            }
+            catch (Exception vE)
+            {
+                UnityEngine.Debug.Log(vE);
+            }
         }
-        catch (Exception vE)
-        {
-            UnityEngine.Debug.Log(vE);
-        }
-
     }
     /**
     * Run()

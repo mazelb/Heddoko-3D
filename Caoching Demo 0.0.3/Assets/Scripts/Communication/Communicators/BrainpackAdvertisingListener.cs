@@ -12,7 +12,8 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Timers;
- using heddoko;
+using Assets.Scripts.Utils.DebugContext.logging;
+using heddoko;
 using HeddokoLib.heddokoProtobuff.Decoder;
 using HeddokoLib.HeddokoDataStructs.Brainpack;
 using ProtoBuf;
@@ -69,6 +70,7 @@ namespace Assets.Scripts.Communication.Communicators
 
         private void VerifyBrainpackCallTime(object vSender, ElapsedEventArgs vE)
         {
+            DebugLogger.Instance.LogMessage(LogType.ApplicationCommand,"verifying brainpack calltime");
             var vTimeNow = DateTime.Now;
             //indices of brainpacks that need to be removed
             List<string> vKeysToRemoves = new List<string>();
@@ -86,6 +88,8 @@ namespace Assets.Scripts.Communication.Communicators
                 mFoundBrainpacks.Remove(vKeysToRemoves[vI]);
                 if (BrainpackLostEvent != null)
                 {
+                    DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "lost a brainpack Id: "+ vRemoved.BrainpackModel.Id);
+
                     BrainpackLostEvent(vRemoved.BrainpackModel);
                 }
             }
@@ -107,7 +111,7 @@ namespace Assets.Scripts.Communication.Communicators
         private void OnReceive(IAsyncResult vAr)
         {
             UdpState vIncomingConnection = (UdpState)vAr.AsyncState;
-            IPEndPoint vEndpoint = new IPEndPoint(IPAddress.Any,  mPort); 
+            IPEndPoint vEndpoint = new IPEndPoint(IPAddress.Any,  mPort);
             try
             {
                 byte[] vBuffer = vIncomingConnection.Client.EndReceive(vAr, ref vEndpoint);
@@ -133,7 +137,7 @@ namespace Assets.Scripts.Communication.Communicators
                                 {
                                     //reset the stream pointer, write and reset.
                                     vMemorySteam.Seek(0, SeekOrigin.Begin);
-                                    vMemorySteam.Write(vDeepCopy.Payload, 1, (int)vDeepCopy.PayloadSize - 1);
+                                    vMemorySteam.Write(vDeepCopy.Payload, 1, (int) vDeepCopy.PayloadSize - 1);
                                     vMemorySteam.Seek(0, SeekOrigin.Begin);
                                     Packet vProtoPacket = Serializer.Deserialize<Packet>(vMemorySteam);
                                     var vMsgType = vProtoPacket.type;
@@ -146,7 +150,7 @@ namespace Assets.Scripts.Communication.Communicators
                                             vBp.Version = vProtoPacket.firmwareVersion;
                                             vBp.Id = vProtoPacket.serialNumber;
                                             vBp.Point = vEndpoint;
-                                            vBp.TcpControlPort = (int)vProtoPacket.configurationPort;
+                                            vBp.TcpControlPort = (int) vProtoPacket.configurationPort;
                                             vBp.TcpIpEndPoint = vEndpoint.Address.ToString();
                                             if (BrainpackFoundEvent != null)
                                             {
@@ -178,7 +182,24 @@ namespace Assets.Scripts.Communication.Communicators
             catch
                 (SocketException vE)
             {
+                string vMsg = "Exception caughtin advertising listener :" + vE;
+                vMsg += ";";
+                if (vE.InnerException != null)
+                {
+                    vMsg += vE.InnerException;
+                }
+                DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, vMsg);
                 UnityEngine.Debug.Log("error in bp advertising listener" + vE.Message);
+            }
+            catch (Exception vE)
+            {
+                string vMsg = "Socket Exception caughtin advertising listener :" + vE;
+                vMsg += ";";
+                if (vE.InnerException != null)
+                {
+                    vMsg += vE.InnerException;
+                }
+                DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, vMsg);
             }
 
         }
@@ -187,9 +208,22 @@ namespace Assets.Scripts.Communication.Communicators
 
         public void StopListening()
         {
-     
-            mClient.Close();
-            
+            try
+            {
+                mClient.Close();
+            }
+            catch (Exception vE)
+            {
+                string vMsg = "Socket Exception caughtin advertising listener :" + vE;
+                vMsg += ";";
+                if (vE.InnerException != null)
+                {
+                    vMsg += vE.InnerException;
+                }
+                DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, vMsg);
+            }
+
+
         }
 
         /// <summary>

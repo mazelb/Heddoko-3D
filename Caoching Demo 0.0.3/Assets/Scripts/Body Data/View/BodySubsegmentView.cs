@@ -26,7 +26,7 @@ namespace Assets.Scripts.Body_Data.view
         //Initial subsegment position 
         private Vector3 mInitialPosition = Vector3.zero;
         public Quaternion mInitialRotation = Quaternion.identity;
-
+        public Quaternion OffsetRotation= Quaternion.identity;
         //Sprite Transform2D
         private ISpriteMover mSpriteMover;
 
@@ -121,6 +121,7 @@ namespace Assets.Scripts.Body_Data.view
                         vObjTransform.Rotate(vNewOrientation.eulerAngles, Space.World);
                         break;
                 }
+                vObjTransform.rotation *= Quaternion.Inverse(OffsetRotation);
             }
             if (mSpriteMover != null)
             {

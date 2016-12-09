@@ -12,10 +12,13 @@ using System.Net;
 using System.Net.Sockets;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.UI.Settings;
+using Assets.Scripts.Utils.DebugContext.logging;
 using heddoko;
 using HeddokoLib.heddokoProtobuff.Decoder;
 using HeddokoLib.HeddokoDataStructs.Brainpack;
 using ProtoBuf;
+using UnityEngine;
+using LogType = Assets.Scripts.Utils.DebugContext.logging.LogType;
 
 namespace Assets.Scripts.Communication.Communicators
 {
@@ -114,7 +117,20 @@ namespace Assets.Scripts.Communication.Communicators
                 vMemorySteam.Seek(0, SeekOrigin.Begin);
                 Packet vProtoPacket = Serializer.Deserialize<Packet>(vMemorySteam);
                 var vMsgType = vProtoPacket.type;
-                mDispatchRouter.Process(vMsgType, vObject, vProtoPacket);
+                try
+                {
+                    mDispatchRouter.Process(vMsgType, vObject, vProtoPacket);
+                }
+                catch (Exception vE)
+                {
+                    string vErr = "Exception thrown: " + vE.Message;
+                    if (vE.InnerException != null)
+                    {
+                        vErr += ";" + vE.InnerException;
+                    }
+                    DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, vErr);
+                }
+
             }
         }
 
@@ -221,19 +237,20 @@ namespace Assets.Scripts.Communication.Communicators
         /// Requests a data stream from the brainpack. 
         /// </summary>
         /// <param name="vUdpPort">The Udp port to listen on  </param>
-        /// <param name="vIpAddress"></param>
-        public void RequestDataStreamFromBrainpack(int vUdpPort, string vIpAddress = null)
+        /// <param name="vRecordingName">the name of the recording</param>
+        /// <param name="vIpAddress">The Ip address of the brainpack</param>
+        public void RequestDataStreamFromBrainpack(int vUdpPort, string vRecordingName = "Default", string vIpAddress = null)
         {
             if (string.IsNullOrEmpty(vIpAddress))
             {
                 vIpAddress = GetIpAddressInRangeOfBrainpackAddress(mBrainpackModel.TcpIpEndPoint);
             }
-            //todo extract this function
+
             ListenToSuitOnUdp(vUdpPort, vIpAddress);
             Packet vProtoPacket = new Packet();
             Endpoint vProtoEndpoint = new Endpoint();
             vProtoPacket.type = PacketType.StartDataStream;
-            vProtoPacket.recordingFilename = "defult";
+            vProtoPacket.recordingFilename = vRecordingName;
             vProtoPacket.recordingFilenameSpecified = true;
             vProtoPacket.sensorMask = 0x1FF; //all sensors
             vProtoPacket.sensorMaskSpecified = true;
@@ -272,7 +289,19 @@ namespace Assets.Scripts.Communication.Communicators
         /// <param name="vPacket"></param>
         private void UdpDataReceived(Packet vPacket)
         {
-            mDispatchRouter.Process(vPacket.type, this, vPacket);
+            try
+            {
+                mDispatchRouter.Process(vPacket.type, this, vPacket);
+            }
+            catch (Exception vE)
+            {
+                string vErr = "Exception thrown while dispatching from the connection manager. The packet type is " +vPacket.type+ "and exception thrown is " + vE.Message;
+                if (vE.InnerException != null)
+                {
+                    vErr += ";" + vE.InnerException;
+                }
+                DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, vErr);
+            }
         }
 
         /// <summary>

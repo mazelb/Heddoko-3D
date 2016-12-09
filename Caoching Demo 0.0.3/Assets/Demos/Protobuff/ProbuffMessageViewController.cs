@@ -7,6 +7,7 @@
 // */
 
 using System;
+using System.Collections;
 using Assets.Demos.Protobuff;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Communication.Communicators;
@@ -39,8 +40,9 @@ namespace Assets.Demos
         public bool CollectData;
         public Text DataCollectionLabel;
         public SuitController SuitController;
-        private CircularQueue<Packet> mBuffer = new CircularQueue<Packet>(8,true); 
-    
+        private CircularQueue<Packet> mBuffer = new CircularQueue<Packet>(8,true);
+ 
+        
         void Update()
         {
            
@@ -69,11 +71,8 @@ namespace Assets.Demos
                 BrainpackMessagePerSec.text = mBrainpackMessagePerSecond.BmPs + "";
                 AverageMessagePerSec.text = mBrainpackMessagePerSecond.AverageBmPs + "";
             }
-            
-            SuitController.ConnectionManager.ImuDataFrameReceivedEvent += (vPacket) =>
-            {
-                ProcessMessage(this, vPacket);
-            };
+           
+
         }
         public BrainpackMessagePerSecond BrainpackMessagePerSecond
         {
@@ -85,6 +84,11 @@ namespace Assets.Demos
         void Start()
         {
             ResetList();
+            SuitController.ConnectionManager.ImuDataFrameReceivedEvent += (vPacket) =>
+            {
+                ProcessMessage(this, vPacket);
+            };
+
         }
 
         public void UpdateBody(Body vBody)

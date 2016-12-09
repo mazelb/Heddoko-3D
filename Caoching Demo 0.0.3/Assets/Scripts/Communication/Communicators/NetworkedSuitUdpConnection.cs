@@ -7,13 +7,18 @@
 // */
 
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
+using Assets.Scripts.Utils.DebugContext.logging;
 using heddoko;
 using HeddokoLib.heddokoProtobuff.Decoder;
 using ProtoBuf;
 using UnityEngine;
+using LogType = Assets.Scripts.Utils.DebugContext.logging.LogType;
 
 namespace Assets.Scripts.Communication.Communicators
 {
@@ -65,7 +70,19 @@ namespace Assets.Scripts.Communication.Communicators
                         return;
                     }
                 }
-                  
+                if (mThread != null && mProcessBytes)
+                {
+                    try
+                    {
+                        mProcessBytes = false;
+                        mThread.Abort();
+
+                    }
+                    catch (ThreadAbortException vE)
+                    {
+
+                    }
+                }
                 Port = vPort;
                 UdpState vState = new UdpState();
                 var vIpAdd = IPAddress.Parse(mIpAddress);
@@ -76,24 +93,29 @@ namespace Assets.Scripts.Communication.Communicators
                 vState.Client = mListener;
                 mListener.BeginReceive(new AsyncCallback(ReceiveCallback), vState);
                 mSuccesfullyInitialized = true;
+                mProcessBytes = true;
+             
+                mThread = new Thread(WorkerFunc);
+                mThread.IsBackground = true;
+                mThread.Start();
             }
             catch (ArgumentOutOfRangeException vException)
             {
                 mSuccesfullyInitialized = false;
-                UnityEngine.Debug.Log("Line: 70 ServerListener_StartServer_Port_number_is_invalid" + vException);
-                //throw new ArgumentOutOfRangeException(Resources.ServerListener_StartServer_Port_number_is_invalid, vArgument);
+                DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "exception thrown in udp suit connection : Line: 70 ServerListener_StartServer_Port_number_is_invalid" + vException);
             }
             catch (SocketException vException)
             {
                 mSuccesfullyInitialized = false;
-                UnityEngine.Debug.Log("Line: 75 Could not create socket, check to make sure that port is not being used by another socket " + vException);
+                DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "exception thrown in udp suit connection :Line: 75 Could not create socket, check to make sure that port is not being used by another socket " + vException);
+
                 throw;
             }
             catch (Exception vException)
             {
                 mSuccesfullyInitialized = false;
-                UnityEngine.Debug.Log("Line: 81 Error occured while binding socket, check inner exception" + vException);
-                // throw new ApplicationException("Error occured while binding socket, check inner exception", vException);
+                DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "exception thrown in udp suit connection :Line: 81 Error occured while binding socket, check inner exception" + vException);
+
             }
 
         }
@@ -109,19 +131,46 @@ namespace Assets.Scripts.Communication.Communicators
                 int vBytesRead = vBuffer.Length;
                 if (vBytesRead > 0)
                 {
-                    //invoke data received event 
-                    //add the bytes to the state object's raw packet
-                    PacketStatus vPacketStatus = PacketStatus.Processing;
-                    for (int i = 0; i < vBytesRead; i++)
+                    byte[] vBytes = new byte[vBuffer.Length];
+                    Array.Copy(vBuffer, vBytes, vBuffer.Length);
+                    mQueueByte.Enqueue(vBytes);
+                    vIncomingConnection.Client.BeginReceive(new AsyncCallback(ReceiveCallback), vIncomingConnection);
+                }
+            }
+            catch (Exception vE)
+            {
+                string vmsg = vE.Message;
+                Debug.Log(vmsg);
+            }
+        }
+
+        private ConcurrentQueue<byte[]> mQueueByte = new ConcurrentQueue<byte[]>();
+        private Thread mThread;
+        private bool mProcessBytes = false;
+        private void WorkerFunc()
+        {
+            while (mProcessBytes)
+            {
+                try
+                {
+                    byte[] vByteBuffer;
+                    mQueueByte.TryDequeue(out vByteBuffer);
+                    if (vByteBuffer == null)
                     {
-                        vPacketStatus = vIncomingConnection.IncomingRawPacket.ProcessByte(vBuffer[i]);
+                        continue;
+                    }
+                    PacketStatus vPacketStatus = PacketStatus.Processing;
+                    RawPacket vRawPacket = new RawPacket();
+                    for (int i = 0; i < vByteBuffer.Length; i++)
+                    {
+                        vPacketStatus = vRawPacket.ProcessByte(vByteBuffer[i]);
                         if (vPacketStatus == PacketStatus.PacketComplete)
                         {
                             if (DataReceivedEvent != null)
                             {
                                 //has been processed and is ready to be processed internally.
                                 //clear out buffer and state objects raw packet.
-                                RawPacket vDeepCopy = new RawPacket(vIncomingConnection.IncomingRawPacket);
+                                RawPacket vDeepCopy = new RawPacket(vRawPacket);
                                 //deserialize the packet 
                                 MemoryStream vMemorySteam = new MemoryStream();
                                 if (vDeepCopy.Payload[0] == 0x04)
@@ -136,24 +185,24 @@ namespace Assets.Scripts.Communication.Communicators
                             }
                             if (vPacketStatus == PacketStatus.PacketError)
                             {
-                                vIncomingConnection.IncomingRawPacket.Clear();
+                                break;
                             }
                         }
                     }
-                    vIncomingConnection.Client.BeginReceive(new AsyncCallback(ReceiveCallback), vIncomingConnection);
+                }
+                catch (Exception VE)
+                {
+
+                    DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "Error in udp thread " + VE.Message);
                 }
             }
-            catch (Exception vE)
-            {
-                string vmsg = vE.Message;
-                Debug.Log(vmsg);
-            }
         }
-
         public void Dispose()
         {
+            mProcessBytes = false;
             if (mListener != null)
             {
+
                 mListener.Close();
             }
         }

@@ -10,6 +10,7 @@ using Assets.Scripts.Body_Data;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.UI;
 using Assets.Scripts.Utils;
+using Assets.Scripts.Utils.DebugContext.logging;
 using heddoko;
 using HeddokoLib.adt;
 using HeddokoLib.HeddokoDataStructs.Brainpack;
@@ -66,7 +67,7 @@ namespace Assets.Scripts.Communication.Communicators
                 Debug.Log("Remove this");
             });
             ContainerController.ContainerView = mContainerPanel;
-            
+
             mAdvertisingListener = new BrainpackAdvertisingListener(3);
             mAdvertisingListener.StartListener(6668);
             RegisterHandlers();
@@ -82,7 +83,7 @@ namespace Assets.Scripts.Communication.Communicators
             mAdvertisingListener.RegisterBrainpackFoundEventHandler(NewBrainpackFound);
             mAdvertisingListener.RegisterBrainpackLostEventHandler(BrainpackLostHandler);
             ConnectionManager.ConcerningReportIncludedEvent += ConcernReportHandler;
-           ConnectionManager.ImuDataFrameReceivedEvent += ImuDataFrameReceivedHandler;
+            ConnectionManager.ImuDataFrameReceivedEvent += ImuDataFrameReceivedHandler;
             ConnectionManager.BrainpackConnectionStateChange += BrainpackControlSocketConnectedHandler;
             mBrainpackStatusPanel.RequestStreamStartEvent += RequestStreamStartHandler;
             ConnectionManager.StatusResponseEvent += StatusResponseHandler;
@@ -96,11 +97,11 @@ namespace Assets.Scripts.Communication.Communicators
             mContainerPanel.BrainpackSelectedEvent -= BrainpackSelectedHandler;
             mAdvertisingListener.RemoveBrainpackFoundEventHandler(NewBrainpackFound);
             mAdvertisingListener.RemoveBrainpackLostEventHandler(BrainpackLostHandler);
-           ConnectionManager.ConcerningReportIncludedEvent -= ConcernReportHandler;
-           ConnectionManager.ImuDataFrameReceivedEvent -= ImuDataFrameReceivedHandler;
-           ConnectionManager.BrainpackConnectionStateChange -= BrainpackControlSocketConnectedHandler;
+            ConnectionManager.ConcerningReportIncludedEvent -= ConcernReportHandler;
+            ConnectionManager.ImuDataFrameReceivedEvent -= ImuDataFrameReceivedHandler;
+            ConnectionManager.BrainpackConnectionStateChange -= BrainpackControlSocketConnectedHandler;
             mBrainpackStatusPanel.RequestStreamStartEvent -= RequestStreamStartHandler;
-          ConnectionManager.StatusResponseEvent -= StatusResponseHandler;
+            ConnectionManager.StatusResponseEvent -= StatusResponseHandler;
         }
 
         /// <summary>
@@ -124,12 +125,12 @@ namespace Assets.Scripts.Communication.Communicators
             if (vFlag)
             {
                 ConnectionManager.RequestDataStreamFromBrainpack(1258);
-               ConnectionManager.RequestSuitStatus();
+                ConnectionManager.RequestSuitStatus();
             }
             else
             {
-               ConnectionManager.RequestStreamFromBrainpackStop();
-               ConnectionManager.RequestSuitStatus();
+                ConnectionManager.RequestStreamFromBrainpackStop();
+                ConnectionManager.RequestSuitStatus();
             }
         }
 
@@ -145,6 +146,10 @@ namespace Assets.Scripts.Communication.Communicators
                 () =>
                 {
                     mBrainpackStatusPanel.SetBrainpackTcpControlState(vArg1);
+                    if (vArg1.NewState == BrainpackConnectionState.Connected)
+                    {
+                         mConnectionManager.RequestSuitStatus();
+                    }
                 });
         }
 
@@ -155,11 +160,6 @@ namespace Assets.Scripts.Communication.Communicators
         /// <param name="vPacket"></param>
         private void ImuDataFrameReceivedHandler(Packet vPacket)
         {
-            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
-              () =>
-              {
-                  Debug.Log("received frame!");
-              });
             mPacketBuffer.Enqueue(vPacket);
         }
 
@@ -187,7 +187,6 @@ namespace Assets.Scripts.Communication.Communicators
            () =>
            {
                ContainerController.RemoveBrainpack(vBrainpack);
-               Debug.Log("Brainpack lost!");
            });
         }
 
@@ -201,7 +200,6 @@ namespace Assets.Scripts.Communication.Communicators
           () =>
           {
               ContainerController.AddBrainpack(vBrainpack);
-              Debug.Log("New brainpack found!");
           });
         }
 
@@ -212,13 +210,8 @@ namespace Assets.Scripts.Communication.Communicators
         /// </summary>
         /// <param name="vSelected"></param>
         private void BrainpackSelectedHandler(BrainpackNetworkingModel vSelected)
-        {
-            //on succesfull connection ,request suit status
-            if (ConnectionManager.ConnectToSuitControlSocket(vSelected))
-            {
-                Debug.Log("selected time start suit status request " + Time.time);
-                ConnectionManager.RequestSuitStatus();
-            }
+        { 
+            ConnectionManager.ConnectToSuitControlSocket(vSelected);
         }
 
         internal void OnApplicationQuit()
@@ -227,7 +220,7 @@ namespace Assets.Scripts.Communication.Communicators
             RemoveHandlers();
             ConnectionManager.CleanUp();
             mAdvertisingListener.StopListening();
-
+            DebugLogger.Instance.Stop();
         }
     }
 }

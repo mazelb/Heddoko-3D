@@ -12,7 +12,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using Assets.Scripts.Utils.DebugContext.logging;
 using UnityEngine;
+using LogType = Assets.Scripts.Utils.DebugContext.logging.LogType;
 
 namespace Assets.Scripts.Utils
 {
@@ -59,7 +61,7 @@ namespace Assets.Scripts.Utils
 
         void Awake()
         {
-            Init();
+           
         }
 
         /// <summary>
@@ -97,6 +99,8 @@ namespace Assets.Scripts.Utils
             try
             {
                 Instance.mQueue.Enqueue(vAction);
+                int vCount = Instance.mQueue.Count;
+                DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "outter thread action queue count: "+ vCount);
             }
             catch (Exception vException)
             {
@@ -128,10 +132,14 @@ namespace Assets.Scripts.Utils
            
         }
 
+        public int OverWritableActionCount;
+        public int QueueCount;
+
         void Update()
         {
             if (mOverWrittableActionQueue.Count > 0)
             {
+                OverWritableActionCount = mOverWrittableActionQueue.Count;
                 List<string> vKeys = new List<string>(mOverWrittableActionQueue.Keys);
                 for (int vI = 0; vI < vKeys.Count; vI++)
                 {
@@ -144,6 +152,7 @@ namespace Assets.Scripts.Utils
             }
             if (mQueue.Count > 0)
             {
+                QueueCount = mQueue.Count;
                 Action vAction = mQueue.Dequeue();
                 if (vAction != null)
                 {

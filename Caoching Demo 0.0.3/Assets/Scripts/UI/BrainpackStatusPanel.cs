@@ -120,6 +120,7 @@ namespace Assets.Scripts.UI
         /// <param name="vArg1"></param>
         public void SetBrainpackTcpControlState(BrainpackConnectionStateChange vArg1)
         {
+           
             //if (vArg1.NewState == BrainpackConnectionState.Connected)
             //{
             //    StartStreamingButton.enabled = true;

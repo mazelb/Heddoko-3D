@@ -252,11 +252,7 @@ public class Body
         foreach (var vKv in BodySegments)
         {
             vKv.Value.UpdateSensorsData(vFrame);
-        }
-        //for (int i = 0; i < BodySegments.Count; i++)
-        //{
-        //    BodySegments[i].UpdateSensorsData(vFrame);
-        //}
+        } 
     }
 
     /**
@@ -284,10 +280,7 @@ public class Body
         {
             vKv.Value.UpdateInitialSensorsData(InitialBodyFrame);
         }
-        //for (int i = 0; i < BodySegments.Count; i++)
-        //{
-        //    BodySegments[i].UpdateInitialSensorsData(InitialBodyFrame);
-        //}
+         
     }
 
     /// <summary>
@@ -299,10 +292,6 @@ public class Body
         {
             vKv.Value.ResetMetrics();
         }
-        //for (int i = 0; i < BodySegments.Count; i++)
-        //{
-        //    BodySegments[i].ResetMetrics();
-        //}
     }
 
     /**
@@ -353,17 +342,12 @@ public class Body
             }
 
             //Setting the first frame as the initial frame
-
-
             SetInitialFrame(vBodyFrame);
             BodyFrameBuffer vBuffer1 = new BodyFrameBuffer();
-
-            // mBodyFrameThread = new BodyFrameThread(bodyFramesRec.RecordingRawFrames, vBuffer1);
             mBodyFrameThread = new BodyFrameThread(vBodyFrameRecording, vBuffer1);
             View.Init(this, vBuffer1);
             View.StartUpdating = true;
             mBodyFrameThread.Start();
-
         }
     }
 
@@ -476,8 +460,7 @@ public class Body
     public static void ApplyTracking(Body vBody, Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic)
     {
         //get the list of segments of the speicfied vBody
-        var vListBodySegments = vBody.BodySegments;
-        foreach (var vBodySegment in vBody.BodySegments)
+         foreach (var vBodySegment in vBody.BodySegments)
         {
             List<BodyStructureMap.SensorPositions> vSensPosList =
              BodyStructureMap.Instance.SegmentToSensorPosMap[vBodySegment.Key];
@@ -516,15 +499,11 @@ public class Body
 
             BodyFrame.Vect4 vInitialRawEuler = vBody.InitialBodyFrame.FrameData[vKey];
             BodyFrame.Vect4 vCurrentRawEuler = vBody.CurrentBodyFrame.FrameData[vKey];
-            //Vector3 vPreviousRawEuler = vBody.PreviousBodyFrame.FrameData[vKey];
-            
             BodyStructureMap.TrackingStructure vStruct = new BodyStructureMap.TrackingStructure();
             vStruct.InitRawEuler = vInitialRawEuler;
             vStruct.CurrRawEuler = vCurrentRawEuler;
-            //vStruct.PrevRawEuler = vPreviousRawEuler;
             vDic.Add(vKey, vStruct);
         }
-
         return vDic;
     }
 
@@ -540,8 +519,7 @@ public class Body
         if (BodySegments.ContainsKey(vSegmentType))
         {
             vSegment = BodySegments[vSegmentType];
-        }
-        //  BodySegment vSegment = BodySegments.First(x => x.SegmentType == vSegmentType);
+        } 
         return vSegment;
     }
 
