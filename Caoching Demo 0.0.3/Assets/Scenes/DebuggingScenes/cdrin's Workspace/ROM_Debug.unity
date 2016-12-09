@@ -559,16 +559,16 @@ MonoBehaviour:
     Name: 
     XMinMax:
       axe: {x: 0, y: 0, z: 0}
-      minAngle: -55.27559
-      maxAngle: 41.417313
+      minAngle: -60
+      maxAngle: 100
     YMinMax:
       axe: {x: 0, y: 0, z: 0}
-      minAngle: 107.56818
-      maxAngle: 135.31177
+      minAngle: -70.43982
+      maxAngle: 34.310852
     ZMinMax:
       axe: {x: 0, y: 0, z: 0}
-      minAngle: 2.634698
-      maxAngle: 37.91385
+      minAngle: 10.293252
+      maxAngle: 34.574795
   ToggleXConstraint: 0
   ToggleYConstraint: 1
   ToggleZConstraint: 1
@@ -636,7 +636,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1288578962}
-  m_LocalRotation: {x: 0.14767396, y: 0.8940584, z: 0.074740775, w: 0.41625202}
+  m_LocalRotation: {x: -0.12048336, y: -0.18378627, z: 0.32903916, w: 0.91838974}
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 3.52, y: 0.2, z: 0.2}
   m_Children: []
@@ -1163,7 +1163,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1621973664}
-  m_LocalRotation: {x: -0.527936, y: 0.7992339, z: -0.2762493, w: -0.07870968}
+  m_LocalRotation: {x: -0.5279359, y: 0.7992338, z: -0.27624926, w: -0.07870967}
   m_LocalPosition: {x: 0.075, y: 3, z: -3.104}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

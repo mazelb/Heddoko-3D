@@ -32,6 +32,9 @@ public class SimpleROMHelper : Editor
     SerializedProperty m_ToggleYConstraint;
     SerializedProperty m_ToggleZConstraint;
 
+    //SerializedProperty ZMaxRadius;
+    //SerializedProperty ZMinRadius;
+
     SimpleROMMB m_simpleROMMB;
     #endregion
 
@@ -73,8 +76,18 @@ public class SimpleROMHelper : Editor
     {
         serializedObject.Update();
 
-        m_ReferenceIsHoriz.boolValue = EditorGUILayout.Toggle("Horiz ?", m_ReferenceIsHoriz.boolValue);
-        m_InvertReference.boolValue = EditorGUILayout.Toggle("Invert ?", m_InvertReference.boolValue);
+
+        EditorGUILayout.FloatField("Z Max Radius", m_ConeRadiusMax);
+        EditorGUILayout.FloatField("Z Min Radius", m_ConeRadiusMin);
+        EditorGUILayout.Separator();
+        EditorGUILayout.FloatField("Proj Z Max Radius", m_ProjConeRadiusMax);
+        EditorGUILayout.FloatField("Proj Z Min Radius", m_ProjConeRadiusMin);
+
+        EditorGUILayout.Separator();
+        EditorGUILayout.Separator();
+
+        //         m_ReferenceIsHoriz.boolValue = EditorGUILayout.Toggle("Horiz ?", m_ReferenceIsHoriz.boolValue);
+        //         m_InvertReference.boolValue = EditorGUILayout.Toggle("Invert ?", m_InvertReference.boolValue);
         // Apply changes to the serializedProperty - always do this in the end of OnInspectorGUI.
 
         m_minX = m_XConstraint.FindPropertyRelative("minAngle").floatValue;
@@ -150,6 +163,11 @@ public class SimpleROMHelper : Editor
         m_ToggleXConstraint = serializedObject.FindProperty("ToggleXConstraint");
         m_ToggleYConstraint = serializedObject.FindProperty("ToggleYConstraint");
         m_ToggleZConstraint = serializedObject.FindProperty("ToggleZConstraint");
+
+
+        //ZMaxRadius = serializedObject.FindProperty("ZMaxRadius");
+        //ZMinRadius = serializedObject.FindProperty("ZMinRadius");
+
     }
 
     #endregion
@@ -364,24 +382,24 @@ public class SimpleROMHelper : Editor
         Vector3 localEnd = m_positionGizmo + localAxe * m_arrowSize;
 
         // draw axes from main direction to constraint bounds
-//         Handles.color = Color.gray;
-//         Handles.DrawLine(localEnd, t_position + YaZaVec * m_arrowSize);
-//         Handles.DrawLine(localEnd, t_position + YaZiVec * m_arrowSize);
-//         Handles.DrawLine(localEnd, t_position + YiZaVec * m_arrowSize);
-//         Handles.DrawLine(localEnd, t_position + YiZiVec * m_arrowSize);
+        Handles.color = Color.gray;
+        Handles.DrawLine(localEnd, m_positionGizmo + YaZaVec * m_arrowSize);
+        Handles.DrawLine(localEnd, m_positionGizmo + YaZiVec * m_arrowSize);
+        Handles.DrawLine(localEnd, m_positionGizmo + YiZaVec * m_arrowSize);
+        Handles.DrawLine(localEnd, m_positionGizmo + YiZiVec * m_arrowSize);
 
         Vector3 endToYaZa = (m_positionGizmo + YaZaVec * m_arrowSize) - localEnd;
         Vector3 endToYiZa = (m_positionGizmo + YiZaVec * m_arrowSize) - localEnd;
 
         Vector3 endToYaZi = (m_positionGizmo + YaZiVec * m_arrowSize) - localEnd;
         Vector3 endToYiZi = (m_positionGizmo + YiZiVec * m_arrowSize) - localEnd;
-        if(ApproxZConstraint(endToYiZa, endToYaZa, endToYiZi, endToYaZi, localAxe))
+        //if(ApproxZConstraint(endToYiZa, endToYaZa, endToYiZi, endToYaZi, localAxe))
+        if(CheckZConstraint())
         {
             if (CheckYConstraint(endToYiZa, endToYaZa, endToYiZi, endToYaZi, localAxe, localEnd))
                 m_IsInBounds = true;
             else
                 m_IsInBounds = false;
-
         }
         else
             m_IsInBounds = false;
@@ -453,6 +471,94 @@ public class SimpleROMHelper : Editor
             ZisInBound = false;
 
         return ZisInBound;
+    }
+    float m_ProjConeRadiusMax;
+    float m_ProjConeRadiusMin;
+    float dist;
+    float m_ConeRadiusMax ;
+    float m_ConeRadiusMin;
+    private bool CheckZConstraint()
+    {
+        bool ZinBound = false;
+
+        Vector3 localAxe = m_localRotation * Vector3.right;
+        localAxe.Normalize();
+
+        float currentZ = m_localRotation.eulerAngles.z;
+        float med = m_minZ + (m_maxZ - m_minZ) * 0.5f;
+
+        float rad;
+
+        m_ConeRadiusMax = (m_maxZ > 0 ? 1 : -1) * Mathf.Sin((90 - m_maxZ) * Mathf.Deg2Rad);
+        m_ConeRadiusMin = (m_minZ > 0 ? 1 : -1) * Mathf.Sin((90 - m_minZ) * Mathf.Deg2Rad);
+
+        m_ProjConeRadiusMax = localAxe.y * Mathf.Tan((90 - Mathf.Abs(m_maxZ)) * Mathf.Deg2Rad);
+        m_ProjConeRadiusMin = localAxe.y * Mathf.Tan((90 - Mathf.Abs(m_minZ)) * Mathf.Deg2Rad);
+
+
+        Vector3 tConeCenter = Vector3.zero;
+        tConeCenter.y += localAxe.y;
+
+        Vector3 projMax;
+        Vector3 projMin;
+        projMax = tConeCenter + (localAxe - tConeCenter).normalized * m_ProjConeRadiusMax; // max
+        projMin = tConeCenter - (localAxe - tConeCenter).normalized * m_ProjConeRadiusMin; // min
+  
+
+        Vector3 startLine = m_positionGizmo + localAxe * m_arrowSize;
+        Vector3 startWire = m_positionGizmo;
+        startWire.y += localAxe.y * m_arrowSize;
+        Vector3 proj = projMax;
+        float radius = m_ProjConeRadiusMax;
+
+        if (m_ProjConeRadiusMax > m_ConeRadiusMax)
+        {
+            Handles.color = Color.red;
+            proj = projMax;
+            radius = m_ProjConeRadiusMax;
+            ZinBound = false;
+        }
+        else if (m_ConeRadiusMin < 0 && m_ProjConeRadiusMin < m_ConeRadiusMin)
+        {
+            Handles.color = Color.black;
+            proj = projMin;
+            radius = m_ProjConeRadiusMin;
+            ZinBound = false;
+        }
+        else if (m_ConeRadiusMin > 0 && m_ProjConeRadiusMin < m_ConeRadiusMin)
+        {
+            Handles.color = Color.grey;
+            proj = projMin;
+            radius = m_ProjConeRadiusMin;
+            ZinBound = false;
+        }
+        else
+        {
+            if (m_ProjConeRadiusMax > 0)
+            {
+                Handles.color = Color.cyan;
+                proj = projMax;
+                radius = m_ProjConeRadiusMax;
+                ZinBound = true;
+            }
+            else if (m_ProjConeRadiusMin < 0)
+            {
+                Handles.color = Color.green;
+                proj = projMin;
+                radius = m_ProjConeRadiusMin;
+                ZinBound = true;
+            }
+            else
+            {
+                Handles.color = Color.clear;
+                ZinBound = false;
+            }
+        }
+
+        Handles.DrawLine(startLine, m_positionGizmo + proj * m_arrowSize);
+        Handles.DrawWireDisc(startWire, Vector3.up, radius * m_arrowSize);
+
+        return ZinBound;
     }
 
     private void DrawDecomposition(Vector3 localAxe)
