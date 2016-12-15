@@ -431,60 +431,7 @@ public class BodyFrame
             this.w = vW;
         }
 
-        /// <summary>
-        /// Converts a Vett4 to a rotation matrix
-        ///<seealso cref="http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/"/>> 
-        /// </summary>
-        /// <param name="vInput"></param>
-        /// <returns></returns>
-        public static Matrix<float> QuatToMatrix(Vect4 vInput)
-        {
-            Matrix<float> vReturnMatrix = Matrix<float>.Build.Dense(3, 3);
-            float vSqw = vInput.w * vInput.w;
-            float vSqx = vInput.x * vInput.x;
-            float vSqy = vInput.y * vInput.y;
-            float vSqz = vInput.z * vInput.z;
-
-            // invs (inverse square length) is only required if quaternion is not already normalised
-         float vInvs = 1 / (vSqx + vSqy + vSqz + vSqw);
-            // since sqw + sqx + sqy + sqz =1/invs*invs
-            vReturnMatrix[0, 0] = (vSqx - vSqy - vSqz + vSqw)* vInvs;
-            vReturnMatrix[1, 1] = (-vSqx + vSqy - vSqz + vSqw) * vInvs;
-            vReturnMatrix[2, 2] = (-vSqx - vSqy + vSqz + vSqw)* vInvs;
-
-            float vTmp1 = vInput.x * vInput.y;
-            float vTmp2 = vInput.z * vInput.w;
-            vReturnMatrix[1, 0] = 2.0f * (vTmp1 + vTmp2)* vInvs;
-            vReturnMatrix[0, 1] = 2.0f * (vTmp1 - vTmp2)* vInvs;
-
-            vTmp1 = vInput.x * vInput.z;
-            vTmp2 = vInput.y * vInput.w;
-            vReturnMatrix[2, 0] = 2.0f * (vTmp1 - vTmp2)* vInvs;
-            vReturnMatrix[0, 2] = 2.0f * (vTmp1 + vTmp2) * vInvs;
-            vTmp1 = vInput.y * vInput.z;
-            vTmp2 = vInput.x * vInput.w;
-            vReturnMatrix[2, 1] = 2.0f * (vTmp1 + vTmp2)* vInvs;
-            vReturnMatrix[1, 2] = 2.0f * (vTmp1 - vTmp2)* vInvs;
-            return vReturnMatrix;
-        }
-
-        /// <summary>
-        /// Returns a new instance of a Vect4 from a given input
-        /// <seealso cref="http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm"/>
-        /// </summary>
-        /// <param name="vInput"></param>
-        /// <returns></returns>
-        public static Vect4 Matrix3X3ToQuat(Matrix<float> vInput)
-        {
-            Vect4 vReturnVect4;
-            vReturnVect4.w = Mathf.Sqrt(1.0f + vInput[0, 0] + vInput[1, 1] + vInput[2, 2]) / 2.0f;
-            float vW4 = (4.0f * vReturnVect4.w);
-            vReturnVect4.x = (vInput[2, 1] - vInput[1, 2]) / vW4;
-            vReturnVect4.y = (vInput[0, 2] - vInput[2, 0]) / vW4;
-            vReturnVect4.z = (vInput[1, 0] - vInput[0, 1]) / vW4;
-            return vReturnVect4;
-        }
-
+        
         public float this[int vIndex]
         {
             get

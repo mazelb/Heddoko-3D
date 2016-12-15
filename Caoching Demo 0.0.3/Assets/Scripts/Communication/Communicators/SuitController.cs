@@ -61,7 +61,7 @@ namespace Assets.Scripts.Communication.Communicators
         {
 
             mPacketBuffer = new CircularQueue<Packet>(PacketBufferSize, true);
-            mFrameConverter = new ProtobuffFrameBodyFrameConverter(mPacketBuffer, new BodyFrameBuffer(8));
+            mFrameConverter = new ProtobuffFrameBodyFrameConverter(mPacketBuffer, new BodyFrameBuffer(32));
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
                 Debug.Log("Remove this");

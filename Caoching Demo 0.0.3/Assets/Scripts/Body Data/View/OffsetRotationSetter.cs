@@ -39,7 +39,7 @@ namespace Assets.Scripts.Body_Data.View
             var vSegmentMap = BodyStructureMap.Instance.SegmentToSubSegmentMap;
             var vSegmentType = vSegmentMap.First(x => x.Value.Contains(vType)).Key;
             var vSegment = RenderedBody.AssociatedBodyView.AssociatedBody.GetSegmentFromSegmentType(vSegmentType);
-            vSegment.BodySubSegmentsDictionary.
+           
         }
 
 

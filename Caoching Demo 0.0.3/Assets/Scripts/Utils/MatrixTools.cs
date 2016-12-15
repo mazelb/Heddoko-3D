@@ -7,6 +7,7 @@
 */
 
 using System;
+using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 
 namespace Assets.Scripts.Utils
@@ -38,28 +39,32 @@ namespace Assets.Scripts.Utils
             vQuaternionResult.x = (float)Math.Sqrt(vQuaternionResult.x);
             vQuaternionResult.y = (float)Math.Sqrt(vQuaternionResult.y);
             vQuaternionResult.z = (float)Math.Sqrt(vQuaternionResult.z);
-            if (vQuaternionResult.w >= vQuaternionResult.x && vQuaternionResult.w >= vQuaternionResult.y && vQuaternionResult.w >= vQuaternionResult.z)
+            if (vQuaternionResult.w >= vQuaternionResult.x && vQuaternionResult.w >= vQuaternionResult.y &&
+                vQuaternionResult.w >= vQuaternionResult.z)
             {
                 vQuaternionResult.w *= +1.0f;
                 vQuaternionResult.x *= Mathf.Sign(vRotationMatrix[2, 1] - vRotationMatrix[1, 2]);
                 vQuaternionResult.y *= Mathf.Sign(vRotationMatrix[0, 2] - vRotationMatrix[2, 0]);
                 vQuaternionResult.z *= Mathf.Sign(vRotationMatrix[1, 0] - vRotationMatrix[0, 1]);
             }
-            else if (vQuaternionResult.x >= vQuaternionResult.w && vQuaternionResult.x >= vQuaternionResult.y && vQuaternionResult.x >= vQuaternionResult.z)
+            else if (vQuaternionResult.x >= vQuaternionResult.w && vQuaternionResult.x >= vQuaternionResult.y &&
+                     vQuaternionResult.x >= vQuaternionResult.z)
             {
                 vQuaternionResult.w *= Mathf.Sign(vRotationMatrix[2, 1] - vRotationMatrix[1, 2]);
                 vQuaternionResult.x *= +1.0f;
                 vQuaternionResult.y *= Mathf.Sign(vRotationMatrix[1, 0] + vRotationMatrix[0, 1]);
                 vQuaternionResult.z *= Mathf.Sign(vRotationMatrix[0, 2] + vRotationMatrix[2, 0]);
             }
-            else if (vQuaternionResult.y >= vQuaternionResult.w && vQuaternionResult.y >= vQuaternionResult.x && vQuaternionResult.y >= vQuaternionResult.z)
+            else if (vQuaternionResult.y >= vQuaternionResult.w && vQuaternionResult.y >= vQuaternionResult.x &&
+                     vQuaternionResult.y >= vQuaternionResult.z)
             {
                 vQuaternionResult.w *= Mathf.Sign(vRotationMatrix[0, 2] - vRotationMatrix[2, 0]);
                 vQuaternionResult.x *= Mathf.Sign(vRotationMatrix[1, 0] + vRotationMatrix[0, 1]);
                 vQuaternionResult.y *= +1.0f;
                 vQuaternionResult.z *= Mathf.Sign(vRotationMatrix[2, 1] + vRotationMatrix[1, 2]);
             }
-            else if (vQuaternionResult.z >= vQuaternionResult.w && vQuaternionResult.z >= vQuaternionResult.x && vQuaternionResult.z >= vQuaternionResult.y)
+            else if (vQuaternionResult.z >= vQuaternionResult.w && vQuaternionResult.z >= vQuaternionResult.x &&
+                     vQuaternionResult.z >= vQuaternionResult.y)
             {
                 vQuaternionResult.w *= Mathf.Sign(vRotationMatrix[1, 0] - vRotationMatrix[0, 1]);
                 vQuaternionResult.x *= Mathf.Sign(vRotationMatrix[2, 0] + vRotationMatrix[0, 2]);
@@ -67,13 +72,17 @@ namespace Assets.Scripts.Utils
                 vQuaternionResult.z *= +1.0f;
             }
 
-            float r = (float)Math.Sqrt(vQuaternionResult.w * vQuaternionResult.w + vQuaternionResult.x * vQuaternionResult.x + vQuaternionResult.y * vQuaternionResult.y + vQuaternionResult.z * vQuaternionResult.z);
+            float r =
+                (float)
+                    Math.Sqrt(vQuaternionResult.w * vQuaternionResult.w + vQuaternionResult.x * vQuaternionResult.x +
+                              vQuaternionResult.y * vQuaternionResult.y + vQuaternionResult.z * vQuaternionResult.z);
             vQuaternionResult.w /= r;
             vQuaternionResult.x /= r;
             vQuaternionResult.y /= r;
             vQuaternionResult.z /= r;
             return vQuaternionResult;
         }
+
         public static Quaternion MatToQuat(float[,] vRotationMatrix)
         {
             Quaternion vQuaternionResult;
@@ -89,28 +98,32 @@ namespace Assets.Scripts.Utils
             vQuaternionResult.x = (float)Math.Sqrt(vQuaternionResult.x);
             vQuaternionResult.y = (float)Math.Sqrt(vQuaternionResult.y);
             vQuaternionResult.z = (float)Math.Sqrt(vQuaternionResult.z);
-            if (vQuaternionResult.w >= vQuaternionResult.x && vQuaternionResult.w >= vQuaternionResult.y && vQuaternionResult.w >= vQuaternionResult.z)
+            if (vQuaternionResult.w >= vQuaternionResult.x && vQuaternionResult.w >= vQuaternionResult.y &&
+                vQuaternionResult.w >= vQuaternionResult.z)
             {
                 vQuaternionResult.w *= +1.0f;
                 vQuaternionResult.x *= Mathf.Sign(vRotationMatrix[2, 1] - vRotationMatrix[1, 2]);
                 vQuaternionResult.y *= Mathf.Sign(vRotationMatrix[0, 2] - vRotationMatrix[2, 0]);
                 vQuaternionResult.z *= Mathf.Sign(vRotationMatrix[1, 0] - vRotationMatrix[0, 1]);
             }
-            else if (vQuaternionResult.x >= vQuaternionResult.w && vQuaternionResult.x >= vQuaternionResult.y && vQuaternionResult.x >= vQuaternionResult.z)
+            else if (vQuaternionResult.x >= vQuaternionResult.w && vQuaternionResult.x >= vQuaternionResult.y &&
+                     vQuaternionResult.x >= vQuaternionResult.z)
             {
                 vQuaternionResult.w *= Mathf.Sign(vRotationMatrix[2, 1] - vRotationMatrix[1, 2]);
                 vQuaternionResult.x *= +1.0f;
                 vQuaternionResult.y *= Mathf.Sign(vRotationMatrix[1, 0] + vRotationMatrix[0, 1]);
                 vQuaternionResult.z *= Mathf.Sign(vRotationMatrix[0, 2] + vRotationMatrix[2, 0]);
             }
-            else if (vQuaternionResult.y >= vQuaternionResult.w && vQuaternionResult.y >= vQuaternionResult.x && vQuaternionResult.y >= vQuaternionResult.z)
+            else if (vQuaternionResult.y >= vQuaternionResult.w && vQuaternionResult.y >= vQuaternionResult.x &&
+                     vQuaternionResult.y >= vQuaternionResult.z)
             {
                 vQuaternionResult.w *= Mathf.Sign(vRotationMatrix[0, 2] - vRotationMatrix[2, 0]);
                 vQuaternionResult.x *= Mathf.Sign(vRotationMatrix[1, 0] + vRotationMatrix[0, 1]);
                 vQuaternionResult.y *= +1.0f;
                 vQuaternionResult.z *= Mathf.Sign(vRotationMatrix[2, 1] + vRotationMatrix[1, 2]);
             }
-            else if (vQuaternionResult.z >= vQuaternionResult.w && vQuaternionResult.z >= vQuaternionResult.x && vQuaternionResult.z >= vQuaternionResult.y)
+            else if (vQuaternionResult.z >= vQuaternionResult.w && vQuaternionResult.z >= vQuaternionResult.x &&
+                     vQuaternionResult.z >= vQuaternionResult.y)
             {
                 vQuaternionResult.w *= Mathf.Sign(vRotationMatrix[1, 0] - vRotationMatrix[0, 1]);
                 vQuaternionResult.x *= Mathf.Sign(vRotationMatrix[2, 0] + vRotationMatrix[0, 2]);
@@ -118,13 +131,17 @@ namespace Assets.Scripts.Utils
                 vQuaternionResult.z *= +1.0f;
             }
 
-            float r = (float)Math.Sqrt(vQuaternionResult.w * vQuaternionResult.w + vQuaternionResult.x * vQuaternionResult.x + vQuaternionResult.y * vQuaternionResult.y + vQuaternionResult.z * vQuaternionResult.z);
+            float r =
+                (float)
+                    Math.Sqrt(vQuaternionResult.w * vQuaternionResult.w + vQuaternionResult.x * vQuaternionResult.x +
+                              vQuaternionResult.y * vQuaternionResult.y + vQuaternionResult.z * vQuaternionResult.z);
             vQuaternionResult.w /= r;
             vQuaternionResult.x /= r;
             vQuaternionResult.y /= r;
             vQuaternionResult.z /= r;
             return vQuaternionResult;
         }
+
         /// <summary>
         /// This Performs transformation From Global Coordinate System To local IMU coordinates
         /// </summary>
@@ -136,12 +153,16 @@ namespace Assets.Scripts.Utils
         {
             float[,] vRotationGlobalResult = new float[3, 3];
             vRotationGlobalResult[0, 0] = Mathf.Cos(vPitch) * Mathf.Cos(vYaw);
-            vRotationGlobalResult[1, 0] = (Mathf.Sin(vRoll) * Mathf.Cos(vYaw) * Mathf.Sin(vPitch) - Mathf.Sin(vYaw) * Mathf.Cos(vRoll));
-            vRotationGlobalResult[2, 0] = (Mathf.Sin(vRoll) * Mathf.Sin(vYaw) + Mathf.Cos(vYaw) * Mathf.Sin(vPitch) * Mathf.Cos(vRoll));
+            vRotationGlobalResult[1, 0] = (Mathf.Sin(vRoll) * Mathf.Cos(vYaw) * Mathf.Sin(vPitch) -
+                                           Mathf.Sin(vYaw) * Mathf.Cos(vRoll));
+            vRotationGlobalResult[2, 0] = (Mathf.Sin(vRoll) * Mathf.Sin(vYaw) +
+                                           Mathf.Cos(vYaw) * Mathf.Sin(vPitch) * Mathf.Cos(vRoll));
 
             vRotationGlobalResult[0, 1] = Mathf.Cos(vPitch) * Mathf.Sin(vYaw);
-            vRotationGlobalResult[1, 1] = Mathf.Sin(vRoll) * Mathf.Sin(vYaw) * Mathf.Sin(vPitch) + Mathf.Cos(vYaw) * Mathf.Cos(vRoll);
-            vRotationGlobalResult[2, 1] = (Mathf.Cos(vRoll) * Mathf.Sin(vYaw) * Mathf.Sin(vPitch) - Mathf.Cos(vYaw) * Mathf.Sin(vRoll));
+            vRotationGlobalResult[1, 1] = Mathf.Sin(vRoll) * Mathf.Sin(vYaw) * Mathf.Sin(vPitch) +
+                                          Mathf.Cos(vYaw) * Mathf.Cos(vRoll);
+            vRotationGlobalResult[2, 1] = (Mathf.Cos(vRoll) * Mathf.Sin(vYaw) * Mathf.Sin(vPitch) -
+                                           Mathf.Cos(vYaw) * Mathf.Sin(vRoll));
 
             vRotationGlobalResult[0, 2] = -Mathf.Sin(vPitch);
             vRotationGlobalResult[1, 2] = Mathf.Cos(vPitch) * Mathf.Sin(vRoll);
@@ -163,12 +184,16 @@ namespace Assets.Scripts.Utils
             vRotationLocalResult[1, 0] = Mathf.Cos(vPitch) * Mathf.Sin(vYaw);
             vRotationLocalResult[2, 0] = -Mathf.Sin(vPitch);
 
-            vRotationLocalResult[0, 1] = -Mathf.Cos(vRoll) * Mathf.Sin(vYaw) + Mathf.Cos(vYaw) * Mathf.Sin(vPitch) * Mathf.Sin(vRoll);
-            vRotationLocalResult[1, 1] = Mathf.Sin(vRoll) * Mathf.Sin(vYaw) * Mathf.Sin(vPitch) + Mathf.Cos(vYaw) * Mathf.Cos(vRoll);
+            vRotationLocalResult[0, 1] = -Mathf.Cos(vRoll) * Mathf.Sin(vYaw) +
+                                         Mathf.Cos(vYaw) * Mathf.Sin(vPitch) * Mathf.Sin(vRoll);
+            vRotationLocalResult[1, 1] = Mathf.Sin(vRoll) * Mathf.Sin(vYaw) * Mathf.Sin(vPitch) +
+                                         Mathf.Cos(vYaw) * Mathf.Cos(vRoll);
             vRotationLocalResult[2, 1] = Mathf.Cos(vPitch) * Mathf.Sin(vRoll);
 
-            vRotationLocalResult[0, 2] = (Mathf.Sin(vRoll) * Mathf.Sin(vYaw) + Mathf.Cos(vYaw) * Mathf.Sin(vPitch) * Mathf.Cos(vRoll));
-            vRotationLocalResult[1, 2] = (Mathf.Cos(vRoll) * Mathf.Sin(vYaw) * Mathf.Sin(vPitch) - Mathf.Cos(vYaw) * Mathf.Sin(vRoll));
+            vRotationLocalResult[0, 2] = (Mathf.Sin(vRoll) * Mathf.Sin(vYaw) +
+                                          Mathf.Cos(vYaw) * Mathf.Sin(vPitch) * Mathf.Cos(vRoll));
+            vRotationLocalResult[1, 2] = (Mathf.Cos(vRoll) * Mathf.Sin(vYaw) * Mathf.Sin(vPitch) -
+                                          Mathf.Cos(vYaw) * Mathf.Sin(vRoll));
             vRotationLocalResult[2, 2] = (Mathf.Cos(vPitch) * Mathf.Cos(vRoll));
             return vRotationLocalResult;
         }
@@ -216,15 +241,48 @@ namespace Assets.Scripts.Utils
 
             IMUQuaternionOrientation vResult;
             vResult.x = -vCosHalfRoll * vSinHalfPitch * vSinHalfYaw
-                + vCosHalfPitch * vCosHalfYaw * vSinHalfRoll;
+                        + vCosHalfPitch * vCosHalfYaw * vSinHalfRoll;
             vResult.y = vCosHalfRoll * vCosHalfYaw * vSinHalfPitch
-                + vSinHalfRoll * vCosHalfPitch * vSinHalfYaw;
+                        + vSinHalfRoll * vCosHalfPitch * vSinHalfYaw;
             vResult.z = vCosHalfRoll * vCosHalfPitch * vSinHalfYaw
-                - vSinHalfRoll * vCosHalfYaw * vSinHalfPitch;
+                        - vSinHalfRoll * vCosHalfYaw * vSinHalfPitch;
             vResult.w = vCosHalfRoll * vCosHalfPitch * vCosHalfYaw
-                + vSinHalfRoll * vSinHalfPitch * vSinHalfYaw;
+                        + vSinHalfRoll * vSinHalfPitch * vSinHalfYaw;
 
             return vResult;
+        }
+
+        /// <summary>
+        /// Converts a Vect4 to a PNI specified DCM. This incoming Quaternion needs to be in NED coordinates
+        /// </summary>
+        /// <param name="vInput"></param>
+        /// <returns></returns>
+        internal static Matrix<float> PniDcmConversion(Quaternion vInput)
+        {
+            Matrix<float> vDCM = Matrix<float>.Build.Dense(3, 3);
+            float vSqw = vInput.w * vInput.w;
+            float vSqx = vInput.x * vInput.x;
+            float vSqy = vInput.y * vInput.y;
+            float vSqz = vInput.z * vInput.z;
+            //set diagonals for legibility first
+            vDCM[0, 0] = (vSqx - vSqy - vSqz + vSqw);
+            vDCM[1, 1] = (-vSqx + vSqy - vSqz + vSqw);
+            vDCM[2, 2] = (-vSqx - vSqy + vSqz + vSqw);
+
+            float vXZ = vInput.x * vInput.z;
+            float vXY = vInput.x * vInput.y;
+            float vYZ = vInput.y * vInput.z;
+            float vYW = vInput.y * vInput.w;
+            float vZW = vInput.z * vInput.w;
+
+            vDCM[0, 1] = 2.0f * (vXY + vZW);
+            vDCM[0, 2] = 2.0f * (vXZ - vYW);
+            vDCM[1, 0] = 2.0f * (vXY - vZW);
+            vDCM[1, 2] = 2.0f * (vYZ + vYW);
+            vDCM[2, 0] = 2.0f * (vXZ + vYW);
+            vDCM[2, 1] = 2.0f * (vYZ - vYW);
+
+            return vDCM;
         }
 
         /// <summary>
@@ -275,7 +333,8 @@ namespace Assets.Scripts.Utils
             a[2, 0] = vRotVector.x * vRotVector.z * (1 - Mathf.Cos(vAngle)) - vRotVector.y * Mathf.Sin(vAngle);
 
             a[0, 1] = vRotVector.x * vRotVector.y * (1 - Mathf.Cos(vAngle)) - vRotVector.z * Mathf.Sin(vAngle);
-            a[1, 1] = Mathf.Cos(vAngle) + vRotVector.y * vRotVector.y * (1 - Mathf.Cos(vAngle)); ;
+            a[1, 1] = Mathf.Cos(vAngle) + vRotVector.y * vRotVector.y * (1 - Mathf.Cos(vAngle));
+            ;
             a[2, 1] = vRotVector.z * vRotVector.y * (1 - Mathf.Cos(vAngle)) + vRotVector.x * Mathf.Sin(vAngle);
 
             a[0, 2] = vRotVector.x * vRotVector.z * (1 - Mathf.Cos(vAngle)) + vRotVector.y * Mathf.Sin(vAngle);
@@ -319,24 +378,188 @@ namespace Assets.Scripts.Utils
 
             return new Vector3(x, y, z);
         }
-    }
 
-    /// <summary>
-    /// A quaternion structure that is needed to render orientation data .
-    /// </summary>
-    public struct IMUQuaternionOrientation
-    {
-        public float x;
-        public float y;
-        public float z;
-        public float w;
-
-        public IMUQuaternionOrientation(float _x, float _y, float _z, float _w)
+        /// <summary>
+        /// Converts a Vett4 to a rotation matrix
+        ///<seealso cref="http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/"/>> 
+        /// </summary>
+        /// <param name="vInput"></param>
+        /// <returns></returns>
+        public static Matrix<float> QuatToMatrix(BodyFrame.Vect4 vInput)
         {
-            x = _x;
-            y = _y;
-            z = _z;
-            w = _w;
+            Matrix<float> vReturnMatrix = Matrix<float>.Build.Dense(3, 3);
+            float vSqw = vInput.w * vInput.w;
+            float vSqx = vInput.x * vInput.x;
+            float vSqy = vInput.y * vInput.y;
+            float vSqz = vInput.z * vInput.z;
+
+            // invs (inverse square length) is only required if quaternion is not already normalised
+            float vInvs = 1 / (vSqx + vSqy + vSqz + vSqw);
+            // since sqw + sqx + sqy + sqz =1/invs*invs
+            vReturnMatrix[0, 0] = (vSqx - vSqy - vSqz + vSqw) * vInvs;
+            vReturnMatrix[1, 1] = (-vSqx + vSqy - vSqz + vSqw) * vInvs;
+            vReturnMatrix[2, 2] = (-vSqx - vSqy + vSqz + vSqw) * vInvs;
+
+            float vTmp1 = vInput.x * vInput.y;
+            float vTmp2 = vInput.z * vInput.w;
+            vReturnMatrix[1, 0] = 2.0f * (vTmp1 + vTmp2) * vInvs;
+            vReturnMatrix[0, 1] = 2.0f * (vTmp1 - vTmp2) * vInvs;
+
+            vTmp1 = vInput.x * vInput.z;
+            vTmp2 = vInput.y * vInput.w;
+            vReturnMatrix[2, 0] = 2.0f * (vTmp1 - vTmp2) * vInvs;
+            vReturnMatrix[0, 2] = 2.0f * (vTmp1 + vTmp2) * vInvs;
+            vTmp1 = vInput.y * vInput.z;
+            vTmp2 = vInput.x * vInput.w;
+            vReturnMatrix[2, 1] = 2.0f * (vTmp1 + vTmp2) * vInvs;
+            vReturnMatrix[1, 2] = 2.0f * (vTmp1 - vTmp2) * vInvs;
+            return vReturnMatrix;
         }
-    };
+        public static Matrix<float> NonNormalizationQuatToMatrix(BodyFrame.Vect4 vInput)
+        {
+            Matrix<float> vReturnMatrix = Matrix<float>.Build.Dense(3, 3);
+            float vSqw = vInput.w * vInput.w;
+            float vSqx = vInput.x * vInput.x;
+            float vSqy = vInput.y * vInput.y;
+            float vSqz = vInput.z * vInput.z;
+
+            // since sqw + sqx + sqy + sqz =1/invs*invs
+            vReturnMatrix[0, 0] = (vSqx - vSqy - vSqz + vSqw);
+            vReturnMatrix[1, 1] = (-vSqx + vSqy - vSqz + vSqw);
+            vReturnMatrix[2, 2] = (-vSqx - vSqy + vSqz + vSqw);
+
+            float vXY = vInput.x * vInput.y;
+            float vWZ = vInput.z * vInput.w;
+            float vWY = vInput.w * vInput.y;
+            float vXZ = vInput.x * vInput.z;
+            float vYZ = vInput.y * vInput.z;
+            float vWX = vInput.x * vInput.w;
+            vReturnMatrix[1, 0] = 2.0f * (vXY + vWZ);
+            vReturnMatrix[0, 1] = 2.0f * (vXY - vWZ);
+
+            vReturnMatrix[2, 0] = 2.0f * (vXZ - vWY);
+            vReturnMatrix[0, 2] = 2.0f * (vXZ + vWY);
+
+            vReturnMatrix[2, 1] = 2.0f * (vYZ + vWX);
+            vReturnMatrix[1, 2] = 2.0f * (vYZ - vWX);
+            return vReturnMatrix;
+        }
+
+        public static Matrix<float> QuatToMatrix(Quaternion vInput)
+        {
+            Matrix<float> vReturnMatrix = Matrix<float>.Build.Dense(3, 3);
+            float vSqw = vInput.w * vInput.w;
+            float vSqx = vInput.x * vInput.x;
+            float vSqy = vInput.y * vInput.y;
+            float vSqz = vInput.z * vInput.z;
+
+            // invs (inverse square length) is only required if quaternion is not already normalised
+            float vInvs = 1 / (vSqx + vSqy + vSqz + vSqw);
+            // since sqw + sqx + sqy + sqz =1/invs*invs
+            vReturnMatrix[0, 0] = (vSqx - vSqy - vSqz + vSqw) * vInvs;
+            vReturnMatrix[1, 1] = (-vSqx + vSqy - vSqz + vSqw) * vInvs;
+            vReturnMatrix[2, 2] = (-vSqx - vSqy + vSqz + vSqw) * vInvs;
+
+            float vTmp1 = vInput.x * vInput.y;
+            float vTmp2 = vInput.z * vInput.w;
+            vReturnMatrix[1, 0] = 2.0f * (vTmp1 + vTmp2) * vInvs;
+            vReturnMatrix[0, 1] = 2.0f * (vTmp1 - vTmp2) * vInvs;
+
+            vTmp1 = vInput.x * vInput.z;
+            vTmp2 = vInput.y * vInput.w;
+            vReturnMatrix[2, 0] = 2.0f * (vTmp1 - vTmp2) * vInvs;
+            vReturnMatrix[0, 2] = 2.0f * (vTmp1 + vTmp2) * vInvs;
+            vTmp1 = vInput.y * vInput.z;
+            vTmp2 = vInput.x * vInput.w;
+            vReturnMatrix[2, 1] = 2.0f * (vTmp1 + vTmp2) * vInvs;
+            vReturnMatrix[1, 2] = 2.0f * (vTmp1 - vTmp2) * vInvs;
+            return vReturnMatrix;
+        }
+
+        /// <summary>
+        /// Returns a new instance of a Vect4 from a given input
+        /// <seealso cref="http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm"/>
+        /// </summary>
+        /// <param name="vInput"></param>
+        /// <returns></returns>
+        public static BodyFrame.Vect4 Matrix3X3ToQuat(Matrix<float> vInput)
+        {
+            BodyFrame.Vect4 vReturnVect4;
+            vReturnVect4.w = Mathf.Sqrt(1.0f + vInput[0, 0] + vInput[1, 1] + vInput[2, 2]) / 2.0f;
+            float vW4 = (4.0f * vReturnVect4.w);
+            vReturnVect4.x = (vInput[2, 1] - vInput[1, 2]) / vW4;
+            vReturnVect4.y = (vInput[0, 2] - vInput[2, 0]) / vW4;
+            vReturnVect4.z = (vInput[1, 0] - vInput[0, 1]) / vW4;
+            return vReturnVect4;
+        }
+
+        /// <summary>
+        /// Returns a new instance of a Vect4 from a given input
+        /// <seealso cref="http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm"/>
+        /// </summary>
+        /// <param name="vInput"></param>
+        /// <returns></returns>
+        public static Quaternion Matrix3X3ToUnityQuat(Matrix<float> vInput)
+        {
+            Quaternion vReturnVect4;
+            vReturnVect4.w = Mathf.Sqrt(1.0f + vInput[0, 0] + vInput[1, 1] + vInput[2, 2]) / 2.0f;
+            float vW4 = (4.0f * vReturnVect4.w);
+            vReturnVect4.x = (vInput[2, 1] - vInput[1, 2]) / vW4;
+            vReturnVect4.y = (vInput[0, 2] - vInput[2, 0]) / vW4;
+            vReturnVect4.z = (vInput[1, 0] - vInput[0, 1]) / vW4;
+            return vReturnVect4;
+        }
+
+        /// <summary>
+        /// A quaternion structure that is needed to render orientation data .
+        /// </summary>
+        public struct IMUQuaternionOrientation
+        {
+            public float x;
+            public float y;
+            public float z;
+            public float w;
+
+            public IMUQuaternionOrientation(float _x, float _y, float _z, float _w)
+            {
+                x = _x;
+                y = _y;
+                z = _z;
+                w = _w;
+            }
+        };
+
+        /// <summary>
+        /// Converts a Vect4 to a PNI specified DCM. This incoming Vect4 needs to be in NED coordinates
+        /// </summary>
+        /// <param name="vInput"></param>
+        /// <returns></returns>
+        public static Matrix<float> PniDcmConversion(BodyFrame.Vect4 vInput)
+        {
+            Matrix<float> vDCM = Matrix<float>.Build.Dense(3, 3);
+            float vSqw = vInput.w * vInput.w;
+            float vSqx = vInput.x * vInput.x;
+            float vSqy = vInput.y * vInput.y;
+            float vSqz = vInput.z * vInput.z;
+            //set diagonals for legibility first
+            vDCM[0, 0] = (vSqx - vSqy - vSqz + vSqw);
+            vDCM[1, 1] = (-vSqx + vSqy - vSqz + vSqw);
+            vDCM[2, 2] = (-vSqx - vSqy + vSqz + vSqw);
+
+            float vXZ = vInput.x * vInput.z;
+            float vXY = vInput.x * vInput.y;
+            float vYZ = vInput.y * vInput.z;
+            float vYW = vInput.y * vInput.w;
+            float vZW = vInput.z * vInput.w;
+
+            vDCM[0, 1] = 2.0f * (vXY + vZW);
+            vDCM[0, 2] = 2.0f * (vXZ - vYW);
+            vDCM[1, 0] = 2.0f * (vXY - vZW);
+            vDCM[1, 2] = 2.0f * (vYZ + vYW);
+            vDCM[2, 0] = 2.0f * (vXZ + vYW);
+            vDCM[2, 1] = 2.0f * (vYZ - vYW);
+
+            return vDCM;
+        }
+    }
 }

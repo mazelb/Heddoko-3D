@@ -19,8 +19,8 @@ using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Trunk;
+using Assets.Scripts.Utils;
 using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Complex;
 
 /// <summary>
 /// BodySegment class: represents one abstracted reprensentation of a body segment.
@@ -243,6 +243,33 @@ public partial class BodySegment
         vSegment.UpdateSubsegmentPosition(mHipDisplacement);
     }
 
+    internal Quaternion SetInitialQuaternion(Quaternion vInit)
+    {
+        Matrix<float> vMatrix = MatrixTools.QuatToMatrix(vInit);
+        Matrix<float> vTemp = Matrix<float>.Build.Dense(3, 3);
+        vMatrix.CopyTo(vTemp);
+        vTemp[0, 1] = vMatrix[1, 0];
+        vTemp[0, 2] = vMatrix[2, 0];
+        vTemp[1, 0] = vMatrix[0, 1];
+        vTemp[1, 2] = vMatrix[2, 1];
+        vTemp[2, 0] = vMatrix[0, 2];
+        vTemp[2, 1] = vMatrix[1, 2];
+        Quaternion vReturn = MatrixTools.Matrix3X3ToUnityQuat(vTemp);
+        return vReturn;
+    }
+
+    internal Quaternion SetInitialQuaternion(BodyFrame.Vect4 vInit)
+    {
+        Matrix<float> vMatrix = MatrixTools.NonNormalizationQuatToMatrix(vInit);
+        Quaternion vReturn = Quaternion.identity;
+        vReturn.w = vInit.w;
+        vReturn.x = vMatrix[0, 0] * vInit.x + vMatrix[1, 0] * vInit.y + vMatrix[2, 0] * vInit.z;
+        vReturn.y = vMatrix[0, 1] * vInit.x + vMatrix[1, 1] * vInit.y + vMatrix[2, 1] * vInit.z;
+        vReturn.z = vMatrix[0, 2] * vInit.x + vMatrix[1, 2] * vInit.y + vMatrix[2, 2] * vInit.z;
+        return vReturn;
+    }
+
+
     /// <summary>
     /// MapTorsoSegment: Performs mapping on the torso subsegment from the available sensor data.
     /// </summary>
@@ -272,15 +299,86 @@ public partial class BodySegment
 
         if (GBodyFrameUsingQuaternion)
         {
-            //Upper torso
-            // Quaternion vTorsoInitQuat = new Quaternion(vTorsoInitRawQuat.X, vTorsoInitRawQuat.Y, vTorsoInitRawQuat.Z, vTorsoInitRawQuat.W);
-            //pni sensor: set to left handed coordinate system
+            // Quaternion vTorsoInitTemp2 = new Quaternion(vTorsoInitRawQuat.x, vTorsoInitRawQuat.y, vTorsoInitRawQuat.z, vTorsoInitRawQuat.w);
+            //  Matrix<float> vPniDcm2 = MatrixTools.PniDcmConversion(vTorsoInitTemp2);
+            Quaternion vTorsoInitTemp = new Quaternion(vTorsoInitRawQuat.z, -vTorsoInitRawQuat.y, vTorsoInitRawQuat.x, vTorsoInitRawQuat.w);
+            //step 1: convert quaternion to a DCM
+            Matrix<float> vPniDcm = MatrixTools.PniDcmConversion(vTorsoInitTemp);
+            //m,aybe use quat.angle axis
+            //step 2: multiply vPniDcm by the global X, this should give us a vector in the form of <m00, m10, m20>
+            Vector3 vPniX = Vector3.zero;
+            vPniX.x = vPniDcm[0, 0];
+            vPniX.y = vPniDcm[1, 0];
+            vPniX.z = vPniDcm[2, 0];
+            Vector3 vPniX2 = Vector3.zero;
+            vPniX2.x = vPniDcm[0, 0];
+            vPniX2.y = vPniDcm[1, 0];
+            vPniX2.z = vPniDcm[2, 0];
+            Vector3 vPniY = Vector3.zero;
+            vPniY.x = vPniDcm[0, 1];
+            vPniY.y = vPniDcm[1, 1];
+            vPniY.z = vPniDcm[2, 1];
+            Vector3 vPniZ = Vector3.zero;
+            vPniZ.x = vPniDcm[0, 2];
+            vPniZ.y = vPniDcm[1, 2];
+            vPniZ.z = vPniDcm[2, 2];
+            vPniZ.Normalize();
+            Debug.Log("vPniX2  : " + vPniX);
+            Debug.Log("vPniY  : " + vPniY);
+            Debug.Log("vPniZ  : " + vPniZ);
+            //find the angle between the global gravity vector Zg and PniX
+            float vTheta = Mathf.Acos(vPniX.z);
+            Debug.Log("angle between: " + vTheta * Mathf.Rad2Deg);
+            //Step 4: get the orthonormal of PniX and Zg
+            Vector3 vOrthoNormal = Vector3.zero;
+            vOrthoNormal.x = vPniDcm[1, 0];
+            vOrthoNormal.y = -vPniDcm[0, 0];
+            Debug.Log("orthonormal : " + vOrthoNormal);
+            // normalize this vector
+            vOrthoNormal.Normalize();
+            Quaternion vTorsoCorrectQuat;//= Quaternion.AngleAxis(vTheta*Mathf.Rad2Deg, vOrthoNormal);
+            //step  : get Sin (theta/2) and Cos(theta/2)
+            float vThetaHalf = vTheta / 2f;
+            float vSinThetaHalf = Mathf.Sin(vThetaHalf);
+            float vCosThetaHalf = Mathf.Cos(vThetaHalf);
+            vTorsoCorrectQuat.w = vCosThetaHalf;
+            vTorsoCorrectQuat.x = vOrthoNormal.x * vSinThetaHalf;
+            vTorsoCorrectQuat.y = vOrthoNormal.y * vSinThetaHalf;
+            vTorsoCorrectQuat.z = vOrthoNormal.z * vSinThetaHalf;
 
-            Quaternion vTorsoInitQuat = new Quaternion(vTorsoInitRawQuat.z, -vTorsoInitRawQuat.y, vTorsoInitRawQuat.x, vTorsoInitRawQuat.w);
+            Quaternion vTorsoCorrected = vTorsoCorrectQuat * vTorsoInitTemp;
+
+
+            //vTorsoCorrected = PniQuaternionConversion(vTorsoCorrected);
+
             vTorsoQuat = new Quaternion(vTorsoCurRawQuat.z, -vTorsoCurRawQuat.y, vTorsoCurRawQuat.x, vTorsoCurRawQuat.w);
-            vTorsoInitQuat = PniQuaternionConversion(vTorsoInitQuat);
+
+
+
+            //Quaternion vTempTorso = vTorsoCorrectQuat*vTorsoQuat;
+            Quaternion vRHS = vTorsoQuat * Quaternion.Inverse(vTorsoCorrectQuat);
+            // vTorsoInitTemp=Quaternion.Inverse(vTorsoCorrected)*vTorsoInitTemp;
+            vTorsoQuat = Quaternion.Inverse(vTorsoCorrected) * vRHS;
+            //  vTorsoQuat = Quaternion.Inverse(vTorsoCorrected) *vTorsoQuat;
             vTorsoQuat = PniQuaternionConversion(vTorsoQuat);
-            vTorsoQuat = Quaternion.Inverse(vTorsoInitQuat) * vTorsoQuat;
+
+            //   vTorsoInitQuat = new Quaternion(vTorsoInitQuat.z, -vTorsoInitQuat.y, vTorsoInitQuat.x, vTorsoInitQuat.w);
+            //rotate 
+            //   vTorsoCorrected = new Quaternion(vTorsoCorrected.z, -vTorsoCorrected.y, vTorsoCorrected.x, vTorsoCorrected.w);
+            //   vTorsoInitTemp = new Quaternion(vTorsoInitTemp.z, -vTorsoInitTemp.y, vTorsoInitTemp.x, vTorsoInitTemp.w);
+            //  vTorsoQuat = new Quaternion(vTorsoCurRawQuat.x, vTorsoCurRawQuat.y, vTorsoCurRawQuat.z, vTorsoCurRawQuat.w);
+
+
+            //Quaternion vConjugateCurr = Quaternion.identity;
+            //vConjugateCurr.x = -vTorsoCorrected.x;
+            //vConjugateCurr.y = -vTorsoCorrected.y;
+            //vConjugateCurr.z = -vTorsoCorrected.z;
+            //vConjugateCurr.w = vTorsoCorrected.w;   
+            // vTorsoQuat = Quaternion.Inverse(vTorsoInitQuat) * vTorsoQuat;
+            //  vTorsoQuat =Quaternion.Inverse(vTorsoInitTemp) * vTorsoCorrected * vTorsoQuat;
+
+
+
 
         }
 
@@ -434,7 +532,7 @@ public partial class BodySegment
         Vector3 vKneeCurrentRawEuler = new Vector3(vKneeCurr.x, vKneeCurr.y, vKneeCurr.z) * 180f / Mathf.PI;
 
         if (GBodyFrameUsingQuaternion)
-        { 
+        {
             Quaternion vThighInitialRawQuat = new Quaternion(vThighInit.z, vThighInit.y, -vThighInit.x, vThighInit.w);
             Quaternion vThighCurrentRawQuat = new Quaternion(vThighCurr.z, vThighCurr.y, -vThighCurr.x, vThighCurr.w);
             Quaternion vKneeInitialRawQuat = new Quaternion(vKneeInit.z, vKneeInit.y, -vKneeInit.x, vKneeInit.w);
@@ -520,10 +618,10 @@ public partial class BodySegment
                                     BodySubSegment vULSubsegment, BodySubSegment vLLSubsegment, BodySubSegment vHipsSubsegment, bool vIsRight = true)
     {
         //Convert to pni scheme
-        vULInitQuat= PniQuaternionConversion(vULInitQuat);
-        vULCurQuat=  PniQuaternionConversion(vULCurQuat);
+        vULInitQuat = PniQuaternionConversion(vULInitQuat);
+        vULCurQuat = PniQuaternionConversion(vULCurQuat);
         vLLInitQuat = PniQuaternionConversion(vLLInitQuat);
-        vLLCurQuat=  PniQuaternionConversion(vLLCurQuat);
+        vLLCurQuat = PniQuaternionConversion(vLLCurQuat);
         //Upper Leg
         Quaternion vThighQuat = Quaternion.Inverse(vULInitQuat) * vULCurQuat;//; Quaternion.Inverse(Quaternion.Euler(0, 0, 180)) * Quaternion.Inverse(vULInitQuat) * vULCurQuat * Quaternion.Euler(0, 0, 180);
 
@@ -680,7 +778,7 @@ public partial class BodySegment
         BodyFrame.Vect4 vLoArmCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightForeArm].CurrRawEuler;
         BodyFrame.Vect4 vTorsoInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightUpperArm].InitRawEuler;
         BodyFrame.Vect4 vTorsoCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightUpperArm].CurrRawEuler;
-         
+
         if (GBodyFrameUsingQuaternion)
         {
             Quaternion vUpArmInitialRawQuat = new Quaternion(-vUpArmInit.z, -vUpArmInit.x, vUpArmInit.y, vUpArmInit.w);
@@ -746,7 +844,7 @@ public partial class BodySegment
             Quaternion vLoArmInitialRawQuat = new Quaternion(-vLoArmInit.z, vLoArmInit.x, -vLoArmInit.y, vLoArmInit.w);
             Quaternion vLoArmCurrentRawQuat = new Quaternion(-vLoArmCurr.z, vLoArmCurr.x, -vLoArmCurr.y, vLoArmCurr.w);
             Quaternion vTorsoInitialRawQuat = new Quaternion(vTorsoInit.z, -vTorsoInit.y, vTorsoInit.z, vTorsoInit.w);
-            Quaternion vTorsoCurrentRawQuat = new Quaternion(vTorsoCurr.z, -vTorsoCurr.y, vTorsoCurr.z, vTorsoCurr.w); 
+            Quaternion vTorsoCurrentRawQuat = new Quaternion(vTorsoCurr.z, -vTorsoCurr.y, vTorsoCurr.z, vTorsoCurr.w);
             MapArmsOrientationsQuat(vUpArmInitialRawQuat, vUpArmCurrentRawQuat, vLoArmInitialRawQuat, vLoArmCurrentRawQuat, vTorsoInitialRawQuat, vTorsoCurrentRawQuat, vUASubsegment, vLASubsegment, vTorsoSubSegment, vHipsSubsegment);
         }
         else
@@ -772,60 +870,6 @@ public partial class BodySegment
         vLACurQuat = PniQuaternionConversion(vLACurQuat);
         vTorsoInitQuat = PniQuaternionConversion(vTorsoInitQuat);
         vTorsoCurQuat = PniQuaternionConversion(vTorsoCurQuat);
-        //vUpCurTemp.x = -vUACurQuat.y;
-        //vUpCurTemp.y = vUACurQuat.z;
-        //vUpCurTemp.z = -vUACurQuat.x;
-        //vUpCurTemp.w = vUACurQuat.w;
-        //vUACurQuat = vUpCurTemp;
-
-        //vUpInitTemp.x = -vUAInitQuat.y;
-        //vUpInitTemp.y = vUAInitQuat.z;
-        //vUpInitTemp.z = -vUAInitQuat.x;
-        //vUpInitTemp.w = vUAInitQuat.w;
-        //vUAInitQuat = vUpInitTemp;
-
-
-
-        //vLoInitCurTemp.x = -vLAInitQuat.y;
-        //vLoInitCurTemp.y = vLAInitQuat.z;
-        //vLoInitCurTemp.z = -vLAInitQuat.x;
-        //vLoInitCurTemp.w = vLAInitQuat.w;
-        //vLAInitQuat = vLoInitCurTemp;
-
-        //vLoCurrTemp.x = -vLACurQuat.y;
-        //vLoCurrTemp.y = vLACurQuat.z;
-        //vLoCurrTemp.z = -vLACurQuat.x;
-        //vLoCurrTemp.w = vLACurQuat.w;
-        //vLACurQuat = vLoCurrTemp;
-
-
-
-        //vTempUpArmQuat.x = -vUACurQuat.y;
-        //vTempUpArmQuat.y = vUACurQuat.z;
-        //vTempUpArmQuat.z = -vUACurQuat.x;
-        //vTempUpArmQuat.w = vUACurQuat.w;
-        //vUACurQuat = vTempUpArmQuat;
-
-        //vTempUpArmQuatInit.x = -vUAInitQuat.y;
-        //vTempUpArmQuatInit.y = vUAInitQuat.z;
-        //vTempUpArmQuatInit.z = -vUAInitQuat.x;
-        //vTempUpArmQuatInit.w = vUAInitQuat.w;
-        //vUAInitQuat = vTempUpArmQuatInit;
-        ///////////////////
-        //vTempLoArmQuatInit.x = -vLoInitCurTemp.y;
-        //vTempLoArmQuatInit.y = vLoInitCurTemp.z;
-        //vTempLoArmQuatInit.z = -vLoInitCurTemp.x;
-        //vTempLoArmQuatInit.w = vLoInitCurTemp.w;
-        //vLoInitCurTemp = vTempUpArmQuat;
-
-        //vTempUpArmQuatInit.x = -vUAInitQuat.y;
-        //vTempUpArmQuatInit.y = vUAInitQuat.z;
-        //vTempUpArmQuatInit.z = -vUAInitQuat.x;
-        //vTempUpArmQuatInit.w = vUAInitQuat.w;
-        //vUAInitQuat = vTempUpArmQuatInit;
-
-        //vTempLoArmQuat.z = vNewLoArmQuat.y;
-
 
         Quaternion vUpArmQuat = Quaternion.Inverse(vUAInitQuat) * vUACurQuat;// Quaternion.Inverse(Quaternion.Euler(180, 0, 90)) * Quaternion.Inverse(vUAInitQuat) * vUACurQuat * Quaternion.Euler(180, 0, 90);
         Quaternion vLoArmQuat = Quaternion.Inverse(vLAInitQuat) * vLACurQuat;// Quaternion.Inverse(Quaternion.Euler(180, 0, 90)) * Quaternion.Inverse(vLAInitQuat) * vLACurQuat * Quaternion.Euler(180, 0, 90);
@@ -846,23 +890,6 @@ public partial class BodySegment
             vNewUpArmQuat = vUpArmQuat;
             vNewLoArmQuat = vLoArmQuat;
         }
-
-
-
-        //    vTempUpArmQuat *= Quaternion.AngleAxis(90, Vector3.forward);
-        //   vTempUpArmQuat *= Quaternion.AngleAxis(90, Vector3.up);
-        //   vTempUpArmQuat *= Quaternion.Euler(0, 90, 90);
-
-        // vTempLoArmQuat *= Quaternion.Euler(0, 90, 90);
-        // vTempLoArmQuat *= Quaternion.AngleAxis(90, Vector3.forward);
-        // vTempLoArmQuat *= Quaternion.AngleAxis(90, Vector3.up);
-        //vTempUpArmQuat.x = vNewUpArmQuat.z;
-        //vTempUpArmQuat.y = vNewUpArmQuat.x;
-        //vTempUpArmQuat.z = vNewUpArmQuat.y;
-
-        //vTempLoArmQuat.x = vNewLoArmQuat.z;
-        //vTempLoArmQuat.y = vNewLoArmQuat.x;
-        //vTempLoArmQuat.z = vNewLoArmQuat.y;
 
 
         vUASubsegment.UpdateSubsegmentOrientation(vNewUpArmQuat, 1, true);

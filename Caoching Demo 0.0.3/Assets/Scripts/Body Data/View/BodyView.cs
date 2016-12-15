@@ -115,6 +115,8 @@ namespace Assets.Scripts.Body_Data.view
                 AssociatedBody.SetInitialFrame(vTempBodyFrame);
                 UpdateViewTracking(vTempBodyFrame);
             }
+            Debug.ClearDeveloperConsole();
+
         }
 
         /// <summary>
