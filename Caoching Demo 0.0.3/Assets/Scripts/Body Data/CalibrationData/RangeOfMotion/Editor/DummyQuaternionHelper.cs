@@ -22,6 +22,9 @@ public class DummyQuaternionHelper : Editor
 
     SerializedProperty drawOrthoProp;
     SerializedProperty AdditionalDebugProp;
+
+    StaticRomMB RootROM;
+
     void OnSceneGUI()
     {
         DummyQuaternion segment = target as DummyQuaternion;
@@ -93,9 +96,45 @@ public class DummyQuaternionHelper : Editor
             Handles.ArrowCap(3, t_position, segment.transform.rotation * Quaternion.Euler(90, 0, 0), arrowSize);
         }
 
+//         if (RootROM == null)
+//         {
+//             Debug.LogError("RootROM is null ? ");
+//             RootROM = segment.transform.GetComponentInParent<StaticRomMB>();
+//             RootROM.PopulateSubSegment();
+//             for (int i = 0; i < RootROM.subSegment.Length; ++i)
+//             {
+//                 Transform t_trans = RootROM.subSegment[i];
+//                 if (t_trans.name == segment.transform.name)
+//                     current_index = i;
+//             }
+//         }
+        tQuat = segment.transform.localRotation; // local copy
+        if (RootROM != null)
+        {
+            segment.transform.localRotation = 
+                RootROM.ROM.capRotation((BodyStructureMap.SegmentTypes)(current_index / 2), 
+                                        (BodyStructureMap.SubSegmentTypes)current_index,
+                                        segment.transform, 
+                                        ref tQuat, true, false);
+        }
+        else
+        {
+            Debug.LogError("RootROM is null : no capRotation ");
+        }
 
+        //Handles.PositionHandle(segment.transform.position, segment.transform.localRotation);
+        Vector3[] verts = new Vector3[4];
+        verts[0] = (arrowSize*0.5f * new Vector3(1, 1, 0));
+        verts[1] = (arrowSize*0.5f * new Vector3(-1, 1, 0));
+        verts[2] = (arrowSize*0.5f * new Vector3(-1, -1, 0));
+        verts[3] = (arrowSize*0.5f * new Vector3(1, -1, 0));
+        for (int i = 0; i < 4; ++i)
+            verts[i] = segment.transform.position + (tQuat * verts[i]);
+
+        Handles.DrawSolidRectangleWithOutline(verts, sphereCol, Color.black);
     }
 
+    int current_index = 0;
     public void OnEnable()
     {
         DummyQuaternion segment = target as DummyQuaternion;
@@ -111,6 +150,23 @@ public class DummyQuaternionHelper : Editor
 
         drawOrthoProp = serializedObject.FindProperty("drawOrtho");
         AdditionalDebugProp = serializedObject.FindProperty("AdditionalDebug");
+
+        RootROM = segment.transform.GetComponentInParent<StaticRomMB>();
+        if(RootROM == null)
+        {
+            Debug.LogError("can't find StaticRomMB script in parents");
+        }
+        else
+        {
+            RootROM.PopulateSubSegment();
+            for(int i = 0; i < RootROM.subSegment.Length; ++i)
+            {
+                Transform t_trans = RootROM.subSegment[i];
+                if (t_trans.name == segment.transform.name)
+                    current_index = i;
+            }
+        }
+
     }
 
     public override void OnInspectorGUI()
@@ -130,9 +186,33 @@ public class DummyQuaternionHelper : Editor
         else
             EditorGUILayout.LabelField("Left Leg");
 
+        EditorGUILayout.Separator();
+        DummyQuaternion segment = target as DummyQuaternion;
+        Vector4 rot;
+        rot.w = segment.transform.localRotation.w;
+        rot.x = segment.transform.localRotation.x;
+        rot.y = segment.transform.localRotation.y;
+        rot.z = segment.transform.localRotation.z;
+        EditorGUILayout.Vector4Field("quaternion", rot);
+        EditorGUILayout.Separator();
+
         drawOrthoProp.boolValue = EditorGUILayout.Toggle("Draw Orthogonal vector (grey)", drawOrthoProp.boolValue);
         AdditionalDebugProp.boolValue = EditorGUILayout.Toggle("Additional Helper", AdditionalDebugProp.boolValue);
         // Apply changes to the serializedProperty - always do this in the end of OnInspectorGUI.
+
+        //if (squel_draw[i] = EditorGUILayout.Foldout(squel_draw[i], t.Name))
+        EditorGUILayout.LabelField("Angle Constraint");
+        {
+            SimpleROM t = RootROM.ROM.squeletteRom[current_index];
+            EditorGUI.indentLevel++;
+            StaticROMHelper.OnInspectorAngleConstraint(t.PitchMinMax, "Pitch axis");
+            StaticROMHelper.OnInspectorAngleConstraint(t.YawMinMax, "Yaw axis");
+            StaticROMHelper.OnInspectorAngleConstraint(t.RollMinMax, "Roll axis");
+            EditorGUI.indentLevel--;
+        }
+
+
+
         serializedObject.ApplyModifiedProperties();
     }
 }

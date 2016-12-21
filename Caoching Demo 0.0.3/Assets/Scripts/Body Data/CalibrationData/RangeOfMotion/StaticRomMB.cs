@@ -14,26 +14,8 @@ public class StaticRomMB : MonoBehaviour
 	public Transform[] subSegment = new Transform[10];
 
 
-	private void Init()
+	public void Init()
 	{
-
-        //         if (rendbod == null)
-        //             rendbod = GetComponent<RenderedBody>();
-        // 
-        //         if (ROM == null)
-        //             ROM = rendbod.ROM;
-        // 
-        //         GameObject t_ref = GameObject.Find("reference");
-        //         if (ROM != null)
-        //         {
-        //             Test(t_ref, "t_ref is null");
-        //             RenderedBody t_rend = t_ref.GetComponent<RenderedBody>();
-        //             Test(t_rend, "t_ref.RenderedBody is null");
-        //             t_rend.Init();
-        //             Test(t_rend.AssociatedBodyView, "t_ref.RenderedBody.AssociatedBodyView is null");
-        //             Test(t_rend.AssociatedBodyView.AssociatedBody, "t_ref.RenderedBody.AssociatedBodyView..AssociatedBody is null");
-        //             ROM.Reference = t_rend.AssociatedBodyView.AssociatedBody;
-        //         }
         ROM = new StaticROM();
         ROM.mFlags = new BodyFlags();
         ROM.mFlags.IsAdjustingSegmentAxis = false;
@@ -63,7 +45,7 @@ public class StaticRomMB : MonoBehaviour
 		}
 	}
 
-	private void PopulateSubSegment()
+	public void PopulateSubSegment()
 	{
         int i = 0;
         if(subSegment[i++] == null)

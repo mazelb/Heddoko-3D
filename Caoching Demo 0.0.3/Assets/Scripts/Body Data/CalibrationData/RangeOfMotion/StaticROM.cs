@@ -73,9 +73,9 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             t_LeftUpperArm.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm);
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm] = t_LeftUpperArm;
             SimpleROM t_LeftForeArm = new SimpleROM();
-			t_LeftForeArm.SetPitchMinMax(0, 0, Vector3.left);   // 
+			t_LeftForeArm.SetPitchMinMax(0, 0, Vector3.forward);   // 
 			t_LeftForeArm.SetYawMinMax(-5, 150, Vector3.up);  // flex 
-			t_LeftForeArm.SetRollMinMax(-150, 20, Vector3.forward);   // 
+			t_LeftForeArm.SetRollMinMax(-150, 20, Vector3.left);   // 
             t_LeftForeArm.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm);
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm] = t_LeftForeArm;
 
@@ -165,40 +165,50 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             a_quat = a_quat * Quaternion.Euler(0, dif, 0);
             return Mathf.Abs(dif) < 1;
         }
-        private bool ConstraintRoll(AngleConstraint a_RollConst, ref Quaternion a_quat, BodyStructureMap.SubSegmentTypes a_subType)
+        private bool ConstraintRoll(AngleConstraint a_RollAC, ref Quaternion a_quat, BodyStructureMap.SubSegmentTypes a_subType)
         {
             Vector3 localOrthoAxe;
             float t_RollAngle;
             //special case for arms
             if (a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_RightUpperArm ||
                 a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm ||
-                a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm || 
-                a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm  )
+                a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm ||
+                a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm)
             {
-                localOrthoAxe = a_quat * Vector3.forward;
-                localOrthoAxe = Vector3.ProjectOnPlane(localOrthoAxe, a_quat * Vector3.right);
-                //localOrthoAxe.Normalize();
-                t_RollAngle = Mathf.Atan2(localOrthoAxe.y, localOrthoAxe.x) * Mathf.Rad2Deg;
+
+                Quaternion localWithoutRoll = Quaternion.LookRotation(a_quat * a_RollAC.axe, Vector3.up);
+                Quaternion localWithRoll = Quaternion.LookRotation(a_quat * a_RollAC.axe, a_quat * Vector3.up);
+
+                t_RollAngle = Quaternion.Angle(localWithoutRoll, localWithRoll);
+                if (a_quat.eulerAngles.x > 180)
+                    t_RollAngle = -t_RollAngle;
+
+                float other_angle;
+                Vector3 random_v;
+                localWithoutRoll.ToAngleAxis(out other_angle, out random_v);
+                if (t_RollAngle < 0.5f && other_angle < 0.5f)
+                    localWithRoll.ToAngleAxis(out t_RollAngle, out random_v); // we don't care about localOrthoAxe
+
             }
             else
             {
-                localOrthoAxe = a_quat * Vector3.right;
+                localOrthoAxe = a_quat * a_RollAC.axe;
                 t_RollAngle = Mathf.Atan2(localOrthoAxe.y, localOrthoAxe.x) * Mathf.Rad2Deg;
             }
 
             float dif = 0;
-            if (a_RollConst != null)
+            if (a_RollAC != null)
             {
-                if (t_RollAngle < a_RollConst.minAngle)
+                if (t_RollAngle < a_RollAC.minAngle)
                 {
-                    dif = a_RollConst.minAngle - t_RollAngle;
+                    dif = a_RollAC.minAngle - t_RollAngle;
                 }
-                else if (t_RollAngle > a_RollConst.maxAngle)
+                else if (t_RollAngle > a_RollAC.maxAngle)
                 {
-                    dif = a_RollConst.maxAngle - t_RollAngle;
+                    dif = a_RollAC.maxAngle - t_RollAngle;
                 }
             }
-            a_quat = a_quat * Quaternion.Euler(0, 0, dif);
+            a_quat = a_quat * Quaternion.Euler(a_RollAC.axe * dif);
             return Mathf.Abs(dif) < 1;
         }
         private bool ConstraintPitch(AngleConstraint a_PitchConst, ref Quaternion a_quat, BodyStructureMap.SubSegmentTypes a_subType)
@@ -272,43 +282,21 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
 			if (tAngles.y > 180) tAngles.y -= 360;
 			if (tAngles.z > 180) tAngles.z -= 360;
 		}
-//        public void capIMURotation(BodyStructureMap.SegmentTypes aSegType, BodyStructureMap.SubSegmentTypes aSubType, BodySubSegment aSubSeg, Vector3 Eulers, Quaternion refquat)
-//        {
-//            Quaternion qcomp = Quaternion.Euler(Eulers);
-//            float angle = Quaternion.Angle(refquat, qcomp);
-//            if (Mathf.Abs(angle) > 1.5f)
-//            {
-//                Debug.LogError("not same angles, dif is: " + angle);
-//            }
-
-//            AngleConstraint Xconstraint = squeletteRom[(int)aSubType].PitchMinMax.NegateForIMU(Vector3.right);
-//            AngleConstraint Yconstraint = squeletteRom[(int)aSubType].RollMinMax.NegateForIMU(Vector3.up);
-//            AngleConstraint Zconstraint = squeletteRom[(int)aSubType].YawMinMax;
 
 
-//            ClampAngles(ref Eulers, Xconstraint, Yconstraint, Zconstraint);
-//            Quaternion tQuat = Quaternion.Euler(-Eulers.x, -Eulers.z, Eulers.y);
-
-////             if (Reference != null)
-////             {
-////                 BodySubSegment refsubSeg = Reference.BodySegments.Find(x => x.SegmentType == aSegType).BodySubSegmentsDictionary[(int)aSubType];
-////                 refsubSeg.UpdateSubsegmentOrientation(tQuat, 0, true);
-////             }
-//        }
-
-        public void capRotation(BodyStructureMap.SegmentTypes aSegType, BodyStructureMap.SubSegmentTypes aSubType, BodySubSegment aSubSeg, ref Quaternion aQuat, bool local = false)
+        public void capRotation(BodyStructureMap.SegmentTypes aSegType, BodyStructureMap.SubSegmentTypes aSubType, BodySubSegment aSubSeg, ref Quaternion aQuat, bool local = false, bool a_Update_Ref = true)
         {
-            capRotation(aSegType, aSubType, aSubSeg.GetSubSegmentTransform(), ref aQuat, local);
+            capRotation(aSegType, aSubType, aSubSeg.GetSubSegmentTransform(), ref aQuat, local, a_Update_Ref);
         }
-        public Quaternion capRotation(BodyStructureMap.SegmentTypes aSegType, BodyStructureMap.SubSegmentTypes aSubType, Transform tSubSeg, ref Quaternion aQuat, bool local = false)
+        public Quaternion capRotation(BodyStructureMap.SegmentTypes aSegType, BodyStructureMap.SubSegmentTypes aSubType, Transform tSubSeg, ref Quaternion aQuat, bool local = false, bool a_Update_Ref= true)
 		{
 			if (viewerCam == null)
 			{
 				TempCameraSettings();
 			}
 
-            if (//aSubType != BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm 
-                // && 
+            if (aSubType != BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm 
+                 && 
                 aSubType != BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm )
                 return aQuat; // Quaternion.identity;
 
@@ -371,7 +359,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             ////aQuat.Set(tQuatLocal.x, tQuatLocal.y, tQuatLocal.z, tQuatLocal.w);
             ////aQuat = Quaternion.Euler(tAngles);
 
-            if (Reference != null)
+            if (a_Update_Ref && Reference != null)
             {
                 BodySubSegment refsubSeg = Reference.BodySegments.Find(x => x.SegmentType == aSegType).BodySubSegmentsDictionary[(int)aSubType];
                 refsubSeg.UpdateSubsegmentOrientation(tQuat, 2/*local ? 0 : 3*/, false);

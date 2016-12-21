@@ -8,7 +8,7 @@ using UnityEditor.AnimatedValues;
 public class StaticROMHelper : Editor
 {
     #region SerializedProperty 
-    SerializedProperty m_ROMProp;
+    //SerializedProperty m_ROMProp;
     #endregion
 
     #region usefull member
@@ -21,10 +21,16 @@ public class StaticROMHelper : Editor
 
     void OnSceneGUI()
     {
-        
+        staticMB = target as StaticRomMB;
+        for (int i = 0; i < staticMB.subSegment.Length; ++i)
+        {
+            Quaternion tQuat = staticMB.subSegment[i].localRotation; // local copy
+            staticMB.subSegment[i].localRotation = staticMB.ROM.capRotation((BodyStructureMap.SegmentTypes)(i / 2), (BodyStructureMap.SubSegmentTypes)i, staticMB.subSegment[i], ref tQuat, true, false);
+        }
     }
 
-    private void OnInspectorAngleConstraint( AngleConstraint ac, string AxisLabel)
+    static
+    public void OnInspectorAngleConstraint( AngleConstraint ac, string AxisLabel)
     {
         ac.axe = EditorGUILayout.Vector3Field(AxisLabel, ac.axe);
         EditorGUI.indentLevel++;
@@ -61,6 +67,7 @@ public class StaticROMHelper : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
+        staticMB = target as StaticRomMB;
 
         EditorGUILayout.ObjectField("static ROM", staticMB.ROM, typeof(StaticROM), true);
         EditorGUILayout.Separator();
@@ -74,15 +81,21 @@ public class StaticROMHelper : Editor
     public void OnEnable()
     {
         staticMB = target as StaticRomMB;
-        m_ROMProp = serializedObject.FindProperty("ROM");
-        if(staticMB.ROM == null)
+        //m_ROMProp = serializedObject.FindProperty("ROM");
+        if (staticMB.ROM == null)
         {
             serializedObject.Update();
+            staticMB.Init();
+            //StaticROM t_rom = new StaticROM();
+            //m_ROMProp = serializedObject.FindProperty("ROM");
+            //m_ROMProp.objectReferenceValue = t_rom;
 
-            StaticROM t_rom = new StaticROM();
-            m_ROMProp.objectReferenceValue = t_rom;
-            
             serializedObject.ApplyModifiedProperties();
+        }
+
+        if (staticMB.subSegment[0] == null)
+        {
+            staticMB.PopulateSubSegment();
         }
 
         if(squel_draw == null)

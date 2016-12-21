@@ -484,7 +484,7 @@ public class SimpleROMHelper : Editor
         Vector3 localAxe = m_localRotation * Vector3.right;
         localAxe.Normalize();
 
-        float currentZ = m_localRotation.eulerAngles.z;
+        //float currentZ = m_localRotation.eulerAngles.z;
         float med = m_minZ + (m_maxZ - m_minZ) * 0.5f;
 
         float rad;
