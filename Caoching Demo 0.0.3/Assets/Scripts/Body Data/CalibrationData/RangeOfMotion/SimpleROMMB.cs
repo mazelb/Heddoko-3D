@@ -15,11 +15,15 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
         public bool ToggleYConstraint;
         public bool ToggleZConstraint;
 
+        public Vector3 axePitch = Vector3.right;
+        public Vector3 axeYaw   = Vector3.up;
+        public Vector3 axeRoll  = Vector3.forward;
+
         public void Init()
         {
-            rom.SetXMinMax(-60, 100); // up/down
-            rom.SetYMinMax(-100, 100);  // front/back
-            rom.SetZMinMax(-90, 90);   // twist
+            rom.SetPitchMinMax(-60, 100, axePitch); // up/down
+            rom.SetYawMinMax(-100, 100 , axeYaw   );  // front/back
+            rom.SetRollMinMax(-90, 90  , axeRoll  );   // twist
         }
 
         public void Awake() { Init(); }

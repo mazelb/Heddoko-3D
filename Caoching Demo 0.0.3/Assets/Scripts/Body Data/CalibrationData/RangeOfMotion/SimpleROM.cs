@@ -26,48 +26,53 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
     [System.Serializable]
     public class SimpleROM
     {
+        //enum axe {RIGHT, UP, FWD };
+
         [HideInInspector]
         public string Name; // only here to have a nice name in inspector while displaying the array
 
-        public void SetXMinMax(float min, float max)
+        public void SetPitchMinMax(float min, float max, Vector3 axe)
         {
-            if (XMinMax == null)
+            if (PitchMinMax == null)
             {
-                XMinMax = new AngleConstraint(Vector3.right, min, max);
+                //PitchMinMax = new AngleConstraint(Vector3.right, min, max);
+                PitchMinMax = new AngleConstraint(axe, min, max);
             }
             else
             {
-                XMinMax.minAngle = min;
-                XMinMax.maxAngle = max;
+                PitchMinMax.minAngle = min;
+                PitchMinMax.maxAngle = max;
             }
         }
-        public void SetYMinMax(float min, float max)
+        public void SetYawMinMax(float min, float max, Vector3 axe)
         {
-            if (YMinMax == null)
+            if (YawMinMax == null)
             {
-                YMinMax = new AngleConstraint(Vector3.up, min, max);
+                //YawMinMax = new AngleConstraint(Vector3.up, min, max);
+                YawMinMax = new AngleConstraint(axe, min, max);
             }
             else
             {
-                YMinMax.minAngle = min;
-                YMinMax.maxAngle = max;
+                YawMinMax.minAngle = min;
+                YawMinMax.maxAngle = max;
             }
         }
-        public void SetZMinMax(float min, float max)
+        public void SetRollMinMax(float min, float max, Vector3 axe)
         {
-            if (ZMinMax == null)
+            if (RollMinMax == null)
             {
-                ZMinMax = new AngleConstraint(Vector3.forward, min, max);
+                //RollMinMax = new AngleConstraint(Vector3.forward, min, max);
+                RollMinMax = new AngleConstraint(axe, min, max);
             }
             else
             {
-                ZMinMax.minAngle = min;
-                ZMinMax.maxAngle = max;
+                RollMinMax.minAngle = min;
+                RollMinMax.maxAngle = max;
             }
         }
 
-        public AngleConstraint XMinMax = null;
-        public AngleConstraint YMinMax   = null;
-        public AngleConstraint ZMinMax  = null;
+        public AngleConstraint PitchMinMax = null;
+        public AngleConstraint YawMinMax   = null;
+        public AngleConstraint RollMinMax  = null;
     }
 }

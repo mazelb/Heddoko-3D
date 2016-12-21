@@ -156,9 +156,9 @@ public class SimpleROMHelper : Editor
 
         m_ROMProp = serializedObject.FindProperty("rom");
 
-        m_XConstraint = m_ROMProp.FindPropertyRelative("XMinMax");
-        m_YConstraint = m_ROMProp.FindPropertyRelative("YMinMax");
-        m_ZConstraint = m_ROMProp.FindPropertyRelative("ZMinMax");
+        m_XConstraint = m_ROMProp.FindPropertyRelative("PitchMinMax");
+        m_YConstraint = m_ROMProp.FindPropertyRelative("YawMinMax");
+        m_ZConstraint = m_ROMProp.FindPropertyRelative("RollMinMax");
 
         m_ToggleXConstraint = serializedObject.FindProperty("ToggleXConstraint");
         m_ToggleYConstraint = serializedObject.FindProperty("ToggleYConstraint");

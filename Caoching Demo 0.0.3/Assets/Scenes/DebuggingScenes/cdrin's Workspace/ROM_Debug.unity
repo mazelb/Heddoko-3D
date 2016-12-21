@@ -89,10 +89,6 @@ NavMeshSettings:
 GameObject:
   m_PrefabParentObject: {fileID: 100012, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
   m_PrefabInternal: {fileID: 1438528904}
---- !u!4 &120689651 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 400012, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
-  m_PrefabInternal: {fileID: 1438528904}
 --- !u!114 &120689653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -141,21 +137,24 @@ MonoBehaviour:
   InvertReference: 0
   rom:
     Name: 
-    XMinMax:
+    PitchMinMax:
       axe: {x: 0, y: 0, z: 0}
       minAngle: 0
       maxAngle: 0
-    YMinMax:
+    YawMinMax:
       axe: {x: 0, y: 0, z: 0}
       minAngle: 0
       maxAngle: 0
-    ZMinMax:
+    RollMinMax:
       axe: {x: 0, y: 0, z: 0}
       minAngle: 0
       maxAngle: 0
   ToggleXConstraint: 0
   ToggleYConstraint: 0
   ToggleZConstraint: 0
+  axePitch: {x: 1, y: 0, z: 0}
+  axeYaw: {x: 0, y: 1, z: 0}
+  axeRoll: {x: 0, y: 0, z: 1}
 --- !u!114 &200793402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,10 +229,6 @@ Transform:
 GameObject:
   m_PrefabParentObject: {fileID: 100068, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
   m_PrefabInternal: {fileID: 1438528904}
---- !u!4 &202153377 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 400068, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
-  m_PrefabInternal: {fileID: 1438528904}
 --- !u!114 &202153379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,10 +242,278 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   drawOrtho: 0
   AdditionalDebug: 0
---- !u!4 &498650863 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 400128, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
-  m_PrefabInternal: {fileID: 1438528904}
+--- !u!114 &375538758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcad05bdfe9d9014595e5b33a5e94673, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Reference:
+    BodyGuid: 
+    SuitGuid: 
+    BodyType: 0
+    RangeOfMotion: {fileID: 0}
+    LeftArmAnalysis:
+      DeltaTime: 0
+      AngleElbowFlexion: 0
+      SignedShoulderFlexion: 0
+      SignedAngleElbowFlexion: 0
+      AngleElbowPronation: 0
+      AngleShoulderFlexion: 0
+      AngleShoulderVertAbduction: 0
+      SignedShoulderVerticalAbduction: 0
+      AngleShoulderHorAbduction: 0
+      AngleShoulderRotation: 0
+      AngularVelocityElbowFlexion: 0
+      PeakAngularVelocityElbowFlexion: 0
+      AngularAccelerationElbowFlexion: 0
+      AngularVelocityPronation: 0
+      AngularAccelerationElbowPronation: 0
+      AngularVelocityShoulderFlexion: 0
+      AngularAccelerationShoulderFlexion: 0
+      AngularVelocityShoulderVertAbduction: 0
+      AngularAccelerationShoulderVertAbduction: 0
+      AngularVelocityShoulderHorAbduction: 0
+      AngularAccelerationShoulderHorAbduction: 0
+      AngularVelocityShoulderRotation: 0
+      AngularAccelerationShoulderRotation: 0
+    RightArmAnalysis:
+      DeltaTime: 0
+      AngleElbowFlexion: 0
+      SignedAngleElbowFlexion: 0
+      AngleElbowPronation: 0
+      AngleShoulderFlexion: 0
+      SignedShoulderFlexion: 0
+      AngleShoulderVertAbduction: 0
+      SignedShoulderVerticalAbduction: 0
+      AngleShoulderHorAbduction: 0
+      AngleShoulderRotation: 0
+      AngleShoulderReference: 0
+      AngleShoulderReferenceXY: 0
+      AngleShoulderReferenceXZ: 0
+      AngleShoulderReferenceYZ: 0
+      AngularVelocityElbowFlexion: 0
+      PeakAngularVelocityElbowFlexion: 0
+      AngularAccelerationElbowFlexion: 0
+      AngularVelocityPronation: 0
+      AngularAccelerationElbowPronation: 0
+      AngularVelocityShoulderFlexion: 0
+      AngularAccelerationShoulderFlexion: 0
+      AngularVelocityShoulderVertAbduction: 0
+      AngularAccelerationShoulderVertAbduction: 0
+      AngularVelocityShoulderHorAbduction: 0
+      AngularAccelerationShoulderHorAbduction: 0
+      AngularVelocityShoulderRotation: 0
+      AngularAccelerationShoulderRotation: 0
+    LeftLegAnalysis:
+      DeltaTime: 0
+      RightLegStride: {x: 0, y: 0, z: 0}
+      LeftLegStride: {x: 0, y: 0, z: 0}
+      AngleKneeFlexion: 0
+      AngleKneeRotation: 0
+      AngleHipFlexion: 0
+      UseGlobalReference: 0
+      SignedAngleHipFlexion: 0
+      AngleHipAbduction: 0
+      SignedAngleHipAbduction: 0
+      AngleHipRotation: 0
+      AngularVelocityKneeFlexion: 0
+      AngularAccelerationKneeFlexion: 0
+      AngularVelocityKneeRotation: 0
+      AngularAccelerationKneeRotation: 0
+      AngularVelocityHipFlexion: 0
+      AngularAccelerationHipFlexion: 0
+      AngularVelocityHipAbduction: 0
+      AngularAccelerationHipAbduction: 0
+      AngularVelocityHipRotation: 0
+      AngularAccelerationHipRotation: 0
+      NumberofSquats: 0
+      AngleSum: 0
+      LegHeight: 0
+    RightLegAnalysis:
+      DeltaTime: 0
+      RightLegStride: {x: 0, y: 0, z: 0}
+      LeftLegStride: {x: 0, y: 0, z: 0}
+      AngleKneeFlexion: 0
+      AngleKneeRotation: 0
+      UseGlobalReference: 0
+      AngleHipFlexion: 0
+      SignedAngleHipAbduction: 0
+      SignedAngleHipFlexion: 0
+      AngleHipAbduction: 0
+      AngleHipRotation: 0
+      AngularVelocityKneeFlexion: 0
+      AngularAccelerationKneeFlexion: 0
+      AngularVelocityKneeRotation: 0
+      AngularAccelerationKneeRotation: 0
+      AngularVelocityHipFlexion: 0
+      AngularAccelerationHipFlexion: 0
+      AngularVelocityHipAbduction: 0
+      AngularAccelerationHipAbduction: 0
+      AngularVelocityHipRotation: 0
+      AngularAccelerationHipRotation: 0
+      NumberofSquats: 0
+      AngleSum: 0
+      LegHeight: 0
+    TorsoAnalysis:
+      DeltaTime: 0
+      AngleTorsoFlexion: 0
+      AngleTorsoLateral: 0
+      SignedAngleTorsoLateral: 0
+      AngleTorsoRotation: 0
+      SignedAngleTorsoRotation: 0
+      TorsoTransform: {fileID: 0}
+      HipGlobalTransform: {fileID: 0}
+      HipTransform: {fileID: 0}
+      KneeTransform: {fileID: 0}
+      SignedTorsoFlexion: 0
+      AngularAccelerationTorsoFlexion: 0
+      AngularVelocityTorsoFlexion: 0
+      AngularAccelerationTorsoLateral: 0
+      AngularVelocityTorsoLateral: 0
+      AngularAccelerationTorsoRotation: 0
+      AngularVelocityTorsoRotation: 0
+      AngleIntegrationTurns: 0
+      AngleIntegrationFlips: 0
+      NumberOfTurns: 0
+      NumberOfFlips: 0
+    mRenderedBody: {fileID: 0}
+  squeletteRom:
+  - Name: SubsegmentType_UpperSpine
+    PitchMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -40
+      maxAngle: 40
+    YawMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -40
+      maxAngle: 40
+    RollMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -40
+      maxAngle: 40
+  - Name: SubsegmentType_LowerSpine
+    PitchMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -40
+      maxAngle: 40
+    YawMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -40
+      maxAngle: 40
+    RollMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -40
+      maxAngle: 40
+  - Name: SubsegmentType_RightUpperArm
+    PitchMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -60
+      maxAngle: 100
+    YawMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -100
+      maxAngle: 100
+    RollMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -90
+      maxAngle: 90
+  - Name: SubsegmentType_RightForeArm
+    PitchMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: 0
+      maxAngle: 0
+    YawMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -150
+      maxAngle: 5
+    RollMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -150
+      maxAngle: 20
+  - Name: SubsegmentType_LeftUpperArm
+    PitchMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -60
+      maxAngle: 100
+    YawMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -100
+      maxAngle: 100
+    RollMinMax:
+      axe: {x: -1, y: 0, z: 0}
+      minAngle: -90
+      maxAngle: 90
+  - Name: SubsegmentType_LeftForeArm
+    PitchMinMax:
+      axe: {x: -1, y: 0, z: 0}
+      minAngle: 0
+      maxAngle: 0
+    YawMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -5
+      maxAngle: 150
+    RollMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -150
+      maxAngle: 20
+  - Name: SubsegmentType_RightThigh
+    PitchMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -90
+      maxAngle: 50
+    YawMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -60
+      maxAngle: 60
+    RollMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -60
+      maxAngle: 60
+  - Name: SubsegmentType_RightCalf
+    PitchMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: 0
+      maxAngle: 150
+    YawMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -20
+      maxAngle: 20
+    RollMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: 0
+      maxAngle: 0
+  - Name: SubsegmentType_LeftThigh
+    PitchMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: -90
+      maxAngle: 50
+    YawMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -60
+      maxAngle: 60
+    RollMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: -60
+      maxAngle: 60
+  - Name: SubsegmentType_LeftCalf
+    PitchMinMax:
+      axe: {x: 1, y: 0, z: 0}
+      minAngle: 0
+      maxAngle: 150
+    YawMinMax:
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -20
+      maxAngle: 20
+    RollMinMax:
+      axe: {x: 0, y: 0, z: 1}
+      minAngle: 0
+      maxAngle: 0
 --- !u!1 &535196267
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,21 +549,24 @@ MonoBehaviour:
   InvertReference: 0
   rom:
     Name: 
-    XMinMax:
+    PitchMinMax:
       axe: {x: 0, y: 0, z: 0}
       minAngle: 0
       maxAngle: 0
-    YMinMax:
+    YawMinMax:
       axe: {x: 0, y: 0, z: 0}
       minAngle: 0
       maxAngle: 0
-    ZMinMax:
+    RollMinMax:
       axe: {x: 0, y: 0, z: 0}
       minAngle: 0
       maxAngle: 0
   ToggleXConstraint: 0
   ToggleYConstraint: 0
   ToggleZConstraint: 0
+  axePitch: {x: 1, y: 0, z: 0}
+  axeYaw: {x: 0, y: 1, z: 0}
+  axeRoll: {x: 0, y: 0, z: 1}
 --- !u!114 &535196269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -436,10 +702,6 @@ Light:
 GameObject:
   m_PrefabParentObject: {fileID: 100126, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
   m_PrefabInternal: {fileID: 1438528904}
---- !u!4 &965652003 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 400126, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
-  m_PrefabInternal: {fileID: 1438528904}
 --- !u!136 &965652004
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -457,10 +719,6 @@ CapsuleCollider:
 GameObject:
   m_PrefabParentObject: {fileID: 100124, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
   m_PrefabInternal: {fileID: 1438528904}
---- !u!4 &968052705 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 400124, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
-  m_PrefabInternal: {fileID: 1438528904}
 --- !u!114 &968052707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -477,10 +735,6 @@ MonoBehaviour:
 --- !u!1 &980611893 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100118, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
-  m_PrefabInternal: {fileID: 1438528904}
---- !u!4 &980611894 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 400118, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
   m_PrefabInternal: {fileID: 1438528904}
 --- !u!114 &980611896
 MonoBehaviour:
@@ -510,18 +764,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c398a0bd1e19ede4790374629b6689a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ROM: {fileID: 0}
+  ROM: {fileID: 375538758}
   subSegment:
-  - {fileID: 498650863}
-  - {fileID: 965652003}
-  - {fileID: 202153377}
-  - {fileID: 1503042202}
-  - {fileID: 1537679586}
-  - {fileID: 120689651}
-  - {fileID: 968052705}
-  - {fileID: 980611894}
-  - {fileID: 1370165611}
-  - {fileID: 1438389596}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &1288578962
 GameObject:
   m_ObjectHideFlags: 0
@@ -541,7 +795,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1288578963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -557,28 +811,31 @@ MonoBehaviour:
   InvertReference: 0
   rom:
     Name: 
-    XMinMax:
+    PitchMinMax:
       axe: {x: 0, y: 0, z: 0}
       minAngle: -60
       maxAngle: 100
-    YMinMax:
+    YawMinMax:
       axe: {x: 0, y: 0, z: 0}
-      minAngle: -70.43982
-      maxAngle: 34.310852
-    ZMinMax:
+      minAngle: -100
+      maxAngle: 100
+    RollMinMax:
       axe: {x: 0, y: 0, z: 0}
-      minAngle: 10.293252
-      maxAngle: 34.574795
+      minAngle: -71.661446
+      maxAngle: 17.492165
   ToggleXConstraint: 0
   ToggleYConstraint: 1
   ToggleZConstraint: 1
+  axePitch: {x: 1, y: 0, z: 0}
+  axeYaw: {x: 0, y: 1, z: 0}
+  axeRoll: {x: 0, y: 0, z: 1}
 --- !u!114 &1288578964
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1288578962}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71156af502855294489551b79cd9965f, type: 3}
   m_Name: 
@@ -636,8 +893,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1288578962}
-  m_LocalRotation: {x: -0.12048336, y: -0.18378627, z: 0.32903916, w: 0.91838974}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalRotation: {x: -0.013343945, y: -0.41255036, z: 0.7945564, w: 0.4453137}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3.52, y: 0.2, z: 0.2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -645,10 +902,6 @@ Transform:
 --- !u!1 &1370165610 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100062, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
-  m_PrefabInternal: {fileID: 1438528904}
---- !u!4 &1370165611 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 400062, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
   m_PrefabInternal: {fileID: 1438528904}
 --- !u!114 &1370165613
 MonoBehaviour:
@@ -666,10 +919,6 @@ MonoBehaviour:
 --- !u!1 &1438389595 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100056, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
-  m_PrefabInternal: {fileID: 1438528904}
---- !u!4 &1438389596 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 400056, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
   m_PrefabInternal: {fileID: 1438528904}
 --- !u!114 &1438389598
 MonoBehaviour:
@@ -1061,7 +1310,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100140, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
@@ -1069,10 +1318,6 @@ Prefab:
 --- !u!1 &1503042201 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100074, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
-  m_PrefabInternal: {fileID: 1438528904}
---- !u!4 &1503042202 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 400074, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
   m_PrefabInternal: {fileID: 1438528904}
 --- !u!114 &1503042204
 MonoBehaviour:
@@ -1090,10 +1335,6 @@ MonoBehaviour:
 --- !u!1 &1537679585 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100006, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
-  m_PrefabInternal: {fileID: 1438528904}
---- !u!4 &1537679586 stripped
-Transform:
-  m_PrefabParentObject: {fileID: 400006, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
   m_PrefabInternal: {fileID: 1438528904}
 --- !u!114 &1537679588
 MonoBehaviour:
@@ -1163,7 +1404,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1621973664}
-  m_LocalRotation: {x: -0.5279359, y: 0.7992338, z: -0.27624926, w: -0.07870967}
+  m_LocalRotation: {x: -0.527936, y: 0.7992339, z: -0.2762493, w: -0.07870968}
   m_LocalPosition: {x: 0.075, y: 3, z: -3.104}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1205,21 +1446,24 @@ MonoBehaviour:
   InvertReference: 0
   rom:
     Name: 
-    XMinMax:
+    PitchMinMax:
       axe: {x: 0, y: 0, z: 0}
       minAngle: 0
       maxAngle: 0
-    YMinMax:
+    YawMinMax:
       axe: {x: 0, y: 0, z: 0}
       minAngle: 0
       maxAngle: 0
-    ZMinMax:
+    RollMinMax:
       axe: {x: 0, y: 0, z: 0}
       minAngle: 0
       maxAngle: 0
   ToggleXConstraint: 0
   ToggleYConstraint: 0
   ToggleZConstraint: 0
+  axePitch: {x: 1, y: 0, z: 0}
+  axeYaw: {x: 0, y: 1, z: 0}
+  axeRoll: {x: 0, y: 0, z: 1}
 --- !u!114 &1756424177
 MonoBehaviour:
   m_ObjectHideFlags: 0

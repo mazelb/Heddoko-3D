@@ -6,7 +6,7 @@ using UnityEditor;
 
 //[RequireComponent(typeof(RenderedBody))]
 //[ExecuteInEditMode]
-public class applyInEditMode : MonoBehaviour
+public class StaticRomMB : MonoBehaviour
 {
     public StaticROM ROM = null;// new StaticROM();
 	//private RenderedBody rendbod = null;
@@ -56,7 +56,6 @@ public class applyInEditMode : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-
 		for (int i = 0; i < subSegment.Length; ++i)
 		{
 			Quaternion tQuat = subSegment[i].localRotation; // local copy
