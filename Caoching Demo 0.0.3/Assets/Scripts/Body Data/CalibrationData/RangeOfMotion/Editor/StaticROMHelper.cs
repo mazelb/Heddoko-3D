@@ -70,6 +70,10 @@ public class StaticROMHelper : Editor
         staticMB = target as StaticRomMB;
 
         EditorGUILayout.ObjectField("static ROM", staticMB.ROM, typeof(StaticROM), true);
+        if (GUILayout.Button("Reset All"))
+        {
+            staticMB.ROM.ResetAll();
+        }
         EditorGUILayout.Separator();
 
         //OnInspectorSquelette(staticMB);

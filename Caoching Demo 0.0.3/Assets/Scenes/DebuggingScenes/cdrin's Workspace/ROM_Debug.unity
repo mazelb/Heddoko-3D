@@ -744,9 +744,9 @@ MonoBehaviour:
       minAngle: -20
       maxAngle: 20
     RollMinMax:
-      axe: {x: 0, y: 0, z: 1}
-      minAngle: 0
-      maxAngle: 0
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -29.638554
+      maxAngle: 90.36145
   - Name: SubsegmentType_LeftThigh
     PitchMinMax:
       axe: {x: 1, y: 0, z: 0}
@@ -767,12 +767,12 @@ MonoBehaviour:
       maxAngle: 150
     YawMinMax:
       axe: {x: 0, y: 1, z: 0}
-      minAngle: -20
-      maxAngle: 20
+      minAngle: -19.75904
+      maxAngle: 20.240974
     RollMinMax:
-      axe: {x: 0, y: 0, z: 1}
-      minAngle: 0
-      maxAngle: 0
+      axe: {x: 0, y: 1, z: 0}
+      minAngle: -90.36145
+      maxAngle: 30.361435
 --- !u!1 &1235046120 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100140, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
@@ -1006,7 +1006,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400074, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.039608616
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400074, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.y
@@ -1018,7 +1018,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400074, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9992153
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400074, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1030,7 +1030,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400012, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.17364822
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400012, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.y
@@ -1042,7 +1042,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400012, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9848078
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400012, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1222,19 +1222,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400056, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: 7.331312e-17
       objectReference: {fileID: 0}
     - target: {fileID: 400056, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.12856302
       objectReference: {fileID: 0}
     - target: {fileID: 400056, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -8.438522e-17
       objectReference: {fileID: 0}
     - target: {fileID: 400056, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.9917014
       objectReference: {fileID: 0}
     - target: {fileID: 400128, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1375,6 +1375,14 @@ Prefab:
     - target: {fileID: 100058, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400118, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.000000003783498
+      objectReference: {fileID: 0}
+    - target: {fileID: 400118, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.017299574
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}

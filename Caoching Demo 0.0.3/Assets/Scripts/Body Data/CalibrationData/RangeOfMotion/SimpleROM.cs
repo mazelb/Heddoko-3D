@@ -16,6 +16,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
         public Vector3 axe;
         public float minAngle;
         public float maxAngle;
+        public float lastCompute;
 
         public AngleConstraint NegateForIMU(Vector3 a_NewAxe)
         {
