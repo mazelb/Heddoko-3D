@@ -54,6 +54,13 @@ public class SimpleROMHelper : Editor
     Quaternion m_localRotation;
 
     bool m_IsInBounds;
+
+    bool m_drawDecomposition = false;
+    bool m_drawMinMaxLinks = false;
+    bool m_drawlocalAxis = true;
+    //bool m_offsetConstraintRepresentation = false;
+    float m_offsetRepresentation = 1.5f;
+    bool m_drawQuatAxis = false;
     #endregion
 
     #region Editor
@@ -65,7 +72,9 @@ public class SimpleROMHelper : Editor
         m_arrowSize = m_handleSize * 1.2f * 0.5f;
         m_offsetSize = m_handleSize * 1.1f * 0.5f;
         m_radiusSize = m_handleSize * 0.5f;
-        m_positionGizmo = m_simpleROMMB.transform.position + Vector3.up * m_handleSize * 1.5f;
+
+        m_positionGizmo = m_simpleROMMB.transform.position + Vector3.up * m_handleSize * m_offsetRepresentation;
+
         m_localRotation = m_simpleROMMB.transform.localRotation;
 
         DrawCustomGizmos();
@@ -76,7 +85,6 @@ public class SimpleROMHelper : Editor
     {
         serializedObject.Update();
 
-
         EditorGUILayout.FloatField("Z Max Radius", m_ConeRadiusMax);
         EditorGUILayout.FloatField("Z Min Radius", m_ConeRadiusMin);
         EditorGUILayout.Separator();
@@ -84,6 +92,11 @@ public class SimpleROMHelper : Editor
         EditorGUILayout.FloatField("Proj Z Min Radius", m_ProjConeRadiusMin);
 
         EditorGUILayout.Separator();
+        m_offsetRepresentation = EditorGUILayout.FloatField("offset constraint", m_offsetRepresentation);
+        m_drawDecomposition = EditorGUILayout.ToggleLeft("draw decomposition", m_drawDecomposition);
+        m_drawMinMaxLinks = EditorGUILayout.ToggleLeft("draw Min Max Links", m_drawMinMaxLinks);
+        m_drawlocalAxis = EditorGUILayout.ToggleLeft("draw local axis", m_drawlocalAxis);
+        m_drawQuatAxis = EditorGUILayout.ToggleLeft("draw quat axis", m_drawQuatAxis);
         EditorGUILayout.Separator();
 
         //         m_ReferenceIsHoriz.boolValue = EditorGUILayout.Toggle("Horiz ?", m_ReferenceIsHoriz.boolValue);
@@ -326,15 +339,8 @@ public class SimpleROMHelper : Editor
         //Handles.DrawLine(m_positionGizmo, m_positionGizmo + (YaZa * Vector3.right) * m_arrowSize);
     }
 
-    private void DrawCustomGizmos()
+    private void DrawMainOrientation()
     {
-        Handles.color = m_sphereCol;
-        Handles.SphereCap(4, m_positionGizmo, Quaternion.identity, m_arrowSize*2);
-
-        DrawAngleAxis(m_simpleROMMB.transform.position);
-        DrawConstraints(m_simpleROMMB.transform.parent == null ? Quaternion.identity : m_simpleROMMB.transform.parent.rotation);
-
-
         //Handles.color = Color.black;
         if (m_IsInBounds)
             Handles.color = Color.cyan; // in z bounds
@@ -342,13 +348,47 @@ public class SimpleROMHelper : Editor
             Handles.color = Color.black; // not z bounds
         Handles.ArrowCap(3, m_positionGizmo, m_localRotation * Quaternion.Euler(0, 90, 0), m_arrowSize);
 
+//         float t_RollAngle = m_simpleROMMB.rom.RollMinMax.lastCompute;
+//         Handles.color = m_angleCol;
+//         Vector3 axis = m_localRotation * (Vector3.right * m_offsetSize);
+// 
+//         Vector3 t_up;
+//         Vector3 t_orthoVec;
+//         if (Mathf.Sin(Vector3.Angle(axis, Vector3.up) * Mathf.Deg2Rad) > 0.1f)
+//         {
+//             t_orthoVec = Vector3.Cross(axis, Vector3.up);
+//             t_up = Vector3.Cross(t_orthoVec, axis);
+//         }
+//         else
+//         {
+//             t_orthoVec = Vector3.Cross(axis, Vector3.forward);
+//             t_up = Vector3.Cross(axis, t_orthoVec);
+//         }
+// 
+//         Handles.DrawSolidArc(m_positionGizmo + axis, axis, t_orthoVec, t_RollAngle, m_radiusSize);
+    }
 
-        Handles.color = Handles.xAxisColor;
-        Handles.ArrowCap(3, m_simpleROMMB.transform.position, m_localRotation * Quaternion.Euler(0, 90, 0), m_arrowSize / 2);
-        Handles.color = Handles.yAxisColor;
-        Handles.ArrowCap(3, m_simpleROMMB.transform.position, m_localRotation * Quaternion.Euler(-90, 0, 0), m_arrowSize / 2);
-        Handles.color = Handles.zAxisColor;
-        Handles.ArrowCap(3, m_simpleROMMB.transform.position, m_localRotation * Quaternion.Euler(0, 0, 90), m_arrowSize / 2);
+    private void DrawCustomGizmos()
+    {
+        Handles.color = m_sphereCol;
+        Handles.SphereCap(4, m_positionGizmo, Quaternion.identity, m_arrowSize*2);
+
+        if(m_drawQuatAxis)
+            DrawAngleAxis(m_simpleROMMB.transform.position);
+
+        DrawConstraints(m_simpleROMMB.transform.parent == null ? Quaternion.identity : m_simpleROMMB.transform.parent.rotation);
+
+        DrawMainOrientation();
+
+        if (m_drawlocalAxis)
+        {
+            Handles.color = Handles.xAxisColor;
+            Handles.ArrowCap(3, m_simpleROMMB.transform.position, m_localRotation * Quaternion.Euler(0, 90, 0), m_arrowSize / 2);
+            Handles.color = Handles.yAxisColor;
+            Handles.ArrowCap(3, m_simpleROMMB.transform.position, m_localRotation * Quaternion.Euler(-90, 0, 0), m_arrowSize / 2);
+            Handles.color = Handles.zAxisColor;
+            Handles.ArrowCap(3, m_simpleROMMB.transform.position, m_localRotation * Quaternion.Euler(0, 0, 90), m_arrowSize / 2);
+        }
     }
     
     #endregion
@@ -382,11 +422,14 @@ public class SimpleROMHelper : Editor
         Vector3 localEnd = m_positionGizmo + localAxe * m_arrowSize;
 
         // draw axes from main direction to constraint bounds
-        Handles.color = Color.gray;
-        Handles.DrawLine(localEnd, m_positionGizmo + YaZaVec * m_arrowSize);
-        Handles.DrawLine(localEnd, m_positionGizmo + YaZiVec * m_arrowSize);
-        Handles.DrawLine(localEnd, m_positionGizmo + YiZaVec * m_arrowSize);
-        Handles.DrawLine(localEnd, m_positionGizmo + YiZiVec * m_arrowSize);
+        if(m_drawMinMaxLinks)
+        {
+            Handles.color = Color.gray;
+            Handles.DrawLine(localEnd, m_positionGizmo + YaZaVec * m_arrowSize);
+            Handles.DrawLine(localEnd, m_positionGizmo + YaZiVec * m_arrowSize);
+            Handles.DrawLine(localEnd, m_positionGizmo + YiZaVec * m_arrowSize);
+            Handles.DrawLine(localEnd, m_positionGizmo + YiZiVec * m_arrowSize);
+        }
 
         Vector3 endToYaZa = (m_positionGizmo + YaZaVec * m_arrowSize) - localEnd;
         Vector3 endToYiZa = (m_positionGizmo + YiZaVec * m_arrowSize) - localEnd;
@@ -394,9 +437,9 @@ public class SimpleROMHelper : Editor
         Vector3 endToYaZi = (m_positionGizmo + YaZiVec * m_arrowSize) - localEnd;
         Vector3 endToYiZi = (m_positionGizmo + YiZiVec * m_arrowSize) - localEnd;
         //if(ApproxZConstraint(endToYiZa, endToYaZa, endToYiZi, endToYaZi, localAxe))
-        if(CheckZConstraint())
+        if(CheckHorizConstraint())
         {
-            if (CheckYConstraint(endToYiZa, endToYaZa, endToYiZi, endToYaZi, localAxe, localEnd))
+            if (CheckVertConstraint(endToYiZa, endToYaZa, endToYiZi, endToYaZi, localAxe, localEnd))
                 m_IsInBounds = true;
             else
                 m_IsInBounds = false;
@@ -404,11 +447,12 @@ public class SimpleROMHelper : Editor
         else
             m_IsInBounds = false;
 
-        DrawDecomposition(localAxe);
+        if(m_drawDecomposition)
+            DrawDecomposition(localAxe);
         
     }
        
-    private bool CheckYConstraint(Vector3 endToYiZa, Vector3 endToYaZa, Vector3 endToYiZi, Vector3 endToYaZi, Vector3 localAxe, Vector3 localEnd)
+    private bool CheckVertConstraint(Vector3 endToYiZa, Vector3 endToYaZa, Vector3 endToYiZi, Vector3 endToYaZi, Vector3 localAxe, Vector3 localEnd)
     {
 
         Vector3 normalYi = Vector3.up;
@@ -472,32 +516,37 @@ public class SimpleROMHelper : Editor
 
         return ZisInBound;
     }
+
     float m_ProjConeRadiusMax;
     float m_ProjConeRadiusMin;
     float dist;
     float m_ConeRadiusMax ;
     float m_ConeRadiusMin;
-    private bool CheckZConstraint()
+    private bool CheckHorizConstraint()
     {
         bool ZinBound = false;
 
         Vector3 localAxe = m_localRotation * Vector3.right;
         localAxe.Normalize();
 
+        Vector3 tFlat = Vector3.ProjectOnPlane(localAxe, Vector3.up);
+        Vector3 tvert = localAxe - tFlat;
+        Handles.DrawLine(m_positionGizmo, m_positionGizmo + tvert * m_arrowSize);
+        Handles.DrawLine(m_positionGizmo + tvert * m_arrowSize, m_positionGizmo + tvert * m_arrowSize + tFlat * m_arrowSize);
+
         //float currentZ = m_localRotation.eulerAngles.z;
         float med = m_minZ + (m_maxZ - m_minZ) * 0.5f;
-
-        float rad;
 
         m_ConeRadiusMax = (m_maxZ > 0 ? 1 : -1) * Mathf.Sin((90 - m_maxZ) * Mathf.Deg2Rad);
         m_ConeRadiusMin = (m_minZ > 0 ? 1 : -1) * Mathf.Sin((90 - m_minZ) * Mathf.Deg2Rad);
 
-        m_ProjConeRadiusMax = localAxe.y * Mathf.Tan((90 - Mathf.Abs(m_maxZ)) * Mathf.Deg2Rad);
-        m_ProjConeRadiusMin = localAxe.y * Mathf.Tan((90 - Mathf.Abs(m_minZ)) * Mathf.Deg2Rad);
+        m_ProjConeRadiusMax = tvert.magnitude/*localAxe.y*/ * Mathf.Tan((90 - Mathf.Abs(m_maxZ)) * Mathf.Deg2Rad);
+        m_ProjConeRadiusMin = tvert.magnitude/*localAxe.y*/ * Mathf.Tan((90 - Mathf.Abs(m_minZ)) * Mathf.Deg2Rad);
 
 
         Vector3 tConeCenter = Vector3.zero;
-        tConeCenter.y += localAxe.y;
+        //tConeCenter.y += localAxe.y;
+        tConeCenter += tvert;
 
         Vector3 projMax;
         Vector3 projMin;
@@ -555,8 +604,13 @@ public class SimpleROMHelper : Editor
             }
         }
 
+
+        
+
         Handles.DrawLine(startLine, m_positionGizmo + proj * m_arrowSize);
         Handles.DrawWireDisc(startWire, Vector3.up, radius * m_arrowSize);
+
+
 
         return ZinBound;
     }
@@ -584,7 +638,7 @@ public class SimpleROMHelper : Editor
         Handles.DrawLine(m_positionGizmo, m_positionGizmo + YaPerp * m_arrowSize);
         Handles.DrawLine(m_positionGizmo + YaPerp * m_arrowSize, m_positionGizmo + YaPerp * m_arrowSize + YaPar * m_arrowSize);
 
-        Handles.color = Color.green * 0.7f;
+        //Handles.color = Color.green * 0.7f;
         Handles.DrawLine(m_positionGizmo, m_positionGizmo + YiPerp * m_arrowSize);
         Handles.DrawLine(m_positionGizmo + YiPerp * m_arrowSize, m_positionGizmo + YiPerp * m_arrowSize + YiPar * m_arrowSize);
     }

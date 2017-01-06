@@ -67,6 +67,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
 			}
 		}
 
+        // return true if in bounds, meaning no constraint applied
         private bool ConstraintYaw(AngleConstraint a_YawConst, ref Quaternion a_quat, BodyStructureMap.SubSegmentTypes a_subType)
         {
             Vector3 t_localOrthoAxe = a_quat * Vector3.forward;
@@ -97,6 +98,8 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             a_quat = a_quat * Quaternion.Euler(0, dif, 0);
             return Mathf.Abs(dif) < 1;
         }
+
+        // return true if in bounds, meaning no constraint applied
         private bool ConstraintRoll(AngleConstraint a_RollAC, ref Quaternion a_quat, BodyStructureMap.SubSegmentTypes a_subType)
         {
             //Vector3 localOrthoAxe;
@@ -125,7 +128,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             if (eulerAxe.x + eulerAxe.y + eulerAxe.z > 180)
                 t_RollAngle = -t_RollAngle;
 
-            // if angles are small enough, don't take roll into acount ? (not sure why I wrote this :/ )
+            // if angles are small enough, don't take roll into account ? (not sure why I wrote this :/ )
             if (a_RollAC.axe == Vector3.right || a_RollAC.axe == Vector3.left)
             {
                 float other_angle;
@@ -149,40 +152,112 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
                 }
             }
             a_quat = a_quat * Quaternion.Euler(a_RollAC.axe * dif);
-            return Mathf.Abs(dif) < 1;
+            return Mathf.Abs(dif) < 0.1f;
         }
-        private bool ConstraintPitch(AngleConstraint a_PitchConst, ref Quaternion a_quat, BodyStructureMap.SubSegmentTypes a_subType)
+
+        // return true if in bounds, meaning no constraint applied
+        private bool ConstraintPitch(AngleConstraint a_PitchAC, ref Quaternion a_quat, BodyStructureMap.SubSegmentTypes a_subType)
         {
-            //Vector3 localOrthoAxe = a_quat * Vector3.up;
-            Vector3 localOrthoAxe;// = Vector3.zero;
-            //special case for arms
-            if (a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_RightUpperArm ||
-                a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm ||
-                a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm ||
-                a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm)
+            //             //Vector3 localOrthoAxe = a_quat * Vector3.up;
+            //             Vector3 localOrthoAxe;// = Vector3.zero;
+            //             //special case for arms
+            //             if (a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_RightUpperArm ||
+            //                 a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm ||
+            //                 a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm ||
+            //                 a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm)
+            //             {
+            //                 localOrthoAxe = a_quat * Vector3.right;
+            //             }
+            //             else
+            //             {
+            //                 localOrthoAxe = a_quat * Vector3.up;
+            //             }
+            //             float t_PitchAngle = Mathf.Atan2(localOrthoAxe.z, localOrthoAxe.y) * Mathf.Rad2Deg;
+            //             float dif = 0;
+            //             if (a_PitchConst != null)
+            //             {
+            //                 if (t_PitchAngle < a_PitchConst.minAngle)
+            //                 {
+            //                     dif = a_PitchConst.minAngle - t_PitchAngle;
+            //                 }
+            //                 else if (t_PitchAngle > a_PitchConst.maxAngle)
+            //                 {
+            //                     dif = a_PitchConst.maxAngle - t_PitchAngle;
+            //                 }
+            //             }
+            //             a_quat = a_quat * Quaternion.Euler(dif,0 ,0);
+            //             return Mathf.Abs(dif) < 1;
+            //             
+            bool t_inBound = false;
+
+            Vector3 localAxe = a_quat * a_PitchAC.axe;
+            localAxe.Normalize();
+
+            Vector3 t_upwards;
+
+            if (a_PitchAC.axe == Vector3.up)
+                t_upwards = Vector3.back;
+            else if (a_PitchAC.axe == Vector3.down)
+                t_upwards = Vector3.forward;
+            else
+                t_upwards = Vector3.up;
+
+            float t_minAngle = a_PitchAC.minAngle, 
+                  t_maxAngle = a_PitchAC.maxAngle;
+            float med = t_minAngle + (t_maxAngle - t_minAngle) * 0.5f;
+
+            float t_RadiusConeMax = (t_maxAngle > 0 ? 1 : -1) * Mathf.Sin((90 - t_maxAngle) * Mathf.Deg2Rad);
+            float t_RadiusConeMin = (t_minAngle > 0 ? 1 : -1) * Mathf.Sin((90 - t_minAngle) * Mathf.Deg2Rad);
+
+            //get vertical component of current direction
+            Vector3 tFlat = Vector3.ProjectOnPlane(localAxe, t_upwards);
+            Vector3 tvert = localAxe - tFlat;
+
+            float t_RadiusProjOnConeMax = tvert.magnitude * Mathf.Tan((90 - Mathf.Abs(t_maxAngle)) * Mathf.Deg2Rad);
+            float t_RadiusProjOnConeMin = tvert.magnitude * Mathf.Tan((90 - Mathf.Abs(t_minAngle)) * Mathf.Deg2Rad);
+
+            Vector3 tConeCenter = Vector3.zero;
+            tConeCenter += tvert;
+
+            Vector3 projMax;
+            Vector3 projMin;
+            projMax = tConeCenter + (localAxe - tConeCenter).normalized * t_RadiusProjOnConeMax; // max
+            projMin = tConeCenter - (localAxe - tConeCenter).normalized * t_RadiusProjOnConeMin; // min
+            Vector3 proj = projMax;
+
+            if (t_RadiusProjOnConeMax > t_RadiusConeMax)
             {
-                localOrthoAxe = a_quat * Vector3.right;
+                proj = projMax;
+                t_inBound = false;
+            }
+            else if((t_RadiusConeMin < 0 && t_RadiusProjOnConeMin < t_RadiusConeMin) || 
+                    (t_RadiusConeMin > 0 && t_RadiusProjOnConeMin < t_RadiusConeMin) )
+            {
+                proj = projMin;
+                t_inBound = false;
+            }
+            else if (t_RadiusProjOnConeMax > 0)
+            {
+                proj = projMax;
+                t_inBound = true;
+            }
+            else if (t_RadiusProjOnConeMin < 0)
+            {
+                proj = projMin;
+                t_inBound = true;
             }
             else
             {
-                localOrthoAxe = a_quat * Vector3.up;
+                t_inBound = false;
             }
-            float t_PitchAngle = Mathf.Atan2(localOrthoAxe.z, localOrthoAxe.y) * Mathf.Rad2Deg;
-            float dif = 0;
-            if (a_PitchConst != null)
-            {
-                if (t_PitchAngle < a_PitchConst.minAngle)
-                {
-                    dif = a_PitchConst.minAngle - t_PitchAngle;
-                }
-                else if (t_PitchAngle > a_PitchConst.maxAngle)
-                {
-                    dif = a_PitchConst.maxAngle - t_PitchAngle;
-                }
-            }
-            a_quat = a_quat * Quaternion.Euler(dif,0 ,0);
-            return Mathf.Abs(dif) < 1;
+
+            if (t_inBound) return true; // no constraint to apply, return now
+            
+
+
+            return t_inBound;
         }
+
         private void ExtractUsingConstraint(ref Quaternion tQuatLocal, AngleConstraint tpitch, AngleConstraint tYaw, AngleConstraint tRoll, BodyStructureMap.SubSegmentTypes a_subType)
         {
             bool roll = ConstraintRoll(tRoll, ref tQuatLocal, a_subType);
@@ -266,17 +341,8 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             YawConstraint = squeletteRom[(int)aSubType].YawMinMax;
             RollConstraint = squeletteRom[(int)aSubType].RollMinMax;
             Vector3 tAngles = Vector3.zero;
-            //Vector3 tEuler = tQuat.eulerAngles;
-            //if (mFlags.IsAdjustingSegmentAxis)
-            //{
-            //    ExtractAngles(tQuat, ref tAngles);
-            //    ClampAngles(ref tAngles, Xconstraint, Yconstraint, Zconstraint);
-            //    tQuat = Quaternion.Euler(tAngles.x, tAngles.y, tAngles.z);
-            //}
-            //else
-            //{
+  
             ExtractUsingConstraint(ref tQuat, PitchConstraint, YawConstraint, RollConstraint, aSubType);
-            //}
 
 
             //Quaternion newLocal = Quaternion.identity;

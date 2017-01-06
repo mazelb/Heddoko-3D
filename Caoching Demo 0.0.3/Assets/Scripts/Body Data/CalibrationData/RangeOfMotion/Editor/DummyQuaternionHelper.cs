@@ -119,19 +119,19 @@ public class DummyQuaternionHelper : Editor
         }
         else
         {
-            Debug.LogError("RootROM is null : no capRotation ");
+            Debug.LogWarning("RootROM is null : no capRotation ");
         }
 
-        //Handles.PositionHandle(segment.transform.position, segment.transform.localRotation);
-        Vector3[] verts = new Vector3[4];
-        verts[0] = (arrowSize*0.5f * new Vector3(1, 1, 0));
-        verts[1] = (arrowSize*0.5f * new Vector3(-1, 1, 0));
-        verts[2] = (arrowSize*0.5f * new Vector3(-1, -1, 0));
-        verts[3] = (arrowSize*0.5f * new Vector3(1, -1, 0));
-        for (int i = 0; i < 4; ++i)
-            verts[i] = segment.transform.position + (tQuat * verts[i]);
+        ////Handles.PositionHandle(segment.transform.position, segment.transform.localRotation);
+        //Vector3[] verts = new Vector3[4];
+        //verts[0] = (arrowSize*0.5f * new Vector3(1, 1, 0));
+        //verts[1] = (arrowSize*0.5f * new Vector3(-1, 1, 0));
+        //verts[2] = (arrowSize*0.5f * new Vector3(-1, -1, 0));
+        //verts[3] = (arrowSize*0.5f * new Vector3(1, -1, 0));
+        //for (int i = 0; i < 4; ++i)
+        //    verts[i] = segment.transform.position + (tQuat * verts[i]);
 
-        Handles.DrawSolidRectangleWithOutline(verts, sphereCol, Color.black);
+        //Handles.DrawSolidRectangleWithOutline(verts, sphereCol, Color.black);
     }
 
     int current_index = 0;
@@ -154,7 +154,7 @@ public class DummyQuaternionHelper : Editor
         RootROM = segment.transform.GetComponentInParent<StaticRomMB>();
         if(RootROM == null)
         {
-            Debug.LogError("can't find StaticRomMB script in parents");
+            Debug.LogWarning("can't find StaticRomMB script in parents");
         }
         else
         {
