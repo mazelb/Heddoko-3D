@@ -158,6 +158,7 @@ public class DummyQuaternionHelper : Editor
         }
         else
         {
+            RootROM.ROM.mFlags = new BodyFlags();
             RootROM.PopulateSubSegment();
             for(int i = 0; i < RootROM.subSegment.Length; ++i)
             {
@@ -198,38 +199,52 @@ public class DummyQuaternionHelper : Editor
             segment.transform.localRotation = Quaternion.identity;
         EditorGUILayout.Vector4Field("quaternion", rot);
         EditorGUILayout.EndHorizontal();
-        SimpleROM tROM = RootROM.ROM.squeletteRom[current_index];
-        //EditorGUILayout.BeginHorizontal();
-        EditorGUILayout.FloatField("last computed Pitch", tROM.PitchMinMax.lastCompute);
-        EditorGUILayout.FloatField("last computed Yaw", tROM.YawMinMax.lastCompute);
-        EditorGUILayout.FloatField("last computed Roll", tROM.RollMinMax.lastCompute);
-        //EditorGUILayout.EndHorizontal();
-        EditorGUILayout.Separator();
 
-        drawOrthoProp.boolValue = EditorGUILayout.ToggleLeft("Draw Orthogonal vector (grey)", drawOrthoProp.boolValue);
-        AdditionalDebugProp.boolValue = EditorGUILayout.ToggleLeft("Additional Helper", AdditionalDebugProp.boolValue);
-        // Apply changes to the serializedProperty - always do this in the end of OnInspectorGUI.
-        EditorGUILayout.Separator();
-
-        //if (squel_draw[i] = EditorGUILayout.Foldout(squel_draw[i], t.Name))
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Reset", GUILayout.MaxWidth(100.0f)))
+        if (RootROM != null)
         {
-            RootROM.ROM.Reset((BodyStructureMap.SubSegmentTypes)current_index);
-        }
-        EditorGUILayout.LabelField("Angle Constraint");
-        EditorGUILayout.EndHorizontal();
-        {
-            SimpleROM t = RootROM.ROM.squeletteRom[current_index];
-            EditorGUI.indentLevel++;
-            
-            StaticROMHelper.OnInspectorAngleConstraint(t.PitchMinMax, "Pitch axis");
-            StaticROMHelper.OnInspectorAngleConstraint(t.YawMinMax, "Yaw axis");
-            StaticROMHelper.OnInspectorAngleConstraint(t.RollMinMax, "Roll axis");
-            EditorGUI.indentLevel--;
+            EditorGUILayout.Separator();
+            SimpleROM tROM = RootROM.ROM.squeletteRom[current_index];
+            //EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginHorizontal();
+                RootROM.ROM.mFlags.Pitch = EditorGUILayout.ToggleLeft("", RootROM.ROM.mFlags.Pitch, GUILayout.MaxWidth(20.0f));
+                EditorGUILayout.FloatField("last computed Pitch", tROM.PitchMinMax.lastCompute);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+                RootROM.ROM.mFlags.Yaw = EditorGUILayout.ToggleLeft("", RootROM.ROM.mFlags.Yaw, GUILayout.MaxWidth(20.0f));
+                EditorGUILayout.FloatField("last computed Yaw", tROM.YawMinMax.lastCompute);
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+                RootROM.ROM.mFlags.Roll = EditorGUILayout.ToggleLeft("", RootROM.ROM.mFlags.Roll, GUILayout.MaxWidth(20.0f));
+                EditorGUILayout.FloatField("last computed Roll", tROM.RollMinMax.lastCompute);
+                //EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.Separator();
+
+            drawOrthoProp.boolValue = EditorGUILayout.ToggleLeft("Draw Orthogonal vector (grey)", drawOrthoProp.boolValue);
+            AdditionalDebugProp.boolValue = EditorGUILayout.ToggleLeft("Additional Helper", AdditionalDebugProp.boolValue);
+            // Apply changes to the serializedProperty - always do this in the end of OnInspectorGUI.
+            EditorGUILayout.Separator();
+
+            //if (squel_draw[i] = EditorGUILayout.Foldout(squel_draw[i], t.Name))
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Reset", GUILayout.MaxWidth(100.0f)))
+            {
+                RootROM.ROM.Reset((BodyStructureMap.SubSegmentTypes)current_index);
+            }
+            EditorGUILayout.LabelField("Angle Constraint");
+            EditorGUILayout.EndHorizontal();
+            {
+                tROM.SegmentAxe = EditorGUILayout.Vector3Field("segment Axe", tROM.SegmentAxe);
+                EditorGUILayout.Separator();
+                EditorGUI.indentLevel++;
+                StaticROMHelper.OnInspectorAngleConstraint(tROM.PitchMinMax, "Pitch axis");
+                StaticROMHelper.OnInspectorAngleConstraint(tROM.YawMinMax, "Yaw axis");
+                StaticROMHelper.OnInspectorAngleConstraint(tROM.RollMinMax, "Roll axis");
+                EditorGUI.indentLevel--;
+            }
         }
 
-        
+
 
         serializedObject.ApplyModifiedProperties();
     }

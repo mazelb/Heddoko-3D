@@ -11,7 +11,7 @@ public class SimpleROMHelper : Editor
     #region color
     Color m_MainCol = Color.magenta;
     Color m_orthoCol = new Color(0.5f, 0.5f, 0.5f, 1.0f);
-    Color m_sphereCol = new Color(0.5f, 0.5f, 0.5f, 0.5f);
+    Color m_sphereCol = new Color(0.5f, 0.5f, 0.5f, 0.2f);
     Color m_angleCol = new Color(1.0f, 0.92f, 0.016f, 0.5f);
     Color m_Xcolor = new Color(1.0f, 0, 0, 0.3f);
     Color m_Ycolor = new Color(0, 1.0f, 0, 0.3f);
@@ -59,8 +59,9 @@ public class SimpleROMHelper : Editor
     bool m_drawMinMaxLinks = false;
     bool m_drawlocalAxis = true;
     //bool m_offsetConstraintRepresentation = false;
-    float m_offsetRepresentation = 1.5f;
+    float m_offsetRepresentation = 0f;
     bool m_drawQuatAxis = false;
+    float m_GUIhandleSizeMultiplier = 3;
     #endregion
 
     #region Editor
@@ -68,7 +69,7 @@ public class SimpleROMHelper : Editor
     void OnSceneGUI()
     {
         m_simpleROMMB = target as SimpleROMMB;
-        m_handleSize = HandleUtility.GetHandleSize(m_simpleROMMB.transform.position) * 3;
+        m_handleSize = HandleUtility.GetHandleSize(m_simpleROMMB.transform.position) * m_GUIhandleSizeMultiplier;
         m_arrowSize = m_handleSize * 1.2f * 0.5f;
         m_offsetSize = m_handleSize * 1.1f * 0.5f;
         m_radiusSize = m_handleSize * 0.5f;
@@ -85,14 +86,15 @@ public class SimpleROMHelper : Editor
     {
         serializedObject.Update();
 
-        EditorGUILayout.FloatField("Z Max Radius", m_ConeRadiusMax);
-        EditorGUILayout.FloatField("Z Min Radius", m_ConeRadiusMin);
+        EditorGUILayout.FloatField("Z Max Radius", m_RadiusConeMax);
+        EditorGUILayout.FloatField("Z Min Radius", m_RadiusConeMin);
         EditorGUILayout.Separator();
-        EditorGUILayout.FloatField("Proj Z Max Radius", m_ProjConeRadiusMax);
-        EditorGUILayout.FloatField("Proj Z Min Radius", m_ProjConeRadiusMin);
+        EditorGUILayout.FloatField("Proj Z Max Radius", m_RadiusProjOnConeMax);
+        EditorGUILayout.FloatField("Proj Z Min Radius", m_RadiusProjOnConeMin);
 
         EditorGUILayout.Separator();
         m_offsetRepresentation = EditorGUILayout.FloatField("offset constraint", m_offsetRepresentation);
+        m_GUIhandleSizeMultiplier = EditorGUILayout.FloatField("handle size", m_GUIhandleSizeMultiplier);
         m_drawDecomposition = EditorGUILayout.ToggleLeft("draw decomposition", m_drawDecomposition);
         m_drawMinMaxLinks = EditorGUILayout.ToggleLeft("draw Min Max Links", m_drawMinMaxLinks);
         m_drawlocalAxis = EditorGUILayout.ToggleLeft("draw local axis", m_drawlocalAxis);
@@ -517,11 +519,11 @@ public class SimpleROMHelper : Editor
         return ZisInBound;
     }
 
-    float m_ProjConeRadiusMax;
-    float m_ProjConeRadiusMin;
+    float m_RadiusProjOnConeMax;
+    float m_RadiusProjOnConeMin;
     float dist;
-    float m_ConeRadiusMax ;
-    float m_ConeRadiusMin;
+    float m_RadiusConeMax ;
+    float m_RadiusConeMin;
     private bool CheckHorizConstraint()
     {
         bool ZinBound = false;
@@ -531,70 +533,69 @@ public class SimpleROMHelper : Editor
 
         Vector3 tFlat = Vector3.ProjectOnPlane(localAxe, Vector3.up);
         Vector3 tvert = localAxe - tFlat;
+        Handles.color = Color.black;
         Handles.DrawLine(m_positionGizmo, m_positionGizmo + tvert * m_arrowSize);
         Handles.DrawLine(m_positionGizmo + tvert * m_arrowSize, m_positionGizmo + tvert * m_arrowSize + tFlat * m_arrowSize);
 
         //float currentZ = m_localRotation.eulerAngles.z;
         float med = m_minZ + (m_maxZ - m_minZ) * 0.5f;
 
-        m_ConeRadiusMax = (m_maxZ > 0 ? 1 : -1) * Mathf.Sin((90 - m_maxZ) * Mathf.Deg2Rad);
-        m_ConeRadiusMin = (m_minZ > 0 ? 1 : -1) * Mathf.Sin((90 - m_minZ) * Mathf.Deg2Rad);
+        m_RadiusConeMax = (m_maxZ > 0 ? 1 : -1) * Mathf.Sin((90 - m_maxZ) * Mathf.Deg2Rad);
+        m_RadiusConeMin = (m_minZ > 0 ? 1 : -1) * Mathf.Sin((90 - m_minZ) * Mathf.Deg2Rad);
 
-        m_ProjConeRadiusMax = tvert.magnitude/*localAxe.y*/ * Mathf.Tan((90 - Mathf.Abs(m_maxZ)) * Mathf.Deg2Rad);
-        m_ProjConeRadiusMin = tvert.magnitude/*localAxe.y*/ * Mathf.Tan((90 - Mathf.Abs(m_minZ)) * Mathf.Deg2Rad);
+        m_RadiusProjOnConeMax = tvert.magnitude/*localAxe.y*/ * Mathf.Tan((90 - m_maxZ) * Mathf.Deg2Rad);
+        m_RadiusProjOnConeMin = tvert.magnitude/*localAxe.y*/ * Mathf.Tan((90 - m_minZ) * Mathf.Deg2Rad);
 
 
-        Vector3 tConeCenter = Vector3.zero;
+        Vector3 tConeCenter = tvert; // Vector3.zero;
         //tConeCenter.y += localAxe.y;
-        tConeCenter += tvert;
+        //tConeCenter += tvert;
 
-        Vector3 projMax;
-        Vector3 projMin;
-        projMax = tConeCenter + (localAxe - tConeCenter).normalized * m_ProjConeRadiusMax; // max
-        projMin = tConeCenter - (localAxe - tConeCenter).normalized * m_ProjConeRadiusMin; // min
+        Vector3 t_AxeProjOnConeMax = tConeCenter + (localAxe - tConeCenter).normalized * m_RadiusProjOnConeMax; // max
+        Vector3 t_AxeProjOnConeMin = tConeCenter - (localAxe - tConeCenter).normalized * m_RadiusProjOnConeMin; // min
   
 
         Vector3 startLine = m_positionGizmo + localAxe * m_arrowSize;
         Vector3 startWire = m_positionGizmo;
         startWire.y += localAxe.y * m_arrowSize;
-        Vector3 proj = projMax;
-        float radius = m_ProjConeRadiusMax;
+        Vector3 proj = t_AxeProjOnConeMax;
+        float radius = m_RadiusProjOnConeMax;
 
-        if (m_ProjConeRadiusMax > m_ConeRadiusMax)
+        if (m_RadiusProjOnConeMax > m_RadiusConeMax)
         {
             Handles.color = Color.red;
-            proj = projMax;
-            radius = m_ProjConeRadiusMax;
+            proj = t_AxeProjOnConeMax;
+            radius = m_RadiusProjOnConeMax;
             ZinBound = false;
         }
-        else if (m_ConeRadiusMin < 0 && m_ProjConeRadiusMin < m_ConeRadiusMin)
+        else if (m_RadiusConeMin < 0 && m_RadiusProjOnConeMin < m_RadiusConeMin)
         {
             Handles.color = Color.black;
-            proj = projMin;
-            radius = m_ProjConeRadiusMin;
+            proj = t_AxeProjOnConeMin;
+            radius = m_RadiusProjOnConeMin;
             ZinBound = false;
         }
-        else if (m_ConeRadiusMin > 0 && m_ProjConeRadiusMin < m_ConeRadiusMin)
+        else if (m_RadiusConeMin > 0 && m_RadiusProjOnConeMin < m_RadiusConeMin)
         {
             Handles.color = Color.grey;
-            proj = projMin;
-            radius = m_ProjConeRadiusMin;
+            proj = t_AxeProjOnConeMin;
+            radius = m_RadiusProjOnConeMin;
             ZinBound = false;
         }
         else
         {
-            if (m_ProjConeRadiusMax > 0)
+            if (m_RadiusProjOnConeMax >= 0)
             {
                 Handles.color = Color.cyan;
-                proj = projMax;
-                radius = m_ProjConeRadiusMax;
+                proj = t_AxeProjOnConeMax;
+                radius = m_RadiusProjOnConeMax;
                 ZinBound = true;
             }
-            else if (m_ProjConeRadiusMin < 0)
+            else if (m_RadiusProjOnConeMin <= 0)
             {
                 Handles.color = Color.green;
-                proj = projMin;
-                radius = m_ProjConeRadiusMin;
+                proj = t_AxeProjOnConeMin;
+                radius = m_RadiusProjOnConeMin;
                 ZinBound = true;
             }
             else
@@ -604,13 +605,26 @@ public class SimpleROMHelper : Editor
             }
         }
 
-
-        
-
         Handles.DrawLine(startLine, m_positionGizmo + proj * m_arrowSize);
         Handles.DrawWireDisc(startWire, Vector3.up, radius * m_arrowSize);
+        Handles.color = Handles.zAxisColor ;
+        startWire = m_positionGizmo + (Vector3.up * Mathf.Sin(m_maxZ * Mathf.Deg2Rad)) * m_arrowSize;
+        Handles.DrawWireDisc(startWire, Vector3.up, m_RadiusConeMax * m_arrowSize);
+        startWire = m_positionGizmo + (Vector3.up * Mathf.Sin(m_minZ * Mathf.Deg2Rad)) * m_arrowSize;
+        Handles.DrawWireDisc(startWire, Vector3.up, m_RadiusConeMin * m_arrowSize);
 
-
+        if (proj != Vector3.zero)
+        {
+            Quaternion tprojQuat = Quaternion.LookRotation(proj.normalized, m_localRotation * Vector3.up);
+            Handles.color = Handles.xAxisColor;
+            Handles.ArrowCap(55, m_positionGizmo + proj * m_arrowSize, tprojQuat, m_arrowSize / 2);
+            Handles.ArrowCap(55, m_positionGizmo , tprojQuat, m_arrowSize);
+            Handles.DrawLine(m_positionGizmo, m_positionGizmo + proj * m_arrowSize);
+            Handles.color = Handles.yAxisColor;
+            Handles.ArrowCap(55, m_positionGizmo + proj * m_arrowSize, tprojQuat * Quaternion.Euler(-90, 0, 0), m_arrowSize / 2);
+            Handles.color = Handles.zAxisColor;
+            Handles.ArrowCap(55, m_positionGizmo + proj * m_arrowSize, tprojQuat * Quaternion.Euler(0, -90, 0), m_arrowSize / 2);
+        }
 
         return ZinBound;
     }

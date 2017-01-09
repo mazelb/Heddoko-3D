@@ -90,6 +90,9 @@ public class BodyFlags
     public bool IsCalibrating = true;
     public bool IsAdjustingSegmentAxis = true;
     public bool IsFusingSubSegments = true;
+    public bool Pitch = true;
+    public bool Yaw = true;
+    public bool Roll = true;
 
     public BodyFlags clone()
     {

@@ -42,3 +42,5 @@ Caoching Demo 0.0.3/*.sln
 Caoching Demo 0.0.3/obj/
 Caoching Demo 0.0.3/AAA_HDK
 Caoching Demo 0.0.3/build/
+CalibrationLib/Calibration1/Calibration1/obj/
+*.user

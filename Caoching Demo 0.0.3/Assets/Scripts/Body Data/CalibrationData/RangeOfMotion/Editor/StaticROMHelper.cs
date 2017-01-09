@@ -102,7 +102,10 @@ public class StaticROMHelper : Editor
             staticMB.PopulateSubSegment();
         }
 
-        if(squel_draw == null)
+        if(staticMB.ROM.mFlags == null)
+            staticMB.ROM.mFlags = new BodyFlags();
+
+        if (squel_draw == null)
         {
             squel_draw = new bool[staticMB.ROM.squeletteRom.Length];
             for (int i = 0; i < squel_draw.Length; ++i)

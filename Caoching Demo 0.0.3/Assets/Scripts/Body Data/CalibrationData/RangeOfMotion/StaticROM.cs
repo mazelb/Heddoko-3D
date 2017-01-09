@@ -68,7 +68,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
 		}
 
         // return true if in bounds, meaning no constraint applied
-        private bool ConstraintYaw(AngleConstraint a_YawConst, ref Quaternion a_quat, BodyStructureMap.SubSegmentTypes a_subType)
+        private bool ConstraintYaw(AngleConstraint a_YawConst, Vector3 a_SegmentAxe, Vector3 a_upwards, ref Quaternion a_quat, BodyStructureMap.SubSegmentTypes a_subType)
         {
             Vector3 t_localOrthoAxe = a_quat * Vector3.forward;
             t_localOrthoAxe.y = 0;
@@ -100,21 +100,14 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
         }
 
         // return true if in bounds, meaning no constraint applied
-        private bool ConstraintRoll(AngleConstraint a_RollAC, ref Quaternion a_quat, BodyStructureMap.SubSegmentTypes a_subType)
+        private bool ConstraintRoll(AngleConstraint a_RollAC, Vector3 a_SegmentAxe, Vector3 a_upwards, ref Quaternion a_quat, BodyStructureMap.SubSegmentTypes a_subType)
         {
             //Vector3 localOrthoAxe;
             float t_RollAngle;
-            Vector3 t_upwards;
+            //Vector3 t_upwards = a_RollAC.GetUpVector();
 
-            if (a_RollAC.axe == Vector3.up)
-                t_upwards = -Vector3.forward;
-            else if(a_RollAC.axe == -Vector3.up)
-                t_upwards = Vector3.forward;
-            else
-                t_upwards = Vector3.up;
-
-            Quaternion localWithoutRoll = Quaternion.LookRotation(a_quat * a_RollAC.axe, t_upwards);
-            Quaternion localWithRoll = Quaternion.LookRotation(a_quat * a_RollAC.axe, a_quat * t_upwards);
+            Quaternion localWithoutRoll = Quaternion.LookRotation(a_quat * a_RollAC.axe, a_upwards);
+            Quaternion localWithRoll = Quaternion.LookRotation(a_quat * a_RollAC.axe, a_quat * a_upwards);
 
             //compute angle between both quaternion which is our current Roll angle
             t_RollAngle = Quaternion.Angle(localWithoutRoll, localWithRoll);
@@ -156,73 +149,62 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
         }
 
         // return true if in bounds, meaning no constraint applied
-        private bool ConstraintPitch(AngleConstraint a_PitchAC, ref Quaternion a_quat, BodyStructureMap.SubSegmentTypes a_subType)
+        private bool ConstraintPitch(AngleConstraint a_PitchAC, Vector3 a_SegmentAxe, Vector3 a_upwards, ref Quaternion a_quat, BodyStructureMap.SubSegmentTypes a_subType)
         {
-            //             //Vector3 localOrthoAxe = a_quat * Vector3.up;
-            //             Vector3 localOrthoAxe;// = Vector3.zero;
-            //             //special case for arms
-            //             if (a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_RightUpperArm ||
-            //                 a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm ||
-            //                 a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm ||
-            //                 a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm)
-            //             {
-            //                 localOrthoAxe = a_quat * Vector3.right;
-            //             }
-            //             else
-            //             {
-            //                 localOrthoAxe = a_quat * Vector3.up;
-            //             }
-            //             float t_PitchAngle = Mathf.Atan2(localOrthoAxe.z, localOrthoAxe.y) * Mathf.Rad2Deg;
-            //             float dif = 0;
-            //             if (a_PitchConst != null)
-            //             {
-            //                 if (t_PitchAngle < a_PitchConst.minAngle)
-            //                 {
-            //                     dif = a_PitchConst.minAngle - t_PitchAngle;
-            //                 }
-            //                 else if (t_PitchAngle > a_PitchConst.maxAngle)
-            //                 {
-            //                     dif = a_PitchConst.maxAngle - t_PitchAngle;
-            //                 }
-            //             }
-            //             a_quat = a_quat * Quaternion.Euler(dif,0 ,0);
-            //             return Mathf.Abs(dif) < 1;
-            //             
+            ////Vector3 localOrthoAxe = a_quat * Vector3.up;
+            //Vector3 localOrthoAxe;// = Vector3.zero;
+            ////special case for arms
+            //if (a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_RightUpperArm ||
+            //    a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm ||
+            //    a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm ||
+            //    a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm)
+            //{
+            //    localOrthoAxe = a_quat * Vector3.right;
+            //}
+            //else
+            //{
+            //    localOrthoAxe = a_quat * Vector3.up;
+            //}
+            //float t_PitchAngle = Mathf.Atan2(localOrthoAxe.z, localOrthoAxe.y) * Mathf.Rad2Deg;
+            //float dif = 0;
+            //if (a_PitchConst != null)
+            //{
+            //    if (t_PitchAngle < a_PitchConst.minAngle)
+            //    {
+            //        dif = a_PitchConst.minAngle - t_PitchAngle;
+            //    }
+            //    else if (t_PitchAngle > a_PitchConst.maxAngle)
+            //    {
+            //        dif = a_PitchConst.maxAngle - t_PitchAngle;
+            //    }
+            //}
+            //a_quat = a_quat * Quaternion.Euler(dif,0 ,0);
+            //return Mathf.Abs(dif) < 1;
+
             bool t_inBound = false;
 
-            Vector3 localAxe = a_quat * a_PitchAC.axe;
-            localAxe.Normalize();
-
-            Vector3 t_upwards;
-
-            if (a_PitchAC.axe == Vector3.up)
-                t_upwards = Vector3.back;
-            else if (a_PitchAC.axe == Vector3.down)
-                t_upwards = Vector3.forward;
-            else
-                t_upwards = Vector3.up;
+            // rotate current axis by current rotation
+            Vector3 localAxe = a_quat * a_SegmentAxe;
+            
 
             float t_minAngle = a_PitchAC.minAngle, 
                   t_maxAngle = a_PitchAC.maxAngle;
             float med = t_minAngle + (t_maxAngle - t_minAngle) * 0.5f;
 
-            float t_RadiusConeMax = (t_maxAngle > 0 ? 1 : -1) * Mathf.Sin((90 - t_maxAngle) * Mathf.Deg2Rad);
-            float t_RadiusConeMin = (t_minAngle > 0 ? 1 : -1) * Mathf.Sin((90 - t_minAngle) * Mathf.Deg2Rad);
+            float t_RadiusConeMax = (t_maxAngle >= 0 ? 1 : -1) * Mathf.Sin((90 - t_maxAngle) * Mathf.Deg2Rad);
+            float t_RadiusConeMin = (t_minAngle >= 0 ? 1 : -1) * Mathf.Sin((90 - t_minAngle) * Mathf.Deg2Rad);
 
             //get vertical component of current direction
-            Vector3 tFlat = Vector3.ProjectOnPlane(localAxe, t_upwards);
+            Vector3 tFlat = Vector3.ProjectOnPlane(localAxe, a_upwards);
             Vector3 tvert = localAxe - tFlat;
 
             float t_RadiusProjOnConeMax = tvert.magnitude * Mathf.Tan((90 - Mathf.Abs(t_maxAngle)) * Mathf.Deg2Rad);
             float t_RadiusProjOnConeMin = tvert.magnitude * Mathf.Tan((90 - Mathf.Abs(t_minAngle)) * Mathf.Deg2Rad);
 
-            Vector3 tConeCenter = Vector3.zero;
-            tConeCenter += tvert;
-
             Vector3 projMax;
             Vector3 projMin;
-            projMax = tConeCenter + (localAxe - tConeCenter).normalized * t_RadiusProjOnConeMax; // max
-            projMin = tConeCenter - (localAxe - tConeCenter).normalized * t_RadiusProjOnConeMin; // min
+            projMax = tvert + (localAxe - tvert).normalized * t_RadiusProjOnConeMax; // max
+            projMin = tvert - (localAxe - tvert).normalized * t_RadiusProjOnConeMin; // min
             Vector3 proj = projMax;
 
             if (t_RadiusProjOnConeMax > t_RadiusConeMax)
@@ -252,15 +234,28 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             }
 
             if (t_inBound) return true; // no constraint to apply, return now
+
+            if(proj != Vector3.zero)
+                a_quat = Quaternion.LookRotation(proj.normalized, a_quat * a_upwards)* Quaternion.LookRotation(-a_SegmentAxe, Vector3.up);
             
-
-
             return t_inBound;
         }
 
-        private void ExtractUsingConstraint(ref Quaternion tQuatLocal, AngleConstraint tpitch, AngleConstraint tYaw, AngleConstraint tRoll, BodyStructureMap.SubSegmentTypes a_subType)
+        private void ExtractUsingConstraint(ref Quaternion tQuatLocal,/* AngleConstraint tpitch, AngleConstraint tYaw, AngleConstraint tRoll,*/ BodyStructureMap.SubSegmentTypes a_subType)
         {
-            bool roll = ConstraintRoll(tRoll, ref tQuatLocal, a_subType);
+            AngleConstraint PitchConstraint = null;
+            AngleConstraint YawConstraint = null;
+            AngleConstraint RollConstraint = null;
+
+            SimpleROM t_segmentROM = squeletteRom[(int)a_subType];
+            PitchConstraint = squeletteRom[(int)a_subType].PitchMinMax;
+            YawConstraint = squeletteRom[(int)a_subType].YawMinMax;
+            RollConstraint = squeletteRom[(int)a_subType].RollMinMax;
+
+            if (mFlags.Pitch)
+                ConstraintPitch(PitchConstraint, t_segmentROM.SegmentAxe, t_segmentROM.GetUpVector(), ref tQuatLocal, a_subType);
+            if(mFlags.Roll)
+                ConstraintRoll(RollConstraint, t_segmentROM.SegmentAxe, t_segmentROM.GetUpVector(), ref tQuatLocal, a_subType);
             //bool pitch = ConstraintPitch(tpitch, ref tQuatLocal);
             //bool yaw = ConstraintYaw(tYaw, ref tQuatLocal, a_subType);
 
@@ -333,16 +328,17 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
 			else
 				tQuat = aQuat;
 
-            AngleConstraint PitchConstraint = null;
-            AngleConstraint YawConstraint = null;
-            AngleConstraint RollConstraint = null;
+            //AngleConstraint PitchConstraint = null;
+            //AngleConstraint YawConstraint = null;
+            //AngleConstraint RollConstraint = null;
 
-            PitchConstraint = squeletteRom[(int)aSubType].PitchMinMax;
-            YawConstraint = squeletteRom[(int)aSubType].YawMinMax;
-            RollConstraint = squeletteRom[(int)aSubType].RollMinMax;
-            Vector3 tAngles = Vector3.zero;
+            //SimpleROM t_segmentROM = squeletteRom[(int)aSubType];
+//             PitchConstraint = squeletteRom[(int)aSubType].PitchMinMax;
+//             YawConstraint = squeletteRom[(int)aSubType].YawMinMax;
+//             RollConstraint = squeletteRom[(int)aSubType].RollMinMax;
+            //Vector3 tAngles = Vector3.zero;
   
-            ExtractUsingConstraint(ref tQuat, PitchConstraint, YawConstraint, RollConstraint, aSubType);
+            ExtractUsingConstraint(ref tQuat, aSubType);
 
 
             //Quaternion newLocal = Quaternion.identity;
@@ -431,6 +427,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             t_LowerSpine.SetYawMinMax(-40, 40, Vector3.up);
             t_LowerSpine.SetRollMinMax(-40, 40, Vector3.forward);
             t_LowerSpine.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine);
+            t_LowerSpine.SegmentAxe = Vector3.up;
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine] = t_LowerSpine;
         }
         private void ResetUpperSpine()
@@ -440,6 +437,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             t_UpperSpine.SetYawMinMax(-40, 40, Vector3.up);
             t_UpperSpine.SetRollMinMax(-40, 40, Vector3.forward);
             t_UpperSpine.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine);
+            t_UpperSpine.SegmentAxe = Vector3.up;
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine] = t_UpperSpine;
         }
         private void ResetRightUpperArm()
@@ -449,6 +447,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             t_RightUpperArm.SetYawMinMax(-100, 100, Vector3.up);  // front/back  
             t_RightUpperArm.SetRollMinMax(-90, 90, Vector3.right);   // twist
             t_RightUpperArm.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_RightUpperArm);
+            t_RightUpperArm.SegmentAxe = Vector3.right;
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_RightUpperArm] = t_RightUpperArm;
         }
         private void ResetRightForeArm()
@@ -458,6 +457,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             t_RightForeArm.SetYawMinMax(-150, 5, Vector3.up);  // flex
             t_RightForeArm.SetRollMinMax(-150, 20, Vector3.right);   // 
             t_RightForeArm.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm);
+            t_RightForeArm.SegmentAxe = Vector3.right;
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm] = t_RightForeArm;
         }
         private void ResetLeftUpperArm()
@@ -468,6 +468,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             t_LeftUpperArm.SetYawMinMax(-100, 100, Vector3.up);  // front/back  
             t_LeftUpperArm.SetRollMinMax(-90, 90, Vector3.right);   // twist
             t_LeftUpperArm.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm);
+            t_LeftUpperArm.SegmentAxe = Vector3.left;
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm] = t_LeftUpperArm;
         }
         private void ResetLeftForeArm()
@@ -477,6 +478,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             t_LeftForeArm.SetYawMinMax(-5, 150, Vector3.up);  // flex 
             t_LeftForeArm.SetRollMinMax(-150, 20, Vector3.right);   // 
             t_LeftForeArm.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm);
+            t_LeftForeArm.SegmentAxe = Vector3.right;
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm] = t_LeftForeArm;
         }
         private void ResetRightThigh()
@@ -486,6 +488,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             t_RightThigh.SetYawMinMax(-60, 60, Vector3.forward);   // twist
             t_RightThigh.SetRollMinMax(-60, 60, Vector3.up);  //right/left  
             t_RightThigh.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_RightThigh);
+            t_RightThigh.SegmentAxe = Vector3.down;
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_RightThigh] = t_RightThigh;
         }
         private void ResetRightCalf()
@@ -495,6 +498,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             t_RightCalf.SetYawMinMax(0, 0, Vector3.forward);   // twist
             t_RightCalf.SetRollMinMax(-30, 90, Vector3.up);  // flex 
             t_RightCalf.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_RightCalf);
+            t_RightCalf.SegmentAxe = Vector3.down;
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_RightCalf] = t_RightCalf;
         }
         private void ResetLeftThigh()
@@ -504,6 +508,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             t_LeftThigh.SetYawMinMax(-60, 60, Vector3.forward);     //right/left
             t_LeftThigh.SetRollMinMax(-60, 60, Vector3.up);         // twist
             t_LeftThigh.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh);
+            t_LeftThigh.SegmentAxe = Vector3.down;
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh] = t_LeftThigh;
         }
         private void ResetLeftCalf()
@@ -513,6 +518,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             t_LeftCalf.SetYawMinMax(0, 0, Vector3.forward);
             t_LeftCalf.SetRollMinMax(-90, 30, Vector3.up);
             t_LeftCalf.Name = System.Enum.GetName(typeof(BodyStructureMap.SubSegmentTypes), BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf);
+            t_LeftCalf.SegmentAxe = Vector3.down;
             squeletteRom[(int)BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf] = t_LeftCalf;
         }
     }

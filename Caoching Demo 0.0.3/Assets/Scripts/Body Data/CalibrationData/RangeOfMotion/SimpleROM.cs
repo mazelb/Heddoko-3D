@@ -5,7 +5,7 @@ using MathNet.Numerics;
 namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
 {
     //enum ROM_LOCAL_AXE { X = 1, Y = 2, Z = 4, LOCK = 0 };
-    enum ROM_LOCAL_AXE { PITCH = 1, YAW = 2, ROLL = 4, LOCK = 0 };
+    //enum ROM_LOCAL_AXE { PITCH = 1, YAW = 2, ROLL = 4, LOCK = 0 };
 
     [System.Serializable]
     public class AngleConstraint
@@ -22,6 +22,9 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
         {
             return new AngleConstraint(a_NewAxe, -minAngle, -maxAngle);
         }
+
+       
+        
     }
 
     [System.Serializable]
@@ -75,5 +78,19 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
         public AngleConstraint PitchMinMax = null;
         public AngleConstraint YawMinMax   = null;
         public AngleConstraint RollMinMax  = null;
+
+        public Vector3 GetUpVector()
+        {
+            Vector3 t_upwards = Vector3.up;
+            if (SegmentAxe == Vector3.up)
+                t_upwards = Vector3.back;
+            else if (SegmentAxe == Vector3.down)
+                t_upwards = Vector3.forward;
+
+            return t_upwards;
+        }
+
+        public Vector3 SegmentAxe
+        { get; set; }
     }
 }
