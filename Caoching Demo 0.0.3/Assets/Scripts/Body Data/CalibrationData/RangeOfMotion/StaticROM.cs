@@ -185,11 +185,19 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
 
             // rotate current axis by current rotation
             Vector3 localAxe = a_quat * a_SegmentAxe;
-            
 
             float t_minAngle = a_PitchAC.minAngle, 
                   t_maxAngle = a_PitchAC.maxAngle;
             float med = t_minAngle + (t_maxAngle - t_minAngle) * 0.5f;
+
+            Vector3 ConeMax = Quaternion.Euler(0, t_maxAngle, 0) * Quaternion.LookRotation(a_SegmentAxe, a_upwards) * a_SegmentAxe;
+            Vector3 ConeMin = Quaternion.Euler(0, t_minAngle, 0) * Quaternion.LookRotation(a_SegmentAxe, a_upwards) * a_SegmentAxe;
+
+            if(Vector3.Angle(localAxe, ConeMax) < Vector3.Angle(localAxe, ConeMin))
+            {
+
+            }
+
 
             float t_RadiusConeMax = (t_maxAngle >= 0 ? 1 : -1) * Mathf.Sin((90 - t_maxAngle) * Mathf.Deg2Rad);
             float t_RadiusConeMin = (t_minAngle >= 0 ? 1 : -1) * Mathf.Sin((90 - t_minAngle) * Mathf.Deg2Rad);
@@ -235,8 +243,14 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
 
             if (t_inBound) return true; // no constraint to apply, return now
 
-            if(proj != Vector3.zero)
-                a_quat = Quaternion.LookRotation(proj.normalized, a_quat * a_upwards)* Quaternion.LookRotation(-a_SegmentAxe, Vector3.up);
+
+            if ((proj != Vector3.zero) && (a_upwards == Vector3.forward || a_upwards == Vector3.back)) // legs or trunk
+            {
+                a_quat = Quaternion.LookRotation(proj.normalized, a_quat * a_upwards) * Quaternion.LookRotation(-a_SegmentAxe, a_upwards);
+                Debug.Log(a_quat.eulerAngles);
+            }
+            else if (proj != Vector3.zero)
+                a_quat = Quaternion.LookRotation(proj.normalized, a_quat * a_upwards)* Quaternion.LookRotation(-a_SegmentAxe, a_upwards);
             
             return t_inBound;
         }

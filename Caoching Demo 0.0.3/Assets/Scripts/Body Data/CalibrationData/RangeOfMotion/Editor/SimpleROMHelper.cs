@@ -57,7 +57,8 @@ public class SimpleROMHelper : Editor
 
     bool m_drawDecomposition = false;
     bool m_drawMinMaxLinks = false;
-    bool m_drawlocalAxis = true;
+    bool m_drawlocalAxis = false;
+    bool m_drawProj = false;
     //bool m_offsetConstraintRepresentation = false;
     float m_offsetRepresentation = 0f;
     bool m_drawQuatAxis = false;
@@ -99,6 +100,7 @@ public class SimpleROMHelper : Editor
         m_drawMinMaxLinks = EditorGUILayout.ToggleLeft("draw Min Max Links", m_drawMinMaxLinks);
         m_drawlocalAxis = EditorGUILayout.ToggleLeft("draw local axis", m_drawlocalAxis);
         m_drawQuatAxis = EditorGUILayout.ToggleLeft("draw quat axis", m_drawQuatAxis);
+        m_drawProj = EditorGUILayout.ToggleLeft("draw proj", m_drawProj);
         EditorGUILayout.Separator();
 
         //         m_ReferenceIsHoriz.boolValue = EditorGUILayout.Toggle("Horiz ?", m_ReferenceIsHoriz.boolValue);
@@ -524,6 +526,15 @@ public class SimpleROMHelper : Editor
     float dist;
     float m_RadiusConeMax ;
     float m_RadiusConeMin;
+
+    private void drawArrow(Vector3 a_vec, Color? a_col = null)
+    {
+        if(a_col.HasValue)
+            Handles.color = a_col.Value;
+        Quaternion tprojQuat = Quaternion.LookRotation(a_vec.normalized, m_localRotation * Vector3.up);
+        Handles.ArrowCap(55, m_positionGizmo, tprojQuat, m_arrowSize);
+    }
+
     private bool CheckHorizConstraint()
     {
         bool ZinBound = false;
@@ -540,70 +551,186 @@ public class SimpleROMHelper : Editor
         //float currentZ = m_localRotation.eulerAngles.z;
         float med = m_minZ + (m_maxZ - m_minZ) * 0.5f;
 
+
+        Vector3 ConeMax = Quaternion.Euler(0, 0, m_maxZ) * Vector3.right;
+        Vector3 ConeMin = Quaternion.Euler(0, 0, m_minZ) * Vector3.right;
+        Vector3 proj;
+        float radius;
+
+        Vector3 ConeCrossProd = Vector3.Cross(ConeMax, ConeMin).normalized;
+
+
+
         m_RadiusConeMax = (m_maxZ > 0 ? 1 : -1) * Mathf.Sin((90 - m_maxZ) * Mathf.Deg2Rad);
         m_RadiusConeMin = (m_minZ > 0 ? 1 : -1) * Mathf.Sin((90 - m_minZ) * Mathf.Deg2Rad);
 
-        m_RadiusProjOnConeMax = tvert.magnitude/*localAxe.y*/ * Mathf.Tan((90 - m_maxZ) * Mathf.Deg2Rad);
-        m_RadiusProjOnConeMin = tvert.magnitude/*localAxe.y*/ * Mathf.Tan((90 - m_minZ) * Mathf.Deg2Rad);
+        m_RadiusProjOnConeMax = tvert.magnitude * Mathf.Tan((90 - m_maxZ) * Mathf.Deg2Rad);
+        m_RadiusProjOnConeMin = tvert.magnitude * Mathf.Tan((90 - m_minZ) * Mathf.Deg2Rad);
 
 
-        Vector3 tConeCenter = tvert; // Vector3.zero;
-        //tConeCenter.y += localAxe.y;
-        //tConeCenter += tvert;
+        Vector3 tConeCenter = tvert; 
 
         Vector3 t_AxeProjOnConeMax = tConeCenter + (localAxe - tConeCenter).normalized * m_RadiusProjOnConeMax; // max
         Vector3 t_AxeProjOnConeMin = tConeCenter - (localAxe - tConeCenter).normalized * m_RadiusProjOnConeMin; // min
-  
+
+        //if (m_RadiusProjOnConeMax > m_RadiusConeMax) // above upper cone
+        //{
+        //    Handles.color = Color.red;
+        //    proj = t_AxeProjOnConeMax;
+        //    radius = m_RadiusProjOnConeMax;
+        //    ZinBound = false;
+        //}
+        //else if (m_RadiusProjOnConeMin < m_RadiusConeMin) // below lower cone
+        //{
+        //    Handles.color = Color.black;
+        //    proj = t_AxeProjOnConeMin;
+        //    radius = m_RadiusProjOnConeMin;
+        //    ZinBound = false;
+        //}
+        if (m_maxZ > 0 && m_minZ >= 0)                              // both positives bounds
+        {
+            if (m_RadiusProjOnConeMax > m_RadiusConeMax)            // above upper cone
+            {
+                Handles.color = Color.red;
+                proj = t_AxeProjOnConeMax;
+                radius = m_RadiusProjOnConeMax;
+                ZinBound = false;
+            }
+            else if (m_RadiusProjOnConeMin < m_RadiusConeMin)       // below lower cone
+            {
+                proj = t_AxeProjOnConeMin;
+                radius = m_RadiusProjOnConeMin;
+                ZinBound = false;
+
+                Vector3 tt_AxeProjOnConeMin = Vector3.ProjectOnPlane(t_AxeProjOnConeMin, ConeCrossProd).normalized;
+                Vector3 crossProjMin = Vector3.Cross(tt_AxeProjOnConeMin, ConeMin).normalized;
+
+                //drawArrow(crossProjMin, Color.yellow);
+                //drawArrow(ConeCrossProd, Color.yellow*0.5f);
+
+                if (Vector3.Distance(crossProjMin, ConeCrossProd) < 0.01f)
+                    proj = t_AxeProjOnConeMin = tConeCenter + tFlat.normalized * m_RadiusProjOnConeMin;
+                else
+                    proj = t_AxeProjOnConeMin = -tConeCenter + tFlat.normalized * m_RadiusProjOnConeMin; ;
+
+                //drawArrow(proj, Color.white);
+            }
+            else                                                    // proj in bounds       
+            {
+                ZinBound = true;
+                if (m_RadiusProjOnConeMin > m_RadiusConeMin)         // proj on cone max
+                {
+                    Handles.color = Color.cyan;
+                    proj = t_AxeProjOnConeMax;
+                    radius = m_RadiusProjOnConeMax;
+                }
+                else                                                // proj == cone min
+                {
+                    Handles.color = Color.green;
+                    proj = t_AxeProjOnConeMin;
+                    radius = m_RadiusProjOnConeMin;
+                }
+
+            }
+        }
+        else if (m_maxZ <= 0 && m_minZ < 0)                         // both negative bounds
+        {
+            if (m_RadiusProjOnConeMax > m_RadiusConeMax)            // above upper cone
+            {
+                Handles.color = Color.red;
+                proj = t_AxeProjOnConeMax;
+                radius = m_RadiusProjOnConeMax;
+                ZinBound = false;
+            }
+            else if (m_RadiusProjOnConeMin < m_RadiusConeMin)       // below lower cone
+            {
+                Handles.color = Color.black;
+                proj = t_AxeProjOnConeMin;
+                radius = m_RadiusProjOnConeMin;
+                ZinBound = false;
+            }
+            else
+            {
+                ZinBound = true;
+                if (m_RadiusProjOnConeMax < m_RadiusConeMax)        // proj on min
+                {
+                    Handles.color = Color.green;
+                    proj = t_AxeProjOnConeMin;
+                    radius = m_RadiusProjOnConeMin;
+                }
+                else                                                // proj == cone max
+                {
+                    Handles.color = Color.cyan;
+                    proj = t_AxeProjOnConeMax;
+                    radius = m_RadiusProjOnConeMax;
+                }
+            }
+        }
+        else                                                        // bounds both positive and negative
+        {
+            if (m_RadiusProjOnConeMax > m_RadiusConeMax)            // above upper cone
+            {
+                Handles.color = Color.red;
+                proj = t_AxeProjOnConeMax;
+                radius = m_RadiusProjOnConeMax;
+                ZinBound = false;
+            }
+            else if (m_RadiusProjOnConeMin < m_RadiusConeMin)       // below lower cone
+            {
+                Handles.color = Color.black;
+                proj = t_AxeProjOnConeMin;
+                radius = m_RadiusProjOnConeMin;
+                ZinBound = false;
+            }
+            else                                                    // proj in bounds
+            {
+                ZinBound = true;
+                Handles.color = Color.grey;
+                proj = t_AxeProjOnConeMax;
+                radius = m_RadiusProjOnConeMax;
+            }
+
+
+        }
+            //if (m_RadiusProjOnConeMax > m_RadiusConeMax) // && m_RadiusProjOnConeMax > m_RadiusConeMin) // above upper cone
+            //{
+            //    Handles.color = Color.red;
+            //    proj = t_AxeProjOnConeMax;
+            //    radius = m_RadiusProjOnConeMax;
+            //    ZinBound = false;
+            //}
+            //else if (m_RadiusProjOnConeMin < m_RadiusConeMin) // below lower cone
+            //{
+            //    Handles.color = Color.black;
+            //    proj = t_AxeProjOnConeMin;
+            //    radius = m_RadiusProjOnConeMin;
+            //    ZinBound = false;
+            //}
+            //else if (m_RadiusProjOnConeMax < m_RadiusConeMax && m_RadiusProjOnConeMax > m_RadiusConeMin) // OK on upper cone
+            //{
+            //    Handles.color = Color.cyan;
+            //    proj = t_AxeProjOnConeMax;
+            //    radius = m_RadiusProjOnConeMax;
+            //    ZinBound = true;
+            //}
+            //else if (m_RadiusProjOnConeMin < m_RadiusConeMax && m_RadiusProjOnConeMin > m_RadiusConeMin) // OK on lower cone
+            //{
+            //    Handles.color = Color.green;
+            //    proj = t_AxeProjOnConeMin;
+            //    radius = m_RadiusProjOnConeMin;
+            //    ZinBound = true;
+            //}
+            //else
+            //{
+            //    proj = t_AxeProjOnConeMax;
+            //    radius = m_RadiusProjOnConeMax;
+            //}
+
 
         Vector3 startLine = m_positionGizmo + localAxe * m_arrowSize;
         Vector3 startWire = m_positionGizmo;
         startWire.y += localAxe.y * m_arrowSize;
-        Vector3 proj = t_AxeProjOnConeMax;
-        float radius = m_RadiusProjOnConeMax;
 
-        if (m_RadiusProjOnConeMax > m_RadiusConeMax)
-        {
-            Handles.color = Color.red;
-            proj = t_AxeProjOnConeMax;
-            radius = m_RadiusProjOnConeMax;
-            ZinBound = false;
-        }
-        else if (m_RadiusConeMin < 0 && m_RadiusProjOnConeMin < m_RadiusConeMin)
-        {
-            Handles.color = Color.black;
-            proj = t_AxeProjOnConeMin;
-            radius = m_RadiusProjOnConeMin;
-            ZinBound = false;
-        }
-        else if (m_RadiusConeMin > 0 && m_RadiusProjOnConeMin < m_RadiusConeMin)
-        {
-            Handles.color = Color.grey;
-            proj = t_AxeProjOnConeMin;
-            radius = m_RadiusProjOnConeMin;
-            ZinBound = false;
-        }
-        else
-        {
-            if (m_RadiusProjOnConeMax >= 0)
-            {
-                Handles.color = Color.cyan;
-                proj = t_AxeProjOnConeMax;
-                radius = m_RadiusProjOnConeMax;
-                ZinBound = true;
-            }
-            else if (m_RadiusProjOnConeMin <= 0)
-            {
-                Handles.color = Color.green;
-                proj = t_AxeProjOnConeMin;
-                radius = m_RadiusProjOnConeMin;
-                ZinBound = true;
-            }
-            else
-            {
-                Handles.color = Color.clear;
-                ZinBound = false;
-            }
-        }
 
         Handles.DrawLine(startLine, m_positionGizmo + proj * m_arrowSize);
         Handles.DrawWireDisc(startWire, Vector3.up, radius * m_arrowSize);
@@ -613,7 +740,7 @@ public class SimpleROMHelper : Editor
         startWire = m_positionGizmo + (Vector3.up * Mathf.Sin(m_minZ * Mathf.Deg2Rad)) * m_arrowSize;
         Handles.DrawWireDisc(startWire, Vector3.up, m_RadiusConeMin * m_arrowSize);
 
-        if (proj != Vector3.zero)
+        if (m_drawProj && proj != Vector3.zero)
         {
             Quaternion tprojQuat = Quaternion.LookRotation(proj.normalized, m_localRotation * Vector3.up);
             Handles.color = Handles.xAxisColor;

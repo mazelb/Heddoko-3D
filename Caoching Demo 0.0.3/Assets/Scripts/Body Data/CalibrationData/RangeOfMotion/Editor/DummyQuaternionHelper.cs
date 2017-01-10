@@ -28,6 +28,8 @@ public class DummyQuaternionHelper : Editor
     void OnSceneGUI()
     {
         DummyQuaternion segment = target as DummyQuaternion;
+        if (!segment.isActiveAndEnabled)
+            return;
         bool drawOrtho = drawOrthoProp.boolValue;
         bool additionalDbg = AdditionalDebugProp.boolValue;
 
@@ -48,9 +50,15 @@ public class DummyQuaternionHelper : Editor
 
 
         Quaternion tQuat = segment.transform.localRotation;
+        
         float angle;
         Vector3 axis;
         tQuat.ToAngleAxis(out angle, out axis);
+        if (float.IsInfinity(axis.x) || float.IsNaN(axis.x) ||
+            float.IsInfinity(axis.y) || float.IsNaN(axis.y) ||
+            float.IsInfinity(axis.z) || float.IsNaN(axis.z))
+            return;
+
         Vector3 t_up;
         Vector3 t_orthoVec;
         if (Mathf.Sin(Vector3.Angle(axis, Vector3.up) * Mathf.Deg2Rad) > 0.1f)
@@ -63,6 +71,7 @@ public class DummyQuaternionHelper : Editor
             t_orthoVec = Vector3.Cross(axis, Vector3.forward);
             t_up = Vector3.Cross(axis, t_orthoVec);
         }
+        t_up.Normalize();
 
         //angle
         Handles.color = angleCol;
@@ -70,9 +79,15 @@ public class DummyQuaternionHelper : Editor
 
         // axis Arrow
         Handles.color = MainCol;
-        Quaternion t_rot = Quaternion.LookRotation(axis, t_up);
-        Handles.ArrowCap(1, t_position, t_rot, arrowSize);
-
+        if (axis.magnitude > 0.1f && t_up.magnitude > 0.1f)
+        {
+            Quaternion t_rot = Quaternion.LookRotation(axis, t_up);
+            Handles.ArrowCap(1, t_position, t_rot, arrowSize);
+        }
+        else
+        {
+            Debug.LogError("axis :" + axis.ToString() + ", local Quat:" + tQuat.ToString());
+        }
         // ortho Arrow
         if (drawOrtho)
         {
@@ -206,25 +221,27 @@ public class DummyQuaternionHelper : Editor
             SimpleROM tROM = RootROM.ROM.squeletteRom[current_index];
             //EditorGUILayout.BeginHorizontal();
             EditorGUILayout.BeginHorizontal();
-                RootROM.ROM.mFlags.Pitch = EditorGUILayout.ToggleLeft("", RootROM.ROM.mFlags.Pitch, GUILayout.MaxWidth(20.0f));
-                EditorGUILayout.FloatField("last computed Pitch", tROM.PitchMinMax.lastCompute);
+            RootROM.ROM.mFlags.Pitch = EditorGUILayout.ToggleLeft("", RootROM.ROM.mFlags.Pitch, GUILayout.MaxWidth(20.0f));
+            EditorGUILayout.FloatField("last computed Pitch", tROM.PitchMinMax.lastCompute);
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
-                RootROM.ROM.mFlags.Yaw = EditorGUILayout.ToggleLeft("", RootROM.ROM.mFlags.Yaw, GUILayout.MaxWidth(20.0f));
-                EditorGUILayout.FloatField("last computed Yaw", tROM.YawMinMax.lastCompute);
+            RootROM.ROM.mFlags.Yaw = EditorGUILayout.ToggleLeft("", RootROM.ROM.mFlags.Yaw, GUILayout.MaxWidth(20.0f));
+            EditorGUILayout.FloatField("last computed Yaw", tROM.YawMinMax.lastCompute);
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
-                RootROM.ROM.mFlags.Roll = EditorGUILayout.ToggleLeft("", RootROM.ROM.mFlags.Roll, GUILayout.MaxWidth(20.0f));
-                EditorGUILayout.FloatField("last computed Roll", tROM.RollMinMax.lastCompute);
-                //EditorGUILayout.EndHorizontal();
+            RootROM.ROM.mFlags.Roll = EditorGUILayout.ToggleLeft("", RootROM.ROM.mFlags.Roll, GUILayout.MaxWidth(20.0f));
+            EditorGUILayout.FloatField("last computed Roll", tROM.RollMinMax.lastCompute);
+            //EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.Separator();
-
+        }
             drawOrthoProp.boolValue = EditorGUILayout.ToggleLeft("Draw Orthogonal vector (grey)", drawOrthoProp.boolValue);
             AdditionalDebugProp.boolValue = EditorGUILayout.ToggleLeft("Additional Helper", AdditionalDebugProp.boolValue);
             // Apply changes to the serializedProperty - always do this in the end of OnInspectorGUI.
             EditorGUILayout.Separator();
 
+        if (RootROM != null)
+        {
             //if (squel_draw[i] = EditorGUILayout.Foldout(squel_draw[i], t.Name))
             EditorGUILayout.BeginHorizontal();
             if (GUILayout.Button("Reset", GUILayout.MaxWidth(100.0f)))
@@ -234,6 +251,7 @@ public class DummyQuaternionHelper : Editor
             EditorGUILayout.LabelField("Angle Constraint");
             EditorGUILayout.EndHorizontal();
             {
+                SimpleROM tROM = RootROM.ROM.squeletteRom[current_index];
                 tROM.SegmentAxe = EditorGUILayout.Vector3Field("segment Axe", tROM.SegmentAxe);
                 EditorGUILayout.Separator();
                 EditorGUI.indentLevel++;
