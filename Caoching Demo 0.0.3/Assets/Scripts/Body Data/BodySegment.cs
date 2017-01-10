@@ -10,8 +10,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
-using Accord.Statistics.Kernels;
-using Assets.Scripts.Body_Data.view;
+ using Assets.Scripts.Body_Data.view;
 using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Data.CalibrationData;
 using Assets.Scripts.Body_Data.View;
@@ -301,12 +300,12 @@ public partial class BodySegment
 
         if (GBodyFrameUsingQuaternion)
         {
-            Vector3 vTorsoRot = new Vector3(0,-90f,0);
-            Quaternion vTorsoInitTemp = new Quaternion(vTorsoInitRawQuat.x, vTorsoInitRawQuat.y, vTorsoInitRawQuat.z, vTorsoInitRawQuat.w);
-            vTorsoInitTemp *= Quaternion.Euler(vTorsoRot);
+            // a rotation applied to the sensor data to align it with a body segment
+             Quaternion vTorsoInitTemp = new Quaternion(vTorsoInitRawQuat.x, vTorsoInitRawQuat.y, vTorsoInitRawQuat.z, vTorsoInitRawQuat.w);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_UpperSpine,ref vTorsoInitTemp);
 
             vTorsoQuat = new Quaternion(vTorsoCurRawQuat.x, vTorsoCurRawQuat.y, vTorsoCurRawQuat.z, vTorsoCurRawQuat.w);
-            vTorsoQuat *= Quaternion.Euler(vTorsoRot);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_UpperSpine, ref vTorsoQuat); 
             vTorsoQuat = Quaternion.Inverse(vTorsoInitTemp) * vTorsoQuat;
             vTorsoQuat = PniQuaternionConversion(vTorsoQuat);
         }
@@ -372,6 +371,17 @@ public partial class BodySegment
         vTorsoAnalysis.AngleExtraction();
         //UpdateHipPosition(vLSSubsegment);//*/
     }
+
+    /// <summary>
+    /// Applies a rotation to align the referenced input rotation with the position of the sensor
+    /// </summary> 
+    /// <param name="vSensorPosition">the position of the sensor</param>
+    /// <param name="vInputRotation">the rotation</param>
+    internal void ApplySensorMappingRotation(BodyStructureMap.SensorPositions vSensorPosition, ref Quaternion vInputRotation)
+    {
+        vInputRotation *= BodyStructureMap.Instance.PniSensorRotationToSegmentMap[vSensorPosition];
+    }
+     
 
     private static Quaternion PniQuaternionConversion(float vX, float vY, float vZ, float vW)
     {
@@ -451,10 +461,6 @@ public partial class BodySegment
         BodyFrame.Vect4 vKneeInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightCalf].InitRawEuler;
         BodyFrame.Vect4 vKneeCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightCalf].CurrRawEuler;
 
-        //Vector3 vThighInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightThigh].InitRawEuler * 180f / Mathf.PI;
-        //Vector3 vThighCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightThigh].CurrRawEuler * 180f / Mathf.PI;
-        //Vector3 vKneeInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightCalf].InitRawEuler * 180f / Mathf.PI;
-        //Vector3 vKneeCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_RightCalf].CurrRawEuler * 180f / Mathf.PI;
         Vector3 vThighInitialRawEuler = new Vector3(vThighInit.x, vThighInit.y, vThighInit.z) * 180f / Mathf.PI;
         Vector3 vThighCurrentRawEuler = new Vector3(vThighCurr.x, vThighCurr.y, vThighCurr.z) * 180f / Mathf.PI;
         Vector3 vKneeInitialRawEuler = new Vector3(vKneeInit.x, vKneeInit.y, vKneeInit.z) * 180f / Mathf.PI;
@@ -462,10 +468,15 @@ public partial class BodySegment
 
         if (GBodyFrameUsingQuaternion)
         {
-            Quaternion vThighInitialRawQuat = new Quaternion(vThighInit.z, vThighInit.y, -vThighInit.x, vThighInit.w);
-            Quaternion vThighCurrentRawQuat = new Quaternion(vThighCurr.z, vThighCurr.y, -vThighCurr.x, vThighCurr.w);
-            Quaternion vKneeInitialRawQuat = new Quaternion(vKneeInit.z, vKneeInit.y, -vKneeInit.x, vKneeInit.w);
-            Quaternion vKneeCurrentRawQuat = new Quaternion(vKneeCurr.z, vKneeCurr.y, -vKneeCurr.x, vKneeCurr.w);
+            Quaternion vThighInitialRawQuat = new Quaternion(vThighInit.x, vThighInit.y, vThighInit.z, vThighInit.w);
+            Quaternion vThighCurrentRawQuat = new Quaternion(vThighCurr.x, vThighCurr.y, vThighCurr.z, vThighCurr.w);
+            Quaternion vKneeInitialRawQuat = new Quaternion(vKneeInit.x, vKneeInit.y, vKneeInit.z, vKneeInit.w);
+            Quaternion vKneeCurrentRawQuat = new Quaternion(vKneeCurr.x, vKneeCurr.y, vKneeCurr.z, vKneeCurr.w);
+            
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_RightThigh, ref vThighInitialRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_RightThigh, ref vThighCurrentRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_RightCalf, ref vKneeInitialRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_RightCalf, ref vKneeCurrentRawQuat);
 
             MapLegsOrientationsQuat(vThighInitialRawQuat, vThighCurrentRawQuat, vKneeInitialRawQuat, vKneeCurrentRawQuat, vULSubsegment, vLLSubsegment, vHipsSubsegment);
         }
@@ -502,12 +513,7 @@ public partial class BodySegment
         BodyFrame.Vect4 vThighInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftThigh].InitRawEuler;
         BodyFrame.Vect4 vThighCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftThigh].CurrRawEuler;
         BodyFrame.Vect4 vKneeInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftCalf].InitRawEuler;
-        BodyFrame.Vect4 vKneeCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftCalf].CurrRawEuler;
-        //Vector3 vThighInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftThigh].InitRawEuler * 180f / Mathf.PI;
-        //Vector3 vThighCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftThigh].CurrRawEuler * 180f / Mathf.PI;
-        //Vector3 vKneeInitialRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftCalf].InitRawEuler * 180f / Mathf.PI;
-        //Vector3 vKneeCurrentRawEuler = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftCalf].CurrRawEuler * 180f / Mathf.PI;
-
+        BodyFrame.Vect4 vKneeCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftCalf].CurrRawEuler; 
         Vector3 vThighInitialRawEuler = new Vector3(vThighInit.x, vThighInit.y, vThighInit.z) * 180f / Mathf.PI;
         Vector3 vThighCurrentRawEuler = new Vector3(vThighCurr.x, vThighCurr.y, vThighCurr.z) * 180f / Mathf.PI;
         Vector3 vKneeInitialRawEuler = new Vector3(vKneeInit.x, vKneeInit.y, vKneeInit.z) * 180f / Mathf.PI;
@@ -515,11 +521,15 @@ public partial class BodySegment
 
         if (GBodyFrameUsingQuaternion)
         {
-            Quaternion vThighInitialRawQuat = new Quaternion(vThighInit.z, vThighInit.y, -vThighInit.x, vThighInit.w);
-            Quaternion vThighCurrentRawQuat = new Quaternion(vThighCurr.z, vThighCurr.y, -vThighCurr.x, vThighCurr.w);
-            Quaternion vKneeInitialRawQuat = new Quaternion(vKneeInit.z, vKneeInit.y, -vKneeInit.x, vKneeInit.w);
-            Quaternion vKneeCurrentRawQuat = new Quaternion(vKneeCurr.z, vKneeCurr.y, -vKneeCurr.x, vKneeCurr.w);
-
+            Quaternion vThighInitialRawQuat = new Quaternion(vThighInit.x, vThighInit.y, vThighInit.z, vThighInit.w);
+            Quaternion vThighCurrentRawQuat = new Quaternion(vThighCurr.x, vThighCurr.y,  vThighCurr.z ,vThighCurr.w);
+            Quaternion vKneeInitialRawQuat = new Quaternion(vKneeInit.x, vKneeInit.y, vKneeInit.z, vKneeInit.w);
+            Quaternion vKneeCurrentRawQuat = new Quaternion(vKneeCurr.x, vKneeCurr.y, vKneeCurr.z, vKneeCurr.w);
+ 
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_LeftThigh, ref vThighInitialRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_LeftThigh, ref vThighCurrentRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_LeftCalf, ref vKneeInitialRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_LeftCalf, ref vKneeCurrentRawQuat);
             MapLegsOrientationsQuat(vThighInitialRawQuat, vThighCurrentRawQuat, vKneeInitialRawQuat, vKneeCurrentRawQuat, vULSubsegment, vLLSubsegment, vHipsSubsegment, false);
         }
         else
@@ -552,10 +562,10 @@ public partial class BodySegment
         vLLInitQuat = PniQuaternionConversion(vLLInitQuat);
         vLLCurQuat = PniQuaternionConversion(vLLCurQuat);
         //Upper Leg
-        Quaternion vThighQuat = Quaternion.Inverse(vULInitQuat) * vULCurQuat;//; Quaternion.Inverse(Quaternion.Euler(0, 0, 180)) * Quaternion.Inverse(vULInitQuat) * vULCurQuat * Quaternion.Euler(0, 0, 180);
+        Quaternion vThighQuat = Quaternion.Inverse(vULInitQuat)*vULCurQuat;
 
         //Lower leg
-        Quaternion vKneeQuat = Quaternion.Inverse(vLLInitQuat) * vLLCurQuat;//Quaternion.Inverse(Quaternion.Euler(0, 0, 180)) * Quaternion.Inverse(vLLInitQuat) * vLLCurQuat * Quaternion.Euler(0, 0, 180);
+        Quaternion vKneeQuat = Quaternion.Inverse(vLLInitQuat)*vLLCurQuat;
 
         Quaternion vNewThighQuat = Quaternion.identity;
         Quaternion vNewKneeQuat = Quaternion.identity;
@@ -710,13 +720,21 @@ public partial class BodySegment
 
         if (GBodyFrameUsingQuaternion)
         {
-            Quaternion vUpArmInitialRawQuat = new Quaternion(-vUpArmInit.z, -vUpArmInit.x, vUpArmInit.y, vUpArmInit.w);
-            Quaternion vUpArmCurrentRawQuat = new Quaternion(-vUpArmCurr.z, -vUpArmCurr.x, vUpArmCurr.y, vUpArmCurr.w);
-            Quaternion vLoArmInitialRawQuat = new Quaternion(-vLoArmInit.z, -vLoArmInit.x, vLoArmInit.y, vLoArmInit.w);
-            Quaternion vLoArmCurrentRawQuat = new Quaternion(-vLoArmCurr.z, -vLoArmCurr.x, vLoArmCurr.y, vLoArmCurr.w);
-            Quaternion vTorsoInitialRawQuat = new Quaternion(vTorsoInit.z, -vTorsoInit.y, vTorsoInit.z, vTorsoInit.w);
-            Quaternion vTorsoCurrentRawQuat = new Quaternion(vTorsoCurr.z, -vTorsoCurr.y, vTorsoCurr.z, vTorsoCurr.w);
+            Quaternion vUpArmInitialRawQuat = new Quaternion(vUpArmInit.x, vUpArmInit.y, vUpArmInit.z, vUpArmInit.w);
+            Quaternion vUpArmCurrentRawQuat = new Quaternion(vUpArmCurr.x, vUpArmCurr.y, vUpArmCurr.z, vUpArmCurr.w);
+            Quaternion vLoArmInitialRawQuat = new Quaternion(vLoArmInit.x, vLoArmInit.y, vLoArmInit.z, vLoArmInit.w);
+            Quaternion vLoArmCurrentRawQuat = new Quaternion(vLoArmCurr.x, vLoArmCurr.y, vLoArmCurr.z, vLoArmCurr.w);
+            Quaternion vTorsoInitialRawQuat = new Quaternion(vTorsoInit.x, vTorsoInit.y, vTorsoInit.z, vTorsoInit.w);
+            Quaternion vTorsoCurrentRawQuat = new Quaternion(vTorsoCurr.x, vTorsoCurr.y, vTorsoCurr.z, vTorsoCurr.w);
 
+            //map sensors by applying a rotation on the sensor data
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_UpperSpine, ref vTorsoInitialRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_UpperSpine, ref vTorsoCurrentRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_RightUpperArm, ref vUpArmInitialRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_RightUpperArm, ref vUpArmCurrentRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_RightForeArm, ref vLoArmInitialRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_RightForeArm, ref vLoArmCurrentRawQuat);
+            //map orientation quaternion
             MapArmsOrientationsQuat(vUpArmInitialRawQuat, vUpArmCurrentRawQuat, vLoArmInitialRawQuat, vLoArmCurrentRawQuat, vTorsoInitialRawQuat, vTorsoCurrentRawQuat, vUASubsegment, vLASubsegment, vTorsoSubSegment, vHipsSubsegment, true);
         }
         else
@@ -768,12 +786,20 @@ public partial class BodySegment
 
         if (GBodyFrameUsingQuaternion)
         {
-            Quaternion vUpArmInitialRawQuat = new Quaternion(-vUpArmInit.z, vUpArmInit.x, -vUpArmInit.y, vUpArmInit.w);
-            Quaternion vUpArmCurrentRawQuat = new Quaternion(-vUpArmCurr.z, vUpArmCurr.x, -vUpArmCurr.y, vUpArmCurr.w);
-            Quaternion vLoArmInitialRawQuat = new Quaternion(-vLoArmInit.z, vLoArmInit.x, -vLoArmInit.y, vLoArmInit.w);
-            Quaternion vLoArmCurrentRawQuat = new Quaternion(-vLoArmCurr.z, vLoArmCurr.x, -vLoArmCurr.y, vLoArmCurr.w);
-            Quaternion vTorsoInitialRawQuat = new Quaternion(vTorsoInit.z, -vTorsoInit.y, vTorsoInit.z, vTorsoInit.w);
-            Quaternion vTorsoCurrentRawQuat = new Quaternion(vTorsoCurr.z, -vTorsoCurr.y, vTorsoCurr.z, vTorsoCurr.w);
+            Quaternion vUpArmInitialRawQuat = new Quaternion(vUpArmInit.x, vUpArmInit.y, vUpArmInit.z, vUpArmInit.w);
+            Quaternion vUpArmCurrentRawQuat = new Quaternion(vUpArmCurr.x, vUpArmCurr.y, vUpArmCurr.z, vUpArmCurr.w);
+            Quaternion vLoArmInitialRawQuat = new Quaternion(vLoArmInit.x, vLoArmInit.y, vLoArmInit.z, vLoArmInit.w);
+            Quaternion vLoArmCurrentRawQuat = new Quaternion(vLoArmCurr.x, vLoArmCurr.y, vLoArmCurr.z, vLoArmCurr.w);
+            Quaternion vTorsoInitialRawQuat = new Quaternion(vTorsoInit.x, vTorsoInit.y, vTorsoInit.z, vTorsoInit.w);
+            Quaternion vTorsoCurrentRawQuat = new Quaternion(vTorsoCurr.x, vTorsoCurr.y, vTorsoCurr.z, vTorsoCurr.w); 
+
+            //map sensors by applying a rotation on the sensor data
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_UpperSpine, ref vTorsoInitialRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_UpperSpine, ref vTorsoCurrentRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_LeftUpperArm, ref vUpArmInitialRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_LeftUpperArm, ref vUpArmCurrentRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_LeftForeArm, ref vLoArmInitialRawQuat);
+            ApplySensorMappingRotation(BodyStructureMap.SensorPositions.SP_LeftForeArm, ref vLoArmCurrentRawQuat);
             MapArmsOrientationsQuat(vUpArmInitialRawQuat, vUpArmCurrentRawQuat, vLoArmInitialRawQuat, vLoArmCurrentRawQuat, vTorsoInitialRawQuat, vTorsoCurrentRawQuat, vUASubsegment, vLASubsegment, vTorsoSubSegment, vHipsSubsegment);
         }
         else

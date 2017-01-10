@@ -1581,7 +1581,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 46412642}
   - 114: {fileID: 46412643}
-  - 114: {fileID: 46412644}
   m_Layer: 0
   m_Name: LocalizationBinder
   m_TagString: Untagged
@@ -1614,17 +1613,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LanguageBinderAsset: {fileID: 11400000, guid: 3f54beb858262a44e957c6196074a414,
     type: 2}
---- !u!114 &46412644
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 46412641}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8a5315a5dc3e304e839d58c041b32da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &48965241
 GameObject:
   m_ObjectHideFlags: 0

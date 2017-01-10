@@ -44,13 +44,35 @@ public class BodyStructureMap
                 instance.CreateSensorPosToSensorIDMap();
                 instance.CreateSensorPosToSensorTypeMap();
                 instance.CreateSensorPosToSegmentType();
-                instance.CreatePniSensorRotationMatrixMap();
+                instance.CreatePniSensorRotationToSegmentMap();
                 instance.isInitialized = true;
 
             }
             return instance;
         }
     }
+
+    /// <summary>
+    /// Start sensor to segment rotation map
+    /// </summary>
+    private void CreatePniSensorRotationToSegmentMap()
+    {
+        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_UpperSpine, Quaternion.Euler(new Vector3(0, -90, 0)));
+        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_LowerSpine, Quaternion.Euler(new Vector3(0, -90, 0)));
+        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_RightUpperArm, Quaternion.Euler(new Vector3(-90, 0, 90)));
+        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_RightForeArm, Quaternion.Euler(new Vector3(-90, 0, 90)));
+        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_RightElbow, Quaternion.Euler(new Vector3(-90, 0, 90)));
+        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_LeftUpperArm, Quaternion.Euler(new Vector3(90, 0, -90)));
+        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_LeftForeArm, Quaternion.Euler(new Vector3(90, 0, -90)));
+        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_LeftElbow, Quaternion.Euler(new Vector3(90, 0, -90)));
+        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_RightThigh, Quaternion.Euler(new Vector3(0, -90, 0)));
+        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_RightCalf, Quaternion.Euler(new Vector3(0, -90, 0)));
+        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_RightKnee, Quaternion.Euler(new Vector3(0, -90, 0)));
+        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_LeftThigh, Quaternion.Euler(new Vector3(0, -90, 0)));
+        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_LeftCalf, Quaternion.Euler(new Vector3(0, -90, 0)));
+        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_LeftKnee, Quaternion.Euler(new Vector3(0, -90, 0)));
+    }
+
     #endregion
 
 
@@ -152,8 +174,9 @@ public class BodyStructureMap
     public Dictionary<SensorPositions, SensorTypes> SensorPosToSensorTypeMap = new Dictionary<SensorPositions, SensorTypes>();
     [JsonProperty]
     public Dictionary<SensorPositions, int> SensorPosToSensorIDMap = new Dictionary<SensorPositions, int>();
-    [JsonProperty]
-    public Dictionary<SensorPositions, Matrix<float>> PniSensorRotationMatrixMap = new Dictionary<SensorPositions, Matrix<float>>();
+
+
+    public Dictionary<SensorPositions, UnityEngine.Quaternion> PniSensorRotationToSegmentMap = new Dictionary<SensorPositions, Quaternion>();
     //Build body structure maps
     public void ReadBodyStructureFile()
     {
@@ -171,7 +194,6 @@ public class BodyStructureMap
             CreateSegmentToSubSegmentMap();
             CreateSensorPosToSensorIDMap();
             CreateSensorPosToSensorTypeMap();
-            CreatePniSensorRotationMatrixMap();
             JsonUtilities.ConvertObjectToJson(vPath, this);
             return;
         }
@@ -184,40 +206,7 @@ public class BodyStructureMap
         vBSm = null; //discard bsm
     }
 
-    private void CreatePniSensorRotationMatrixMap()
-    {
-        //spine
-        Matrix<float> vTorsoMatrix = Matrix<float>.Build.Dense(3, 3);
-        vTorsoMatrix[0, 2] = 1;
-        vTorsoMatrix[0, 0] = -1;
-        vTorsoMatrix[2, 2] = 1;
-        PniSensorRotationMatrixMap.Add(SensorPositions.SP_UpperSpine, Matrix<float>.Build.DenseOfMatrix(vTorsoMatrix));
-        PniSensorRotationMatrixMap.Add(SensorPositions.SP_LowerSpine, Matrix<float>.Build.DenseOfMatrix(vTorsoMatrix));
 
-        //leg
-        Matrix<float> vLegMatrix = Matrix<float>.Build.Dense(3, 3);
-        vLegMatrix[0, 2] = 1;
-        vLegMatrix[1, 1] = 1;
-        vLegMatrix[2, 0] = -1;
-        PniSensorRotationMatrixMap.Add(SensorPositions.SP_RightThigh, Matrix<float>.Build.DenseOfMatrix(vLegMatrix));
-        PniSensorRotationMatrixMap.Add(SensorPositions.SP_RightCalf, Matrix<float>.Build.DenseOfMatrix(vLegMatrix));
-        PniSensorRotationMatrixMap.Add(SensorPositions.SP_LeftThigh, Matrix<float>.Build.DenseOfMatrix(vLegMatrix));
-        PniSensorRotationMatrixMap.Add(SensorPositions.SP_LeftCalf, Matrix<float>.Build.DenseOfMatrix(vLegMatrix));
-        // left arm
-        Matrix<float> vLeftArm = Matrix<float>.Build.Dense(3, 3);
-        vLeftArm[0, 2] = -1;
-        vLeftArm[1, 0] = 0;
-        vLeftArm[2, 1] = -1;
-        PniSensorRotationMatrixMap.Add(SensorPositions.SP_LeftUpperArm, Matrix<float>.Build.DenseOfMatrix(vLegMatrix));
-        PniSensorRotationMatrixMap.Add(SensorPositions.SP_LeftForeArm, Matrix<float>.Build.DenseOfMatrix(vLegMatrix));
-        // right arm
-        Matrix<float> vRightArm = Matrix<float>.Build.Dense(3, 3);
-        vRightArm[0, 0] = -1;
-        vRightArm[1, 1] = 1;
-        vRightArm[2, 2] = 1;
-        PniSensorRotationMatrixMap.Add(SensorPositions.SP_RightUpperArm, Matrix<float>.Build.DenseOfMatrix(vRightArm));
-        PniSensorRotationMatrixMap.Add(SensorPositions.SP_RightForeArm, Matrix<float>.Build.DenseOfMatrix(vRightArm));
-    }
 
 
     /// <summary>
