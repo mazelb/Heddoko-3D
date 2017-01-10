@@ -271,19 +271,7 @@ public partial class BodySegment
         vReturn.z = vMatrix[0, 2] * vInit.x + vMatrix[1, 2] * vInit.y + vMatrix[2, 2] * vInit.z;
         return vReturn;
     }
-
-    /// <summary>
-    /// Returns a quaternion from an orthonormal basis of three vectors
-    /// </summary>
-    /// <param name="vForward"></param>
-    /// <param name="vUp"></param>
-    /// <param name="vRight"></param>
-    /// <returns></returns>
-    private Quaternion FromOrthonormalBasis(Vector3 vForward, Vector3 vUp, Vector3 vRight)
-    {
-        Quaternion vReturn = Quaternion.identity;
-        return vReturn;
-    }
+     
     /// <summary>
     /// MapTorsoSegment: Performs mapping on the torso subsegment from the available sensor data.
     /// </summary>
@@ -313,117 +301,14 @@ public partial class BodySegment
 
         if (GBodyFrameUsingQuaternion)
         {
-
-            Quaternion vTorsoInitTemp2 = new Quaternion(vTorsoInitRawQuat.x, vTorsoInitRawQuat.y, vTorsoInitRawQuat.z, vTorsoInitRawQuat.w);
-            Matrix<float> vPniDcm2 = MatrixTools.PniDcmConversion(vTorsoInitTemp2);
-
-            var vPniDcmX = vPniDcm2.Column(0);
-            var vPniDcmY = vPniDcm2.Column(1);
-            var vPniDcmZ = vPniDcm2.Column(2);
-            //swap 
-            vPniDcm2.Column(1).SetValues(new[] { vPniDcmZ[0], vPniDcmZ[1], vPniDcmZ[2] });
-            vPniDcm2.Column(1).SetValues(new[] { -vPniDcmY[0], -vPniDcmY[1], -vPniDcmY[2] });
-            vPniDcm2.Column(1).SetValues(new[] { vPniDcmX[0], vPniDcmX[1], vPniDcmX[2] });
-
-            //convert back into a quaternion
-
-            Quaternion vTorsoInitTemp=     MatrixTools.DCMToQuaternion(vPniDcm2);
-           //  Matrix<float> vPniDcm2 = MatrixTools.PniDcmConversion(vTorsoInitTemp2);
-           //Quaternion vTorsoInitTemp = new Quaternion(vTorsoInitRawQuat.z, -vTorsoInitRawQuat.y, vTorsoInitRawQuat.x, vTorsoInitRawQuat.w);
-           // Quaternion vRaw = new Quaternion(vTorsoInitRawQuat.x, vTorsoInitRawQuat.y, vTorsoInitRawQuat.z, vTorsoInitRawQuat.w);
-
-           // //step 1: convert quaternion to a DCM
-           // Matrix<float> vPniDcm = MatrixTools.PniDcmConversion(vTorsoInitTemp);
-           // //m,aybe use quat.angle axis
-           // //step 2: multiply vPniDcm by the global X, this should give us a vector in the form of <m00, m10, m20>
-           // Vector3 vPniX = Vector3.zero;
-           // vPniX.x = vPniDcm[0, 0];
-           // vPniX.y = vPniDcm[1, 0];
-           // vPniX.z = vPniDcm[2, 0];
-           // Vector3 vPniX2 = Vector3.zero;
-           // vPniX2.x = vPniDcm[0, 0];
-           // vPniX2.y = vPniDcm[1, 0];
-           // vPniX2.z = vPniDcm[2, 0];
-           // Vector3 vPniY = Vector3.zero;
-           // vPniY.x = vPniDcm[0, 1];
-           // vPniY.y = vPniDcm[1, 1];
-           // vPniY.z = vPniDcm[2, 1];
-           // Vector3 vPniZ = Vector3.zero;
-           // vPniZ.x = vPniDcm[0, 2];
-           // vPniZ.y = vPniDcm[1, 2];
-           // vPniZ.z = vPniDcm[2, 2];
-           // vPniZ.Normalize();
-
-
-           // //find the angle between the global gravity vector Zg and PniX
-           // float vTheta = Vector3.Angle(vPniX, new Vector3(0, 0, 1)) * Mathf.Deg2Rad;
-
-
-           // //Step 4: get the orthonormal of PniX and Zg
-           // Vector3 vOrthoNormal = Vector3.Cross(vPniX, new Vector3(0, 0, 1));
-
-           // Quaternion vTorsoOffset;//= Quaternion.AngleAxis(vTheta*Mathf.Rad2Deg, vOrthoNormal);
-           // //step  : get Sin (theta/2) and Cos(theta/2)
-           // float vThetaHalf = vTheta / 2f;
-           // float vSinThetaHalf = Mathf.Sin(vThetaHalf);
-           // float vCosThetaHalf = Mathf.Cos(vThetaHalf);
-           // vTorsoOffset.w = vCosThetaHalf;
-           // vTorsoOffset.x = vOrthoNormal.x * vSinThetaHalf;
-           // vTorsoOffset.y = vOrthoNormal.y * vSinThetaHalf;
-           // vTorsoOffset.z = vOrthoNormal.z * vSinThetaHalf;
-           // Vector4 vOffsetVector4 = new Vector4(vTorsoOffset.x, vTorsoOffset.y, vTorsoOffset.z, vTorsoOffset.w);
-           // var vMag = vOffsetVector4.magnitude;
-           // vTorsoOffset.w *= vMag;
-           // vTorsoOffset.x *= vMag;
-           // vTorsoOffset.y *= vMag;
-           // vTorsoOffset.z *= vMag;
-           // Quaternion vTorsoCorrected = vTorsoOffset * vTorsoInitTemp;
-
-
-            //vTorsoCorrected = PniQuaternionConversion(vTorsoCorrected);
+            Vector3 vTorsoRot = new Vector3(0,-90f,0);
+            Quaternion vTorsoInitTemp = new Quaternion(vTorsoInitRawQuat.x, vTorsoInitRawQuat.y, vTorsoInitRawQuat.z, vTorsoInitRawQuat.w);
+            vTorsoInitTemp *= Quaternion.Euler(vTorsoRot);
 
             vTorsoQuat = new Quaternion(vTorsoCurRawQuat.x, vTorsoCurRawQuat.y, vTorsoCurRawQuat.z, vTorsoCurRawQuat.w);
-
-            Matrix<float> vPniDcm3 = MatrixTools.PniDcmConversion(vTorsoQuat);
-
-            var vPniDcmX2 = vPniDcm3.Column(0);
-            var vPniDcmY2 = vPniDcm3.Column(1);
-            var vPniDcmZ2 = vPniDcm3.Column(2);
-            //swap 
-            vPniDcm3.Column(1).SetValues(new[] { vPniDcmZ2[0], vPniDcmZ2[1], vPniDcmZ2[2] });
-            vPniDcm3.Column(1).SetValues(new[] { -vPniDcmY2[0], -vPniDcmY2[1], -vPniDcmY2[2] });
-            vPniDcm3.Column(1).SetValues(new[] { vPniDcmX2[0], vPniDcmX2[1], vPniDcmX2[2] });
-            vTorsoQuat = MatrixTools.DCMToQuaternion(vPniDcm3);
-            vTorsoQuat = Quaternion.Inverse(vTorsoInitTemp)*vTorsoQuat;
-
-            //Quaternion vTempTorso = vTorsoCorrectQuat*vTorsoQuat;
-       //     Quaternion vRHS = vTorsoQuat;// * Quaternion.Inverse(vTorsoOffset);
-                                         // vTorsoInitTemp=Quaternion.Inverse(vTorsoCorrected)*vTorsoInitTemp;
-
-            // Quaternion.Inverse(Quaternion.Euler(180, 0, 90)) * Quaternion.Inverse(vUAInitQuat) * vUACurQuat * Quaternion.Euler(180, 0, 90);
-
-         //   vTorsoQuat = Quaternion.Inverse(vTorsoCorrected) * vTorsoQuat;// Quaternion.Inverse(vTorsoInitTemp) * vTorsoQuat * vTorsoOffset;
-            //  vTorsoQuat = Quaternion.Inverse(vTorsoCorrected) *vTorsoQuat;
+            vTorsoQuat *= Quaternion.Euler(vTorsoRot);
+            vTorsoQuat = Quaternion.Inverse(vTorsoInitTemp) * vTorsoQuat;
             vTorsoQuat = PniQuaternionConversion(vTorsoQuat);
-
-            //   vTorsoInitQuat = new Quaternion(vTorsoInitQuat.z, -vTorsoInitQuat.y, vTorsoInitQuat.x, vTorsoInitQuat.w);
-            //rotate     
-            //   vTorsoCorrected = new Quaternion(vTorsoCorrected.z, -vTorsoCorrected.y, vTorsoCorrected.x, vTorsoCorrected.w);
-            //   vTorsoInitTemp = new Quaternion(vTorsoInitTemp.z, -vTorsoInitTemp.y, vTorsoInitTemp.x, vTorsoInitTemp.w);
-            //  vTorsoQuat = new Quaternion(vTorsoCurRawQuat.x, vTorsoCurRawQuat.y, vTorsoCurRawQuat.z, vTorsoCurRawQuat.w);
-
-
-            //Quaternion vConjugateCurr = Quaternion.identity;
-            //vConjugateCurr.x = -vTorsoCorrected.x;
-            //vConjugateCurr.y = -vTorsoCorrected.y;
-            //vConjugateCurr.z = -vTorsoCorrected.z;
-            //vConjugateCurr.w = vTorsoCorrected.w;   
-            // vTorsoQuat = Quaternion.Inverse(vTorsoInitQuat) * vTorsoQuat;
-            //  vTorsoQuat =Quaternion.Inverse(vTorsoInitTemp) * vTorsoCorrected * vTorsoQuat;
-
-
-
-
         }
 
         if (!GBodyFrameUsingQuaternion)
