@@ -146,10 +146,11 @@ public class BodyFrame
     /// Create a Bodyframe from a protobuf packet
     /// </summary>
     /// <param name="vPacket">The packet</param>
-    public BodyFrame(Packet vPacket)
+    public BodyFrame(Packet vPacket )
     {
         Timestamp = vPacket.fullDataFrame.timeStamp / 1000f;
         var vDataList = vPacket.fullDataFrame.imuDataFrame;
+        
         for (int vI = 0; vI < vDataList.Count; vI++)
         {
             var vDataFrame = vDataList[vI];

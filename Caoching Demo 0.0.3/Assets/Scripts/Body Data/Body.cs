@@ -43,6 +43,8 @@ public class Body
     [SerializeField]
     public Dictionary<BodyStructureMap.SegmentTypes, BodySegment> BodySegments = new Dictionary<BodyStructureMap.SegmentTypes, BodySegment>();
 
+    private Dictionary<BodyStructureMap.SegmentTypes, BodySegmentCalibration> mBodySegmentCalibration = new Dictionary<BodyStructureMap.SegmentTypes, BodySegmentCalibration>();
+
     [SerializeField]
     public BodyStructureMap.BodyTypes BodyType = BodyStructureMap.BodyTypes.BodyType_FullBody;
 
@@ -165,8 +167,20 @@ public class Body
 
         //Init all structures
         CreateBodyStructure(vBodyType);
+        InitiateCalibrationStructure(BodySegments);
     }
 
+    /// <summary>
+    /// Initiates the bodysegment calibration structure.
+    /// </summary>
+    private void InitiateCalibrationStructure(Dictionary<BodyStructureMap.SegmentTypes, BodySegment> vBodySegments)
+    {
+        foreach (var vBodySegment in vBodySegments)
+        {
+            var vCalib = new BodySegmentCalibration(vBodySegment.Value);
+            mBodySegmentCalibration.Add(vBodySegment.Key,vCalib);
+        }
+    }
     /**
     * CreateBodyStructure(BodyStructureMap.BodyTypes vBodyType )
     * @param  vBodyType: the desired BodyType, this also initializes the body's analysis segment
@@ -189,7 +203,6 @@ public class Body
             //set the reference to the BodyFrameCalibrationContainer
             vSegment.BodyFrameCalibrationContainer = mBodyFrameCalibrationContainer;
             BodySegments.Add(type, vSegment);
-
             vSegment.AssociatedView.transform.parent = View.transform;
 
             //Todo: this can can be abstracted and mapped nicely. 

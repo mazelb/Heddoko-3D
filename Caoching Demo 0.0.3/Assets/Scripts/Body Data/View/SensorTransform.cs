@@ -105,6 +105,7 @@ namespace Assets.Scripts.Body_Data.View
                 vFrameRot.z = vFrame.quat_z_roll;
                 vFrameRot.w = vFrame.quat_w;
                 Rotation.UpdateRotatation(vFrameRot);
+                
             }
         }
 

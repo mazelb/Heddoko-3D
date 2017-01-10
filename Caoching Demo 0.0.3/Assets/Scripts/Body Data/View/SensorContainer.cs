@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using heddoko;
 using UnityEngine;
-using  System.Linq;
+using System.Linq;
 using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.Body_Data.View
@@ -156,5 +156,7 @@ namespace Assets.Scripts.Body_Data.View
                 mSensorTransformList[vIdx].UpdateRotation(vImuFrames[vI]);
             }
         }
+
+
     }
 }

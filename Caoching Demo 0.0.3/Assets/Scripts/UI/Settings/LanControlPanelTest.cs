@@ -32,7 +32,8 @@ namespace Assets.Scripts.UI.Settings
         public SlideBlock BrainpackConnectionSlider;
         public SlideBlock ResolutionSettingSlideBlock;
         public SegmentAnalysisRecordingController SegmentAnalysisRecordingController;
-
+        public GameObject LivePanel;
+ 
         public RecordingPlayerView RecordingPlayerView;
         public LiveSuitFeedView SuitFeedView;
 
@@ -55,13 +56,15 @@ namespace Assets.Scripts.UI.Settings
                         BodyControlPanel.TogglePanel();
                     }
                 }
+                CloudLocalStorageViewManager.gameObject.SetActive(true);
                 CloudLocalStorageViewManager.Show();
                 if (!RecordingPlayerView.gameObject.activeInHierarchy)
                 {
                     SuitFeedView.Hide();
                     RecordingPlayerView.Show();
+               
                 }
-
+                LivePanel.SetActive(false);
                 LoadRecordingsButton.colors = SelectedColorBlock;
                 LiveViewButton.Button.colors = UnSelectedColorBlock;
                 BrainpackConnectionButton.colors = UnSelectedColorBlock;
@@ -97,7 +100,8 @@ namespace Assets.Scripts.UI.Settings
                     RecordingPlayerView.Hide();
                     SuitFeedView.Show();
 
-                }
+                } 
+                LivePanel.SetActive(true);
                 LiveViewButton.Button.colors = SelectedColorBlock;
                 LoadRecordingsButton.colors = UnSelectedColorBlock;
                 BrainpackConnectionButton.colors = UnSelectedColorBlock;

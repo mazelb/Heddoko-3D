@@ -1,6 +1,6 @@
 ﻿// /**
 // * @file OffsetRotationSetter.cs
-// * @brief Contains the 
+// * @brief Contains the OffsetRotationSetter class
 // * @author Mohammed Haider( 
 // * @date 12 2016
 // * Copyright Heddoko(TM) 2016,  all rights reserved

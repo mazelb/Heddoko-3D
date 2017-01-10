@@ -55,7 +55,7 @@ namespace Assets.Scripts.Communication
 
             if (OutBoundBuffer.AllowOverflow || (!OutBoundBuffer.AllowOverflow && !OutBoundBuffer.IsFull()))
             {
-                var vBodyFrame = new BodyFrame(vPacket);
+                var vBodyFrame = new BodyFrame(vPacket );
                 OutBoundBuffer.Enqueue(vBodyFrame);
                 if (DataFrameMessageReceivedEvent != null)
                 {

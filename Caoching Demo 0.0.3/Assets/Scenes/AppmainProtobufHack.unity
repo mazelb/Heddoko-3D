@@ -1625,8 +1625,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8a5315a5dc3e304e839d58c041b32da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Negator: {x: 1, y: 1, z: 1, w: 1}
-  caseSwitch: 0
 --- !u!1 &48965241
 GameObject:
   m_ObjectHideFlags: 0
@@ -11379,7 +11377,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &409676873
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11434,7 +11432,7 @@ MonoBehaviour:
     m_HighlightedTrigger: Highlighted
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 409676877}
   m_OnClick:
     m_PersistentCalls:
@@ -12184,7 +12182,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &480663378
 RectTransform:
   m_ObjectHideFlags: 0
@@ -17918,7 +17916,7 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 927780d8d1c36a9419b82d6f0c766637, type: 3}
+  m_Sprite: {fileID: 21300000, guid: eb34a4189d169db418fe05d19ce3592f, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -20596,6 +20594,7 @@ MonoBehaviour:
   BrainpackConnectionSlider: {fileID: 2100874791}
   ResolutionSettingSlideBlock: {fileID: 1528181431}
   SegmentAnalysisRecordingController: {fileID: 2090096977}
+  LivePanel: {fileID: 151862836}
   RecordingPlayerView: {fileID: 1103780630}
   SuitFeedView: {fileID: 1585398391}
   BodyControlPanel: {fileID: 415361737}
@@ -28823,7 +28822,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1103780629
 RectTransform:
   m_ObjectHideFlags: 0
@@ -29923,7 +29922,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1156839643
 RectTransform:
   m_ObjectHideFlags: 0
@@ -42114,8 +42113,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 168.34117, y: -34.737274}
-  m_SizeDelta: {x: 316.68234, y: 49.47455}
+  m_AnchoredPosition: {x: 100.79053, y: -22.633453}
+  m_SizeDelta: {x: 181.58105, y: 25.266907}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1577945283
 GameObject:
@@ -46325,6 +46324,10 @@ Prefab:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 186800, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
   m_IsPrefabParent: 0
@@ -49619,8 +49622,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 495.0235, y: -34.737274}
-  m_SizeDelta: {x: 316.68234, y: 49.47455}
+  m_AnchoredPosition: {x: 292.37158, y: -22.633453}
+  m_SizeDelta: {x: 181.58105, y: 25.266907}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1788273716
 GameObject:
@@ -54759,7 +54762,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1970707600
 RectTransform:
   m_ObjectHideFlags: 0

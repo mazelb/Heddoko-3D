@@ -8,6 +8,8 @@
 
 using System.Security.Policy;
 using Assets.Scripts.Utils.DebugContext;
+using heddoko;
+using HeddokoLib.body_pipeline;
 using UnityEngine;
 
 namespace Assets.Scripts.Body_Data.View
@@ -52,10 +54,19 @@ namespace Assets.Scripts.Body_Data.View
         void Update()
         {
             transform.rotation = InitialRotation * AbsoluteRotation;
-            if (Input.GetKeyDown(KeyCode.Home))
-            {
-                Reset();
-            }
+        }
+
+        void Calibrate(Packet vFramePacket, int vIndex)
+        {
+            var vImuFrame = vFramePacket.fullDataFrame.imuDataFrame;
+            //get the acceleration. Hopefully the user is not moving at this present time
+            Vector3 vAcceleration = new Vector3();
+            vAcceleration.x = vImuFrame[vIndex].Mag_x;
+            vAcceleration.y= vImuFrame[vIndex].Mag_y;
+            vAcceleration.z = vImuFrame[vIndex].Mag_z;
+            Reset();
+
+
         }
 
     }

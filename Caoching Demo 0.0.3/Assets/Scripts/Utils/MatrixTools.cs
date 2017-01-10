@@ -285,6 +285,23 @@ namespace Assets.Scripts.Utils
             return vDCM;
         }
 
+
+        /// <summary>
+        /// Converts a Direction Cosine Matrix to a quaternion <see cref="http://www.vectornav.com/docs/default-source/documentation/vn-100-documentation/AN002.pdf?sfvrsn=10"/>
+        /// </summary>
+        /// <param name="vDCM">the direction cosine matrix</param>
+        /// <returns>The converted quaternion</returns>
+        internal static Quaternion DCMToQuaternion(Matrix<float> vDCM)
+        {
+            Quaternion vReturn = Quaternion.identity;
+            vReturn.w = 0.5f * Mathf.Sqrt(vDCM[0, 0] + vDCM[1, 1] + vDCM[2, 2] + 1);
+            float vWFactor = (4f * vReturn.w);
+            vReturn.x = (vDCM[1, 2] + vDCM[2, 1]) / vWFactor;
+            vReturn.y = (vDCM[2, 0] + vDCM[0, 2]) / vWFactor;
+            vReturn.z = (vDCM[0, 1] + vDCM[1, 0]) / vWFactor;
+            return vReturn;
+        }
+
         /// <summary>
         /// returns a 3x3 identity matrix.
         /// </summary>

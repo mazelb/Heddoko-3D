@@ -42,6 +42,7 @@ namespace Assets.Scripts.Body_Data
         /// </summary>
         protected override void ThreadFunction()
         {
+            int vIndexCount = 0;
             while (!mIsDone)
             {
                 try
@@ -55,7 +56,7 @@ namespace Assets.Scripts.Body_Data
                     var vPacket = mPacketBuffer.Dequeue();
                     if (vPacket != null)
                     {
-                        BodyFrame vBodyFrame = new BodyFrame(vPacket);
+                        BodyFrame vBodyFrame = new BodyFrame(vPacket );
                         mOutBoundBuffer.Enqueue(vBodyFrame);
                     }
                 }
