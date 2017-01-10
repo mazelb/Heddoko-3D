@@ -33,6 +33,7 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
         [SerializeField]
         public List<Tag> Tags = new List<Tag>();
         public abstract string Title { get; set; }
+
         public abstract BodyRawFrameBase GetBodyRawFrameAt(int vIndex); 
         /// <summary>
         /// ExtractRawFramesData from a BodyRecordingReader

@@ -17,8 +17,7 @@ using Assets.Scripts.ErrorHandling;
 using Assets.Scripts.ErrorHandling.Model;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.Licensing.Model;
-using Assets.Scripts.Localization;
-using Assets.Scripts.Tests;
+using Assets.Scripts.Localization; 
 using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
 using Assets.Scripts.UI.AbstractViews.Permissions;
@@ -50,6 +49,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         public AnaylsisTextContainer AnaylsisTextContainer;
         public event RecordingPlayerViewLayoutCreated RecordingPlayerViewLayoutCreatedEvent;
         public CloudLocalStorageViewManager CloudLocalStorageViewManager;
+        
         public PanelNode RootNode
         {
             get { return mPanelNodes[0]; }
@@ -62,11 +62,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             List<ControlPanelType> vRightSide = new List<ControlPanelType>();
             vRightSide.Add(ControlPanelType.RecordingPlaybackControlPanel);
             ControlPanelTypeList.Add(vLeftSide);
-            ControlPanelTypeList.Add(vRightSide);
-            //SingleRecordingSelection.Instance.StartLoadingEvent += StartLoadHookFunc;
-            //SingleRecordingSelection.Instance.FinishLoadingEvent += StopLoadHookFunc;
-            //PbControlPanel.SingleRecordingLoadSubControl.OnRecordingSelected += () =>
-            //{ SingleRecordingSelection.Instance.OpenFileBrowseDialog(PbControlPanel.NewRecordingSelected); };
+            ControlPanelTypeList.Add(vRightSide); 
             Hide();
 
         }
@@ -112,8 +108,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             PbControlPanel.BodyUpdatedEvent += SetNewBody;
             CloudLocalStorageViewManager.RecordingLoadingCompleteEvent += PbControlPanel.NewRecordingSelected;
 
-            //  PbControlPanel.SingleRecordingLoadSubControl.SetNewButtonControl(LoadRecordingButton);
-            if (RecordingPlayerViewLayoutCreatedEvent != null)
+             if (RecordingPlayerViewLayoutCreatedEvent != null)
             {
                 RecordingPlayerViewLayoutCreatedEvent(this);
             }

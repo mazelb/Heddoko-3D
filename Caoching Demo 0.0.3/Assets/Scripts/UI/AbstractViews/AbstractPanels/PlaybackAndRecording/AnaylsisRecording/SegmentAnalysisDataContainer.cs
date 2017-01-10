@@ -21,7 +21,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
     /// </summary>
     public class SegmentAnalysisDataContainer : MonoBehaviour
     {
-         private Pool<RecordingAnalysisSegmentSectionView> mPool;
+        private Pool<RecordingAnalysisSegmentSectionView> mPool;
         private List<RecordingAnalysisSegmentSectionView> mList = new List<RecordingAnalysisSegmentSectionView>();
         private BodyFrame[] mConvertedFrames;
         private Body mBody;
@@ -72,7 +72,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
         /// 
         /// </summary>
         /// <param name="vControlPanel"></param>
-
         void UpdateConvertedFrames(PlaybackControlPanel vControlPanel)
         {
             mConvertedFrames = vControlPanel.PlaybackTask.ConvertedFrames.ToArray();

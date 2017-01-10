@@ -9,7 +9,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Body_Data;
+using System;
 using Assets.Scripts.Frames_Pipeline;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.Localization;
@@ -28,8 +28,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
 
     public delegate void BodyUpdated(Body vBody);
     public delegate void RecordingUpdated(PlaybackControlPanel vControlPanel);
-
     public delegate void NewRecordingSelected();
+
     /// <summary>
     /// Provides controls for recording play back
     /// </summary>
@@ -60,6 +60,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         private PlaybackSettings mPlaybackSettings = new PlaybackSettings();
         private bool mCanUse = true;
         private bool mPreviousBodyLerpVal;
+        public event Action<RecordingPlaybackTask> RecordingPlaybackTaskUpdated;
+        
         public PlaybackState CurrentState
         {
             get
@@ -95,8 +97,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         {
             get { return mPlaybackTask; }
         }
-
-
 
         /// <summary>
         /// Updates recording for the current playback panel
@@ -454,16 +454,12 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                     //check if this a new recording that was loaded. 
                     if (mIsNewRecording)
                     {
+                        //todo: put this in an event!!!
                         mIsNewRecording = false;
                         UpdateRecording(mBody.MBodyFrameThread.PlaybackTask);
                     }
-
-
-
                 }
-
             }
-
         }
 
 
@@ -533,7 +529,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         }
 
         /// <summary>
-        /// A new recording has been selected
+        /// A new recording has been selected, calon a fucntion to start converting.
         /// </summary>
         /// <param name="vNewCsvBodyFramesRecording"></param>
         public void NewRecordingSelected(BodyFramesRecordingBase vNewCsvBodyFramesRecording)
@@ -589,9 +585,11 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             {
                 yield return null;
             }
-            mPlaybackTask = mBody.MBodyFrameThread.PlaybackTask;
-
-
+            mPlaybackTask = mBody.MBodyFrameThread.PlaybackTask;  
+            if(RecordingPlaybackTaskUpdated!= null)
+            {
+                RecordingPlaybackTaskUpdated(mPlaybackTask);
+            }   
         }
 
         /// <summary>

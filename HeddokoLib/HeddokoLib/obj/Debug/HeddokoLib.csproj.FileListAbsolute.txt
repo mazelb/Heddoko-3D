@@ -24,3 +24,9 @@ E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\bin\Debug\protobuf-net.dll
 E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.dll
 E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.pdb
 E:\Code\Heddoko3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.csprojResolveAssemblyReference.cache
+C:\Users\Simon\Documents\Heddoko3D\HeddokoLib\HeddokoLib\bin\Debug\HeddokoLib.dll
+C:\Users\Simon\Documents\Heddoko3D\HeddokoLib\HeddokoLib\bin\Debug\HeddokoLib.pdb
+C:\Users\Simon\Documents\Heddoko3D\HeddokoLib\HeddokoLib\bin\Debug\protobuf-net.dll
+C:\Users\Simon\Documents\Heddoko3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.csprojResolveAssemblyReference.cache
+C:\Users\Simon\Documents\Heddoko3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.dll
+C:\Users\Simon\Documents\Heddoko3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.pdb

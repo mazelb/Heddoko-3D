@@ -21,9 +21,8 @@ using HeddokoLib.body_pipeline;
 
 namespace Assets.Scripts.Frames_Pipeline
 {
-
+    public delegate void BodyFrameConversionCompleted(List<BodyFrame> vBodyFrames);
     public delegate void FinalFramePositionReached();
-
      /// <summary>
     /// A vRecording playback task used by body frame thread
     /// </summary>
@@ -40,6 +39,7 @@ namespace Assets.Scripts.Frames_Pipeline
         private int mCurrentIdx;
         private int mFirstPos = 0;
         internal event FinalFramePositionReached FinalFramePositionReachedEvent;
+        internal event BodyFrameConversionCompleted BodyFrameConversionCompletedEvent;
         /// <summary>
         /// Depending if the current state is rewinding or going forward, then the 
         /// the index iterator changes the local position of the converted frame data
@@ -364,6 +364,11 @@ namespace Assets.Scripts.Frames_Pipeline
                     vProgressBar.StopAnimation();
                 }
             });
+
+            if(BodyFrameConversionCompletedEvent != null)
+            {
+                BodyFrameConversionCompletedEvent(mConvertedBodyFrames);
+            }
         }
         /// <summary>
         /// Sets the playback to be played from the passed in index
