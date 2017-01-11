@@ -17897,7 +17897,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.403}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -20582,7 +20582,6 @@ MonoBehaviour:
   BrainpackConnectionSlider: {fileID: 2100874791}
   ResolutionSettingSlideBlock: {fileID: 1528181431}
   SegmentAnalysisRecordingController: {fileID: 2090096977}
-  LivePanel: {fileID: 151862836}
   RecordingPlayerView: {fileID: 1103780630}
   SuitFeedView: {fileID: 1585398391}
   BodyControlPanel: {fileID: 415361737}
@@ -45416,6 +45415,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1652885650}
+  - 114: {fileID: 1652885649}
   m_Layer: 0
   m_Name: Controllers and managers
   m_TagString: Controllers
@@ -45423,6 +45423,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1652885649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1652885648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efedb9770f3f25a479e7feaa28677c62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LiveFeedView: {fileID: 1585398391}
+  RecordingsView: {fileID: 1103780630}
+  MessagesView: {fileID: 2131720897}
+  LiveviewFeedButton: {fileID: 892415416}
+  RecordingFeedButton: {fileID: 409676876}
 --- !u!4 &1652885650
 Transform:
   m_ObjectHideFlags: 0
@@ -47604,7 +47620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.259}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:

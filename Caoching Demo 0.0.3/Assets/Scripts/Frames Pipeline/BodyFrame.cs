@@ -12,11 +12,8 @@ using System;
 using System.Runtime.Serialization;
 using Assets.Scripts.Frames_Pipeline;
 using heddoko;
-using HeddokoLib.heddokoProtobuff;
 using HeddokoLib.utils;
-using MathNet.Numerics.LinearAlgebra;
 using Newtonsoft.Json;
-using UnityEngine;
 
 /// <summary>
 /// The frame of data that is populated to sensors, and contains the list of sensors to access sensors data
@@ -25,10 +22,12 @@ using UnityEngine;
 public class BodyFrame
 {
 
-    //The frame of data populated to sensors 
     [JsonProperty]
+    //The frame of data populated to sensors
     private Dictionary<BodyStructureMap.SensorPositions, Vect4> mFrameData;
+     
 
+    private Packet mAssociatedPacket;
     //The timestamp of a bodybody frame 
     [JsonProperty]
     private float mTimeStamp;
@@ -58,6 +57,11 @@ public class BodyFrame
     {
         get { return mTimeStamp; }
         set { mTimeStamp = value; }
+    }
+
+    public Packet AssociatedPacket
+    {
+        get { return mAssociatedPacket; }
     }
 
 
@@ -101,7 +105,6 @@ public class BodyFrame
     /// </summary>
     /// <param name="vSeperator"></param>
     /// <returns></returns>
-
     public string ToCsvnoTsNoKeyIncluded(string vSeperator = ",")
     {
         string vOutput = "";
@@ -146,32 +149,38 @@ public class BodyFrame
     /// Create a Bodyframe from a protobuf packet
     /// </summary>
     /// <param name="vPacket">The packet</param>
-    public BodyFrame(Packet vPacket )
+    public BodyFrame(Packet vPacket)
     {
         Timestamp = vPacket.fullDataFrame.timeStamp / 1000f;
         var vDataList = vPacket.fullDataFrame.imuDataFrame;
-        
+
         for (int vI = 0; vI < vDataList.Count; vI++)
         {
             var vDataFrame = vDataList[vI];
             int vId = (int)vPacket.fullDataFrame.imuDataFrame[vI].imuId;
             var vSensorId = ImuSensorFromPos(vId);
-            Vect4 vVect = new Vect4();
-            vVect.x = vDataFrame.quat_x_yaw;
-            vVect.y = vDataFrame.quat_y_pitch;
-            vVect.z = vDataFrame.quat_z_roll;
-            vVect.w = vDataFrame.quat_w;
-            FrameData.Add(vSensorId, vVect);
+            Vect4 vVect = new Vect4()
+            {
+                x = vDataFrame.quat_x_yaw,
+                y = vDataFrame.quat_y_pitch,
+                z = vDataFrame.quat_z_roll,
+                w = vDataFrame.quat_w
+            };
+           
+            FrameData.Add(vSensorId, vVect); 
         }
+        mAssociatedPacket = vPacket;
     }
-     
+
+
+
     /**
     * ConvertRawFrame(BodyRawFrame rawData)
     * @brief Pass in a BodyRawFrame and convert it to a body frame
     * @param BodyRawFrame rawData
     * @return void
     * 
-    */
+*/
     public static BodyFrame ConvertRawFrame(BodyRawFrame vRawData)
     {
         float vTimestamp = 0;
@@ -415,7 +424,7 @@ public class BodyFrame
     }
 
     /// <summary>
-    /// Vector4 with nullable component w
+    /// Vector4 
     /// </summary>
     public struct Vect4
     {
@@ -432,7 +441,7 @@ public class BodyFrame
             this.w = vW;
         }
 
-        
+
         public float this[int vIndex]
         {
             get
@@ -480,6 +489,6 @@ public class BodyFrame
 
         }
 
-
     }
+  
 }

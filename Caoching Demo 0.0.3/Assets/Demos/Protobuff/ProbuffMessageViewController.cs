@@ -45,7 +45,6 @@ namespace Assets.Demos
         
         void Update()
         {
-           
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 IsPaused = !IsPaused;
@@ -61,7 +60,7 @@ namespace Assets.Demos
                 {
                     return;
                 }
-                ProcessMessage(vPacket);
+               
                 if (!mBrainpackMessagePerSecond.Initialized)
                 {
                     mBrainpackMessagePerSecond.Init(vPacket);
@@ -97,10 +96,18 @@ namespace Assets.Demos
             {
                 vBody.RenderedBody.SensorTransformContainer.SensorSelected -= RemoveAllButIndex;
                 vBody.RenderedBody.SensorTransformContainer.SensorDeselected -= DisplayAllItems;
+                Body.View.BodyFrameUpdatedEvent -= UpdateView;
+
             }
             Body = vBody;
             Body.RenderedBody.SensorTransformContainer.SensorSelected += RemoveAllButIndex;
             Body.RenderedBody.SensorTransformContainer.SensorDeselected += DisplayAllItems;
+            Body.View.BodyFrameUpdatedEvent += UpdateView;
+        }
+
+        private void UpdateView(BodyFrame vVnewframe)
+        {
+            ProcessMessage(vVnewframe.AssociatedPacket);
         }
 
         private void DisplayAllItems(int vObj)

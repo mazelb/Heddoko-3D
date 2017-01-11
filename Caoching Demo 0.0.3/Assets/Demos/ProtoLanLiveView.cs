@@ -11,9 +11,7 @@ using Assets.Scripts.UI.AbstractViews.Layouts;
 using Assets.Scripts.UI.RecordingLoading;
 using UnityEngine;
 using System.Collections.Generic;
-using Assets.Scripts.Communication;
 using Assets.Scripts.Communication.Communicators;
-using heddoko;
 
 namespace Assets.Demos
 {
@@ -80,13 +78,7 @@ namespace Assets.Demos
             ProbuffMessageViewController.BrainpackMessagePerSecond.Initialized = false;
             try
             {
-                // Quaternion vUpAxis = Quaternion.Euler(0, 180, 0);
-
-                BodySegment.IsUsingInterpolation = false;
-                //    BodyFrame vBodyFrame = new BodyFrame(0);
-                //  vBodyFrame.FrameData = new Dictionary<BodyStructureMap.SensorPositions, BodyFrame.Vect4>();
-                //  vBodyFrame.FrameData.Add(BodyStructureMap.SensorPositions.SP_LowerSpine,new BodyFrame.Vect4( vUpAxis.x, vUpAxis.x, vUpAxis.x, vUpAxis.w) ); 
-                BrainpackBody.View.ResetInitialFrame();
+                BodySegment.IsUsingInterpolation = false; BrainpackBody.View.ResetInitialFrame();
                 BodySegment.IsUsingInterpolation = true;
             }
             catch
@@ -95,19 +87,14 @@ namespace Assets.Demos
             }
             BodySegment.IsUsingInterpolation = vIsLerp;
             SetContextualInfo();
-
-
         }
-
-
-
+        
         /// <summary>
         /// Set information relative to the context of this view
         /// </summary>
         private void SetContextualInfo()
         {
-            BodyFrameDataControl.SetBody(BrainpackBody);
-            //    FrameGraphControl.SetBody(BrainpackBody);
+            BodyFrameDataControl.SetBody(BrainpackBody); 
             AnaylsisTextContainer.BodyToAnalyze = BrainpackBody;
         }
 
