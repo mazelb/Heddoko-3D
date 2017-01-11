@@ -22,8 +22,8 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
         public void Init()
         {
             rom.SetPitchMinMax(-60, 100, axePitch); // up/down
-            rom.SetYawMinMax(-100, 100 , axeYaw   );  // front/back
-            rom.SetRollMinMax(-90, 90  , axeRoll  );   // twist
+            rom.SetYawMinMax(-50, 50 , axeYaw   );  // front/back
+            rom.SetRollMinMax(-30, 30  , axeRoll  );   // twist
         }
 
         public void Awake() { Init(); }

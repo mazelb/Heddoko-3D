@@ -808,7 +808,7 @@ MonoBehaviour:
       axe: {x: 0, y: 1, z: 0}
       minAngle: -90.36145
       maxAngle: 30.361435
-      lastCompute: -30.3614
+      lastCompute: 0
 --- !u!1 &1235046120 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100140, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
@@ -855,7 +855,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1288578963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -878,13 +878,13 @@ MonoBehaviour:
       lastCompute: 0
     YawMinMax:
       axe: {x: 0, y: 0, z: 0}
-      minAngle: -100
-      maxAngle: 100
+      minAngle: -32.965275
+      maxAngle: 33.540386
       lastCompute: 0
     RollMinMax:
       axe: {x: 0, y: 0, z: 0}
-      minAngle: -71.661446
-      maxAngle: 17.492165
+      minAngle: 6.0025506
+      maxAngle: 45.252438
       lastCompute: 0
   ToggleXConstraint: 0
   ToggleYConstraint: 1
@@ -956,7 +956,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1288578962}
-  m_LocalRotation: {x: -0.013343945, y: -0.41255036, z: 0.7945564, w: 0.4453137}
+  m_LocalRotation: {x: 0, y: 0, z: 0.9997816, w: 0.020900594}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 3.52, y: 0.2, z: 0.2}
   m_Children: []
@@ -1261,7 +1261,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400056, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.26186448
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400056, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.y
@@ -1269,11 +1269,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400056, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.9651047
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400056, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400128, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1289,7 +1289,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400118, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.7071068
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400118, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.y
@@ -1301,7 +1301,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400118, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400126, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1381,7 +1381,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 100140, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400068, guid: c173dc7ff3d3a314b992d618cf37bf04, type: 3}
       propertyPath: m_LocalRotation.x
