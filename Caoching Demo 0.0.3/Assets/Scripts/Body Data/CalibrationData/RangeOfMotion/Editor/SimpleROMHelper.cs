@@ -691,53 +691,36 @@ public class SimpleROMHelper : Editor
     private HorizResult HorizBothNegBounds(Vector3 constraintUp, Vector3 tvert, Vector3 tFlat, Vector3 t_AxeProjOnConeMin, Vector3 t_AxeProjOnConeMax)
     {
         HorizResult tRes = new HorizResult();
-        if (tvert.normalized != constraintUp)
+        if (tvert.normalized == constraintUp) // upper side always false as both constraints are negatives
         {
             tRes.color = Color.magenta;
-            tRes.proj = -tvert + tFlat.normalized * m_RadiusProjOnConeMin;
+            tRes.proj = -t_AxeProjOnConeMax;
             tRes.radius = m_RadiusProjOnConeMin;
             tRes.ZinBound = false;
         }
         else
         {
-
-            if (m_RadiusProjOnConeMax > m_RadiusConeMax)
+            if (m_RadiusProjOnConeMax > m_RadiusConeMax) // negative part above max
             {
                 tRes.color = Color.red;
-                tRes.proj = t_AxeProjOnConeMax;
+                tRes.proj = tvert - tFlat.normalized * m_RadiusProjOnConeMax;
                 tRes.radius = m_RadiusProjOnConeMax;
                 tRes.ZinBound = false;
             }
-            else if (m_RadiusConeMin < 0 && m_RadiusProjOnConeMin < m_RadiusConeMin)
+            else if (m_RadiusProjOnConeMin < m_RadiusConeMin) // negative part under min
             {
                 tRes.color = Color.black;
-                tRes.proj = t_AxeProjOnConeMin;
+                tRes.proj = tvert - tFlat.normalized * m_RadiusProjOnConeMin;
                 tRes.radius = m_RadiusProjOnConeMin;
                 tRes.ZinBound = false;
             }
-            else if (m_RadiusConeMin > 0 && m_RadiusProjOnConeMin < m_RadiusConeMin)
+            else //if (m_RadiusProjOnConeMin < 0)
             {
-                tRes.color = Color.grey;
-                tRes.proj = t_AxeProjOnConeMin;
+                tRes.color = Color.green;
+                tRes.proj = tvert - tFlat.normalized * m_RadiusProjOnConeMin;
                 tRes.radius = m_RadiusProjOnConeMin;
-                tRes.ZinBound = false;
-            }
-            else
-            {
-                if (m_RadiusProjOnConeMax > 0)
-                {
-                    tRes.color = Color.cyan;
-                    tRes.proj = t_AxeProjOnConeMax;
-                    tRes.radius = m_RadiusProjOnConeMax;
-                    tRes.ZinBound = true;
-                }
-                else if (m_RadiusProjOnConeMin < 0)
-                {
-                    tRes.color = Color.green;
-                    tRes.proj = t_AxeProjOnConeMin;
-                    tRes.radius = m_RadiusProjOnConeMin;
-                    tRes.ZinBound = true;
-                }
+                tRes.ZinBound = true;
+
             }
         }
         return tRes;
