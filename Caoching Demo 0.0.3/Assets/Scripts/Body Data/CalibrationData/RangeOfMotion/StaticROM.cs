@@ -148,111 +148,175 @@ namespace Assets.Scripts.Body_Data.CalibrationData.RangeOfMotion
             return Mathf.Abs(dif) < 0.1f;
         }
 
-        // return true if in bounds, meaning no constraint applied
-        private bool ConstraintPitch(AngleConstraint a_PitchAC, Vector3 a_SegmentAxe, Vector3 a_upwards, ref Quaternion a_quat, BodyStructureMap.SubSegmentTypes a_subType)
+
+        public class PitchResult
         {
-            ////Vector3 localOrthoAxe = a_quat * Vector3.up;
-            //Vector3 localOrthoAxe;// = Vector3.zero;
-            ////special case for arms
-            //if (a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_RightUpperArm ||
-            //    a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm ||
-            //    a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm ||
-            //    a_subType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm)
-            //{
-            //    localOrthoAxe = a_quat * Vector3.right;
-            //}
-            //else
-            //{
-            //    localOrthoAxe = a_quat * Vector3.up;
-            //}
-            //float t_PitchAngle = Mathf.Atan2(localOrthoAxe.z, localOrthoAxe.y) * Mathf.Rad2Deg;
-            //float dif = 0;
-            //if (a_PitchConst != null)
-            //{
-            //    if (t_PitchAngle < a_PitchConst.minAngle)
-            //    {
-            //        dif = a_PitchConst.minAngle - t_PitchAngle;
-            //    }
-            //    else if (t_PitchAngle > a_PitchConst.maxAngle)
-            //    {
-            //        dif = a_PitchConst.maxAngle - t_PitchAngle;
-            //    }
-            //}
-            //a_quat = a_quat * Quaternion.Euler(dif,0 ,0);
-            //return Mathf.Abs(dif) < 1;
+            public Color color = Color.clear;
+            public Vector3 proj = Vector3.zero;
+            public float radius = 0.0f;
+            public bool inBound = false;
+        }
+        public PitchResult m_Res = new PitchResult();
 
-            bool t_inBound = false;
+        private PitchResult PitchBothPosBounds(Vector3 constraintUp, Vector3 tvert, Vector3 tFlat, float m_RadiusConeMin, float m_RadiusConeMax, float m_RadiusProjOnConeMin, float m_RadiusProjOnConeMax)
+        {
+            PitchResult tRes = new PitchResult();
 
-            // rotate current axis by current rotation
-            Vector3 localAxe = a_quat * a_SegmentAxe;
+            Vector3 t_AxeProjOnConeMax = tvert + tFlat.normalized * m_RadiusProjOnConeMax;
+            Vector3 t_AxeProjOnConeMin = tvert + tFlat.normalized * m_RadiusProjOnConeMin;
 
-            float t_minAngle = a_PitchAC.minAngle, 
-                  t_maxAngle = a_PitchAC.maxAngle;
-            float med = t_minAngle + (t_maxAngle - t_minAngle) * 0.5f;
-
-            Vector3 ConeMax = Quaternion.Euler(0, t_maxAngle, 0) * Quaternion.LookRotation(a_SegmentAxe, a_upwards) * a_SegmentAxe;
-            Vector3 ConeMin = Quaternion.Euler(0, t_minAngle, 0) * Quaternion.LookRotation(a_SegmentAxe, a_upwards) * a_SegmentAxe;
-
-            if(Vector3.Angle(localAxe, ConeMax) < Vector3.Angle(localAxe, ConeMin))
+            if (tvert.normalized != constraintUp)
             {
-
-            }
-
-
-            float t_RadiusConeMax = (t_maxAngle >= 0 ? 1 : -1) * Mathf.Sin((90 - t_maxAngle) * Mathf.Deg2Rad);
-            float t_RadiusConeMin = (t_minAngle >= 0 ? 1 : -1) * Mathf.Sin((90 - t_minAngle) * Mathf.Deg2Rad);
-
-            //get vertical component of current direction
-            Vector3 tFlat = Vector3.ProjectOnPlane(localAxe, a_upwards);
-            Vector3 tvert = localAxe - tFlat;
-
-            float t_RadiusProjOnConeMax = tvert.magnitude * Mathf.Tan((90 - Mathf.Abs(t_maxAngle)) * Mathf.Deg2Rad);
-            float t_RadiusProjOnConeMin = tvert.magnitude * Mathf.Tan((90 - Mathf.Abs(t_minAngle)) * Mathf.Deg2Rad);
-
-            Vector3 projMax;
-            Vector3 projMin;
-            projMax = tvert + (localAxe - tvert).normalized * t_RadiusProjOnConeMax; // max
-            projMin = tvert - (localAxe - tvert).normalized * t_RadiusProjOnConeMin; // min
-            Vector3 proj = projMax;
-
-            if (t_RadiusProjOnConeMax > t_RadiusConeMax)
-            {
-                proj = projMax;
-                t_inBound = false;
-            }
-            else if((t_RadiusConeMin < 0 && t_RadiusProjOnConeMin < t_RadiusConeMin) || 
-                    (t_RadiusConeMin > 0 && t_RadiusProjOnConeMin < t_RadiusConeMin) )
-            {
-                proj = projMin;
-                t_inBound = false;
-            }
-            else if (t_RadiusProjOnConeMax > 0)
-            {
-                proj = projMax;
-                t_inBound = true;
-            }
-            else if (t_RadiusProjOnConeMin < 0)
-            {
-                proj = projMin;
-                t_inBound = true;
+                tRes.color = Color.magenta;
+                tRes.proj = -tvert + tFlat.normalized * m_RadiusProjOnConeMin;
+                tRes.radius = m_RadiusProjOnConeMin;
+                tRes.inBound = false;
             }
             else
             {
-                t_inBound = false;
+                if (m_RadiusProjOnConeMax > m_RadiusConeMax)
+                {
+                    tRes.color = Color.red;
+                    tRes.proj = t_AxeProjOnConeMax;
+                    tRes.radius = m_RadiusProjOnConeMax;
+                    tRes.inBound = false;
+                }
+                else if (m_RadiusProjOnConeMin < m_RadiusConeMin)
+                {
+                    tRes.color = Color.black;
+                    tRes.proj = t_AxeProjOnConeMin;
+                    tRes.radius = m_RadiusProjOnConeMin;
+                    tRes.inBound = false;
+                }
+                else
+                {
+                    tRes.color = Color.cyan;
+                    tRes.proj = t_AxeProjOnConeMax;
+                    tRes.radius = m_RadiusProjOnConeMax;
+                    tRes.inBound = true;
+                }
             }
+            return tRes;
+        }
 
-            if (t_inBound) return true; // no constraint to apply, return now
+        private PitchResult PitchHalfPosBounds(Vector3 constraintUp, Vector3 tvert, Vector3 tFlat, float a_RadiusConeMin, float a_RadiusConeMax, float a_RadiusProjOnConeMin, float a_RadiusProjOnConeMax)
+        {
+            PitchResult tRes = new PitchResult();
+            Vector3 t_AxeProjOnConeMax = tvert + tFlat.normalized * a_RadiusProjOnConeMax;
+            Vector3 t_AxeProjOnConeMin = tvert - tFlat.normalized * a_RadiusProjOnConeMin;
 
-
-            if ((proj != Vector3.zero) && (a_upwards == Vector3.forward || a_upwards == Vector3.back)) // legs or trunk
+            if (tvert.normalized != constraintUp) // bottom side
             {
-                a_quat = Quaternion.LookRotation(proj.normalized, a_quat * a_upwards) * Quaternion.LookRotation(-a_SegmentAxe, a_upwards);
-                Debug.Log(a_quat.eulerAngles);
+                tRes.proj = t_AxeProjOnConeMin;
+                tRes.radius = a_RadiusProjOnConeMin;
+                if (a_RadiusProjOnConeMin < a_RadiusConeMin)
+                {
+                    tRes.color = Color.black;
+                    tRes.inBound = false;
+                }
+                else
+                {
+                    tRes.color = Color.green;
+                    tRes.inBound = true;
+                }
             }
-            else if (proj != Vector3.zero)
-                a_quat = Quaternion.LookRotation(proj.normalized, a_quat * a_upwards)* Quaternion.LookRotation(-a_SegmentAxe, a_upwards);
-            
-            return t_inBound;
+            else // upper side
+            {
+                tRes.proj = t_AxeProjOnConeMax;
+                tRes.radius = a_RadiusProjOnConeMax;
+                if (a_RadiusProjOnConeMax > a_RadiusConeMax)
+                {
+                    tRes.color = Color.red;
+                    tRes.inBound = false;
+                }
+                else
+                {
+                    tRes.color = Color.cyan;
+                    tRes.inBound = true;
+                }
+            }
+            return tRes;
+        }
+
+        private PitchResult PitchBothNegBounds(Vector3 constraintUp, Vector3 tvert, Vector3 tFlat, float m_RadiusConeMin, float m_RadiusConeMax, float m_RadiusProjOnConeMin, float m_RadiusProjOnConeMax)
+        {
+            PitchResult tRes = new PitchResult();
+            if (tvert.normalized == constraintUp) // upper side always false as both constraints are negatives
+            {
+                tRes.color = Color.magenta;
+                tRes.proj = -tvert - tFlat.normalized * m_RadiusProjOnConeMax;
+                tRes.radius = m_RadiusProjOnConeMax;
+                tRes.inBound = false;
+            }
+            else
+            {
+                if (m_RadiusProjOnConeMax > m_RadiusConeMax) // negative part above max
+                {
+                    tRes.color = Color.red;
+                    tRes.proj = tvert - tFlat.normalized * m_RadiusProjOnConeMax;
+                    tRes.radius = m_RadiusProjOnConeMax;
+                    tRes.inBound = false;
+                }
+                else if (m_RadiusProjOnConeMin < m_RadiusConeMin) // negative part under min
+                {
+                    tRes.color = Color.black;
+                    tRes.proj = tvert - tFlat.normalized * m_RadiusProjOnConeMin;
+                    tRes.radius = m_RadiusProjOnConeMin;
+                    tRes.inBound = false;
+                }
+                else
+                {
+                    tRes.color = Color.cyan;
+                    tRes.proj = tvert - tFlat.normalized * m_RadiusProjOnConeMin;
+                    tRes.radius = m_RadiusProjOnConeMin;
+                    tRes.inBound = true;
+
+                }
+            }
+            return tRes;
+        }
+
+
+        // return true if in bounds, meaning no constraint applied
+        private bool ConstraintPitch(AngleConstraint a_PitchAC, Vector3 a_SegmentAxe, Vector3 a_upwards, ref Quaternion a_quat, BodyStructureMap.SubSegmentTypes a_subType)
+        {
+            Vector3 localAxe = a_quat * a_SegmentAxe;
+            localAxe.Normalize();
+            Vector3 constraintUp = a_upwards;
+
+            float t_maxZ = a_PitchAC.maxAngle;
+            float t_minZ = a_PitchAC.minAngle;
+
+            Vector3 tFlat = Vector3.ProjectOnPlane(localAxe, constraintUp);
+            Vector3 tvert = localAxe - tFlat;
+
+            //Vector3 t_ConeMax = Quaternion.Euler(0, 0, t_maxZ) * a_SegmentAxe;
+            //Vector3 t_ConeMin = Quaternion.Euler(0, 0, t_minZ) * a_SegmentAxe;
+
+            float t_RadiusConeMax = (t_maxZ > 0 ? 1 : -1) * Mathf.Sin((90 - t_maxZ) * Mathf.Deg2Rad);
+            float t_RadiusConeMin = (t_minZ > 0 ? 1 : -1) * Mathf.Sin((90 - t_minZ) * Mathf.Deg2Rad);
+
+            float t_RadiusProjOnConeMax = tvert.magnitude * Mathf.Tan((90 - t_maxZ) * Mathf.Deg2Rad);
+            float t_RadiusProjOnConeMin = tvert.magnitude * Mathf.Tan((90 - t_minZ) * Mathf.Deg2Rad);
+
+            if (t_maxZ > 0 && t_minZ >= 0)
+            {
+                m_Res = PitchBothPosBounds(constraintUp, tvert, tFlat, t_RadiusConeMin, t_RadiusConeMax, t_RadiusProjOnConeMin, t_RadiusProjOnConeMax);
+            }
+            else if (t_maxZ > 0 && t_minZ < 0)
+            {
+                m_Res = PitchHalfPosBounds(constraintUp, tvert, tFlat, t_RadiusConeMin, t_RadiusConeMax, t_RadiusProjOnConeMin, t_RadiusProjOnConeMax);
+            }
+            else if (t_maxZ <= 0 && t_minZ < 0)
+            {
+                m_Res = PitchBothNegBounds(constraintUp, tvert, tFlat, t_RadiusConeMin, t_RadiusConeMax, t_RadiusProjOnConeMin, t_RadiusProjOnConeMax);
+            }
+
+            if (!m_Res.inBound && m_Res.proj != Vector3.zero)
+                a_quat = Quaternion.LookRotation(m_Res.proj.normalized, a_quat * Vector3.up) * Quaternion.Inverse(Quaternion.LookRotation(a_SegmentAxe, a_upwards));
+
+
+            return m_Res.inBound;
         }
 
         private void ExtractUsingConstraint(ref Quaternion tQuatLocal,/* AngleConstraint tpitch, AngleConstraint tYaw, AngleConstraint tRoll,*/ BodyStructureMap.SubSegmentTypes a_subType)

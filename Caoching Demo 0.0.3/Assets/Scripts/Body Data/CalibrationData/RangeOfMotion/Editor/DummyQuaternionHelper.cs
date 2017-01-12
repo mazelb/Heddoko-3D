@@ -126,11 +126,58 @@ public class DummyQuaternionHelper : Editor
         tQuat = segment.transform.localRotation; // local copy
         if (RootROM != null)
         {
-            segment.transform.localRotation = 
+            Quaternion a_quat = segment.transform.localRotation;
+            segment.transform.localRotation =
                 RootROM.ROM.capRotation((BodyStructureMap.SegmentTypes)(current_index / 2), 
                                         (BodyStructureMap.SubSegmentTypes)current_index,
                                         segment.transform, 
                                         ref tQuat, true, false);
+
+            StaticROM.PitchResult tRes = RootROM.ROM.m_Res;
+            Vector3 m_positionGizmo = segment.transform.position;
+            float m_arrowSize = HandleUtility.GetHandleSize(m_positionGizmo) * 6.0f * 1.2f * 0.5f;
+            if (tRes.proj != Vector3.zero)
+            {
+                SimpleROM segConstr = RootROM.ROM.squeletteRom[current_index];
+                Vector3 tUp = segConstr.GetUpVector();
+                Vector3 localAxe = a_quat * segConstr.SegmentAxe;
+                Vector3 tFlat = Vector3.ProjectOnPlane(localAxe, tUp);
+                Vector3 tvert = localAxe - tFlat;
+                
+                float m_maxZ = RootROM.ROM.squeletteRom[current_index].PitchMinMax.maxAngle;
+                float m_minZ = RootROM.ROM.squeletteRom[current_index].PitchMinMax.minAngle;
+
+                float m_RadiusConeMax = (m_maxZ > 0 ? 1 : -1) * Mathf.Sin((90 - m_maxZ) * Mathf.Deg2Rad);
+                float m_RadiusConeMin = (m_minZ > 0 ? 1 : -1) * Mathf.Sin((90 - m_minZ) * Mathf.Deg2Rad);
+
+                Handles.color = Color.black;
+                Handles.DrawLine(m_positionGizmo, m_positionGizmo + tvert * m_arrowSize);
+                Handles.DrawLine(m_positionGizmo + tvert * m_arrowSize, m_positionGizmo + tvert * m_arrowSize + tFlat * m_arrowSize);
+
+
+                Handles.color = tRes.color;
+                Vector3 startLine = m_positionGizmo + localAxe * m_arrowSize;
+                Vector3 startWire = m_positionGizmo + tvert * m_arrowSize;
+                //startWire.y += localAxe.y * m_arrowSize;
+
+                Handles.DrawLine(startLine, m_positionGizmo + tRes.proj * m_arrowSize);
+                Handles.DrawWireDisc(startWire, tUp, tRes.radius * m_arrowSize);
+                Handles.color = Handles.zAxisColor;
+                startWire = m_positionGizmo + ( tUp * Mathf.Sin(m_maxZ * Mathf.Deg2Rad)) * m_arrowSize;
+                Handles.DrawWireDisc(startWire, tUp, m_RadiusConeMax * m_arrowSize);
+                startWire = m_positionGizmo + ( tUp * Mathf.Sin(m_minZ * Mathf.Deg2Rad)) * m_arrowSize;
+                Handles.DrawWireDisc(startWire, tUp, m_RadiusConeMin * m_arrowSize);
+
+                Quaternion tprojQuat = Quaternion.LookRotation(tRes.proj.normalized, a_quat  * tUp);
+                Handles.color = Handles.xAxisColor;
+                Handles.ArrowCap(55, m_positionGizmo, tprojQuat, m_arrowSize);
+                //Handles.ArrowCap(55, m_positionGizmo + tRes.proj * m_arrowSize, tprojQuat, m_arrowSize / 2);
+                //Handles.DrawLine(m_positionGizmo, m_positionGizmo + tRes.proj * m_arrowSize);
+                //Handles.color = Handles.yAxisColor;
+                //Handles.ArrowCap(55, m_positionGizmo + tRes.proj * m_arrowSize, tprojQuat * Quaternion.Euler(-90, 0, 0), m_arrowSize / 2);
+                //Handles.color = Handles.zAxisColor;
+                //Handles.ArrowCap(55, m_positionGizmo + tRes.proj * m_arrowSize, tprojQuat * Quaternion.Euler(0, -90, 0), m_arrowSize / 2);
+            }
         }
         else
         {
