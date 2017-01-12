@@ -58,7 +58,7 @@ public class SimpleROMHelper : Editor
     bool m_drawDecomposition = false;
     bool m_drawMinMaxLinks = false;
     bool m_drawlocalAxis = false;
-    bool m_drawProj = false;
+    bool m_drawDebugHoriz = false;
     //bool m_offsetConstraintRepresentation = false;
     float m_offsetRepresentation = 0f;
     bool m_drawQuatAxis = false;
@@ -137,7 +137,7 @@ public class SimpleROMHelper : Editor
         m_drawMinMaxLinks = EditorGUILayout.ToggleLeft("draw Min Max Links", m_drawMinMaxLinks);
         m_drawlocalAxis = EditorGUILayout.ToggleLeft("draw local axis", m_drawlocalAxis);
         m_drawQuatAxis = EditorGUILayout.ToggleLeft("draw quat axis", m_drawQuatAxis);
-        m_drawProj = EditorGUILayout.ToggleLeft("draw proj", m_drawProj);
+        m_drawDebugHoriz = EditorGUILayout.ToggleLeft("draw debug horiz", m_drawDebugHoriz);
         EditorGUILayout.Separator();
 
         //         m_ReferenceIsHoriz.boolValue = EditorGUILayout.Toggle("Horiz ?", m_ReferenceIsHoriz.boolValue);
@@ -592,9 +592,13 @@ public class SimpleROMHelper : Editor
         public bool ZinBound = false;
     }
 
-    private HorizResult HorizBothPosBounds(Vector3 constraintUp, Vector3 tvert, Vector3 tFlat, Vector3 t_AxeProjOnConeMin, Vector3 t_AxeProjOnConeMax)
+    private HorizResult HorizBothPosBounds(Vector3 constraintUp, Vector3 tvert, Vector3 tFlat)
     {
         HorizResult tRes = new HorizResult();
+
+        Vector3 t_AxeProjOnConeMax = tvert + tFlat.normalized * m_RadiusProjOnConeMax;
+        Vector3 t_AxeProjOnConeMin = tvert + tFlat.normalized * m_RadiusProjOnConeMin;
+
         if (tvert.normalized != constraintUp)
         {
             tRes.color = Color.magenta;
@@ -604,7 +608,6 @@ public class SimpleROMHelper : Editor
         }
         else
         {
-
             if (m_RadiusProjOnConeMax > m_RadiusConeMax)
             {
                 tRes.color = Color.red;
@@ -612,58 +615,43 @@ public class SimpleROMHelper : Editor
                 tRes.radius = m_RadiusProjOnConeMax;
                 tRes.ZinBound = false;
             }
-            else if (m_RadiusConeMin < 0 && m_RadiusProjOnConeMin < m_RadiusConeMin)
+            else if (m_RadiusProjOnConeMin < m_RadiusConeMin)
             {
                 tRes.color = Color.black;
                 tRes.proj = t_AxeProjOnConeMin;
                 tRes.radius = m_RadiusProjOnConeMin;
                 tRes.ZinBound = false;
             }
-            else if (m_RadiusConeMin > 0 && m_RadiusProjOnConeMin < m_RadiusConeMin)
-            {
-                tRes.color = Color.grey;
-                tRes.proj = t_AxeProjOnConeMin;
-                tRes.radius = m_RadiusProjOnConeMin;
-                tRes.ZinBound = false;
-            }
             else
             {
-                if (m_RadiusProjOnConeMax > 0)
-                {
-                    tRes.color = Color.cyan;
-                    tRes.proj = t_AxeProjOnConeMax;
-                    tRes.radius = m_RadiusProjOnConeMax;
-                    tRes.ZinBound = true;
-                }
-                else if (m_RadiusProjOnConeMin < 0)
-                {
-                    tRes.color = Color.green;
-                    tRes.proj = t_AxeProjOnConeMin;
-                    tRes.radius = m_RadiusProjOnConeMin;
-                    tRes.ZinBound = true;
-                }
+                tRes.color = Color.cyan;
+                tRes.proj = t_AxeProjOnConeMax;
+                tRes.radius = m_RadiusProjOnConeMax;
+                tRes.ZinBound = true;
             }
         }
         return tRes;
     }
 
-    private HorizResult HorizHalfPosBounds(Vector3 constraintUp, Vector3 tvert, Vector3 tFlat, Vector3 t_AxeProjOnConeMin, Vector3 t_AxeProjOnConeMax)
+    private HorizResult HorizHalfPosBounds(Vector3 constraintUp, Vector3 tvert, Vector3 tFlat)
     {
         HorizResult tRes = new HorizResult();
+        Vector3 t_AxeProjOnConeMax = tvert + tFlat.normalized * m_RadiusProjOnConeMax;
+        Vector3 t_AxeProjOnConeMin = tvert - tFlat.normalized * m_RadiusProjOnConeMax;
 
         if (tvert.normalized != constraintUp) // bottom side
         {
             if (m_RadiusProjOnConeMin < m_RadiusConeMin)
             {
                 tRes.color = Color.black;
-                tRes.proj = tvert - tFlat.normalized * m_RadiusProjOnConeMin; //t_AxeProjOnConeMin;
+                tRes.proj = t_AxeProjOnConeMin;
                 tRes.radius = m_RadiusProjOnConeMin;
                 tRes.ZinBound = false;
             }
             else
             {
                 tRes.color = Color.green;
-                tRes.proj = tvert - tFlat.normalized * m_RadiusProjOnConeMin; //t_AxeProjOnConeMin;
+                tRes.proj = t_AxeProjOnConeMin;
                 tRes.radius = m_RadiusProjOnConeMin;
                 tRes.ZinBound = true;
             }
@@ -688,13 +676,13 @@ public class SimpleROMHelper : Editor
         return tRes;
     }
 
-    private HorizResult HorizBothNegBounds(Vector3 constraintUp, Vector3 tvert, Vector3 tFlat, Vector3 t_AxeProjOnConeMin, Vector3 t_AxeProjOnConeMax)
+    private HorizResult HorizBothNegBounds(Vector3 constraintUp, Vector3 tvert, Vector3 tFlat)
     {
         HorizResult tRes = new HorizResult();
         if (tvert.normalized == constraintUp) // upper side always false as both constraints are negatives
         {
             tRes.color = Color.magenta;
-            tRes.proj = -t_AxeProjOnConeMax;
+            tRes.proj = -tvert - tFlat.normalized * m_RadiusProjOnConeMax;
             tRes.radius = m_RadiusProjOnConeMin;
             tRes.ZinBound = false;
         }
@@ -714,9 +702,9 @@ public class SimpleROMHelper : Editor
                 tRes.radius = m_RadiusProjOnConeMin;
                 tRes.ZinBound = false;
             }
-            else //if (m_RadiusProjOnConeMin < 0)
+            else
             {
-                tRes.color = Color.green;
+                tRes.color = Color.cyan;
                 tRes.proj = tvert - tFlat.normalized * m_RadiusProjOnConeMin;
                 tRes.radius = m_RadiusProjOnConeMin;
                 tRes.ZinBound = true;
@@ -726,30 +714,18 @@ public class SimpleROMHelper : Editor
         return tRes;
     }
 
+    
     private bool CheckHorizConstraint()
     {
-        //bool ZinBound = false;
-
         Vector3 localAxe = m_localRotation * Vector3.right;
         localAxe.Normalize();
         Vector3 constraintUp = Vector3.up;
 
         Vector3 tFlat = Vector3.ProjectOnPlane(localAxe, constraintUp);
         Vector3 tvert = localAxe - tFlat;
-        Handles.color = Color.black;
-        Handles.DrawLine(m_positionGizmo, m_positionGizmo + tvert * m_arrowSize);
-        Handles.DrawLine(m_positionGizmo + tvert * m_arrowSize, m_positionGizmo + tvert * m_arrowSize + tFlat * m_arrowSize);
-
-        //float currentZ = m_localRotation.eulerAngles.z;
-        float med = m_minZ + (m_maxZ - m_minZ) * 0.5f;
-
 
         Vector3 ConeMax = Quaternion.Euler(0, 0, m_maxZ) * Vector3.right;
         Vector3 ConeMin = Quaternion.Euler(0, 0, m_minZ) * Vector3.right;
-        //Vector3 proj = Vector3.zero;
-        //float radius = 0;
-
-        //m_ConeCrossProd = Vector3.Cross(ConeMax, ConeMin).normalized;
 
         m_RadiusConeMax = (m_maxZ > 0 ? 1 : -1) * Mathf.Sin((90 - m_maxZ) * Mathf.Deg2Rad);
         m_RadiusConeMin = (m_minZ > 0 ? 1 : -1) * Mathf.Sin((90 - m_minZ) * Mathf.Deg2Rad);
@@ -757,41 +733,24 @@ public class SimpleROMHelper : Editor
         m_RadiusProjOnConeMax = tvert.magnitude * Mathf.Tan((90 - m_maxZ) * Mathf.Deg2Rad);
         m_RadiusProjOnConeMin = tvert.magnitude * Mathf.Tan((90 - m_minZ) * Mathf.Deg2Rad);
 
-
-        Vector3 tConeCenter = tvert;
-
-        Vector3 t_AxeProjOnConeMax = tvert + tFlat.normalized * m_RadiusProjOnConeMax;
-        Vector3 t_AxeProjOnConeMin = tvert + tFlat.normalized * m_RadiusProjOnConeMin;
-
         HorizResult tRes = new HorizResult();
         if (m_maxZ > 0 && m_minZ >= 0)
-            tRes = HorizBothPosBounds(constraintUp, tvert, tFlat, t_AxeProjOnConeMin, t_AxeProjOnConeMax);
+            tRes = HorizBothPosBounds(constraintUp, tvert, tFlat);
         else if(m_maxZ > 0 && m_minZ < 0)
-            tRes = HorizHalfPosBounds(constraintUp, tvert, tFlat, t_AxeProjOnConeMin, t_AxeProjOnConeMax);
+            tRes = HorizHalfPosBounds(constraintUp, tvert, tFlat);
         else if(m_maxZ <= 0 && m_minZ < 0)
-            tRes = HorizBothNegBounds(constraintUp, tvert, tFlat, t_AxeProjOnConeMin, t_AxeProjOnConeMax);
-
-        Handles.color = tRes.color;
-
-        Vector3 startLine = m_positionGizmo + localAxe * m_arrowSize;
-        Vector3 startWire = m_positionGizmo;
-        startWire.y += localAxe.y * m_arrowSize;
+            tRes = HorizBothNegBounds(constraintUp, tvert, tFlat);
 
 
-        Handles.DrawLine(startLine, m_positionGizmo + tRes.proj * m_arrowSize);
-        Handles.DrawWireDisc(startWire, Vector3.up, tRes.radius * m_arrowSize);
-        Handles.color = Handles.zAxisColor ;
-        startWire = m_positionGizmo + (Vector3.up * Mathf.Sin(m_maxZ * Mathf.Deg2Rad)) * m_arrowSize;
-        Handles.DrawWireDisc(startWire, Vector3.up, m_RadiusConeMax * m_arrowSize);
-        startWire = m_positionGizmo + (Vector3.up * Mathf.Sin(m_minZ * Mathf.Deg2Rad)) * m_arrowSize;
-        Handles.DrawWireDisc(startWire, Vector3.up, m_RadiusConeMin * m_arrowSize);
+        if (m_drawDebugHoriz)
+            DrawDebugHorizConstraint(tRes, localAxe, tvert, tFlat);
 
-        if (m_drawProj && tRes.proj != Vector3.zero)
+        if (tRes.proj != Vector3.zero)
         {
             Quaternion tprojQuat = Quaternion.LookRotation(tRes.proj.normalized, m_localRotation * Vector3.up);
             Handles.color = Handles.xAxisColor;
             Handles.ArrowCap(55, m_positionGizmo + tRes.proj * m_arrowSize, tprojQuat, m_arrowSize / 2);
-            Handles.ArrowCap(55, m_positionGizmo , tprojQuat, m_arrowSize);
+            Handles.ArrowCap(55, m_positionGizmo, tprojQuat, m_arrowSize);
             Handles.DrawLine(m_positionGizmo, m_positionGizmo + tRes.proj * m_arrowSize);
             Handles.color = Handles.yAxisColor;
             Handles.ArrowCap(55, m_positionGizmo + tRes.proj * m_arrowSize, tprojQuat * Quaternion.Euler(-90, 0, 0), m_arrowSize / 2);
@@ -799,7 +758,31 @@ public class SimpleROMHelper : Editor
             Handles.ArrowCap(55, m_positionGizmo + tRes.proj * m_arrowSize, tprojQuat * Quaternion.Euler(0, -90, 0), m_arrowSize / 2);
         }
 
+
         return tRes.ZinBound;
+    }
+    private void DrawDebugHorizConstraint(HorizResult tRes, Vector3 localAxe, Vector3 tvert, Vector3 tFlat)
+    {
+        Handles.color = Color.black;
+        Handles.DrawLine(m_positionGizmo, m_positionGizmo + tvert * m_arrowSize);
+        Handles.DrawLine(m_positionGizmo + tvert * m_arrowSize, m_positionGizmo + tvert * m_arrowSize + tFlat * m_arrowSize);
+
+        Handles.color = tRes.color;
+        Vector3 startLine = m_positionGizmo + localAxe * m_arrowSize;
+        Vector3 startWire = m_positionGizmo;
+        startWire.y += localAxe.y * m_arrowSize;
+
+        Handles.DrawLine(startLine, m_positionGizmo + tRes.proj * m_arrowSize);
+        Handles.DrawWireDisc(startWire, Vector3.up, tRes.radius * m_arrowSize);
+        Handles.color = Handles.zAxisColor;
+        startWire = m_positionGizmo + (Vector3.up * Mathf.Sin(m_maxZ * Mathf.Deg2Rad)) * m_arrowSize;
+        Handles.DrawWireDisc(startWire, Vector3.up, m_RadiusConeMax * m_arrowSize);
+        startWire = m_positionGizmo + (Vector3.up * Mathf.Sin(m_minZ * Mathf.Deg2Rad)) * m_arrowSize;
+        Handles.DrawWireDisc(startWire, Vector3.up, m_RadiusConeMin * m_arrowSize);
+
+        
+
+
     }
 
     private void DrawDecomposition(Vector3 localAxe)
