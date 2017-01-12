@@ -78,8 +78,8 @@ public class BodyStructureMap
 
     public struct TrackingStructure
     {
-        public BodyFrame.Vect4 InitRawEuler;
-        public BodyFrame.Vect4 CurrRawEuler;
+        public BodyFrame.Vect4 InitRawData;
+        public BodyFrame.Vect4 CurrRawData;
         public Matrix<float> InitRotationMatrix;
         public Matrix<float> CurrRotationMatrix;
         public CalibrationStructure CalibrationData;
@@ -174,9 +174,9 @@ public class BodyStructureMap
     public Dictionary<SensorPositions, SensorTypes> SensorPosToSensorTypeMap = new Dictionary<SensorPositions, SensorTypes>();
     [JsonProperty]
     public Dictionary<SensorPositions, int> SensorPosToSensorIDMap = new Dictionary<SensorPositions, int>();
-
-
+    
     public Dictionary<SensorPositions, UnityEngine.Quaternion> PniSensorRotationToSegmentMap = new Dictionary<SensorPositions, Quaternion>();
+    
     //Build body structure maps
     public void ReadBodyStructureFile()
     {

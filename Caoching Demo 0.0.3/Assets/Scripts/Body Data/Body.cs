@@ -513,8 +513,8 @@ public class Body
             BodyFrame.Vect4 vInitialRawEuler = vBody.InitialBodyFrame.FrameData[vKey];
             BodyFrame.Vect4 vCurrentRawEuler = vBody.CurrentBodyFrame.FrameData[vKey];
             BodyStructureMap.TrackingStructure vStruct = new BodyStructureMap.TrackingStructure();
-            vStruct.InitRawEuler = vInitialRawEuler;
-            vStruct.CurrRawEuler = vCurrentRawEuler;
+            vStruct.InitRawData = vInitialRawEuler;
+            vStruct.CurrRawData = vCurrentRawEuler;
             vDic.Add(vKey, vStruct);
         }
         return vDic;
