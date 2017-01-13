@@ -18,7 +18,7 @@ namespace Assets.Scripts.Body_Data.View
     {
         public Vector3 AxisOfRotation = new Vector3(0, 180, 0);
         public Quaternion AbsoluteRotation = Quaternion.identity;
-        public Quaternion RelativeRotation = Quaternion.identity;
+        //public Quaternion RelativeRotation = Quaternion.identity;
         public Quaternion InitialRotation = Quaternion.identity;
         public Quaternion UpAxisRotation;
 
@@ -43,7 +43,7 @@ namespace Assets.Scripts.Body_Data.View
             AbsoluteRotation.y = vNewRot.z;
             AbsoluteRotation.z = -vNewRot.x;
             AbsoluteRotation.w = vNewRot.w;
-            RelativeRotation = InitialRotation * AbsoluteRotation;
+            //RelativeRotation = InitialRotation * AbsoluteRotation;
         }
 
         public void Reset()
@@ -53,6 +53,8 @@ namespace Assets.Scripts.Body_Data.View
 
         void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Home))
+                Reset();
             transform.rotation = InitialRotation * AbsoluteRotation;
         }
 
