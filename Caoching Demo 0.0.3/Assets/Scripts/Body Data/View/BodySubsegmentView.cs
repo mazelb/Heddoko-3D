@@ -102,6 +102,7 @@ namespace Assets.Scripts.Body_Data.view
         {
             mInitialRotation = vInit;
         }
+
         public void ApplyTransformations(Quaternion vNewOrientation, int vApplyLocal = 0, bool vResetRotation = false)
         {
             foreach (Transform vObjTransform in SubSegmentTransforms)
