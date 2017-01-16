@@ -5,6 +5,7 @@ using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
 using HeddokoSDK.Models;
+using HeddokoSDK.Models.Requests;
 
 namespace Assets.Scripts.UI.RecordingLoading
 {
@@ -15,16 +16,26 @@ namespace Assets.Scripts.UI.RecordingLoading
     /// </summary>
     public class RecordingListFetcher
     {
-        //  private List<RecordingListItem> mRecordingItems = new List<RecordingListItem>();
         private UserProfileModel mProfile;
         public int ItemNumbersPerPage = 500;
-        private int mSkipMultiplier = 0;
+
         public RecordingListUpdated RecordingListUpdatedHandler;
         private IUserProfileManager mManager;
         private Thread mWorkerThread;
         private bool mIsWorking;
         private int mTimer = 10000;
-
+        /// <summary>
+        /// Skips the number of items to download
+        /// </summary>
+        private int mSkipMultiplier { get; set; }
+        /// <summary>
+        /// Flag to collect default records
+        /// </summary>
+        private bool mAddDefaultRecord { get; set; }
+        /// <summary>
+        /// Create a new instance with a user profile manager object
+        /// </summary>
+        /// <param name="vManager"></param>
         public RecordingListFetcher(IUserProfileManager vManager)
         {
             mManager = vManager;
@@ -64,7 +75,6 @@ namespace Assets.Scripts.UI.RecordingLoading
             if (mManager.UserProfile.User.RoleType == UserRoleType.Analyst)
             {
                 var vList = mManager.UserProfile.UserList;
-
                 for (int i = 0; i < vList.TotalCount && mIsWorking; i++)
                 {
                     var vUser = vList.Collection[i];
@@ -93,7 +103,68 @@ namespace Assets.Scripts.UI.RecordingLoading
         private int UpdateList(User vUser)
         {
             int vTotalCount = 0;
-            ListCollection<Asset> vRecords = mManager.UserProfile.Client.AssetsCollection(new AssetListRequest()
+
+            List<RecordingListItem> vRecordingItems = new List<RecordingListItem>();
+            //check if the list is new. Request default recordings and add it to the list.  
+            if (mAddDefaultRecord)
+            {
+                vRecordingItems = RequestDefaultRecordings();
+                mAddDefaultRecord = false;
+            }
+            else
+            {
+                vRecordingItems = new List<RecordingListItem>();
+            }
+            //the old version of the sdk had a different request type of AssetCollection. This function collects older types of records
+            AddOldRecordAssetsTypes(ref vRecordingItems, vUser);
+            var vRecords = mManager.UserProfile.Client.RecordsCollection(new UserRecordListRequest()
+            {
+                UserID = vUser.ID,
+                Take = ItemNumbersPerPage,
+                Skip = mSkipMultiplier * ItemNumbersPerPage
+            }
+                 );
+            if (vRecords != null)
+            {
+                if (vRecords.Collection.Count > 0)
+                {
+                    var vRecordCollection = vRecords.Collection;
+                    for (int vI = 0; vI < vRecords.TotalCount; vI++)
+                    {
+                        var vRecord = vRecordCollection[vI];
+                        for (int vJ = 0; vJ < vRecord.Assets.Count; vJ++)
+                        {
+                            var vRecordedAsset = vRecord.Assets[vJ];
+                            if (!string.IsNullOrEmpty(vRecordedAsset.Name) && vRecordedAsset.Type == AssetType.Record)
+                            {
+                                RecordingListItem vItem = new RecordingListItem();
+                                vItem.Name = vRecordedAsset.Name;
+                                vItem.AssetType = AssetType.Record;
+                                RecordingListItem.RecordingItemLocation vLoc =
+                                    new RecordingListItem.RecordingItemLocation(vRecordedAsset.Url,
+                                        RecordingListItem.LocationType.RemoteEndPoint);
+                                vItem.Location = vLoc;
+                                vItem.User = vUser;
+                                vRecordingItems.Add(vItem);
+                            }
+                        }
+                    }
+                }
+
+
+                if (RecordingListUpdatedHandler != null && mIsWorking)
+                {
+                    RecordingListUpdatedHandler(vRecordingItems);
+                }
+                vTotalCount = vRecordingItems.Count;
+            }
+          
+            return vTotalCount;
+        }
+
+        private void AddOldRecordAssetsTypes(ref List<RecordingListItem> vItems, User vUser)
+        {
+             ListCollection<Asset> vRecords = mManager.UserProfile.Client.AssetsCollection(new AssetListRequest()
             {
                 UserID = vUser.ID,
                 Take = ItemNumbersPerPage,
@@ -101,8 +172,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             });
             if (vRecords != null)
             {
-                List<RecordingListItem> vRecordingItems = new List<RecordingListItem>();
-                if (vRecords.Collection.Count > 0)
+                 if (vRecords.Collection.Count > 0)
                 {
                     foreach (var vRecordedAsset in vRecords.Collection)
                     {
@@ -116,19 +186,50 @@ namespace Assets.Scripts.UI.RecordingLoading
                                     RecordingListItem.LocationType.RemoteEndPoint);
                             vItem.Location = vLoc;
                             vItem.User = vUser;
-                            vRecordingItems.Add(vItem);
+                            vItems.Add(vItem);
                         }
                     }
                 }
-                if (RecordingListUpdatedHandler != null && mIsWorking)
-                {
-                    RecordingListUpdatedHandler(vRecordingItems);
-                }
-                vTotalCount = vRecordingItems.Count;
             }
-            return vTotalCount;
+          
         }
-
+        /// <summary>
+        /// requests default recordings
+        /// </summary> 
+        /// <returns>a list of default recordings</returns>>
+        internal List<RecordingListItem> RequestDefaultRecordings()
+        {
+            List<RecordingListItem> vRecordingItems = null;
+            var vRecords = mManager.UserProfile.Client.GetDefaultRecords(new ListRequest { Take = 100, Skip = 0 });
+            if (vRecords != null)
+            {
+                vRecordingItems = new List<RecordingListItem>();
+                if (vRecords.Collection.Count > 0)
+                {
+                    var vRecordCollection = vRecords.Collection;
+                    for (int vI = 0; vI < vRecords.TotalCount; vI++)
+                    {
+                        var vRecord = vRecordCollection[vI];
+                        for (int vJ = 0; vJ < vRecord.Assets.Count; vJ++)
+                        {
+                            var vRecordedAsset = vRecord.Assets[vJ];
+                            if (!string.IsNullOrEmpty(vRecordedAsset.Name) && vRecordedAsset.Type == (AssetType.RawFrameData | AssetType.DefaultRecords))
+                            {
+                                RecordingListItem vItem = new RecordingListItem();
+                                vItem.Name = vRecordedAsset.Name;
+                                vItem.AssetType = AssetType.Record;
+                                RecordingListItem.RecordingItemLocation vLoc =
+                                    new RecordingListItem.RecordingItemLocation(vRecordedAsset.Url,
+                                        RecordingListItem.LocationType.RemoteEndPoint);
+                                vItem.Location = vLoc;
+                                vRecordingItems.Add(vItem);
+                            }
+                        }
+                    }
+                }
+            }
+            return vRecordingItems;
+        }
         /// <summary>
         /// stops the work
         /// </summary>
@@ -154,16 +255,20 @@ namespace Assets.Scripts.UI.RecordingLoading
             mIsWorking = true;
             mWorkerThread = new Thread(WorkingFunction);
             mWorkerThread.IsBackground = true;
+            mAddDefaultRecord = true;
             mWorkerThread.Start();
         }
 
         private void FetchInitialList()
         {
-            
-        }
 
+        }
+        /// <summary>
+        /// Clears the multiplier, which allows the collection of records from the beginning.
+        /// </summary>
         public void Clear()
         {
+            mAddDefaultRecord = true;
             mSkipMultiplier = 0;
         }
     }

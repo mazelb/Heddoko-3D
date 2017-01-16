@@ -43,6 +43,8 @@ namespace Assets.Scripts.Licensing.Controller
         private Thread mConnectionThread;
         private string mUrl;
         private string mSecret;
+        private static int sReconnectionAttempts = 10;
+        private static int sReconnectionDelay = 2000;
         public LoginController LoginController
         {
             get { return mLoginController; }
@@ -57,7 +59,7 @@ namespace Assets.Scripts.Licensing.Controller
             mUrl = GlobalConfig.DevServer;
             mSecret = GlobalConfig.DevServerKey;
 #endif
-            HeddokoConfig vConfig = new HeddokoConfig(mUrl, mSecret);
+            HeddokoConfig vConfig = new HeddokoConfig(mUrl, mSecret, sReconnectionAttempts, sReconnectionDelay);
             mClient = new HeddokoClient(vConfig);
             ServicePointManager.ServerCertificateValidationCallback += RemoteCertificateValidationCallback;
             mLoginController = new LoginController();
