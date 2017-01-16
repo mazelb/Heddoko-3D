@@ -14,6 +14,7 @@ using Assets.Scripts.Frames_Pipeline;
 using heddoko;
 using HeddokoLib.utils;
 using Newtonsoft.Json;
+using UnityEngine;
 
 /// <summary>
 /// The frame of data that is populated to sensors, and contains the list of sensors to access sensors data
@@ -25,7 +26,13 @@ public class BodyFrame
     [JsonProperty]
     //The frame of data populated to sensors
     private Dictionary<BodyStructureMap.SensorPositions, Vect4> mFrameData;
-     
+    [JsonProperty]
+    //Acceleration frame data for the current frame
+    private Dictionary<BodyStructureMap.SensorPositions, Vector3> mAccelFrameData;
+
+    [JsonProperty]
+    //Magnetic frame data for the current frame
+    private Dictionary<BodyStructureMap.SensorPositions, Vector3> mMagFrameData;
 
     private Packet mAssociatedPacket;
     //The timestamp of a bodybody frame 
@@ -62,6 +69,34 @@ public class BodyFrame
     public Packet AssociatedPacket
     {
         get { return mAssociatedPacket; }
+    }
+    /// <summary>
+    /// Getter: returns a map of the Acceleration frame data for the current frame
+    /// </summary>
+    public Dictionary<BodyStructureMap.SensorPositions, Vector3> AccelFrameData
+    {
+        get
+        {
+            if (mAccelFrameData == null)
+            {
+                mAccelFrameData = new Dictionary<BodyStructureMap.SensorPositions, Vector3>( );
+            }
+            return mAccelFrameData;
+        }
+    }
+    /// <summary>
+    /// Getter: returns a map of the Magnetic frame data for the current frame
+    /// </summary>
+    public Dictionary<BodyStructureMap.SensorPositions, Vector3> MagFrameData
+    {
+        get
+        {
+            if (mMagFrameData == null)
+            {
+                mMagFrameData = new Dictionary<BodyStructureMap.SensorPositions, Vector3>();
+            }
+            return mMagFrameData;
+        }
     }
 
 
@@ -146,7 +181,7 @@ public class BodyFrame
 
 
     /// <summary>
-    /// Create a Bodyframe from a protobuf packet
+    /// Create a Bodyframe from a protobuf packet. This also includes Acceleration and Magnetic data
     /// </summary>
     /// <param name="vPacket">The packet</param>
     public BodyFrame(Packet vPacket)
@@ -166,8 +201,11 @@ public class BodyFrame
                 z = vDataFrame.quat_z_roll,
                 w = vDataFrame.quat_w
             };
-           
-            FrameData.Add(vSensorId, vVect); 
+            FrameData.Add(vSensorId, vVect);
+            Vector3 vAccel = new Vector3(vDataFrame.Accel_x, vDataFrame.Accel_y, vDataFrame.Accel_z);
+            AccelFrameData.Add(vSensorId,vAccel);
+            Vector3 vMag = new Vector3(vDataFrame.Mag_x, vDataFrame.Mag_y, vDataFrame.Mag_z);
+            MagFrameData.Add(vSensorId, vMag);
         }
         mAssociatedPacket = vPacket;
     }
