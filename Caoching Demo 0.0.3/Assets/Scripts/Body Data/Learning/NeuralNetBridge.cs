@@ -1,4 +1,14 @@
-﻿using UnityEngine;
+﻿/** 
+* @file TPoseSelectionView.cs
+* @brief Contains the TPoseSelectionView class
+* @author Mohammed Haider (mohammed@heddoko.com)
+* @date January 2017
+* Copyright Heddoko(TM) 2017, all rights reserved
+*/
+
+
+
+using UnityEngine;
 using System.Collections.Generic;
 using Assets.Scripts.Utils;
 using TPoseDetection.Model;
@@ -106,8 +116,11 @@ public class NeuralNetBridge : MonoBehaviour
             FeatureVectorMap vFvm = new FeatureVectorMap(vListOfSensorCaptureFrames, vExamples);
 
             mTrainer = new Trainer(vFvm, "Sig", 0.001f, 0.6f, 1, 20, OnTrainingCompletion, ErrorProgressUpdate);
+            Debug.Log("Before Begin" +"\n");
             mTrainer.Begin();
+            Debug.Log("After Begin" + "\n");
             mTrainer.Validation();
+            Debug.Log("After Validation" + "\n");
             vWatch.Stop();
         }
         catch (Exception vE)

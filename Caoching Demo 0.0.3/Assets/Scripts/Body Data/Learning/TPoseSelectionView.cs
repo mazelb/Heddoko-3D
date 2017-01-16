@@ -1,4 +1,15 @@
-﻿using System;
+﻿/** 
+* @file TPoseSelectionView.cs
+* @brief Contains the TPoseSelectionView class
+* @author Mohammed Haider (mohammed@heddoko.com)
+* @date January 2017
+* Copyright Heddoko(TM) 2017, all rights reserved
+*/
+
+
+
+
+using System;
 using System.Collections.Generic;
 using Assets.Scripts.UI.RecordingLoading; 
 using UnityEngine;

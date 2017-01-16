@@ -344,7 +344,9 @@ namespace Assets.Scripts.Frames_Pipeline
             {
                 try
                 {
-                    mConvertedBodyFrames.Add(RawFrameConverter.ConvertRawFrame(mCurrentRecording.GetBodyRawFrameAt(i)));
+                    var vConvertedFrame = RawFrameConverter.ConvertRawFrame(mCurrentRecording.GetBodyRawFrameAt(i));
+                    vConvertedFrame.Index = i;
+                    mConvertedBodyFrames.Add(vConvertedFrame);
                 }
                 catch (Exception vE)
                 {
