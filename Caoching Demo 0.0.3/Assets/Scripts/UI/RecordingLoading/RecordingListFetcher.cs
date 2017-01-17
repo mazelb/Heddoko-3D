@@ -85,6 +85,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                     }
                 }
             }
+
             else
             {
                 vCount = UpdateList(mManager.UserProfile.User);
@@ -95,6 +96,8 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
         }
 
+
+         
         /// <summary>
         /// Fetches a list and triggers an update
         /// </summary>
@@ -105,6 +108,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             int vTotalCount = 0;
 
             List<RecordingListItem> vRecordingItems = new List<RecordingListItem>();
+            ListCollection<Record> vRecords = null;
             //check if the list is new. Request default recordings and add it to the list.  
             if (mAddDefaultRecord)
             {
@@ -115,15 +119,27 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 vRecordingItems = new List<RecordingListItem>();
             }
-            //the old version of the sdk had a different request type of AssetCollection. This function collects older types of records
-            AddOldRecordAssetsTypes(ref vRecordingItems, vUser);
-            var vRecords = mManager.UserProfile.Client.RecordsCollection(new UserRecordListRequest()
+            if (mManager.UserProfile.User.RoleType == UserRoleType.LicenseUniversal)
             {
-                UserID = vUser.ID,
-                Take = ItemNumbersPerPage,
-                Skip = mSkipMultiplier * ItemNumbersPerPage
+                var request = new RecordListRequest
+                {
+                    Take = ItemNumbersPerPage,
+                    Skip = mSkipMultiplier * ItemNumbersPerPage
+                };
+
+                vRecords = mManager.UserProfile.Client.GetAllRecords(request);
             }
-                 );
+            else
+            {
+                //the old version of the sdk had a different request type of AssetCollection. This function collects older types of records
+                AddOldRecordAssetsTypes(ref vRecordingItems, vUser);
+                vRecords = mManager.UserProfile.Client.RecordsCollection(new UserRecordListRequest()
+                {
+                    UserID = vUser.ID,
+                    Take = ItemNumbersPerPage,
+                    Skip = mSkipMultiplier * ItemNumbersPerPage
+                });
+            }
             if (vRecords != null)
             {
                 if (vRecords.Collection.Count > 0)
@@ -150,21 +166,20 @@ namespace Assets.Scripts.UI.RecordingLoading
                         }
                     }
                 }
-
-
-                if (RecordingListUpdatedHandler != null && mIsWorking)
-                {
-                    RecordingListUpdatedHandler(vRecordingItems);
-                }
-                vTotalCount = vRecordingItems.Count;
             }
-          
+            
+            if (RecordingListUpdatedHandler != null && mIsWorking)
+            {
+                RecordingListUpdatedHandler(vRecordingItems);
+            }
+            vTotalCount = vRecordingItems.Count;
+
             return vTotalCount;
         }
 
         private void AddOldRecordAssetsTypes(ref List<RecordingListItem> vItems, User vUser)
         {
-             ListCollection<Asset> vRecords = mManager.UserProfile.Client.AssetsCollection(new AssetListRequest()
+            ListCollection<Asset> vRecords = mManager.UserProfile.Client.AssetsCollection(new AssetListRequest()
             {
                 UserID = vUser.ID,
                 Take = ItemNumbersPerPage,
@@ -172,7 +187,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             });
             if (vRecords != null)
             {
-                 if (vRecords.Collection.Count > 0)
+                if (vRecords.Collection.Count > 0)
                 {
                     foreach (var vRecordedAsset in vRecords.Collection)
                     {
@@ -191,7 +206,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                     }
                 }
             }
-          
+
         }
         /// <summary>
         /// requests default recordings

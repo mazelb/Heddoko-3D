@@ -17,7 +17,9 @@ using Assets.Scripts.UI.RecordingLoading.Model;
 using Assets.Scripts.UI.RecordingLoading.View;
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.Utils;
+using HeddokoSDK;
 using HeddokoSDK.Models;
+using HeddokoSDK.Models.Requests;
 using UIWidgets;
 using UnityEngine;
 
@@ -45,10 +47,7 @@ namespace Assets.Scripts.UI.RecordingLoading
 
         private float mFetchCounter = 12f;
         private float mFetchTime = 12f;
-        void Start()
-        {
-            
-        }
+        
 
         public void Init()
         {
@@ -67,6 +66,21 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
         }
 
+        private static void TestGetAllRecords(HeddokoClient client)
+        {
+            var request = new RecordListRequest
+            {
+                Take = 20,
+                Skip = 0,
+                TeamId = 1
+            };
+
+            ListCollection<Record> records = client.GetAllRecords(request);
+            foreach (Record record in records.Collection)
+            {
+                Console.WriteLine("kitId: {0} user: {1}", record.KitID, record.User.Name);
+            }
+        }
         private void ExceptionHandler(Exception vE)
         {
             Debug.Log(vE.Message);
