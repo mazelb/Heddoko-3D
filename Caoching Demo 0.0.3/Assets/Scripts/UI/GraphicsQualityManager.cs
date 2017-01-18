@@ -97,6 +97,16 @@ namespace Assets.Scripts.UI
             }
         }
 
+        /// <summary>
+        /// Sets the application to windowed mode
+        /// </summary>
+        /// <param name="vFlag"></param>
+        public void SetToWindowedMode(bool vFlag)
+        {
+            Screen.fullScreen = vFlag;
+        }
+
+       
 
     }
 }

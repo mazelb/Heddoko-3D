@@ -14,6 +14,7 @@ using Assets.Scripts.Licensing.Controller;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.Localization;
 using Assets.Scripts.Notification;
+using Assets.Scripts.UI;
 using Assets.Scripts.UI.AbstractViews.Permissions;
  using Assets.Scripts.UI.RecordingLoading;
 using Assets.Scripts.UI.Settings;
@@ -54,9 +55,11 @@ namespace Assets.Scripts.MainApp
         public UploadController UploadController;
         public UnityLoginControl LoginController;
         public OrganizationViewController OrganizationViewController;
+        public GraphicsQualityManager GraphicsQualityManager;
         void Awake()
         {
             OutterThreadToUnityThreadIntermediary.Instance.Init();
+            GraphicsQualityManager.SetToWindowedMode(false);
         }
 
         /// <summary>
