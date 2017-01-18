@@ -246,7 +246,6 @@ namespace Assets.Scripts.UI.RecordingLoading
                         vIndices.Push(i);
                     }
                 }
-
             }
             while (vIndices.Count > 0)
             {
@@ -284,9 +283,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                     }
                     mUploader.UploadSingleItem(vUploadItem);
                 }
-
                 UploadBrainpackLogData();
-
             }
 
             //On completion handle errors and succesful uploads
@@ -299,13 +296,14 @@ namespace Assets.Scripts.UI.RecordingLoading
                 }
             }
 
-
             if (ContentsCompletedUploadEvent != null)
             {
                 ContentsCompletedUploadEvent();
             }
             if (mUploadRecordingStatus.ProblematicUploads != null)
-            { mUploadRecordingStatus.ProblematicUploads.Clear(); }
+            {
+                mUploadRecordingStatus.ProblematicUploads.Clear();
+            }
         }
 
         /// <summary>
@@ -360,8 +358,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             //get brainpack serial number
             string vBpSerial = mSearcher.GetSerialNumFromSdCard();
-            //    var vLogFileInfo = new FileInfo(mSearcher.HeddokoSdCardStruct.LogFileDirectoryPath);
-            var vLogFileInfo = mSearcher.HeddokoSdCardStruct;
+             var vLogFileInfo = mSearcher.HeddokoSdCardStruct;
             if (vBpSerial != null)
             {
                 BrainpackLogFileItem = new UploadableListItem()
@@ -371,30 +368,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                     BrainpackSerialNumber = vBpSerial,
                     AssetType = AssetType.Log
                 };
-            }
-            //var vFiles = vDrive.GetFiles();
-
-            ////var vLogFile = vFiles.First(vX => vX.Name.Contains("sysHdk.bin"));
-
-            //if (vLogFile != null)
-            //{
-            //    //get brainpack name
-            //    string vBrainpackSerial = null;
-            //    using (StreamReader vSr = new StreamReader(vDrive.Name + Path.DirectorySeparatorChar + "sysHdk.bin"))
-            //    {
-            //        string vLine;
-            //        while ((vLine = vSr.ReadLine()) != null)
-            //        {
-            //            var vMatch = Regex.Match(vLine, @"S\\d\\d\\d\\d\\d_");
-            //            if (vMatch.Index >= 0)
-            //            {
-            //                vBrainpackSerial = vLine.Substring(vMatch.Index, 6);
-            //                break;
-            //            }
-            //        }
-            //    }
-
-            //}
+            } 
         }
     }
 

@@ -341,6 +341,13 @@ namespace Assets.Scripts.Licensing.Controller
             return vBuilder.ToString();
         }
 
+        /// <summary>
+        /// clears the input fields
+        /// </summary>
+        public void Clear()
+        {
+            LoginView.Clear();
+        }
     }
 
 

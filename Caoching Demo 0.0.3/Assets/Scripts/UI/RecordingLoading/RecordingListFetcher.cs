@@ -4,6 +4,7 @@ using System.Threading;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
+using Assets.Scripts.Utils;
 using HeddokoSDK.Models;
 using HeddokoSDK.Models.Requests;
 
@@ -24,6 +25,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         private Thread mWorkerThread;
         private bool mIsWorking;
         private int mTimer = 10000;
+        private int mRemainderRecordingsLeft;
         /// <summary>
         /// Skips the number of items to download
         /// </summary>
@@ -133,12 +135,22 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 //the old version of the sdk had a different request type of AssetCollection. This function collects older types of records
                 AddOldRecordAssetsTypes(ref vRecordingItems, vUser);
-                vRecords = mManager.UserProfile.Client.RecordsCollection(new UserRecordListRequest()
+                try
                 {
-                    UserID = vUser.ID,
-                    Take = ItemNumbersPerPage,
-                    Skip = mSkipMultiplier * ItemNumbersPerPage
-                });
+                    vRecords = mManager.UserProfile.Client.RecordsCollection(new UserRecordListRequest()
+                    {
+                        UserID = vUser.ID,
+                        Take = ItemNumbersPerPage,
+                        Skip = mSkipMultiplier * ItemNumbersPerPage
+                    });
+                }
+                catch (Exception ve)
+                {
+                    OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
+                    {
+                        UnityEngine.Debug.Log("exception in list fetching "+ve);
+                    });
+                }
             }
             if (vRecords != null)
             {
@@ -151,7 +163,8 @@ namespace Assets.Scripts.UI.RecordingLoading
                         for (int vJ = 0; vJ < vRecord.Assets.Count; vJ++)
                         {
                             var vRecordedAsset = vRecord.Assets[vJ];
-                            if (!string.IsNullOrEmpty(vRecordedAsset.Name) && vRecordedAsset.Type == AssetType.Record)
+                            var vIsRecord = vRecordedAsset.Type == AssetType.Record || vRecordedAsset.Type == AssetType.RawFrameData;
+                            if (!string.IsNullOrEmpty(vRecordedAsset.Name) &&   vIsRecord)
                             {
                                 RecordingListItem vItem = new RecordingListItem();
                                 vItem.Name = vRecordedAsset.Name;

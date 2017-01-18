@@ -10,19 +10,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Licensing.Controller;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.Localization;
 using Assets.Scripts.Notification;
 using Assets.Scripts.UI.AbstractViews.Permissions;
-using Assets.Scripts.UI.RecordingLoading;
+ using Assets.Scripts.UI.RecordingLoading;
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.Utils;
 using HeddokoSDK.Models;
 using HeddokoSDK.Models.Activity;
 using HeddokoSDK.Models.Enum;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
-using UnityEngine.EventSystems;
+ using UnityEngine.EventSystems;
 
 namespace Assets.Scripts.MainApp
 {
@@ -51,6 +51,9 @@ namespace Assets.Scripts.MainApp
         public ControlPanel ControlPanel;
         private UserProfileModel mCurrentProfileModel;
         private ActivitiesManager mActivitiesManager;
+        public UploadController UploadController;
+        public UnityLoginControl LoginController;
+        public OrganizationViewController OrganizationViewController;
         void Awake()
         {
             OutterThreadToUnityThreadIntermediary.Instance.Init();
@@ -60,7 +63,6 @@ namespace Assets.Scripts.MainApp
         /// Initializes the application with the user profile model passed in. 
         /// </summary>
         /// <param name="vProfileModel"></param>
-
         public void Init(UserProfileModel vProfileModel)
         {
             mCurrentProfileModel = vProfileModel;
@@ -82,6 +84,16 @@ namespace Assets.Scripts.MainApp
                 OnLoginEvent();
             }
             RegisterNotificationEvents();
+            UploadController.Initialize();
+            LoginController.Clear();
+            if (mCurrentProfileModel.User.RoleType == UserRoleType.LicenseUniversal)
+            {
+                OrganizationViewController.gameObject.SetActive(true);
+            }
+            else
+            {
+                OrganizationViewController.gameObject.SetActive(false);
+            }
         }
 
         /// <summary>
@@ -107,7 +119,7 @@ namespace Assets.Scripts.MainApp
         /// <summary>
         /// Unregister from notification events.
         /// </summary>
-        private void RenoveNotificationEvents()
+        private void RemoveNotificationEvents()
         {
             mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.StreamChannelOpened, StreamChannelOpened);
             mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.StreamChannelClosed, StreamChannelClosed);
@@ -147,7 +159,7 @@ namespace Assets.Scripts.MainApp
         private void LicenseChangedForUser(NotificationMessage vObj)
         {
             DispatchNotification(vObj);
-OutterThreadToUnityThreadIntermediary.QueueActionInUnity(ReturnToLoginView);
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(ReturnToLoginView);
         }
 
         private void DispatchNotification(NotificationMessage vObj)
@@ -249,14 +261,27 @@ OutterThreadToUnityThreadIntermediary.QueueActionInUnity(ReturnToLoginView);
             if (OnLogoutEvent != null)
             {
                 OnLogoutEvent();
-                RenoveNotificationEvents();
             }
+            UploadController.Stop();
+            RemoveNotificationEvents();
+            StopCurrentNotifications();
+        }
+
+        /// <summary>
+        /// Removes notifications from view. 
+        /// </summary>
+        private void StopCurrentNotifications()
+        {
+            NotificationManager.StopNotifications();
         }
 
         void OnApplicationQuit()
         {
             mActivitiesManager.Dispose();
         }
+        /// <summary>
+        /// exits the application
+        /// </summary>
         public void ExitApplication()
         {
             Application.Quit();

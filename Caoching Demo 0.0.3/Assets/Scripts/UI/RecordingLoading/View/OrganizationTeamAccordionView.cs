@@ -78,11 +78,11 @@ namespace Assets.Scripts.UI.RecordingLoading.View
         {
             if (mOrganizationsSelected > 0)
             {
-                TeamSelectableOption.interactable = true;
+                TeamSelectableOption.enabled = true;
             }
             else
             {
-                TeamSelectableOption.interactable = false;
+                TeamSelectableOption.enabled = false;
                 var vItem = Accordion.Items[1];
                 Accordion.Close(vItem);
                 //disable all team selection
@@ -106,13 +106,15 @@ namespace Assets.Scripts.UI.RecordingLoading.View
             vNewItemGo.ListItem = vOrgItem;
             vNewItemGo.OnToggleAction = vCallbackAction;
             vNewItemGo.Toggle.onValueChanged.AddListener(IncrementNumberOfSelectedItems);
-            mOrgSelectionItems.Add(vOrgItem.Organization.Name, vNewItemGo);
+             mOrgSelectionItems.Add(vOrgItem.Organization.Name, vNewItemGo);
             var vTeamList = vOrgItem.TeamCollection;
             for (int vI = 0; vI < vTeamList.Count; vI++)
             {
                 BuildTeamOption(vTeamList[vI], vTeamCallbackAction);
             }
         }
+
+        
 
         /// <summary>
         /// Increment the number of selected organizations
@@ -183,14 +185,24 @@ namespace Assets.Scripts.UI.RecordingLoading.View
         /// <param name="vOrgItem">the organization item to remove</param>
         public void RemoveOrganizationItem(OrganizationListItem vOrgItem)
         {
-            var vItem = mOrgSelectionItems[vOrgItem.Organization.Name];
+            var vItem = RemoveTeamItemFromList(vOrgItem);
             mOrgSelectionItems.Remove(vOrgItem.Organization.Name);
+            Destroy(vItem.gameObject);
+        }
+
+        /// <summary>
+        /// Removes all the team items for a specific organization
+        /// </summary>
+        /// <param name="vOrgItem">the organization item</param>
+        public OrganizationSelectionItem RemoveTeamItemFromList(OrganizationListItem vOrgItem)
+        {
+            var vItem = mOrgSelectionItems[vOrgItem.Organization.Name];
             var vTeamList = vItem.ListItem.TeamCollection;
             for (int vI = 0; vI < vTeamList.Count; vI++)
             {
                 RemoveTeamItem(vTeamList[vI]);
             }
-            Destroy(vItem.gameObject);
+            return vItem;
         }
     }
 }

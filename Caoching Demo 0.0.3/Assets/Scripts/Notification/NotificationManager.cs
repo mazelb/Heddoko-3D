@@ -56,7 +56,7 @@ namespace Assets.Scripts.Notification
             {
                 UIWidgets.Notify vNotifyViewObject = Notify.Template("fade");
                 vNotifyViewObject.Show(vNotice.Message, gInstance.NotificationTimeout[vNotice.Urgency],
-                    sequenceType: NotifySequence.First, clearSequence: true);
+                    sequenceType: NotifySequence.First, clearSequence: false);
                 vNotice.NotifyViewObject = vNotifyViewObject;
             });
         }
@@ -70,9 +70,10 @@ namespace Assets.Scripts.Notification
         {
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
-                vNotice.NotifyViewObject.Hide(); 
+                vNotice.NotifyViewObject.Hide();
+                gInstance.NotificationList.Remove(vNotice);
             });
-             gInstance.NotificationList.Remove(vNotice);
+     
         }
 
         public enum NotificationUrgency
@@ -83,5 +84,13 @@ namespace Assets.Scripts.Notification
             Urgent
         }
 
+        /// <summary>
+        /// Stops all current notifications
+        /// </summary>
+        public static void StopNotifications()
+        {
+            Notify.NotifyManager.StopAllCoroutines();
+            Notify.NotifyManager.Clear();
+        }
     }
 }

@@ -159,6 +159,13 @@ namespace Assets.Scripts.Licensing.Authentication
             LoadingImage.gameObject.SetActive(vStatus);
         }
 
-        
+        /// <summary>
+        /// Clears the input fields
+        /// </summary>
+        public void Clear()
+        {
+            UsernameInputField.text = "";
+            PasswordInputField.Clear();
+        }
     }
 }

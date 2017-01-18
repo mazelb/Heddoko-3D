@@ -66,21 +66,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
         }
 
-        private static void TestGetAllRecords(HeddokoClient client)
-        {
-            var request = new RecordListRequest
-            {
-                Take = 20,
-                Skip = 0,
-                TeamId = 1
-            };
-
-            ListCollection<Record> records = client.GetAllRecords(request);
-            foreach (Record record in records.Collection)
-            {
-                Console.WriteLine("kitId: {0} user: {1}", record.KitID, record.User.Name);
-            }
-        }
+       
         private void ExceptionHandler(Exception vE)
         {
             Debug.Log(vE.Message);
@@ -98,6 +84,9 @@ namespace Assets.Scripts.UI.RecordingLoading
                 View.LoadData(mRecordingItems);
             });
         }
+
+      
+        
 
         /// <summary>
         /// Double click checker
@@ -255,8 +244,8 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// Reset the list
         /// </summary>
         public void ResetDownloadList()
-        {
-            StartCoroutine(WaitThenReDownload(1.5f)); 
+        { 
+           Invoke("WaitThenReDownload",1.5f);
         }
 
         /// <summary>
@@ -264,9 +253,8 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         /// <param name="vSeconds"></param>
         /// <returns></returns>
-        private IEnumerator WaitThenReDownload(float vSeconds)
+        private void WaitThenReDownload( )
         {
-            yield return new WaitForSeconds(vSeconds);
             Clear();
             mListFetcher.Start();
             View.OnClickAction += DoubleClickCheck;
