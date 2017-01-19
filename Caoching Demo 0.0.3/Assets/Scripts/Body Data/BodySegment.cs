@@ -40,7 +40,7 @@ public partial class BodySegment
     public static bool GBodyFrameUsingQuaternion = false;
     //Is segment tracked (based on body type) 
     public bool IsTracked = true;
-    public bool IsReseting = false;
+    public bool IsReset = false;
     public int ResetCounter = 0;
     static public bool IsTrackingHeight = true;
     static public bool IsTrackingGait = false;
@@ -85,6 +85,11 @@ public partial class BodySegment
     static int svRightCounter = 0;
     static int svLeftCounter = 0;
     static int svStandCounter = 0;
+
+    static Quaternion sInitialOffsetTrunk = Quaternion.identity;
+
+    private Quaternion mInitialOffset = Quaternion.identity;
+    private Quaternion mInitialOffsetLowerLimb = Quaternion.identity;
 
     /// <summary>
     /// The function will update the sensors data with the passed in BodyFrame. Iterates through the list of sensor tuples and updates the current sensor's information
@@ -131,7 +136,7 @@ public partial class BodySegment
     /// <param name="vBodyCalibrationSetting">optional parameter to set the current calibration setting</param>
     public void UpdateInitialSensorsData(BodyFrame vFrame)
     {
-        IsReseting = true;
+        IsReset = false;
         List<BodyStructureMap.SensorPositions> vSensorPos = BodyStructureMap.Instance.SegmentToSensorPosMap[SegmentType];
         foreach (BodyStructureMap.SensorPositions vPos in vSensorPos)
         {
@@ -346,10 +351,18 @@ public partial class BodySegment
 
         if (GBodyFrameUsingQuaternion)
         {
-            // a rotation applied to the sensor data to align it with a body segment
-            Quaternion vTrunkInitRawQuat = Quaternion.Euler(0,180,0); // new Quaternion(-vTrunkInit.y, vTrunkInit.z, -vTrunkInit.x, vTrunkInit.w);
+            Quaternion vTrunkInitRawQuat = new Quaternion(-vTrunkInit.y, vTrunkInit.z, -vTrunkInit.x, vTrunkInit.w);
             Quaternion vTrunkCurRawQuat = new Quaternion(-vTrunkCur.y, vTrunkCur.z, -vTrunkCur.x, vTrunkCur.w);
-            Quaternion vNewTrunkQuat = Quaternion.Inverse(Quaternion.Euler(90,0 ,0)) * Quaternion.Inverse(vTrunkInitRawQuat) * vTrunkCurRawQuat * Quaternion.Euler(90, 0, 0);
+
+            if (!IsReset)
+            {
+                IsReset = true;
+                Vector3 vAxisDown = Quaternion.Inverse(vTrunkInitRawQuat) * Vector3.down;
+                mInitialOffset = Quaternion.FromToRotation(Vector3.down, vAxisDown);
+                sInitialOffsetTrunk = mInitialOffset;
+            }
+
+            Quaternion vNewTrunkQuat = Quaternion.Inverse(mInitialOffset) * Quaternion.Inverse(vTrunkInitRawQuat) * vTrunkCurRawQuat * mInitialOffset;
 
             //Apply transform on Trunk
             if (IsUsingInterpolation)
@@ -365,8 +378,8 @@ public partial class BodySegment
         }
         else
         {
-            Vector3 vTorsoInitialRawEuler = new Vector3(vTrunkInit.x, vTrunkInit.y, vTrunkInit.z) * 180f / Mathf.PI;
-            Vector3 vTorsoCurrentRawEuler = new Vector3(vTrunkCur.x, vTrunkCur.y, vTrunkCur.z) * 180f / Mathf.PI;
+            Vector3 vTorsoInitialRawEuler = new Vector3(vTrunkInit.x, vTrunkInit.y, vTrunkInit.z) * Mathf.Rad2Deg;
+            Vector3 vTorsoCurrentRawEuler = new Vector3(vTrunkCur.x, vTrunkCur.y, vTrunkCur.z) * Mathf.Rad2Deg;
 
             Quaternion vTorsoInitQuat = Quaternion.Euler(0, -vTorsoInitialRawEuler.z, 0);
             Quaternion vTorsoQuatY = Quaternion.Euler(0, -vTorsoCurrentRawEuler.z, 0);
@@ -394,8 +407,8 @@ public partial class BodySegment
         }
 
         //Apply results
-        vUSSubsegment.UpdateSubsegmentOrientation(vTrunkQuat, 1, true);
-        vLSSubsegment.UpdateSubsegmentOrientation(vHipQuat, 3, true);
+        //vUSSubsegment.UpdateSubsegmentOrientation(vTrunkQuat, 1, true);
+        //vLSSubsegment.UpdateSubsegmentOrientation(vHipQuat, 3, true);
 
         ////////////////////////////////////////////////////////  Analysis /////////////////////////////////////////////////////////////////////
         //Update the analysis inputs
@@ -475,11 +488,11 @@ public partial class BodySegment
 
         if (GBodyFrameUsingQuaternion)
         {
-            Quaternion vThighInitialRawQuat = PniQuaternionConversion(new Quaternion(vThighInit.x, vThighInit.y, vThighInit.z, vThighInit.w));
-            Quaternion vThighCurrentRawQuat = PniQuaternionConversion(new Quaternion(vThighCurr.x, vThighCurr.y,  vThighCurr.z ,vThighCurr.w));
-            Quaternion vKneeInitialRawQuat = PniQuaternionConversion(new Quaternion(vKneeInit.x, vKneeInit.y, vKneeInit.z, vKneeInit.w));
-            Quaternion vKneeCurrentRawQuat = PniQuaternionConversion(new Quaternion(vKneeCurr.x, vKneeCurr.y, vKneeCurr.z, vKneeCurr.w));
- 
+            Quaternion vThighInitialRawQuat = new Quaternion(-vThighInit.y, vThighInit.z, -vThighInit.x, vThighInit.w);
+            Quaternion vThighCurrentRawQuat = new Quaternion(-vThighCurr.y, vThighCurr.z, -vThighCurr.x, vThighCurr.w);
+            Quaternion vKneeInitialRawQuat = new Quaternion(-vKneeInit.y, vKneeInit.z, -vKneeInit.x, vKneeInit.w);
+            Quaternion vKneeCurrentRawQuat = new Quaternion(-vKneeCurr.y, vKneeCurr.z, -vKneeCurr.x, vKneeCurr.w);
+
             MapLegsOrientationsQuat(vThighInitialRawQuat, vThighCurrentRawQuat, vKneeInitialRawQuat, vKneeCurrentRawQuat, vULSubsegment, vLLSubsegment, vHipsSubsegment, false);
         }
         else
@@ -511,15 +524,18 @@ public partial class BodySegment
     public void MapLegsOrientationsQuat(Quaternion vULInitQuat, Quaternion vULCurQuat, Quaternion vLLInitQuat, Quaternion vLLCurQuat,
                                     BodySubSegment vULSubsegment, BodySubSegment vLLSubsegment, BodySubSegment vHipsSubsegment, bool vIsRight = true)
     {
+        if (!IsReset)
+        {
+            IsReset = true;
+            Vector3 vULAxisUp = Quaternion.Inverse(vULInitQuat) * Vector3.up;
+            Vector3 vLLAxisUp = Quaternion.Inverse(vLLInitQuat) * Vector3.up;
 
-        // a rotation applied to the sensor data to align it with a body segment
-        Quaternion vULInitRawQuat = new Quaternion(-vULInitQuat.y, vULInitQuat.z, -vULInitQuat.x, vULInitQuat.w);
-        Quaternion vLLInitRawQuat = new Quaternion(-vLLInitQuat.y, vLLInitQuat.z, -vLLInitQuat.x, vLLInitQuat.w);
-        Quaternion vULCurRawQuat = new Quaternion(-vULCurQuat.y, vULCurQuat.z, -vULCurQuat.x, vULCurQuat.w);
-        Quaternion vLLCurRawQuat = new Quaternion(-vLLCurQuat.y, vLLCurQuat.z, -vLLCurQuat.x, vLLCurQuat.w);
+            mInitialOffset = Quaternion.FromToRotation(Vector3.up, vULAxisUp);
+            mInitialOffsetLowerLimb = Quaternion.FromToRotation(Vector3.up, vLLAxisUp);
+        }
 
-        Quaternion vThighQuat = Quaternion.Inverse(Quaternion.Euler(0, 0, 0)) * Quaternion.Inverse(vULInitRawQuat) * vULCurRawQuat * Quaternion.Euler(0, 0, 0);
-        Quaternion vKneeQuat = Quaternion.Inverse(Quaternion.Euler(0, 0, 0)) * Quaternion.Inverse(vLLInitRawQuat) * vULCurRawQuat * Quaternion.Euler(0, 0, 0);
+        Quaternion vThighQuat = Quaternion.Inverse(mInitialOffset) * /*Quaternion.Inverse(vULInitQuat) * */vULCurQuat * mInitialOffset;
+        Quaternion vKneeQuat = Quaternion.Inverse(mInitialOffsetLowerLimb) * /*Quaternion.Inverse(vLLInitQuat) * */vLLCurQuat * mInitialOffset;
 
         Quaternion vNewThighQuat = Quaternion.identity;
         Quaternion vNewKneeQuat = Quaternion.identity;
@@ -537,7 +553,7 @@ public partial class BodySegment
         }
 
         vULSubsegment.UpdateSubsegmentOrientation(vNewThighQuat, 1, true);
-        //vLLSubsegment.UpdateSubsegmentOrientation(vNewKneeQuat, 1, true);
+        vLLSubsegment.UpdateSubsegmentOrientation(vNewKneeQuat, 1, true);
     }
 
     /// <summary>
@@ -938,12 +954,13 @@ public partial class BodySegment
         }
         if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_RightLeg)
         {
+            //Debug.Log("RIGHT LEG ");
             if (!vFilteredDictionary.ContainsKey(BodyStructureMap.SensorPositions.SP_RightCalf) ||
                 !vFilteredDictionary.ContainsKey(BodyStructureMap.SensorPositions.SP_RightThigh))
             {
                 return;
             }
-            //Debug.Log("RIGHT LEG");
+            //Debug.Log("RIGHT LEG 1");
             MapRightLegSegment(vFilteredDictionary);
         }
         if (SegmentType == BodyStructureMap.SegmentTypes.SegmentType_LeftLeg)

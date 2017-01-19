@@ -131,8 +131,6 @@ namespace Assets.Scripts.Body_Data.View
             {
                 SetSensorsSpatialPosition(1);
             }
-
-
         }
 
         /// <summary>
@@ -155,6 +153,9 @@ namespace Assets.Scripts.Body_Data.View
                 int vIdx = (int)vImuFrames[vI].imuId;
                 mSensorTransformList[vIdx].UpdateRotation(vImuFrames[vI]);
             }
+
+            //uint calStable = (dataFrame.sensorMask >> 19) & 0x01;
+            //uint magTransient = (dataFrame.sensorMask >> 20) & 0x01;
         }
 
 
