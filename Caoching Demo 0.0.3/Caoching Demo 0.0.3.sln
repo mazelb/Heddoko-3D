@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caoching Demo 0.0.3.CSharp.Plugins", "Caoching Demo 0.0.3.CSharp.Plugins.csproj", "{740D810D-B248-7727-FF5B-3F330CDF380A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caoching Demo 0.0.3.CSharp", "Caoching Demo 0.0.3.CSharp.csproj", "{17DD78BB-1B5F-F2B1-C695-1413117D664A}"
@@ -8,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caoching Demo 0.0.3.CSharp.Editor", "Caoching Demo 0.0.3.CSharp.Editor.csproj", "{C8339DCD-10AD-7FB1-79E4-929BC9C1FEE7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeddokoLib", "..\HeddokoLib\HeddokoLib\HeddokoLib.csproj", "{CE1E86BF-D8CD-4E0C-9B93-B32939065C6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeddokoSDK", "..\..\Heddoko-SDK\HeddokoSDK\HeddokoSDK.csproj", "{7780B603-40B8-465C-B348-F6D6CB259079}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nivot.SignalR.Client.Net35", "..\..\Heddoko-SDK\Nivot.SignalR.Client.Net35\Nivot.SignalR.Client.Net35.csproj", "{EB46B9C6-EE37-48F9-835E-E49580E40E0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +37,14 @@ Global
 		{CE1E86BF-D8CD-4E0C-9B93-B32939065C6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE1E86BF-D8CD-4E0C-9B93-B32939065C6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE1E86BF-D8CD-4E0C-9B93-B32939065C6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7780B603-40B8-465C-B348-F6D6CB259079}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7780B603-40B8-465C-B348-F6D6CB259079}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7780B603-40B8-465C-B348-F6D6CB259079}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7780B603-40B8-465C-B348-F6D6CB259079}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB46B9C6-EE37-48F9-835E-E49580E40E0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB46B9C6-EE37-48F9-835E-E49580E40E0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB46B9C6-EE37-48F9-835E-E49580E40E0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB46B9C6-EE37-48F9-835E-E49580E40E0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

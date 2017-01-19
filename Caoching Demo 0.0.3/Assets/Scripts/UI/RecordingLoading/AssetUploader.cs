@@ -44,6 +44,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                 UploadableListItem vUploadableItem = (UploadableListItem)vItem;
                 Asset vAsset = mProfile.Client.Upload(new AssetRequest()
                 {
+                    KitID = mProfile.GetKitIdFromBrainpackLabel(vUploadableItem.BrainpackSerialNumber),
                     Serial = vUploadableItem.BrainpackSerialNumber,
                     Type = vUploadableItem.AssetType
                 }, vUploadableItem.RelativePath);
