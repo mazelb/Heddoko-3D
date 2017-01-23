@@ -175,10 +175,8 @@ namespace Assets.Scripts.UI.RecordingLoading
                     vSucess, vFailCount);
                 Notify.Template("fade").Show(vMsg, 15f, sequenceType: NotifySequence.First);
                 OutterThreadToUnityThreadIntermediary.QueueActionInUnity(RecordingListViewController.ResetDownloadList);
+
             });
-
-
-
         }
 
         private void DriveFoundHandler(DirectoryInfo vVdrive)

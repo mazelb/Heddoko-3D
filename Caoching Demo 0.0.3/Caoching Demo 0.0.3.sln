@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2015
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caoching Demo 0.0.3.CSharp.Plugins", "Caoching Demo 0.0.3.CSharp.Plugins.csproj", "{740D810D-B248-7727-FF5B-3F330CDF380A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Caoching Demo 0.0.3.CSharp", "Caoching Demo 0.0.3.CSharp.csproj", "{17DD78BB-1B5F-F2B1-C695-1413117D664A}"
