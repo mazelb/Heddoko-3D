@@ -71,8 +71,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
         /// Extract angles from orientations for the right leg
         /// </summary>
         public override void AngleExtraction()
-        {
-            //Get necessary Axis info
+        { //Get necessary Axis info
             Vector3 vThighAxisUp, vThighAxisRight, vThighAxisForward;
             Vector3 vKneeAxisUp, vKneeAxisRight, vKneeAxisForward;
             Vector3 vHipAxisUp, vHipAxisRight, vHipAxisForward;
@@ -95,11 +94,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             LeftKneeFlexionAngle = vAngleKneeFlexionNew;
             Vector3 vCross = Vector3.Cross(-vThighAxisUp, -vKneeAxisUp);
             float vSign = Mathf.Sign(Vector3.Dot(vThighAxisRight, vCross));
-            LeftKneeFlexionSignedAngle = vSign * vAngleKneeFlexionNew * GetSign("System.Single LeftKneeFlexionAngle");
+            LeftKneeFlexionSignedAngle = vSign * vAngleKneeFlexionNew * GetSign("System.Single RightKneeFlexion");
 
             //calculate the Knee Rotation angle
             float vAngleKneeRotationNew = 180 - Mathf.Abs(180 - KneeTransform.rotation.eulerAngles.y);
-            LeftKneeRotationSignedAngle = vAngleKneeRotationNew * GetSign("System.Single LeftKneeRotationAngle");
+            LeftKneeRotationSignedAngle = vAngleKneeRotationNew * GetSign("System.Single RightKneeRotationAngle");
 
             //calculate the Hip Flexion angle
             Vector3 vThighUpAxisProjectedOnHipRight = Vector3.ProjectOnPlane(-vThighAxisUp, vHipAxisRight);
@@ -115,10 +114,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             LeftHipFlexionAngle = vAngleHipFlexionNew;
             vCross = Vector3.Cross(vThighUpAxisProjectedOnHipRight, -vHipAxisUp);
             vSign = Mathf.Sign(Vector3.Dot(vHipAxisRight, vCross));
-            LeftHipFlexionSignedAngle = vSign * LeftHipFlexionAngle * GetSign("System.Single LeftHipFlexionAngle");
+            LeftHipFlexionSignedAngle = vSign * LeftHipFlexionAngle * GetSign("System.Single RightHipFlexionAngle");
 
             //calculate the Hip Abduction angle
-            Vector3 vThighUpAxisProjectedOnHipForward = Vector3.ProjectOnPlane(-vThighAxisUp, vHipAxisRight);
+            Vector3 vThighUpAxisProjectedOnHipForward = Vector3.ProjectOnPlane(-vThighAxisUp, vHipAxisForward);
             float vAngleHipAbductionNew;
             if (vThighUpAxisProjectedOnHipForward == Vector3.zero)
             {
@@ -130,12 +129,18 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             }
             LeftHipAbductionAngle = vAngleHipAbductionNew;
             vCross = Vector3.Cross(vThighUpAxisProjectedOnHipForward, -vHipAxisUp);
-            vSign = Mathf.Sign(Vector3.Dot(vHipAxisRight, vCross));
-            LeftHipAbductionSignedAngle = vSign * LeftHipAbductionAngle * GetSign("System.Single LeftHipAbductionAngle");
+            vSign = Mathf.Sign(Vector3.Dot(vHipAxisForward, vCross));
+            LeftHipAbductionSignedAngle = vSign * LeftHipAbductionAngle * -1f;//GetSign("System.Single RightHipAbductionAngle");
 
             //calculate the Hip Rotation angle
-            float vAngleHipRotationNew = 180 - Mathf.Abs(180 - ThighTransform.rotation.eulerAngles.y);
-            LeftHipRotationSignedAngle = vAngleHipRotationNew * GetSign("System.Single LeftHipRotationAngle");
+            float vAngleHipRotationNew = ThighTransform.rotation.eulerAngles.y;// 180 - Mathf.Abs(180 - ThighTransform.rotation.eulerAngles.y);
+            if (vAngleHipRotationNew > 180)
+            {
+                vAngleHipRotationNew = ThighTransform.rotation.eulerAngles.y- 360f ;
+            }
+           
+
+            LeftHipRotationSignedAngle = vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
 
             //Calculate Leg height 
             float vThighHeight = mInitThighHeight * Mathf.Abs(Vector3.Dot(vThighAxisUp, Vector3.up));
@@ -145,13 +150,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             float vTibiaStride = Mathf.Sqrt((mInitTibiaHeight * mInitTibiaHeight) - (vTibiaHeight * vTibiaHeight));
             Vector3 vThighDirection = -vThighAxisUp.normalized;
             Vector3 vTibiaDirection = -vKneeAxisUp.normalized;
-            LeftLegStride = Vector3.ProjectOnPlane((vThighStride * vThighDirection), Vector3.up) + Vector3.ProjectOnPlane((vTibiaStride * vTibiaDirection), Vector3.up);
+            RightLegStride = Vector3.ProjectOnPlane((vThighStride * vThighDirection), Vector3.up) + Vector3.ProjectOnPlane((vTibiaStride * vTibiaDirection), Vector3.up);
 
             //Calculate the velocity and accelerations
-            if (DeltaTime != 0)
+            if (DeltaTime > 0)
             {
                 VelocityAndAccelerationExtraction(vAngleKneeFlexionNew, vAngleHipRotationNew, vAngleHipAbductionNew,
-                    vAngleHipFlexionNew, vAngleKneeRotationNew, DeltaTime);
+                    vAngleKneeRotationNew, vAngleHipFlexionNew, DeltaTime);
             }
 
             //notify listeners that analysis on this component has been completed. 
