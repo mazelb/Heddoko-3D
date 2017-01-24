@@ -44,6 +44,8 @@ namespace Assets.Scripts.Licensing.Controller
         private string mUrl;
         private string mUrlExt;
         private string mSecret;
+        private const int RECONNECTION_ATTEMPTS = 10;
+        private const int RECONNECTION_DELAY = 2000;
         public LoginController LoginController
         {
             get { return mLoginController; }
@@ -56,10 +58,10 @@ namespace Assets.Scripts.Licensing.Controller
             mSecret = "HEDFstcKsx0NHjPSsjcndjnckSDJjknCCSjcnsJSK89SJDkvVBrk";
 
 #if DEBUG
-        //    mUrl = "http://dev.app.heddoko.com/";
-         //   mSecret = "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk";
+            mUrl = "http://dev.app.heddoko.com/";
+            mSecret = "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk";
 #endif
-            HeddokoConfig vConfig = new HeddokoConfig(mUrl + mUrlExt, mSecret);
+            HeddokoConfig vConfig = new HeddokoConfig(mUrl, mSecret, RECONNECTION_ATTEMPTS, RECONNECTION_DELAY);
             mClient = new HeddokoClient(vConfig);
             ServicePointManager.ServerCertificateValidationCallback += RemoteCertificateValidationCallback;
             mLoginController = new LoginController();
@@ -75,9 +77,7 @@ namespace Assets.Scripts.Licensing.Controller
             mLoginController.AddErrorHandler(LoginErrorType.Other, vX => EnableControls());
             mLoginController.AddLoginSubmissionHandler(SubmitLogin);
             OutterThreadToUnityThreadIntermediary.Instance.Init();
-
         }
-
         /// <summary>
         /// No internet connection error handler. 
         /// </summary>
@@ -87,7 +87,6 @@ namespace Assets.Scripts.Licensing.Controller
             DisplayErrorNotification(vVmsg);
             EnableControls();
         }
-
 
         /// <summary>
         /// enable login controls
@@ -105,6 +104,7 @@ namespace Assets.Scripts.Licensing.Controller
         {
             LoginSuccessEvent += vHandler;
         }
+
         /// <summary>
         /// Removes handler to user's on login success.
         /// </summary>
@@ -117,7 +117,6 @@ namespace Assets.Scripts.Licensing.Controller
             }
         }
 
-
         /// <summary>
         /// Displays an error notification
         /// </summary>
@@ -126,7 +125,6 @@ namespace Assets.Scripts.Licensing.Controller
         {
             Notify.Template("fade").Show(vMsg);
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(false));
-
         }
 
         void SubmitLogin(LoginModel vModel)
@@ -135,8 +133,6 @@ namespace Assets.Scripts.Licensing.Controller
             LoginView.DisableSubmissionControls();
             StartCoroutine(VerifyInternetConnection(vModel));
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(true));
-
-
         }
 
         /// <summary>
@@ -172,10 +168,12 @@ namespace Assets.Scripts.Licensing.Controller
             try
             {
                 UserRequest vRequest = vModel.UserRequest;
-
+                string token = "";
                 User vUser = mClient.SignIn(vRequest);
                 if (!vUser.IsOk)
                 {
+
+                    //  mClient.SetToken(vUser.Token);
                     OutterThreadToUnityThreadIntermediary.QueueActionInUnity(EnableControls);
                     var vErrorMsg = FormatLoginNoOkError(vUser.Errors);
                     string vMsg = LocalizationBinderContainer.GetString(KeyMessage.LoginFailureMsg);
@@ -189,16 +187,18 @@ namespace Assets.Scripts.Licensing.Controller
                     return;
                 }
                 LicenseInfo vLicense = vUser.LicenseInfo;
-                mClient.SetToken(vUser.Token);
+
                 if (vUser.IsOk)
                 {
+                    token = mClient.GenerateDeviceToken();
                     UserProfileModel vProfileModel = new UserProfileModel()
                     {
                         User = vUser,
                         LicenseInfo = vLicense,
-                        Client = mClient
+                        Client = mClient,
+                        DeviceToken = token
                     };
-                    //if user is a analyst
+                    //if user is an analyst
                     if (vUser.RoleType == UserRoleType.Analyst)
                     {
                         ListCollection<User> vUsers = mClient.UsersCollection(new ListRequest()
@@ -270,9 +270,16 @@ namespace Assets.Scripts.Licensing.Controller
             }
             catch (Exception vE)
             {
-                UnityEngine.Debug.Log("error "+vE);
-            }
+                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
+                {
+                    LoginView.EnableButtonControls();
+                    LoginView.SetLoadingIconAsActive(false);
+                    mLoginController.RaiseErrorEvent(LoginErrorType.Other,
+                        LocalizationBinderContainer.GetString(KeyMessage.ReportErrorCodeMsg) +
+                        " " + vE.Message);
+                });
 
+            }
         }
 
 
@@ -328,7 +335,7 @@ namespace Assets.Scripts.Licensing.Controller
             vBuilder.Append(vMsg);
             foreach (var vError in vErrors.Errors)
             {
-                vBuilder.Append("\r\n"+vListCount + "." + vError.Message + "");
+                vBuilder.Append("\r\n" + vListCount + "." + vError.Message + "");
                 vListCount++;
             }
             string vYesMsg = LocalizationBinderContainer.GetString(KeyMessage.AckErrorMsg);
@@ -336,6 +343,13 @@ namespace Assets.Scripts.Licensing.Controller
             return vBuilder.ToString();
         }
 
+        /// <summary>
+        /// clears the input fields
+        /// </summary>
+        public void Clear()
+        {
+            LoginView.Clear();
+        }
     }
 
 

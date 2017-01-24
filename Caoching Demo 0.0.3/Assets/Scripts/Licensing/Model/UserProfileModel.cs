@@ -16,12 +16,67 @@ namespace Assets.Scripts.Licensing.Model
     /// </summary>
     public class UserProfileModel
     {
-         public User User { get; set; }
+        private string mDeviceToken = "";
+
+        public User User { get; set; }
         public LicenseInfo LicenseInfo { get; set; }
 
         public HeddokoClient Client { get; set; }
         public ListCollection<User> UserList { get; set; }
 
-        //todo: add a the current kit to be used(for uploading)
+        public string DeviceToken { get; set; }
+
+        /// <summary>
+        /// Returns a kit id. If the user isn't instantiated, then -1 is returned
+        /// </summary>
+        public int GetKitIdFromBrainpackLabel(string vLabel)
+        {
+            int vKitId = -1;
+            if (User != null)
+            {
+                if (User.RoleType == UserRoleType.Analyst)
+                {
+                    //check if the analyst is uploading one of his brainpacks.
+                    if (User.Kit != null)
+                    {
+                        if (User.Kit.Brainpack != null)
+                        {
+                            if (User.Kit.Brainpack.Label.Equals(vLabel))
+                            {
+                                return User.Kit.Brainpack.ID;
+                            }
+                        }
+                    }
+                    for (int vI = 0; vI < UserList.TotalCount; vI++)
+                    {
+                        var vUser = UserList.Collection[vI];
+                        if (vUser.Kit != null)
+                        {
+                            if (vUser.Kit.Brainpack != null)
+                            {
+                                if (vUser.Kit.Brainpack.Label.Equals(vLabel))
+                                {
+                                    return vUser.Kit.ID;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (User.RoleType == UserRoleType.Worker)
+                {
+                    if (User.Kit != null)
+                    {
+                        if (User.Kit.Brainpack != null)
+                        {
+                            if (User.Kit.Brainpack.Label.Equals(vLabel))
+                            {
+                                return User.Kit.ID;
+                            }
+                        }
+                    }
+                }
+            }
+            return vKitId;
+        }
     }
 }

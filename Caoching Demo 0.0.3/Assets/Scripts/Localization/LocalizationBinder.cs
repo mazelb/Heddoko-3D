@@ -69,6 +69,8 @@ namespace Assets.Scripts.Localization
         RecordingFileLessThanSkippableFrames,
         BadKitUpload1,
         BadKitUpload2,
-        CannotLoadRecording
+        CannotLoadRecording,
+        MessageFromServerReceived,
+        ReturnToLoginScreen
     }
 }

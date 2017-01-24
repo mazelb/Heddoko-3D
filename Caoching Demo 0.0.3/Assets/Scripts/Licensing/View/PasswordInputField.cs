@@ -57,5 +57,13 @@ namespace Assets.Scripts.Licensing.Authentication
             InputField.contentType = InputField.ContentType.Password;
             StartCoroutine(DeselectPasswordInput());
         }
+        /// <summary>
+        /// Clears the input fields
+        /// </summary>
+        public void Clear()
+        {
+            InputField.text = "";
+        }
+
     }
 }

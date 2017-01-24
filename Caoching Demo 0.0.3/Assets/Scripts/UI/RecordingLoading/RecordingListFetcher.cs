@@ -24,15 +24,37 @@ namespace Assets.Scripts.UI.RecordingLoading
         private Thread mWorkerThread;
         private bool mIsWorking;
         private int mTimer = 10000;
+        private object mIsWorkingLock  = new object();
 
         public RecordingListFetcher(IUserProfileManager vManager)
         {
             mManager = vManager;
         }
 
+        /// <summary>
+        /// Flag to determine if the working function is supposed to be working or not. 
+        /// </summary>
+        private bool IsWorking
+        {
+            get
+            {
+                lock (mIsWorkingLock)
+                {
+                    return mIsWorking;
+                }
+            }
+            set
+            {
+                lock (mIsWorkingLock)
+                {
+                    mIsWorking = value;
+                }
+            }
+        }
+
         void WorkingFunction()
         {
-            while (mIsWorking)
+            while (IsWorking)
             {
                 try
                 {
@@ -65,7 +87,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 var vList = mManager.UserProfile.UserList;
 
-                for (int i = 0; i < vList.TotalCount && mIsWorking; i++)
+                for (int i = 0; i < vList.TotalCount && IsWorking; i++)
                 {
                     var vUser = vList.Collection[i];
                     int vTempCount = UpdateList(vUser);
@@ -120,7 +142,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                         }
                     }
                 }
-                if (RecordingListUpdatedHandler != null && mIsWorking)
+                if (RecordingListUpdatedHandler != null && IsWorking)
                 {
                     RecordingListUpdatedHandler(vRecordingItems);
                 }
@@ -134,7 +156,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         public void Stop()
         {
-            mIsWorking = false;
+            IsWorking = false;
             try
             {
                 mWorkerThread.Abort();
@@ -151,7 +173,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         public void Start()
         {
-            mIsWorking = true;
+            IsWorking = true;
             mWorkerThread = new Thread(WorkingFunction);
             mWorkerThread.IsBackground = true;
             mWorkerThread.Start();
