@@ -175,8 +175,7 @@ public class Body
         //Get the list of segments from the bodystructuremap 
         List<BodyStructureMap.SegmentTypes> vSegmentList = BodyStructureMap.Instance.BodyToSegmentMap[vBodyType];
         TrunkAnalysis vTorsoSegmentAnalysis = new TrunkAnalysis();
-        vTorsoSegmentAnalysis.SegmentType = BodyStructureMap.SegmentTypes.SegmentType_Torso;
-
+        vTorsoSegmentAnalysis.SegmentType = BodyStructureMap.SegmentTypes.SegmentType_Trunk;
 
         foreach (BodyStructureMap.SegmentTypes type in vSegmentList)
         {
@@ -191,10 +190,10 @@ public class Body
             vSegment.AssociatedView.transform.parent = View.transform;
 
             //Todo: this can can be abstracted and mapped nicely. 
-            if (type == BodyStructureMap.SegmentTypes.SegmentType_Torso)
+            if (type == BodyStructureMap.SegmentTypes.SegmentType_Trunk || type == BodyStructureMap.SegmentTypes.SegmentType_Hips)
             {
                 vSegment.mCurrentAnalysisSegment = vTorsoSegmentAnalysis;
-                AnalysisSegments.Add(BodyStructureMap.SegmentTypes.SegmentType_Torso, vTorsoSegmentAnalysis);
+                AnalysisSegments.Add(type, vTorsoSegmentAnalysis);
                 TorsoAnalysis = vTorsoSegmentAnalysis;
             }
             if (type == BodyStructureMap.SegmentTypes.SegmentType_LeftArm)
@@ -451,14 +450,13 @@ public class Body
         for (int i = 0; i < vListBodySegments.Count; i++)
         { 
             //of the current body segment, get the appropriate subsegments
-            List<BodyStructureMap.SensorPositions> vSensPosList =
-                BodyStructureMap.Instance.SegmentToSensorPosMap[vListBodySegments[i].SegmentType];
+            List<BodyStructureMap.SensorPositions> vSensPosList = BodyStructureMap.Instance.SegmentToSensorPosMap[vListBodySegments[i].SegmentType];
 
             //create a Dictionary of BodyStructureMap.SensorPositions, float[,] , which will be passed
             //to the segment
             Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vFilteredDictionary = new Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure>(2);
 
-             for (int j = 0; j < vSensPosList.Count; j++)
+            for (int j = 0; j < vSensPosList.Count; j++)
             { 
                 //    if (vDic.ContainsKey(vSenPos))
                 if (vDic.ContainsKey(vSensPosList[j]))
@@ -468,10 +466,42 @@ public class Body
                 }
             }  
 
-            vListBodySegments[i].UpdateSegment(vFilteredDictionary); 
+            vListBodySegments[i].UpdateSegment(vFilteredDictionary);
         }
-         
     }
+
+    /// <summary>
+    /// Applies tracking Anlysis on the requested body. 
+    /// </summary>
+    /// <param name="vBody">Body vBody: The body to apply analysis to. </param> 
+    /// <param name="vDic">Dictionary vDic: The tracking matrices to be applied. </param> 
+    public static void ApplyAnalysis(Body vBody, Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic)
+    {
+        //get the list of segments of the speicfied vBody
+        List<BodySegment> vListBodySegments = vBody.BodySegments;
+
+        for (int i = 0; i < vListBodySegments.Count; i++)
+        {
+            //of the current body segment, get the appropriate subsegments
+            List<BodyStructureMap.SensorPositions> vSensPosList = BodyStructureMap.Instance.SegmentToSensorPosMap[vListBodySegments[i].SegmentType];
+
+            //create a Dictionary of BodyStructureMap.SensorPositions, float[,] ,
+            //which will be passed to the segment
+            Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vFilteredDictionary = new Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure>(2);
+
+            for (int j = 0; j < vSensPosList.Count; j++)
+            {
+                if (vDic.ContainsKey(vSensPosList[j]))
+                {
+                    BodyStructureMap.TrackingStructure vTrackedMatrices = vDic[vSensPosList[j]];
+                    vFilteredDictionary.Add(vSensPosList[j], vTrackedMatrices);
+                }
+            }
+
+            vListBodySegments[i].UpdateSegmentAnalysis(vFilteredDictionary);
+        }
+    }
+
     /**
     * GetTracking()
     * @brief  Play a recording from the given recording UUID. 

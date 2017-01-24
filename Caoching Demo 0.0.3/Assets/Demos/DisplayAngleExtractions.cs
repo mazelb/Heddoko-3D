@@ -143,10 +143,10 @@ namespace Assets.Demos
         {
             
             TrunkAnalysis vTorsoAnalysis;
-            if (CurrentBody.AnalysisSegments.ContainsKey(BodyStructureMap.SegmentTypes.SegmentType_Torso))
+            if (CurrentBody.AnalysisSegments.ContainsKey(BodyStructureMap.SegmentTypes.SegmentType_Trunk))
             {
                 vTorsoAnalysis =
-                    CurrentBody.AnalysisSegments[BodyStructureMap.SegmentTypes.SegmentType_Torso] as
+                    CurrentBody.AnalysisSegments[BodyStructureMap.SegmentTypes.SegmentType_Trunk] as
                         TrunkAnalysis;
             }
         }
