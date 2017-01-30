@@ -143,9 +143,14 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             vCross = Vector3.Cross(vVerticalShoulderAbdProjection, -vTrunkAxisUp);
             vSign = Mathf.Sign(Vector3.Dot(vTrunkAxisForward, vCross));
             LeftShoulderVerticalAbductionSignedAngle = vSign * LeftShoulderVertAbductionAngle * GetSign("System.Single LeftShoulderVertAbductionAngle");
-
-            //calculate the Shoulder Abduction Horizontal angle
             Vector3 vHorizontalShoulderAbdProjection = Vector3.ProjectOnPlane(-vShoulderAxisRight, vTrunkAxisUp);
+
+            //check if the arm is above the head 
+            if (vAngleShoulderVertAbductionNew >= 165 || LeftShoulderVerticalAbductionSignedAngle <= 0)
+            {
+               vHorizontalShoulderAbdProjection = Vector3.ProjectOnPlane(-vShoulderAxisRight, -vTrunkAxisRight);
+            }
+            //calculate the Shoulder Abduction Horizontal angle
             float vAngleShoulderHorAbductionNew;
             if (vHorizontalShoulderAbdProjection == Vector3.zero)
             {
@@ -153,10 +158,26 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             }
             else
             {
-                vAngleShoulderHorAbductionNew = Vector3.Angle(-vTrunkAxisRight, vHorizontalShoulderAbdProjection);
+               
+                if (vAngleShoulderVertAbductionNew >= 165)
+                {
+                  vAngleShoulderHorAbductionNew = Vector3.Angle(vTrunkAxisUp, vHorizontalShoulderAbdProjection);
+                }
+               else  if (LeftShoulderVerticalAbductionSignedAngle <= 0)
+                {
+                    Debug.Log(
+                        "here");
+                    vAngleShoulderHorAbductionNew = Vector3.Angle(-vTrunkAxisUp, vHorizontalShoulderAbdProjection);
+                }
+
+                else
+                {
+                 vAngleShoulderHorAbductionNew = Vector3.Angle(-vTrunkAxisRight, vHorizontalShoulderAbdProjection);
+                }
             }
+          
             LeftShoulderHorAbductionAngle = vAngleShoulderHorAbductionNew;
-            vCross = Vector3.Cross(vHorizontalShoulderAbdProjection, -vTrunkAxisRight);
+            vCross = Vector3.Cross( -vTrunkAxisRight,vHorizontalShoulderAbdProjection);
             vSign = Mathf.Sign(Vector3.Dot(vTrunkAxisUp, vCross));
             LeftShoulderHorizontalAbductionSignedAngle = vSign * LeftShoulderHorAbductionAngle * GetSign("System.Single LeftShoulderHorAbductionAngle");
 
@@ -171,7 +192,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
                     vAngleShoulderHorAbductionNew,
                     vAngleShoulderVertAbductionNew, vAngleShoulderFlexionNew, vAngleForeArmPronationNew, DeltaTime);
             }
-            
+
             //notify listeners that analysis on this component has been completed. 
             NotifyAnalysisCompletionListeners();
         }
