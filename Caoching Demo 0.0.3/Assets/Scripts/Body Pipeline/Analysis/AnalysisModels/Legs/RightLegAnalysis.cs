@@ -140,11 +140,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
             if (vAngleHipRotationNew > 180)
             {
                 vAngleHipRotationNew = 360f - ThighTransform.rotation.eulerAngles.y;
-            }
-            else
-            {
                 vAngleHipRotationNew *= -1f;
             }
+             
             RightHipRotationSignedAngle = vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
 
             //Calculate Leg height 
