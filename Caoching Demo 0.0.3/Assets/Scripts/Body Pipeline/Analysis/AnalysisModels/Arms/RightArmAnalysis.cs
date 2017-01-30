@@ -185,9 +185,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             vCross = Vector3.Cross(-vTrunkAxisRight, vHorizontalShoulderAbdProjection);
             vSign = Mathf.Sign(Vector3.Dot(vTrunkAxisUp, vCross));
             RightShoulderHorizontalAbductionSignedAngle = vSign * RightShoulderHorAbductionAngle * GetSign("System.Single LeftShoulderHorAbductionAngle");
-
+     
+      
             //calculate the Shoulder Rotation angle
             float vAngleShoulderRotationNew = 180 - Mathf.Abs(180 - UpArTransform.rotation.eulerAngles.x);
+            vAngleShoulderRotationNew *= -1;
             RightShoulderRotationSignedAngle = vAngleShoulderRotationNew * GetSign("System.Single RightShoulderRotationAngle");
 
             //Calculate the velocity and accelerations
