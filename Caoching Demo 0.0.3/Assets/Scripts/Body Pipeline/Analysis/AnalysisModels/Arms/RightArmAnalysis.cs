@@ -163,7 +163,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             }
             else
             {
-
                 if (vAngleShoulderVertAbductionNew >= 165)
                 {
                     vAngleShoulderHorAbductionNew = Vector3.Angle(vTrunkAxisUp, vHorizontalShoulderAbdProjection);
@@ -176,13 +175,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
                     Debug.DrawLine(UpArTransform.position, (UpArTransform.position + vTrunkAxisUp) * 3f, Color.blue);
                     Debug.DrawLine(UpArTransform.position, (UpArTransform.position + vHorizontalShoulderAbdProjection) * 3f, Color.blue);
                 }
-
                 else
                 {
                     vAngleShoulderHorAbductionNew = Vector3.Angle(vTrunkAxisRight, vHorizontalShoulderAbdProjection);
                 }
             }
-
 
             RightShoulderHorAbductionAngle = vAngleShoulderHorAbductionNew;
             vCross = Vector3.Cross(-vTrunkAxisRight, vHorizontalShoulderAbdProjection);
@@ -222,7 +219,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             float vAngularVelocityShoulderFlexionNew = (vAngleShoulderFlexionNew - Mathf.Abs(RightShoulderFlexionAngle)) / DeltaTime;
             RightShoulderFlexionAngularAcceleration = (vAngularVelocityShoulderFlexionNew - RightShoulderFlexionAngularVelocity) / DeltaTime;
             RightShoulderFlexionAngularVelocity = vAngularVelocityShoulderFlexionNew;
-
 
             float vAngularVelocityElbowFlexionNew = (vAngleElbowFlexionNew - RightElbowFlexionAngle) / DeltaTime;
             RightElbowFlexionAngularAcceleration = (vAngularVelocityElbowFlexionNew - RightElbowFlexionAngularVelocity) / DeltaTime;
