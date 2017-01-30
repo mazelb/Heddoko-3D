@@ -241,12 +241,11 @@ namespace Assets.Demos
                     {
                         mCollector.UpdateCollection(vID, vTimeStamp, vQx, vQy, vQz, vQw, vMx, vMy, vMz, vAccelx, vAccely, vAccelz, vRx, vRy, vRz, vYaw, vPitch, vRoll, vCalStableStatus, vMagTransient);
                     }
-                    Body.RenderedBody.SensorTransformContainer.UpdateSensorOrientation(vPacket);
                     ListView.UpdateItems();
-
                 }
-
             }
+
+            Body.RenderedBody.SensorTransformContainer.UpdateSensorOrientation(vPacket);
         }
 
         public void ChangeDataCollectionState()
