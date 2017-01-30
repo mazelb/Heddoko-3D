@@ -183,7 +183,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <param name="vKey"></param>
         public void UpdateSegmentFieldInfo(SegmentAnalysis vKey)
         {
-            
+            if (SerializedList.Count != 0 && SerializedList[SerializedList.Count - 1].Count == 0)
+            {
+                Debug.Log("counter is "+ mCounter);
+            }
             if (!mStorage.ContainsKey(vKey))
             {
                 Debug.Log("no key found");
@@ -219,19 +222,25 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                     //avoid floating point rounding values
                     string vRoundedValue =((double)vPassedInValue).ToString("F2");
                     vList.Add(vKvPair.Key, vRoundedValue);
-                    mCounter++;
+                
 
                 }
                 catch (Exception vE)
                 {
 
                 }
+                mCounter++;
 
             }
             if (mCounter >= mFieldInfoCount)
             {
+                if (SerializedList.Count != 0 && SerializedList[SerializedList.Count - 1].Count == 0)
+                {
+                    Debug.Log("2 counter is " + mCounter);
+                }
                 mCounter = 0;
             }
+            
 
         }
 
