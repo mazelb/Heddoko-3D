@@ -8,6 +8,8 @@
 
 using UnityEngine;
 using System;
+using UnityEngine.Assertions.Comparers;
+
 namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
 {
     /**
@@ -114,8 +116,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
 
             //calculate the Shoulder Flexion angle
             Vector3 vShoulderRightAxisProjectedOnTrunkRight = Vector3.ProjectOnPlane(-vShoulderAxisRight, vTrunkAxisRight);
+            Debug.DrawLine(UpArTransform.position, (UpArTransform.position + vShoulderRightAxisProjectedOnTrunkRight)*3f, Color.red,0.1f);
             float vAngleShoulderFlexionNew;
-            if (vShoulderRightAxisProjectedOnTrunkRight == Vector3.zero)
+            var vShoulderProjSqrMag = vShoulderRightAxisProjectedOnTrunkRight.sqrMagnitude;
+            //check if the projection's square magnitude is under a certain tolerance. 
+            if (Math.Abs(vShoulderProjSqrMag) < 0.001f) 
             {
                 vAngleShoulderFlexionNew = 0.0f;
             }
