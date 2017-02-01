@@ -135,15 +135,31 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
             vSign = Mathf.Sign(Vector3.Dot(vHipAxisForward, vCross));
             RightHipAbductionSignedAngle = vSign * RightHipAbductionAngle * GetSign("System.Single RightHipAbductionAngle");
 
-            //calculate the Hip Rotation angle
-            float vAngleHipRotationNew = ThighTransform.rotation.eulerAngles.y;// 180 - Mathf.Abs(180 - ThighTransform.rotation.eulerAngles.y);
-            if (vAngleHipRotationNew > 180)
+            Vector3 vRotationProjection = Vector3.ProjectOnPlane(vThighAxisForward, vHipAxisUp);
+            float vAngleHipRotationNew = 0;// 180 - Mathf.Abs(180 - ThighTransform.localRotation.eulerAngles.y);
+
+            if (Mathf.Abs(RightHipFlexionAngle) >= 59)
             {
-                vAngleHipRotationNew = 360f - ThighTransform.rotation.eulerAngles.y;
-                vAngleHipRotationNew *= -1f;
+
+                vRotationProjection = Vector3.ProjectOnPlane(vThighAxisForward, vHipAxisForward);
+                vAngleHipRotationNew = Vector3.Angle(vRotationProjection, vHipAxisUp);
+                vCross = Vector3.Cross(vRotationProjection, -vHipAxisUp);
+                vSign = Mathf.Sign(Vector3.Dot(vHipAxisRight, vCross)); RightHipRotationSignedAngle = vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
+                RightHipRotationSignedAngle = vSign * vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
+
             }
-             
-            RightHipRotationSignedAngle = vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
+            else
+            {
+                vRotationProjection = Vector3.ProjectOnPlane(vThighAxisForward, vHipAxisUp);
+                vAngleHipRotationNew = Vector3.Angle(vRotationProjection, vHipAxisForward);
+                vCross = Vector3.Cross(vThighUpAxisProjectedOnHipRight, -vHipAxisUp);
+                vSign = Mathf.Sign(Vector3.Dot(vHipAxisRight, vCross)); RightHipRotationSignedAngle = vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
+                RightHipRotationSignedAngle = vSign * vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
+
+            }
+            //calculate the Hip Rotation angle
+
+
 
             //Calculate Leg height 
             float vThighHeight = mInitThighHeight * Mathf.Abs(Vector3.Dot(vThighAxisUp, Vector3.up));

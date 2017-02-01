@@ -6,6 +6,7 @@ public class cccccccc : MonoBehaviour
     public Transform Copy;
     public Vector3 CurrentRot;
     public Vector3 Euler;
+    public float Angle = 0;
 	// Use this for initialization
 	void Start () {
 	
@@ -17,17 +18,21 @@ public class cccccccc : MonoBehaviour
 	{
         if(Copy!=null)
         {
-             
-            CurrentRot = Copy.transform.rotation.eulerAngles;
+            transform.position = Copy.position;
+            transform.LookAt((Copy.position +Copy.up).normalized);// = Quaternion.LookRotation(Copy.up);
+            //CurrentRot = Copy.transform.rotation.eulerAngles;
             Euler = Copy.transform.rotation.eulerAngles;
-            var vClamped = ClampAngle(CurrentRot.y + 180, -180, 180) ;
-            var vCurr = ClampAngle(CurrentRot.y,-180,180);
-            var vClosest = ClosestAngle(lastYValue, vCurr, vClamped);
-            CurrentRot.x  = ClampAngle(CurrentRot.x + 180, 0, 360);
-            CurrentRot.z  = ClampAngle(CurrentRot.z + 180, 0, 360);
-            CurrentRot.y = vClosest;
-            transform.rotation = Quaternion.Euler(CurrentRot);
-            Debug.DrawLine(transform.position, (transform.position + transform.forward).normalized * 3f, Color.blue, 0.1f);
+            Angle = Vector3.Angle(Copy.forward, transform.forward);
+            //var vClamped = ClampAngle(CurrentRot.y + 180, -180, 180) ;
+            //var vCurr = ClampAngle(CurrentRot.y,-180,180);
+            //var vClosest = ClosestAngle(lastYValue, vCurr, vClamped);
+            //CurrentRot.x  = ClampAngle(CurrentRot.x + 180, 0, 360);
+            //CurrentRot.z  = ClampAngle(CurrentRot.z + 180, 0, 360);
+            //CurrentRot.y = vClosest;
+            //transform.rotation = Quaternion.Euler(CurrentRot);
+             Debug.DrawLine(transform.position, (transform.position + transform.forward).normalized * 3f, Color.blue, 0.1f);
+            Debug.DrawLine(transform.position, (transform.position + transform.up).normalized * 3f, Color.red, 0.1f);
+            Debug.DrawLine(transform.position, (transform.position + transform.right).normalized * 3f, Color.green, 0.1f);
         }
     
 	}
