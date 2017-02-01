@@ -114,7 +114,7 @@ public class BodyFrame
         {
             if (mGyroFrameData == null)
             {
-                mMagFrameData = new Dictionary<BodyStructureMap.SensorPositions, Vector3>();
+                mGyroFrameData = new Dictionary<BodyStructureMap.SensorPositions, Vector3>();
             }
             return mGyroFrameData;
         }
