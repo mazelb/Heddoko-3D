@@ -40,7 +40,10 @@ namespace Assets.Scripts.Body_Data.View
         public Vector3 LeftArmForwardVector = new Vector3(-1, 0, 0);
 
         public Vector3 CurAccelVector = Vector3.zero;
+        public Vector3 CurAccelVectorSmoothed = Vector3.zero;
         public Vector3 CurGyroVector = Vector3.zero;
+        public Vector3 CurGyroDiffVector = Vector3.zero;
+        public Vector3 CurGyroDiffVectorSmoothed = Vector3.zero;
 
         private bool mCalState = false;
         private bool mMagState = false;
@@ -67,12 +70,15 @@ namespace Assets.Scripts.Body_Data.View
         public void UpdateAccel(Vector3 vNewAccel)
         {
             //Lowpass filter fro acceleration to smooth it (in static case
-            CurAccelVector = Vector3.Lerp(CurAccelVector, vNewAccel, 0.15f);
+            CurAccelVectorSmoothed = Vector3.Lerp(CurAccelVector, vNewAccel, 0.15f);
+            CurAccelVector = vNewAccel;
         }
 
         public void UpdateGyro(Vector3 vNewGyro)
         {
-            CurGyroVector = vNewGyro;// Vector3.Lerp(CurGyroVector, vNewGyro, 0.85f);
+            CurGyroDiffVectorSmoothed = Vector3.Lerp(CurGyroDiffVector, CurGyroVector - vNewGyro, 0.15f);               
+            CurGyroDiffVector = CurGyroVector - vNewGyro;
+            CurGyroVector = vNewGyro;
         }
 
         public void UpdateRotatation(Quaternion vNewRot)
@@ -105,8 +111,6 @@ namespace Assets.Scripts.Body_Data.View
             var vOffset = Quaternion.AngleAxis(vAngle, vOrthoNormalCross);
             return vOffset;
         }
-
-
 
         void Q2HPR(Quaternion vQ, ref Vector3 ypr)
         {
@@ -143,7 +147,7 @@ namespace Assets.Scripts.Body_Data.View
             }
 
             vExpectedGravity = vExpectedRotation * Vector3.down;
-            vCurGravity = Quaternion.Inverse(vExpectedRotation) * CurAccelVector;
+            vCurGravity = Quaternion.Inverse(vExpectedRotation) * CurAccelVectorSmoothed;
             GravityOffset = Quaternion.FromToRotation(vExpectedGravity, vCurGravity);
             InitialRotation = AbsoluteRotation * GravityOffset;
         }
@@ -158,6 +162,7 @@ namespace Assets.Scripts.Body_Data.View
                 Quaternion vCurRotation = Quaternion.identity;
                 Quaternion vExpectedRotation = Quaternion.identity;
                 Quaternion vGravityOffset = Quaternion.identity;
+                Vector3 vCurGyro = CurGyroDiffVectorSmoothed;
 
                 if (CurId == 5 || CurId == 7 || CurId == 6 || CurId == 8)
                 {
@@ -175,6 +180,10 @@ namespace Assets.Scripts.Body_Data.View
                 {
                     vExpectedRotation = Quaternion.LookRotation(-LegForwardVector, LegUpVector);
                 }
+
+                //vCurGyro = Quaternion.Inverse(vExpectedRotation) * GravityOffset * vCurGyro;
+                //if (CurId == 5)
+                //    Debug.Log(vCurGyro);
 
                 vCurRotation = Quaternion.Inverse(vExpectedRotation) * Quaternion.Inverse(InitialRotation) * (AbsoluteRotation * GravityOffset);
                 Quaternion vNewRotation = Quaternion.Slerp(transform.rotation, vCurRotation, 0.3f);
