@@ -143,24 +143,18 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
 
                 vRotationProjection = Vector3.ProjectOnPlane(vThighAxisForward, vHipAxisForward);
                 vAngleHipRotationNew = Vector3.Angle(vRotationProjection, vHipAxisUp);
-                vCross = Vector3.Cross(vRotationProjection, -vHipAxisUp);
-                vSign = Mathf.Sign(Vector3.Dot(vHipAxisRight, vCross)); RightHipRotationSignedAngle = vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
-                RightHipRotationSignedAngle = vSign * vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
-
+                vCross = Vector3.Cross(vHipAxisUp,vRotationProjection);
+                vSign = Mathf.Sign(Vector3.Dot(vHipAxisForward, vCross)); RightHipRotationSignedAngle = vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
             }
             else
             {
                 vRotationProjection = Vector3.ProjectOnPlane(vThighAxisForward, vHipAxisUp);
                 vAngleHipRotationNew = Vector3.Angle(vRotationProjection, vHipAxisForward);
-                vCross = Vector3.Cross(vThighUpAxisProjectedOnHipRight, -vHipAxisUp);
-                vSign = Mathf.Sign(Vector3.Dot(vHipAxisRight, vCross)); RightHipRotationSignedAngle = vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
-                RightHipRotationSignedAngle = vSign * vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
-
+                vCross = Vector3.Cross(vRotationProjection, vHipAxisForward);
+                vSign = Mathf.Sign(Vector3.Dot(vHipAxisUp, vCross)); RightHipRotationSignedAngle = vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
             }
             //calculate the Hip Rotation angle
-
-
-
+            RightHipRotationSignedAngle = vSign * vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
             //Calculate Leg height 
             float vThighHeight = mInitThighHeight * Mathf.Abs(Vector3.Dot(vThighAxisUp, Vector3.up));
             float vTibiaHeight = mInitTibiaHeight * Mathf.Abs(Vector3.Dot(vKneeAxisUp, Vector3.up));
