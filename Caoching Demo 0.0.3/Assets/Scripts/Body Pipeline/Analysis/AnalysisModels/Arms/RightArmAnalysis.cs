@@ -119,7 +119,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             //calculate the Shoulder Flexion angle
             Vector3 vShoulderRightAxisProjectedOnTrunkRight = Vector3.ProjectOnPlane(vShoulderAxisRight, vTrunkAxisRight);
             float vAngleShoulderFlexionNew;
-            if (vShoulderRightAxisProjectedOnTrunkRight == Vector3.zero)
+            var vShoulderProjSqrMag = vShoulderRightAxisProjectedOnTrunkRight.sqrMagnitude;
+            //check if the projection's square magnitude is under a certain tolerance. 
+            if (Math.Abs(vShoulderProjSqrMag) < 0.001f)
             {
                 vAngleShoulderFlexionNew = 0.0f;
             }
