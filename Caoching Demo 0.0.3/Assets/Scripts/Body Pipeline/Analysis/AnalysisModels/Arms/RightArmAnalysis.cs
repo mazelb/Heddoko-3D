@@ -137,7 +137,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             //calculate the Shoulder Abduction Vertical angle
             Vector3 vVerticalShoulderAbdProjection = Vector3.ProjectOnPlane(vShoulderAxisRight, vTrunkAxisForward);
             float vAngleShoulderVertAbductionNew;
-            if (vVerticalShoulderAbdProjection == Vector3.zero)
+            var vShoulderVertAbductionProjSqrMag = vVerticalShoulderAbdProjection.sqrMagnitude;
+            if (vShoulderVertAbductionProjSqrMag < 0.001f)
             {
                 vAngleShoulderVertAbductionNew = 0.0f;
             }
@@ -146,7 +147,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
                 vAngleShoulderVertAbductionNew = Vector3.Angle(-vTrunkAxisUp, vVerticalShoulderAbdProjection);
             }
             RightShoulderVertAbductionAngle = vAngleShoulderVertAbductionNew;
-            vCross = Vector3.Cross(-vTrunkAxisUp ,vVerticalShoulderAbdProjection );
+            vCross = Vector3.Cross(vVerticalShoulderAbdProjection   , -vTrunkAxisUp);
             vSign = Mathf.Sign(Vector3.Dot(vTrunkAxisForward, vCross));
             RightShoulderVerticalAbductionSignedAngle = vSign * RightShoulderVertAbductionAngle * GetSign("System.Single RightShoulderVertAbductionAngle");
 
