@@ -5921,7 +5921,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &152570
 GameObject:
   m_ObjectHideFlags: 1
@@ -15029,7 +15029,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 168734}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.293, y: -1.072, z: 0}
+  m_LocalPosition: {x: 0.293, y: -1.072, z: 0}
   m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
   m_Children:
   - {fileID: 442750}
@@ -17664,7 +17664,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 118504}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.293, y: -1.57, z: 0}
+  m_LocalPosition: {x: -0.293, y: -1.57, z: 0}
   m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
   m_Children:
   - {fileID: 433176}
@@ -18426,7 +18426,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 108104}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.293, y: -1.072, z: 0}
+  m_LocalPosition: {x: -0.293, y: -1.072, z: 0}
   m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
   m_Children:
   - {fileID: 455076}
@@ -19453,7 +19453,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 135488}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.293, y: -1.57, z: 0}
+  m_LocalPosition: {x: 0.293, y: -1.57, z: 0}
   m_LocalScale: {x: 0.03, y: 0.03, z: 0.03}
   m_Children:
   - {fileID: 474606}
@@ -37305,11 +37305,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  RelativeRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  UpVector: {x: 0, y: 1, z: 0}
+  RightVector: {x: 1, y: 0, z: 0}
+  ForwardVector: {x: 0, y: 0, z: 1}
+  TrunkUpVector: {x: 0, y: 0, z: 1}
+  TrunkRightVector: {x: -1, y: 0, z: 0}
+  TrunkForwardVector: {x: 0, y: -1, z: 0}
+  LegUpVector: {x: 0, y: 0, z: -1}
+  LegRightVector: {x: 1, y: 0, z: 0}
+  LegForwardVector: {x: 0, y: 1, z: 0}
+  RightArmUpVector: {x: -1, y: 0, z: 0}
+  RightArmRightVector: {x: 0, y: 1, z: 0}
+  RightArmForwardVector: {x: 0, y: 0, z: 1}
+  LeftArmUpVector: {x: 1, y: 0, z: 0}
+  LeftArmRightVector: {x: 0, y: 1, z: 0}
+  LeftArmForwardVector: {x: 0, y: 0, z: 1}
+  InitialMagVector: {x: 0, y: 0, z: 0}
+  CurMagVector: {x: 0, y: 0, z: 0}
+  CurId: 0
   OrientationCorrection: {x: 0, y: 0, z: -90}
   UseCorrection: 0
+  IsReset: 0
 --- !u!114 &11407372
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -37483,11 +37508,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  RelativeRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  UpVector: {x: 0, y: 1, z: 0}
+  RightVector: {x: 1, y: 0, z: 0}
+  ForwardVector: {x: 0, y: 0, z: 1}
+  TrunkUpVector: {x: 0, y: 0, z: 1}
+  TrunkRightVector: {x: -1, y: 0, z: 0}
+  TrunkForwardVector: {x: 0, y: -1, z: 0}
+  LegUpVector: {x: 0, y: 0, z: -1}
+  LegRightVector: {x: 1, y: 0, z: 0}
+  LegForwardVector: {x: 0, y: 1, z: 0}
+  RightArmUpVector: {x: -1, y: 0, z: 0}
+  RightArmRightVector: {x: 0, y: 1, z: 0}
+  RightArmForwardVector: {x: 0, y: 0, z: 1}
+  LeftArmUpVector: {x: 1, y: 0, z: 0}
+  LeftArmRightVector: {x: 0, y: 1, z: 0}
+  LeftArmForwardVector: {x: 0, y: 0, z: 1}
+  InitialMagVector: {x: 0, y: 0, z: 0}
+  CurMagVector: {x: 0, y: 0, z: 0}
+  CurId: 0
   OrientationCorrection: {x: 0, y: 180, z: 180}
   UseCorrection: 0
+  IsReset: 0
 --- !u!114 &11415354
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38065,11 +38115,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  RelativeRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  UpVector: {x: 0, y: 1, z: 0}
+  RightVector: {x: 1, y: 0, z: 0}
+  ForwardVector: {x: 0, y: 0, z: 1}
+  TrunkUpVector: {x: 0, y: 0, z: 1}
+  TrunkRightVector: {x: -1, y: 0, z: 0}
+  TrunkForwardVector: {x: 0, y: -1, z: 0}
+  LegUpVector: {x: 0, y: 0, z: -1}
+  LegRightVector: {x: 1, y: 0, z: 0}
+  LegForwardVector: {x: 0, y: 1, z: 0}
+  RightArmUpVector: {x: -1, y: 0, z: 0}
+  RightArmRightVector: {x: 0, y: 1, z: 0}
+  RightArmForwardVector: {x: 0, y: 0, z: 1}
+  LeftArmUpVector: {x: 1, y: 0, z: 0}
+  LeftArmRightVector: {x: 0, y: 1, z: 0}
+  LeftArmForwardVector: {x: 0, y: 0, z: 1}
+  InitialMagVector: {x: 0, y: 0, z: 0}
+  CurMagVector: {x: 0, y: 0, z: 0}
+  CurId: 0
   OrientationCorrection: {x: 0, y: 180, z: 180}
   UseCorrection: 0
+  IsReset: 0
 --- !u!114 &11442004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38188,11 +38263,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  RelativeRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  UpVector: {x: 0, y: 1, z: 0}
+  RightVector: {x: 1, y: 0, z: 0}
+  ForwardVector: {x: 0, y: 0, z: 1}
+  TrunkUpVector: {x: 0, y: 0, z: 1}
+  TrunkRightVector: {x: -1, y: 0, z: 0}
+  TrunkForwardVector: {x: 0, y: -1, z: 0}
+  LegUpVector: {x: 0, y: 0, z: -1}
+  LegRightVector: {x: 1, y: 0, z: 0}
+  LegForwardVector: {x: 0, y: 1, z: 0}
+  RightArmUpVector: {x: -1, y: 0, z: 0}
+  RightArmRightVector: {x: 0, y: 1, z: 0}
+  RightArmForwardVector: {x: 0, y: 0, z: 1}
+  LeftArmUpVector: {x: 1, y: 0, z: 0}
+  LeftArmRightVector: {x: 0, y: 1, z: 0}
+  LeftArmForwardVector: {x: 0, y: 0, z: 1}
+  InitialMagVector: {x: 0, y: 0, z: 0}
+  CurMagVector: {x: 0, y: 0, z: 0}
+  CurId: 0
   OrientationCorrection: {x: 0, y: 0, z: -90}
   UseCorrection: 0
+  IsReset: 0
 --- !u!114 &11445376
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38357,11 +38457,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  RelativeRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  UpVector: {x: 0, y: 1, z: 0}
+  RightVector: {x: 1, y: 0, z: 0}
+  ForwardVector: {x: 0, y: 0, z: 1}
+  TrunkUpVector: {x: 0, y: 0, z: 1}
+  TrunkRightVector: {x: -1, y: 0, z: 0}
+  TrunkForwardVector: {x: 0, y: -1, z: 0}
+  LegUpVector: {x: 0, y: 0, z: -1}
+  LegRightVector: {x: 1, y: 0, z: 0}
+  LegForwardVector: {x: 0, y: 1, z: 0}
+  RightArmUpVector: {x: -1, y: 0, z: 0}
+  RightArmRightVector: {x: 0, y: 1, z: 0}
+  RightArmForwardVector: {x: 0, y: 0, z: 1}
+  LeftArmUpVector: {x: 1, y: 0, z: 0}
+  LeftArmRightVector: {x: 0, y: 1, z: 0}
+  LeftArmForwardVector: {x: 0, y: 0, z: 1}
+  InitialMagVector: {x: 0, y: 0, z: 0}
+  CurMagVector: {x: 0, y: 0, z: 0}
+  CurId: 0
   OrientationCorrection: {x: 0, y: 0, z: -90}
   UseCorrection: 0
+  IsReset: 0
 --- !u!114 &11452200
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38375,11 +38500,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  RelativeRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  UpVector: {x: 0, y: 1, z: 0}
+  RightVector: {x: 1, y: 0, z: 0}
+  ForwardVector: {x: 0, y: 0, z: 1}
+  TrunkUpVector: {x: 0, y: 0, z: 1}
+  TrunkRightVector: {x: -1, y: 0, z: 0}
+  TrunkForwardVector: {x: 0, y: -1, z: 0}
+  LegUpVector: {x: 0, y: 0, z: -1}
+  LegRightVector: {x: 1, y: 0, z: 0}
+  LegForwardVector: {x: 0, y: 1, z: 0}
+  RightArmUpVector: {x: -1, y: 0, z: 0}
+  RightArmRightVector: {x: 0, y: 1, z: 0}
+  RightArmForwardVector: {x: 0, y: 0, z: 1}
+  LeftArmUpVector: {x: 1, y: 0, z: 0}
+  LeftArmRightVector: {x: 0, y: 1, z: 0}
+  LeftArmForwardVector: {x: 0, y: 0, z: 1}
+  InitialMagVector: {x: 0, y: 0, z: 0}
+  CurMagVector: {x: 0, y: 0, z: 0}
+  CurId: 0
   OrientationCorrection: {x: 0, y: 0, z: 90}
   UseCorrection: 0
+  IsReset: 0
 --- !u!114 &11452626
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -39185,11 +39335,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  RelativeRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  UpVector: {x: 0, y: 1, z: 0}
+  RightVector: {x: 1, y: 0, z: 0}
+  ForwardVector: {x: 0, y: 0, z: 1}
+  TrunkUpVector: {x: 0, y: 0, z: 1}
+  TrunkRightVector: {x: -1, y: 0, z: 0}
+  TrunkForwardVector: {x: 0, y: -1, z: 0}
+  LegUpVector: {x: 0, y: 0, z: -1}
+  LegRightVector: {x: 1, y: 0, z: 0}
+  LegForwardVector: {x: 0, y: 1, z: 0}
+  RightArmUpVector: {x: -1, y: 0, z: 0}
+  RightArmRightVector: {x: 0, y: 1, z: 0}
+  RightArmForwardVector: {x: 0, y: 0, z: 1}
+  LeftArmUpVector: {x: 1, y: 0, z: 0}
+  LeftArmRightVector: {x: 0, y: 1, z: 0}
+  LeftArmForwardVector: {x: 0, y: 0, z: 1}
+  InitialMagVector: {x: 0, y: 0, z: 0}
+  CurMagVector: {x: 0, y: 0, z: 0}
+  CurId: 0
   OrientationCorrection: {x: 0, y: 0, z: -90}
   UseCorrection: 0
+  IsReset: 0
 --- !u!114 &11478290
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -39430,11 +39605,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  RelativeRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  UpVector: {x: 0, y: 1, z: 0}
+  RightVector: {x: 1, y: 0, z: 0}
+  ForwardVector: {x: 0, y: 0, z: 1}
+  TrunkUpVector: {x: 0, y: 0, z: 1}
+  TrunkRightVector: {x: -1, y: 0, z: 0}
+  TrunkForwardVector: {x: 0, y: -1, z: 0}
+  LegUpVector: {x: 0, y: 0, z: -1}
+  LegRightVector: {x: 1, y: 0, z: 0}
+  LegForwardVector: {x: 0, y: 1, z: 0}
+  RightArmUpVector: {x: -1, y: 0, z: 0}
+  RightArmRightVector: {x: 0, y: 1, z: 0}
+  RightArmForwardVector: {x: 0, y: 0, z: 1}
+  LeftArmUpVector: {x: 1, y: 0, z: 0}
+  LeftArmRightVector: {x: 0, y: 1, z: 0}
+  LeftArmForwardVector: {x: 0, y: 0, z: 1}
+  InitialMagVector: {x: 0, y: 0, z: 0}
+  CurMagVector: {x: 0, y: 0, z: 0}
+  CurId: 0
   OrientationCorrection: {x: 0, y: 180, z: 180}
   UseCorrection: 0
+  IsReset: 0
 --- !u!114 &11493010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -39472,11 +39672,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  RelativeRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
+  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  UpVector: {x: 0, y: 1, z: 0}
+  RightVector: {x: 1, y: 0, z: 0}
+  ForwardVector: {x: 0, y: 0, z: 1}
+  TrunkUpVector: {x: 0, y: 0, z: 1}
+  TrunkRightVector: {x: -1, y: 0, z: 0}
+  TrunkForwardVector: {x: 0, y: -1, z: 0}
+  LegUpVector: {x: 0, y: 0, z: -1}
+  LegRightVector: {x: 1, y: 0, z: 0}
+  LegForwardVector: {x: 0, y: 1, z: 0}
+  RightArmUpVector: {x: -1, y: 0, z: 0}
+  RightArmRightVector: {x: 0, y: 1, z: 0}
+  RightArmForwardVector: {x: 0, y: 0, z: 1}
+  LeftArmUpVector: {x: 1, y: 0, z: 0}
+  LeftArmRightVector: {x: 0, y: 1, z: 0}
+  LeftArmForwardVector: {x: 0, y: 0, z: 1}
+  InitialMagVector: {x: 0, y: 0, z: 0}
+  CurMagVector: {x: 0, y: 0, z: 0}
+  CurId: 0
   OrientationCorrection: {x: 0, y: 180, z: 180}
   UseCorrection: 0
+  IsReset: 0
 --- !u!114 &11494276
 MonoBehaviour:
   m_ObjectHideFlags: 1

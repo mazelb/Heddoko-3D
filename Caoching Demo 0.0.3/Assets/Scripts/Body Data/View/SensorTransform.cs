@@ -31,8 +31,8 @@ namespace Assets.Scripts.Body_Data.View
         public UnityAction<int> SensorClicked;
         public GameObject[] HighlightedGameObjects;
         private bool mIsHighlighted;
-        private bool mPreviousCalState = false;
-        private bool mPreviousMagState = false;
+        private bool mCalState = false;
+        private bool mMagState = false;
         private ParticlePoolManager mRedPool;
         private ParticlePoolManager mWhitePool;
         public AirplaneSensorColor Wings;
@@ -104,8 +104,16 @@ namespace Assets.Scripts.Body_Data.View
                 vFrameRot.y = vFrame.quat_y_pitch;
                 vFrameRot.z = vFrame.quat_z_roll;
                 vFrameRot.w = vFrame.quat_w;
+
+                Vector3 vAccelVec = new Vector3(vFrame.Accel_x, vFrame.Accel_y, vFrame.Accel_z);
+                vAccelVec = Vector3.Normalize(vAccelVec);
+
+                Vector3 vGyroVec = new Vector3(vFrame.Rot_x, vFrame.Rot_y, vFrame.Rot_z);
+
+                Rotation.CurId = SensorPos;
+                Rotation.UpdateAccel(vAccelVec);
+                Rotation.UpdateGyro(vGyroVec);
                 Rotation.UpdateRotatation(vFrameRot);
-                
             }
         }
 
@@ -164,16 +172,16 @@ namespace Assets.Scripts.Body_Data.View
             }
             if (mUseParticles)
             {
-                if (vCalStatus != mPreviousCalState)
+                if (vCalStatus != mCalState)
                 {
                     TriggerCalStateChange(vCalStatus);
-                    mPreviousCalState = vCalStatus;
+                    mCalState = vCalStatus;
                 }
 
-                if (vMagneticTransience != mPreviousMagState)
+                if (vMagneticTransience != mMagState)
                 {
                     TriggerMagTransStateChange(vMagneticTransience);
-                    mPreviousMagState = vMagneticTransience;
+                    mMagState = vMagneticTransience;
                 }
             }
         }
