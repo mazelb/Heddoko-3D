@@ -113,8 +113,24 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             RightElbowFlexionSignedAngle = vSign * RightElbowFlexionAngle * GetSign("System.Single RightElbowFlexionAngle");
 
             //calculate the Elbow Pronation angle
-            float vAngleForeArmPronationNew = 180 - Mathf.Abs(180 - LoArTransform.rotation.eulerAngles.x);
-            RightForeArmPronationSignedAngle = vAngleForeArmPronationNew * GetSign("System.Single RightForeArmPronationAngle");
+            Vector3 vForeArmPronationProj = Vector3.ProjectOnPlane(vElbowAxisUp, vShoulderAxisRight);
+            float vAngleForeArmPronationNew = 0;
+            //check the flexion angle
+            if (RightElbowFlexionSignedAngle >= 65)
+            {
+                vForeArmPronationProj = Vector3.ProjectOnPlane(vElbowAxisUp, vShoulderAxisForward);
+                vAngleForeArmPronationNew = Vector3.Angle(vForeArmPronationProj, vShoulderAxisUp);
+                vCross = Vector3.Cross(vShoulderAxisForward ,vForeArmPronationProj  );
+                vSign = Mathf.Sign(Vector3.Dot(vShoulderAxisForward, vCross));
+                RightForeArmPronationSignedAngle = vSign * vAngleForeArmPronationNew * GetSign("System.Single RightForeArmPronationAngle");
+            }
+            else
+            {
+                vAngleForeArmPronationNew = Vector3.Angle(vForeArmPronationProj, vShoulderAxisUp);
+                vCross = Vector3.Cross( vShoulderAxisUp, vForeArmPronationProj);
+                vSign = Mathf.Sign(Vector3.Dot(vShoulderAxisRight, vCross));
+                RightForeArmPronationSignedAngle = vSign * vAngleForeArmPronationNew * GetSign("System.Single RightForeArmPronationAngle");
+            }
 
             //calculate the Shoulder Flexion angle
             Vector3 vShoulderRightAxisProjectedOnTrunkRight = Vector3.ProjectOnPlane(vShoulderAxisRight, vTrunkAxisRight);
@@ -147,7 +163,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
                 vAngleShoulderVertAbductionNew = Vector3.Angle(-vTrunkAxisUp, vVerticalShoulderAbdProjection);
             }
             RightShoulderVertAbductionAngle = vAngleShoulderVertAbductionNew;
-            vCross = Vector3.Cross(vVerticalShoulderAbdProjection   , -vTrunkAxisUp);
+            vCross = Vector3.Cross(vVerticalShoulderAbdProjection, -vTrunkAxisUp);
             vSign = Mathf.Sign(Vector3.Dot(vTrunkAxisForward, vCross));
             RightShoulderVerticalAbductionSignedAngle = vSign * RightShoulderVertAbductionAngle * GetSign("System.Single RightShoulderVertAbductionAngle");
 
@@ -188,8 +204,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             vCross = Vector3.Cross(-vTrunkAxisRight, vHorizontalShoulderAbdProjection);
             vSign = Mathf.Sign(Vector3.Dot(vTrunkAxisUp, vCross));
             RightShoulderHorizontalAbductionSignedAngle = vSign * RightShoulderHorAbductionAngle * GetSign("System.Single LeftShoulderHorAbductionAngle");
-     
-      
+
+
             //calculate the Shoulder Rotation angle
             float vAngleShoulderRotationNew = 180 - Mathf.Abs(180 - UpArTransform.rotation.eulerAngles.x);
             vAngleShoulderRotationNew *= -1;
