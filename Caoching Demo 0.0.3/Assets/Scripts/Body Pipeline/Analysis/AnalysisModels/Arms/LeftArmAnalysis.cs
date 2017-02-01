@@ -127,7 +127,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
                 vAngleShoulderFlexionNew = Vector3.Angle(-vTrunkAxisUp, vShoulderRightAxisProjectedOnTrunkRight);
             }
             LeftShoulderFlexionAngle = vAngleShoulderFlexionNew;
-            vCross = Vector3.Cross(vShoulderRightAxisProjectedOnTrunkRight, -vTrunkAxisUp);
+            vCross = Vector3.Cross(-vTrunkAxisUp ,vShoulderRightAxisProjectedOnTrunkRight);
             vSign = Mathf.Sign(Vector3.Dot(-vTrunkAxisRight, vCross));
             LeftShoulderFlexionSignedAngle = vSign * LeftShoulderFlexionAngle * GetSign("System.Single LeftShoulderFlexionAngle");
 
