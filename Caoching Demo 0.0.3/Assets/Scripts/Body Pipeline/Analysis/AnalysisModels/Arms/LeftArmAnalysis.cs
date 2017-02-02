@@ -182,35 +182,17 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             vCross = Vector3.Cross(-vTrunkAxisRight, vHorizontalShoulderAbdProjection);
             vSign = Mathf.Sign(Vector3.Dot(vTrunkAxisUp, vCross));
             LeftShoulderHorizontalAbductionSignedAngle = vSign * LeftShoulderHorAbductionAngle * GetSign("System.Single LeftShoulderHorAbductionAngle");
-
-            //calculate the Shoulder Rotation angle
-            //get the vector projection for shoulder rotation
-            Vector3 vRotPlaneNormal = GetPlaneNormal(-vShoulderAxisRight, UpArTransform, TorsoTransform);
-            Vector3 vComparisonVector = Vector3.zero;
-            Vector3 vClampedRotPlaneNormal = vRotPlaneNormal;
-            vClampedRotPlaneNormal.x = Mathf.Round(vClampedRotPlaneNormal.x);
-            vClampedRotPlaneNormal.y = Mathf.Round(vClampedRotPlaneNormal.y);
-            vClampedRotPlaneNormal.z = Mathf.Round(vClampedRotPlaneNormal.z);
-            if (Mathf.Abs(vClampedRotPlaneNormal.x) > 0)
-            {
-                vComparisonVector.y = 1;
-            }
-            else if (Mathf.Abs(vClampedRotPlaneNormal.y) > 0)
-            {
-                vComparisonVector.x = -1;
-            }
-            else if (Mathf.Abs(vClampedRotPlaneNormal.z) > 0)
-            {
-                vComparisonVector.y = 1;
-            }
-            Vector3 vShoulderRotationProj = Vector3.ProjectOnPlane(vShoulderAxisUp, vRotPlaneNormal);
-            var vRotAng = Vector3.Angle(vShoulderRotationProj, vComparisonVector);
+             
             //get the cross product in order to determine the sign of the angle
-            vCross = Vector3.Cross(vVerticalShoulderAbdProjection, vComparisonVector);
-            vSign = Mathf.Sign(Vector3.Dot(vRotPlaneNormal, vCross));
-            float vAngleShoulderRotationNew = vRotAng; 
-            LeftShoulderRotationSignedAngle = vAngleShoulderRotationNew * vSign * GetSign("System.Single LeftShoulderRotationAngle");
-            
+
+            float vAngleShoulderRotationNew = - UpArTransform.rotation.eulerAngles.x;//  -UpArTransform.rotation.eulerAngles.x -360f);
+         
+            if (vAngleShoulderRotationNew < -180)
+            {
+                vAngleShoulderRotationNew =  360f +vAngleShoulderRotationNew ;
+            }
+            LeftShoulderRotationSignedAngle = vAngleShoulderRotationNew;// * vSign * GetSign("System.Single LeftShoulderRotationAngle");
+
             //Calculate the velocity and accelerations
             if (DeltaTime != 0)
             {
@@ -313,39 +295,39 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             if (vOutputRightPlane < vOutputLeftPlane && vOutputRightPlane < vOutputUpPlane
                 && vOutputRightPlane < vOutputDownPlane && vOutputRightPlane < vOutputForwardPlane
                 && vOutputRightPlane < vOutputBackPlane)
-            { 
+            {
                 return vParent.right;
             }
             else if (vOutputLeftPlane < vOutputRightPlane && vOutputLeftPlane < vOutputUpPlane
                 && vOutputLeftPlane < vOutputDownPlane && vOutputLeftPlane < vOutputForwardPlane
                 && vOutputLeftPlane < vOutputBackPlane)
-            { 
+            {
 
                 return vParent.right;
             }
             else if (vOutputUpPlane < vOutputRightPlane && vOutputUpPlane < vOutputLeftPlane
               && vOutputUpPlane < vOutputDownPlane && vOutputUpPlane < vOutputForwardPlane
               && vOutputUpPlane < vOutputBackPlane)
-            { 
+            {
                 return vParent.up;
             }
             else if (vOutputDownPlane < vOutputRightPlane && vOutputDownPlane < vOutputLeftPlane
             && vOutputDownPlane < vOutputUpPlane && vOutputDownPlane < vOutputForwardPlane
             && vOutputDownPlane < vOutputBackPlane)
-            { 
+            {
                 return vParent.up;
             }
             else if (vOutputForwardPlane < vOutputRightPlane && vOutputForwardPlane < vOutputLeftPlane
             && vOutputForwardPlane < vOutputUpPlane && vOutputForwardPlane < vOutputDownPlane
             && vOutputForwardPlane < vOutputBackPlane)
-            { 
+            {
                 return vParent.forward;
             }
             else if (vOutputBackPlane < vOutputRightPlane && vOutputBackPlane < vOutputLeftPlane
            && vOutputBackPlane < vOutputUpPlane && vOutputBackPlane < vOutputDownPlane
            && vOutputBackPlane < vOutputForwardPlane)
             {
-                
+
                 return vParent.forward;
             }
 

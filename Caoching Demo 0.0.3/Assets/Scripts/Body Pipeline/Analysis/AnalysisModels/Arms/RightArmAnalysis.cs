@@ -207,10 +207,12 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
 
 
             //calculate the Shoulder Rotation angle
-            float vAngleShoulderRotationNew = 180 - Mathf.Abs(180 - UpArTransform.rotation.eulerAngles.x);
-            vAngleShoulderRotationNew *= -1;
+            float vAngleShoulderRotationNew =  UpArTransform.rotation.eulerAngles.x ; 
+            if (vAngleShoulderRotationNew > 180)
+            {
+                vAngleShoulderRotationNew = UpArTransform.rotation.eulerAngles.x - 360f;
+            }
             RightShoulderRotationSignedAngle = vAngleShoulderRotationNew * GetSign("System.Single RightShoulderRotationAngle");
-
             //Calculate the velocity and accelerations
             if (DeltaTime != 0)
             {
