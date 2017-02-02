@@ -111,27 +111,14 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             Vector3 vCross = Vector3.Cross(vElbowAxisRight, vShoulderAxisRight);
             float vSign = Mathf.Sign(Vector3.Dot(vShoulderAxisUp, vCross));
             RightElbowFlexionSignedAngle = vSign * RightElbowFlexionAngle * GetSign("System.Single RightElbowFlexionAngle");
-
-            //calculate the Elbow Pronation angle
-            Vector3 vForeArmPronationProj = Vector3.ProjectOnPlane(vElbowAxisUp, vShoulderAxisRight);
-            float vAngleForeArmPronationNew = 0;
-            //check the flexion angle
-            if (RightElbowFlexionSignedAngle >= 65)
+      
+            float vAngleForeArmPronationNew = LoArTransform.localRotation.eulerAngles.x;
+            if (vAngleForeArmPronationNew > 180)
             {
-                vForeArmPronationProj = Vector3.ProjectOnPlane(vElbowAxisUp, vShoulderAxisForward);
-                vAngleForeArmPronationNew = Vector3.Angle(vForeArmPronationProj, vShoulderAxisUp);
-                vCross = Vector3.Cross(vShoulderAxisForward ,vForeArmPronationProj  );
-                vSign = Mathf.Sign(Vector3.Dot(vShoulderAxisForward, vCross));
-                RightForeArmPronationSignedAngle = vSign * vAngleForeArmPronationNew * GetSign("System.Single RightForeArmPronationAngle");
+                vAngleForeArmPronationNew = vAngleForeArmPronationNew - 360f;
             }
-            else
-            {
-                vAngleForeArmPronationNew = Vector3.Angle(vForeArmPronationProj, vShoulderAxisUp);
-                vCross = Vector3.Cross( vShoulderAxisUp, vForeArmPronationProj);
-                vSign = Mathf.Sign(Vector3.Dot(vShoulderAxisRight, vCross));
-                RightForeArmPronationSignedAngle = vSign * vAngleForeArmPronationNew * GetSign("System.Single RightForeArmPronationAngle");
-            }
-
+            RightForeArmPronationSignedAngle =  vAngleForeArmPronationNew * GetSign("System.Single RightForeArmPronationAngle");
+             
             //calculate the Shoulder Flexion angle
             Vector3 vShoulderRightAxisProjectedOnTrunkRight = Vector3.ProjectOnPlane(vShoulderAxisRight, vTrunkAxisRight);
             float vAngleShoulderFlexionNew;
@@ -207,6 +194,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
 
 
             //calculate the Shoulder Rotation angle
+
             float vAngleShoulderRotationNew =  UpArTransform.rotation.eulerAngles.x ; 
             if (vAngleShoulderRotationNew > 180)
             {
