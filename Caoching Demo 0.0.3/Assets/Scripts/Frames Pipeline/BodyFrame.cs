@@ -34,6 +34,10 @@ public class BodyFrame
     //Magnetic frame data for the current frame
     private Dictionary<BodyStructureMap.SensorPositions, Vector3> mMagFrameData;
 
+    [JsonProperty]
+    //Gyro frame data for the current fram
+    private Dictionary<BodyStructureMap.SensorPositions, Vector3> mGyroFrameData;
+
     private Packet mAssociatedPacket;
     //The timestamp of a bodybody frame 
     [JsonProperty]
@@ -99,7 +103,22 @@ public class BodyFrame
         }
     }
 
+    
 
+    /// <summary>
+    /// Getter: returns a map of the Magnetic frame data for the current frame
+    /// </summary>
+    public Dictionary<BodyStructureMap.SensorPositions, Vector3> GyroFrameData
+    {
+        get
+        {
+            if (mGyroFrameData == null)
+            {
+                mGyroFrameData = new Dictionary<BodyStructureMap.SensorPositions, Vector3>();
+            }
+            return mGyroFrameData;
+        }
+    }
     /**
     * ToString()
     * @brief Prepares the current body frame as a string 
@@ -206,6 +225,8 @@ public class BodyFrame
             AccelFrameData.Add(vSensorId,vAccel);
             Vector3 vMag = new Vector3(vDataFrame.Mag_x, vDataFrame.Mag_y, vDataFrame.Mag_z);
             MagFrameData.Add(vSensorId, vMag);
+            Vector3 vGyroData = new Vector3(vDataFrame.Rot_x,vDataFrame.Rot_z,vDataFrame.Rot_z);
+            GyroFrameData.Add(vSensorId, vGyroData); 
         }
         mAssociatedPacket = vPacket;
     }
