@@ -150,7 +150,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
                 vAngleShoulderVertAbductionNew = Vector3.Angle(-vTrunkAxisUp, vVerticalShoulderAbdProjection);
             }
             LeftShoulderVertAbductionAngle = vAngleShoulderVertAbductionNew;
-            vCross = Vector3.Cross(vVerticalShoulderAbdProjection, -vTrunkAxisUp);
+            vCross = Vector3.Cross(-vTrunkAxisUp, vVerticalShoulderAbdProjection);
             vSign = Mathf.Sign(Vector3.Dot(vTrunkAxisForward, vCross));
             LeftShoulderVerticalAbductionSignedAngle = vSign * LeftShoulderVertAbductionAngle * GetSign("System.Single LeftShoulderVertAbductionAngle");
             Vector3 vHorizontalShoulderAbdProjection = Vector3.ProjectOnPlane(-vShoulderAxisRight, vTrunkAxisUp);
