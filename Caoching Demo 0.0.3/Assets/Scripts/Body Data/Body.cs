@@ -508,13 +508,8 @@ public class Body
         List<BodyStructureMap.SensorPositions> vKeyList = new List<BodyStructureMap.SensorPositions>(vBody.CurrentBodyFrame.FrameData.Keys);
         for (int i = 0; i < vKeyList.Count; i++)
         {
-            BodyStructureMap.SensorPositions vKey = vKeyList[i];
-
-            BodyFrame.Vect4 vInitialRawEuler = vBody.InitialBodyFrame.FrameData[vKey];
-            BodyFrame.Vect4 vCurrentRawEuler = vBody.CurrentBodyFrame.FrameData[vKey];
-            BodyStructureMap.TrackingStructure vStruct = new BodyStructureMap.TrackingStructure();
-            vStruct.InitRawData = vInitialRawEuler;
-            vStruct.CurrRawData = vCurrentRawEuler;
+            BodyStructureMap.SensorPositions vKey = vKeyList[i]; 
+            BodyStructureMap.TrackingStructure vStruct = new BodyStructureMap.TrackingStructure(vBody.InitialBodyFrame, vBody.CurrentBodyFrame, vKey);
             vDic.Add(vKey, vStruct);
         }
         return vDic;

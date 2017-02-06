@@ -80,9 +80,39 @@ public class BodyStructureMap
     {
         public BodyFrame.Vect4 InitRawData;
         public BodyFrame.Vect4 CurrRawData;
-        public Matrix<float> InitRotationMatrix;
-        public Matrix<float> CurrRotationMatrix;
-        public CalibrationStructure CalibrationData;
+        /// <summary>
+        /// the initial frame's acceleration data
+        /// </summary>
+        public Vector3 InitAccelData;
+        /// <summary>
+        /// the current(newest) frame's acceleration data
+        /// </summary>
+        public Vector3 CurrAccelData;
+        /// <summary>
+        /// the initial frame's mag data
+        /// </summary>
+        public Vector3 InitMagData;
+        /// <summary>
+        /// the current(newest) frame's mag data
+        /// </summary>
+        public Vector3 CurrMagData;
+
+        ///  <summary>
+        /// intialize an instance of the tracking structure from a given body frame
+        ///  </summary> 
+        /// <param name="vInitialFrame">The initial frame </param>
+        /// <param name="vNewBodyFrame">the current body frame</param>
+        /// <param name="vPosition">the position to track</param>
+        public TrackingStructure(BodyFrame vInitialFrame, BodyFrame vNewBodyFrame, SensorPositions vPosition)
+        {
+            InitRawData = vInitialFrame.FrameData[vPosition];
+            CurrRawData = vNewBodyFrame.FrameData[vPosition];
+            InitAccelData = vInitialFrame.AccelFrameData[vPosition];
+            CurrAccelData = vNewBodyFrame.AccelFrameData[vPosition];
+            InitMagData = vInitialFrame.MagFrameData[vPosition];
+            CurrMagData = vNewBodyFrame.MagFrameData[vPosition];
+        }
+ 
     };
 
     public struct CalibrationStructure

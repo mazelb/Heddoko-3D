@@ -116,6 +116,8 @@ public partial class BodySegment
             {
                 BodyFrame.Vect4 vFrameData = vFrame.FrameData[vSensorPosKey];
                 vSensTuple.CurrentSensor.SensorData.PositionalData = vFrameData;
+                vSensTuple.CurrentSensor.SensorData.AccelData = vFrame.AccelFrameData[vSensorPosKey];
+                vSensTuple.CurrentSensor.SensorData.MagData = vFrame.MagFrameData[vSensorPosKey];
             }
         }
     }
@@ -147,6 +149,10 @@ public partial class BodySegment
             if (vFrame.FrameData.ContainsKey(vPos))
             {
                 vSensTuple.InitSensor.SensorData.PositionalData = vFrame.FrameData[vPos];
+                BodyFrame.Vect4 vFrameData = vFrame.FrameData[vPos];
+                vSensTuple.InitSensor.SensorData.PositionalData = vFrameData;
+                vSensTuple.InitSensor.SensorData.AccelData = vFrame.AccelFrameData[vPos];
+                vSensTuple.InitSensor.SensorData.MagData = vFrame.MagFrameData[vPos];
                 int vKey = (int)vSensTuple.InitSensor.SensorPosition;
 
                 if (vSensTuple.InitSensor.SensorType == BodyStructureMap.SensorTypes.ST_Biomech)
@@ -710,7 +716,7 @@ public partial class BodySegment
         BodyFrame.Vect4 vLoArmInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftForeArm].InitRawData;
         BodyFrame.Vect4 vLoArmCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_LeftForeArm].CurrRawData;
         BodyFrame.Vect4 vTorsoInit = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].InitRawData;
-        BodyFrame.Vect4 vTorsoCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].CurrRawData;
+        BodyFrame.Vect4 vTorsoCurr = vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].CurrRawData; 
 
         if (GBodyFrameUsingQuaternion)
         {
