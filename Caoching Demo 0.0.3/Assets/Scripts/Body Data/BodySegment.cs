@@ -118,6 +118,7 @@ public partial class BodySegment
                 vSensTuple.CurrentSensor.SensorData.PositionalData = vFrameData;
                 vSensTuple.CurrentSensor.SensorData.AccelData = vFrame.AccelFrameData[vSensorPosKey];
                 vSensTuple.CurrentSensor.SensorData.MagData = vFrame.MagFrameData[vSensorPosKey];
+                vSensTuple.CurrentSensor.SensorData.GyroData = vFrame.GyroFrameData[vSensorPosKey];
             }
         }
     }
@@ -153,6 +154,7 @@ public partial class BodySegment
                 vSensTuple.InitSensor.SensorData.PositionalData = vFrameData;
                 vSensTuple.InitSensor.SensorData.AccelData = vFrame.AccelFrameData[vPos];
                 vSensTuple.InitSensor.SensorData.MagData = vFrame.MagFrameData[vPos];
+                vSensTuple.InitSensor.SensorData.GyroData = vFrame.GyroFrameData[vPos];
                 int vKey = (int)vSensTuple.InitSensor.SensorPosition;
 
                 if (vSensTuple.InitSensor.SensorType == BodyStructureMap.SensorTypes.ST_Biomech)

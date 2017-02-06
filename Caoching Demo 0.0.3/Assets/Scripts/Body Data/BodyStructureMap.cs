@@ -96,7 +96,14 @@ public class BodyStructureMap
         /// the current(newest) frame's mag data
         /// </summary>
         public Vector3 CurrMagData;
-
+        /// <summary>
+        /// the initial frame's gyro data
+        /// </summary>
+        public Vector3 InitGyroData;
+        /// <summary>
+        /// the current(newest) frame's gyro data
+        /// </summary>
+        public Vector3 CurrGyroData;
         ///  <summary>
         /// intialize an instance of the tracking structure from a given body frame
         ///  </summary> 
@@ -111,6 +118,8 @@ public class BodyStructureMap
             CurrAccelData = vNewBodyFrame.AccelFrameData[vPosition];
             InitMagData = vInitialFrame.MagFrameData[vPosition];
             CurrMagData = vNewBodyFrame.MagFrameData[vPosition];
+            InitGyroData = vInitialFrame.GyroFrameData[vPosition];
+            CurrGyroData = vNewBodyFrame.GyroFrameData[vPosition];
         }
  
     };
