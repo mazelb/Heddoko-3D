@@ -74,8 +74,6 @@ namespace Assets.Scripts.Communication
                     PriorityMessage vMsg = mPriorityMessages.RemoveFirstItem();
                     mSemaphore.Release();
                     StartClientAndSendData(vMsg);
-
-
                 }
 
             }
@@ -101,8 +99,6 @@ namespace Assets.Scripts.Communication
             // Connect to a remote device.
             try
             {
-                // IPHostEntry vIpHostEntry = Dns.Resolve("localhost");
-                //  IPAddress vIpAddress = vIpHostEntry.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork);
                 IPAddress vIpAddress = IPAddress.Parse("127.0.0.1");
                 IPEndPoint vRemoteEndPoint = new IPEndPoint(vIpAddress, 11000);
                 // Create a TCP/IP  socket.
@@ -138,9 +134,6 @@ namespace Assets.Scripts.Communication
                     DebugLogger.Instance.LogMessage(LogType.SocketClientError, vE.Message);
                     vMsg = "Timeout exception:time taken from start" + vStopwatch.ElapsedMilliseconds + " ms";
                     DebugLogger.Instance.LogMessage(LogType.SocketClientError, vMsg);
-
-
-
                     vSender.Close();
                 }
                 catch (ArgumentNullException vE)
@@ -149,7 +142,6 @@ namespace Assets.Scripts.Communication
                     DebugLogger.Instance.LogMessage(LogType.SocketClientError, vMsg);
                     vMsg = "time taken from start until this exception " + vStopwatch.ElapsedMilliseconds + " ms";
                     DebugLogger.Instance.LogMessage(LogType.SocketClientError, vMsg);
-
                     Debug.Log(vMsg);
                 }
                 catch (SocketException vE)
@@ -210,10 +202,8 @@ namespace Assets.Scripts.Communication
             // Connect to a remote device.
             try
             {
-                // IPHostEntry vIpHostEntry = Dns.Resolve("localhost");
-                // IPHostEntry vIpHostEntry =  new IPHostEntry("")//Dns.GetHostEntry("localhost");
-                IPAddress vIpAddress = IPAddress.Parse("127.0.0.1");// vIpHostEntry.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork);
-               // IPAddress vIpAddress = vIpHostEntry.AddressList.First(x => x.AddressFamily == AddressFamily.InterNetwork);
+                
+                IPAddress vIpAddress = IPAddress.Parse("127.0.0.1"); 
                 IPEndPoint vRemoteEndPoint = new IPEndPoint(vIpAddress, 11000);
                 // Create a TCP/IP  socket.
                 Socket vSender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -239,9 +229,7 @@ namespace Assets.Scripts.Communication
 
                     // Release the socket.
                     vSender.Shutdown(SocketShutdown.Both);
-                    vSender.Close();
-
-                    // vMsg = PacketSetting.Encoding.GetString(bytes);
+                    vSender.Close(); 
                 }
                 catch (TimeoutException vE)
                 {
@@ -283,7 +271,7 @@ namespace Assets.Scripts.Communication
                     vSender.Close();
                     HeddokoPacket vPacket = new HeddokoPacket("TimeoutException", string.Empty);
                     PacketCommandRouter.Instance.Process(this, vPacket);
-                   
+
                 }
                 catch (Exception e)
                 {
@@ -294,7 +282,6 @@ namespace Assets.Scripts.Communication
                     DebugLogger.Instance.LogMessage(LogType.SocketClientError, vLogMessage);
                     vLogMessage = "time taken from start until this exception " + vStopwatch.ElapsedMilliseconds + " ms";
                     DebugLogger.Instance.LogMessage(LogType.SocketClientError, vLogMessage);
-
                 }
 
             }
@@ -309,16 +296,11 @@ namespace Assets.Scripts.Communication
             mReceivedMessage = true;
             vStopwatch.Stop();
             vLogMessage = "time taken from start send message to end " + vStopwatch.ElapsedMilliseconds + " ms";
-            //    DebugLogger.Instance.LogMessage(LogType.SocketClientSettings, vMsg);
-
-
         }
         private bool mIsworking;
         public void Stop()
         {
-            //while (mPriorityMessages.Count != 0) ;
             UnityEngine.Debug.Log("Stopping sync client");
-
             mIsworking = false;
             try
             {
