@@ -50,6 +50,10 @@ namespace Assets.Scripts.Body_Data.View
                 if (mRotation == null)
                 {
                     mRotation = gameObject.GetComponent<SensorRotation>();
+                    if (mRotation == null)
+                    {
+                        mRotation = gameObject.AddComponent<SensorRotation>();
+                    }
                 }
                 return mRotation;
             }

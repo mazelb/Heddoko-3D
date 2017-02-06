@@ -5921,7 +5921,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &152570
 GameObject:
   m_ObjectHideFlags: 1
@@ -37300,26 +37300,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 168734}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 530a6a170f6b7ac45a364e3aa40546ba, type: 3}
+  m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
   UpVector: {x: 0, y: 1, z: 0}
   RightVector: {x: 1, y: 0, z: 0}
   ForwardVector: {x: 0, y: 0, z: 1}
-  TrunkUpVector: {x: 0, y: 0, z: 1}
-  TrunkRightVector: {x: -1, y: 0, z: 0}
-  TrunkForwardVector: {x: 0, y: -1, z: 0}
   LegUpVector: {x: 0, y: 0, z: -1}
   LegRightVector: {x: 1, y: 0, z: 0}
   LegForwardVector: {x: 0, y: 1, z: 0}
@@ -37329,8 +37320,11 @@ MonoBehaviour:
   LeftArmUpVector: {x: 1, y: 0, z: 0}
   LeftArmRightVector: {x: 0, y: 1, z: 0}
   LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  InitialMagVector: {x: 0, y: 0, z: 0}
-  CurMagVector: {x: 0, y: 0, z: 0}
+  CurAccelVector: {x: 0, y: 0, z: 0}
+  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
+  CurGyroVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
   CurId: 0
   OrientationCorrection: {x: 0, y: 0, z: -90}
   UseCorrection: 0
@@ -37503,26 +37497,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 154136}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 530a6a170f6b7ac45a364e3aa40546ba, type: 3}
+  m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
   UpVector: {x: 0, y: 1, z: 0}
   RightVector: {x: 1, y: 0, z: 0}
   ForwardVector: {x: 0, y: 0, z: 1}
-  TrunkUpVector: {x: 0, y: 0, z: 1}
-  TrunkRightVector: {x: -1, y: 0, z: 0}
-  TrunkForwardVector: {x: 0, y: -1, z: 0}
   LegUpVector: {x: 0, y: 0, z: -1}
   LegRightVector: {x: 1, y: 0, z: 0}
   LegForwardVector: {x: 0, y: 1, z: 0}
@@ -37532,8 +37517,11 @@ MonoBehaviour:
   LeftArmUpVector: {x: 1, y: 0, z: 0}
   LeftArmRightVector: {x: 0, y: 1, z: 0}
   LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  InitialMagVector: {x: 0, y: 0, z: 0}
-  CurMagVector: {x: 0, y: 0, z: 0}
+  CurAccelVector: {x: 0, y: 0, z: 0}
+  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
+  CurGyroVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
   CurId: 0
   OrientationCorrection: {x: 0, y: 180, z: 180}
   UseCorrection: 0
@@ -38110,26 +38098,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 198450}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 530a6a170f6b7ac45a364e3aa40546ba, type: 3}
+  m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
   UpVector: {x: 0, y: 1, z: 0}
   RightVector: {x: 1, y: 0, z: 0}
   ForwardVector: {x: 0, y: 0, z: 1}
-  TrunkUpVector: {x: 0, y: 0, z: 1}
-  TrunkRightVector: {x: -1, y: 0, z: 0}
-  TrunkForwardVector: {x: 0, y: -1, z: 0}
   LegUpVector: {x: 0, y: 0, z: -1}
   LegRightVector: {x: 1, y: 0, z: 0}
   LegForwardVector: {x: 0, y: 1, z: 0}
@@ -38139,8 +38118,11 @@ MonoBehaviour:
   LeftArmUpVector: {x: 1, y: 0, z: 0}
   LeftArmRightVector: {x: 0, y: 1, z: 0}
   LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  InitialMagVector: {x: 0, y: 0, z: 0}
-  CurMagVector: {x: 0, y: 0, z: 0}
+  CurAccelVector: {x: 0, y: 0, z: 0}
+  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
+  CurGyroVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
   CurId: 0
   OrientationCorrection: {x: 0, y: 180, z: 180}
   UseCorrection: 0
@@ -38258,26 +38240,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 108104}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 530a6a170f6b7ac45a364e3aa40546ba, type: 3}
+  m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
   UpVector: {x: 0, y: 1, z: 0}
   RightVector: {x: 1, y: 0, z: 0}
   ForwardVector: {x: 0, y: 0, z: 1}
-  TrunkUpVector: {x: 0, y: 0, z: 1}
-  TrunkRightVector: {x: -1, y: 0, z: 0}
-  TrunkForwardVector: {x: 0, y: -1, z: 0}
   LegUpVector: {x: 0, y: 0, z: -1}
   LegRightVector: {x: 1, y: 0, z: 0}
   LegForwardVector: {x: 0, y: 1, z: 0}
@@ -38287,8 +38260,11 @@ MonoBehaviour:
   LeftArmUpVector: {x: 1, y: 0, z: 0}
   LeftArmRightVector: {x: 0, y: 1, z: 0}
   LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  InitialMagVector: {x: 0, y: 0, z: 0}
-  CurMagVector: {x: 0, y: 0, z: 0}
+  CurAccelVector: {x: 0, y: 0, z: 0}
+  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
+  CurGyroVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
   CurId: 0
   OrientationCorrection: {x: 0, y: 0, z: -90}
   UseCorrection: 0
@@ -38452,26 +38428,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 118504}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 530a6a170f6b7ac45a364e3aa40546ba, type: 3}
+  m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
   UpVector: {x: 0, y: 1, z: 0}
   RightVector: {x: 1, y: 0, z: 0}
   ForwardVector: {x: 0, y: 0, z: 1}
-  TrunkUpVector: {x: 0, y: 0, z: 1}
-  TrunkRightVector: {x: -1, y: 0, z: 0}
-  TrunkForwardVector: {x: 0, y: -1, z: 0}
   LegUpVector: {x: 0, y: 0, z: -1}
   LegRightVector: {x: 1, y: 0, z: 0}
   LegForwardVector: {x: 0, y: 1, z: 0}
@@ -38481,8 +38448,11 @@ MonoBehaviour:
   LeftArmUpVector: {x: 1, y: 0, z: 0}
   LeftArmRightVector: {x: 0, y: 1, z: 0}
   LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  InitialMagVector: {x: 0, y: 0, z: 0}
-  CurMagVector: {x: 0, y: 0, z: 0}
+  CurAccelVector: {x: 0, y: 0, z: 0}
+  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
+  CurGyroVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
   CurId: 0
   OrientationCorrection: {x: 0, y: 0, z: -90}
   UseCorrection: 0
@@ -38495,26 +38465,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 138756}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 530a6a170f6b7ac45a364e3aa40546ba, type: 3}
+  m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
   UpVector: {x: 0, y: 1, z: 0}
   RightVector: {x: 1, y: 0, z: 0}
   ForwardVector: {x: 0, y: 0, z: 1}
-  TrunkUpVector: {x: 0, y: 0, z: 1}
-  TrunkRightVector: {x: -1, y: 0, z: 0}
-  TrunkForwardVector: {x: 0, y: -1, z: 0}
   LegUpVector: {x: 0, y: 0, z: -1}
   LegRightVector: {x: 1, y: 0, z: 0}
   LegForwardVector: {x: 0, y: 1, z: 0}
@@ -38524,8 +38485,11 @@ MonoBehaviour:
   LeftArmUpVector: {x: 1, y: 0, z: 0}
   LeftArmRightVector: {x: 0, y: 1, z: 0}
   LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  InitialMagVector: {x: 0, y: 0, z: 0}
-  CurMagVector: {x: 0, y: 0, z: 0}
+  CurAccelVector: {x: 0, y: 0, z: 0}
+  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
+  CurGyroVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
   CurId: 0
   OrientationCorrection: {x: 0, y: 0, z: 90}
   UseCorrection: 0
@@ -39330,26 +39294,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 135488}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 530a6a170f6b7ac45a364e3aa40546ba, type: 3}
+  m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
   UpVector: {x: 0, y: 1, z: 0}
   RightVector: {x: 1, y: 0, z: 0}
   ForwardVector: {x: 0, y: 0, z: 1}
-  TrunkUpVector: {x: 0, y: 0, z: 1}
-  TrunkRightVector: {x: -1, y: 0, z: 0}
-  TrunkForwardVector: {x: 0, y: -1, z: 0}
   LegUpVector: {x: 0, y: 0, z: -1}
   LegRightVector: {x: 1, y: 0, z: 0}
   LegForwardVector: {x: 0, y: 1, z: 0}
@@ -39359,8 +39314,11 @@ MonoBehaviour:
   LeftArmUpVector: {x: 1, y: 0, z: 0}
   LeftArmRightVector: {x: 0, y: 1, z: 0}
   LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  InitialMagVector: {x: 0, y: 0, z: 0}
-  CurMagVector: {x: 0, y: 0, z: 0}
+  CurAccelVector: {x: 0, y: 0, z: 0}
+  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
+  CurGyroVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
   CurId: 0
   OrientationCorrection: {x: 0, y: 0, z: -90}
   UseCorrection: 0
@@ -39600,26 +39558,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 151394}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 530a6a170f6b7ac45a364e3aa40546ba, type: 3}
+  m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
   UpVector: {x: 0, y: 1, z: 0}
   RightVector: {x: 1, y: 0, z: 0}
   ForwardVector: {x: 0, y: 0, z: 1}
-  TrunkUpVector: {x: 0, y: 0, z: 1}
-  TrunkRightVector: {x: -1, y: 0, z: 0}
-  TrunkForwardVector: {x: 0, y: -1, z: 0}
   LegUpVector: {x: 0, y: 0, z: -1}
   LegRightVector: {x: 1, y: 0, z: 0}
   LegForwardVector: {x: 0, y: 1, z: 0}
@@ -39629,8 +39578,11 @@ MonoBehaviour:
   LeftArmUpVector: {x: 1, y: 0, z: 0}
   LeftArmRightVector: {x: 0, y: 1, z: 0}
   LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  InitialMagVector: {x: 0, y: 0, z: 0}
-  CurMagVector: {x: 0, y: 0, z: 0}
+  CurAccelVector: {x: 0, y: 0, z: 0}
+  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
+  CurGyroVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
   CurId: 0
   OrientationCorrection: {x: 0, y: 180, z: 180}
   UseCorrection: 0
@@ -39667,26 +39619,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 125212}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 530a6a170f6b7ac45a364e3aa40546ba, type: 3}
+  m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   AxisOfRotation: {x: 0, y: 180, z: 0}
   AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
   InitialRotation: {x: -0, y: -0, z: -0, w: 1}
   UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  InitialOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  InitialRollOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurHeadingOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurPitchOffset: {x: 0, y: 0, z: 0, w: 1}
-  CurRollOffset: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
   UpVector: {x: 0, y: 1, z: 0}
   RightVector: {x: 1, y: 0, z: 0}
   ForwardVector: {x: 0, y: 0, z: 1}
-  TrunkUpVector: {x: 0, y: 0, z: 1}
-  TrunkRightVector: {x: -1, y: 0, z: 0}
-  TrunkForwardVector: {x: 0, y: -1, z: 0}
   LegUpVector: {x: 0, y: 0, z: -1}
   LegRightVector: {x: 1, y: 0, z: 0}
   LegForwardVector: {x: 0, y: 1, z: 0}
@@ -39696,8 +39639,11 @@ MonoBehaviour:
   LeftArmUpVector: {x: 1, y: 0, z: 0}
   LeftArmRightVector: {x: 0, y: 1, z: 0}
   LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  InitialMagVector: {x: 0, y: 0, z: 0}
-  CurMagVector: {x: 0, y: 0, z: 0}
+  CurAccelVector: {x: 0, y: 0, z: 0}
+  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
+  CurGyroVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVector: {x: 0, y: 0, z: 0}
+  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
   CurId: 0
   OrientationCorrection: {x: 0, y: 180, z: 180}
   UseCorrection: 0
