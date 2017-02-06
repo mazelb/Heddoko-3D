@@ -416,6 +416,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlayPauseSubControls.IsPaused = true;
             PlaybackSpeedModifierSubControl.IsPaused = true;
             PlaybackSpeedModifierSubControl.IsInteractable = false;
+            mPreviousBodyLerpVal = BodySegment.IsUsingInterpolation;
             BodySegment.IsUsingInterpolation = false;
         }
 
