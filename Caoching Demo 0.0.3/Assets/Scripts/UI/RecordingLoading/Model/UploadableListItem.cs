@@ -13,13 +13,16 @@ namespace Assets.Scripts.UI.RecordingLoading.Model
 {
     public class UploadableListItem
     {
-        public string FileName;
         public string RelativePath;
         public bool IsNew;
         private string mBrainpackSerialNumber = "";
         public AssetType AssetType;
 
-       
+        /// <summary>
+        /// File name of the item
+        /// </summary>
+        public string FileName { get; set; }
+
         public string BrainpackSerialNumber
         {
             get

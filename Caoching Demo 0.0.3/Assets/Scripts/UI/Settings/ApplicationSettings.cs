@@ -26,7 +26,8 @@ namespace Assets.Scripts.UI.Settings
         private static int sResHeight;
         private static string sAnalysisAttributeSettingsFile;
         private static bool sAppLaunchedSafely;
-        private static string sCacheFolderPath;
+        private static string sDownloadCacheFolderPath;
+        private static string sBrainpackCacheFolderPath;
         //set it to -1 to  force a registry check
         private static int sCacheSize = 0;
         private static int sTftpPortNum = 8845;
@@ -74,13 +75,13 @@ namespace Assets.Scripts.UI.Settings
         }
 
         /// <summary>
-        /// Getter/setter property : returns and sets the cache folder.
+        /// Getter  property : returns and sets the cache folder.
         /// </summary>
-        public static string CacheFolderPath
+        public static string DownloadCacheFolderPath
         {
             get
             {
-                if (string.IsNullOrEmpty(sCacheFolderPath))
+                if (string.IsNullOrEmpty(sDownloadCacheFolderPath))
                 {
                     //check player prefs
                     string vVal = Application.persistentDataPath + Path.DirectorySeparatorChar + "RecCache";
@@ -88,13 +89,33 @@ namespace Assets.Scripts.UI.Settings
                     {
                         Directory.CreateDirectory(vVal);
                     }
-                    sCacheFolderPath = vVal;
+                    sDownloadCacheFolderPath = vVal;
                 }
-                return sCacheFolderPath;
+                return sDownloadCacheFolderPath;
             }
             
         }
 
+        /// <summary>
+        /// Getter property : returns and sets the cache folder.
+        /// </summary>
+        public static string BrainpackDownloadCacheFolderPath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(sBrainpackCacheFolderPath))
+                {
+                    //check player prefs
+                    string vVal = Application.persistentDataPath + Path.DirectorySeparatorChar + "BpRecCache";
+                    if (!Directory.Exists(vVal))
+                    {
+                        Directory.CreateDirectory(vVal);
+                    }
+                    sBrainpackCacheFolderPath = vVal;
+                }
+                return sBrainpackCacheFolderPath;
+            }
+        }
         /// <summary>
         /// Port property for the local tftp server 
         /// </summary>

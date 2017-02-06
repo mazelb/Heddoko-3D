@@ -43,11 +43,13 @@ namespace Assets.Scripts.MainApp
             OutterThreadToUnityThreadIntermediary.Instance.Init();
             BodySegment.IsTrackingHeight = false;
             mTaggingManager = new TaggingManager();
-            InitiliazePools();
+            InitializeFilePaths();
+            InitialiazePools();
+            InitializeLoggers();
             InitializeDatabase();
             InjectDatabaseDependents();
             InjectTaggingManagerDependents();
-            InitializeLoggers();
+
             QualitySettings.vSyncCount = 0;
             bool vAppSafelyLaunched; 
             HVector3.Vector3MathServiceProvider = new UVector3MathServiceProvider();
@@ -61,6 +63,16 @@ namespace Assets.Scripts.MainApp
                 mDbAccess.SetApplicationSettings();
             }
         }
+
+        /// <summary>
+        /// Initializes file paths.
+        /// </summary>
+        private void InitializeFilePaths()
+        {
+            var vBpDlPath =ApplicationSettings.BrainpackDownloadCacheFolderPath;
+            var vDlPath = ApplicationSettings.DownloadCacheFolderPath;
+        }
+
         // ReSharper disable once UnusedMember.Local
         void Awake()
         {
@@ -115,7 +127,7 @@ namespace Assets.Scripts.MainApp
         /// <summary>
         /// Sets up internal pools
         /// </summary>
-        private void InitiliazePools()
+        private void InitialiazePools()
         {
             GameObject vRenderedBodyGroup = GameObject.FindWithTag("RenderedBodyGroup");
             GameObject vPanelCameraGroup = GameObject.FindWithTag("PanelCameraGroup");

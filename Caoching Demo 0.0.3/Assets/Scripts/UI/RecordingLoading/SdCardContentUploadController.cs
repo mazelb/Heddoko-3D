@@ -14,8 +14,11 @@ using System.Threading;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
+using Assets.Scripts.UI.Settings;
+using Assets.Scripts.Utils.DebugContext.logging;
 using HeddokoSDK.Models;
 using UnityEngine;
+using LogType = Assets.Scripts.Utils.DebugContext.logging.LogType;
 
 namespace Assets.Scripts.UI.RecordingLoading
 {
@@ -145,11 +148,27 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
             try
             {
-                File.Delete(vItem.RelativePath);
+                //move a file to a backup  
+                var vFileName =vItem.FileName;
+                var vFullFilePath  = ApplicationSettings.BrainpackDownloadCacheFolderPath + Path.DirectorySeparatorChar + vFileName;
+                //rename file if exists
+                int vCounter = 0;
+                if (File.Exists(vFullFilePath))
+                {
+                    var vFileInfo = new FileInfo(vFullFilePath);
+                    while (File.Exists(vFullFilePath))
+                    {
+                        var vTempFilePath = Path.GetFileNameWithoutExtension(vFullFilePath);
+                        vTempFilePath += vCounter++;
+                        vTempFilePath += vFileInfo.Extension;
+                        vFullFilePath = vTempFilePath;
+                    }
+                }
+                File.Move(vItem.RelativePath,vFullFilePath); 
             }
             catch (Exception vE)
             {
-                UnityEngine.Debug.Log(vE);
+               DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "Issue moving file "+vE.Message + " ,"+ vE.StackTrace);
             }
 
         }
@@ -372,29 +391,6 @@ namespace Assets.Scripts.UI.RecordingLoading
                     AssetType = AssetType.Log
                 };
             }
-            //var vFiles = vDrive.GetFiles();
-
-            ////var vLogFile = vFiles.First(vX => vX.Name.Contains("sysHdk.bin"));
-
-            //if (vLogFile != null)
-            //{
-            //    //get brainpack name
-            //    string vBrainpackSerial = null;
-            //    using (StreamReader vSr = new StreamReader(vDrive.Name + Path.DirectorySeparatorChar + "sysHdk.bin"))
-            //    {
-            //        string vLine;
-            //        while ((vLine = vSr.ReadLine()) != null)
-            //        {
-            //            var vMatch = Regex.Match(vLine, @"S\\d\\d\\d\\d\\d_");
-            //            if (vMatch.Index >= 0)
-            //            {
-            //                vBrainpackSerial = vLine.Substring(vMatch.Index, 6);
-            //                break;
-            //            }
-            //        }
-            //    }
-
-            //}
         }
     }
 
