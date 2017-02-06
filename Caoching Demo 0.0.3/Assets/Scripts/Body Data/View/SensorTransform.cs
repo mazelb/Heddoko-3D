@@ -43,6 +43,9 @@ namespace Assets.Scripts.Body_Data.View
         [SerializeField]
         private bool mUseParticles = false;
 
+        /// <summary>
+        /// The rotational component of the sensor transform. 
+        /// </summary>
         private SensorRotation Rotation
         {
             get
