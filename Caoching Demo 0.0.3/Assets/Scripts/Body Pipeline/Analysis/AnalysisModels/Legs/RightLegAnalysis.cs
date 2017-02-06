@@ -24,7 +24,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
         public float RightKneeFlexionAngle = 0;
         [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RKnee F/E", Order = 21)]
         public float RightKneeFlexionSignedAngle;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RKnee Rot", Order = 23)]
+        [AnalysisSerialization(IgnoreAttribute = true, AttributeName = "RKnee Rot", Order = 23)]
         public float RightKneeRotationSignedAngle;
 
         //Hip Angles

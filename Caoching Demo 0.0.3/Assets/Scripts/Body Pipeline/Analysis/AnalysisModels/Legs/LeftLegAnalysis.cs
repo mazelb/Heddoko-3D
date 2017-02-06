@@ -22,7 +22,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
         public float LeftKneeFlexionAngle = 0;
         [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LKnee F/E", Order = 22)]
         public float LeftKneeFlexionSignedAngle;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LKnee Rot", Order = 24)]
+        [AnalysisSerialization(IgnoreAttribute = true, AttributeName = "LKnee Rot", Order = 24)]
         public float LeftKneeRotationSignedAngle;
 
         //Hip Angles
@@ -94,11 +94,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             LeftKneeFlexionAngle = vAngleKneeFlexionNew;
             Vector3 vCross = Vector3.Cross(-vThighAxisUp, -vKneeAxisUp);
             float vSign = Mathf.Sign(Vector3.Dot(vThighAxisRight, vCross));
-            LeftKneeFlexionSignedAngle = vSign * vAngleKneeFlexionNew * GetSign("System.Single RightKneeFlexion");
+            LeftKneeFlexionSignedAngle = vSign * vAngleKneeFlexionNew * GetSign("System.Single LeftKneeFlexion");
 
             //calculate the Knee Rotation angle
             float vAngleKneeRotationNew = 180 - Mathf.Abs(180 - KneeTransform.rotation.eulerAngles.y);
-            LeftKneeRotationSignedAngle = vAngleKneeRotationNew * GetSign("System.Single RightKneeRotationAngle");
+            LeftKneeRotationSignedAngle = vAngleKneeRotationNew * GetSign("System.Single LeftKneeRotationAngle");
 
             //calculate the Hip Flexion angle
             Vector3 vThighUpAxisProjectedOnHipRight = Vector3.ProjectOnPlane(-vThighAxisUp, vHipAxisRight);
