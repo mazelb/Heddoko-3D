@@ -103,10 +103,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             vElbowAxisForward = LoArTransform.forward;
 
             //calculate the Elbow Flexion angle
-            float vAngleElbowFlexionNew = Vector3.Angle( vElbowAxisRight, -vShoulderAxisRight);
+            float vAngleElbowFlexionNew = Vector3.Angle(-vShoulderAxisRight, -vElbowAxisRight);
             LeftElbowFlexionAngle = vAngleElbowFlexionNew;
-            Vector3 vCross = Vector3.Cross(vElbowAxisRight, -vShoulderAxisRight);
-            Debug.DrawLine(Vector3.zero, vCross,Color.red,0.1f);
+            Vector3 vCross = Vector3.Cross( -vShoulderAxisRight ,- vElbowAxisRight);
             float vSign = Mathf.Sign(Vector3.Dot(vShoulderAxisUp, vCross));
             LeftElbowFlexionSignedAngle = vSign * LeftElbowFlexionAngle * GetSign("System.Single LeftElbowFlexionAngle");
 
@@ -115,8 +114,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
 
             if (vAngleForeArmPronationNew > 180)
             {
-                vAngleForeArmPronationNew =  vAngleForeArmPronationNew -360f;
-            } 
+                vAngleForeArmPronationNew = vAngleForeArmPronationNew - 360f;
+            }
             LeftForeArmPronationSignedAngle = vAngleForeArmPronationNew * GetSign("System.Single LeftForeArmPronationAngle");
 
             //calculate the Shoulder Flexion angle
@@ -188,14 +187,14 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             vCross = Vector3.Cross(-vTrunkAxisRight, vHorizontalShoulderAbdProjection);
             vSign = Mathf.Sign(Vector3.Dot(vTrunkAxisUp, vCross));
             LeftShoulderHorizontalAbductionSignedAngle = vSign * LeftShoulderHorAbductionAngle * GetSign("System.Single LeftShoulderHorAbductionAngle");
-             
+
             //get the cross product in order to determine the sign of the angle
 
-            float vAngleShoulderRotationNew = - UpArTransform.rotation.eulerAngles.x;//  -UpArTransform.rotation.eulerAngles.x -360f);
-         
+            float vAngleShoulderRotationNew = -UpArTransform.rotation.eulerAngles.x;//  -UpArTransform.rotation.eulerAngles.x -360f);
+
             if (vAngleShoulderRotationNew < -180)
             {
-                vAngleShoulderRotationNew =  360f +vAngleShoulderRotationNew ;
+                vAngleShoulderRotationNew = 360f + vAngleShoulderRotationNew;
             }
             LeftShoulderRotationSignedAngle = vAngleShoulderRotationNew;// * vSign * GetSign("System.Single LeftShoulderRotationAngle");
 

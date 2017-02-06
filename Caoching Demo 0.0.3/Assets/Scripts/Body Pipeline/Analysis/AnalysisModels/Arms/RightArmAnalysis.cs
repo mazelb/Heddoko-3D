@@ -174,9 +174,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
                     vAngleShoulderHorAbductionNew = Vector3.Angle(vTrunkAxisUp, vHorizontalShoulderAbdProjection);
                 }
                 else if (RightShoulderVerticalAbductionSignedAngle <= 0)
-                {
-                    Debug.Log(
-                        "here");
+                { 
                     vAngleShoulderHorAbductionNew = Vector3.Angle(-vTrunkAxisUp, vHorizontalShoulderAbdProjection);
                     Debug.DrawLine(UpArTransform.position, (UpArTransform.position + vTrunkAxisUp) * 3f, Color.blue);
                     Debug.DrawLine(UpArTransform.position, (UpArTransform.position + vHorizontalShoulderAbdProjection) * 3f, Color.blue);
