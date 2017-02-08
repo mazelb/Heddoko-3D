@@ -310,6 +310,9 @@ namespace Assets.Scripts.Frames_Pipeline
             }
         }
 
+        /// <summary>
+        /// Convert frames to BodyFrames
+        /// </summary>
         private void ConvertFrames()
         {
             //There are less frames than currently supported, throw an error

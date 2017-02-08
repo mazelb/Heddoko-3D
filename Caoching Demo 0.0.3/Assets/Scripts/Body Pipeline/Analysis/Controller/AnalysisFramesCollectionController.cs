@@ -1,0 +1,334 @@
+﻿// /**
+// * @file AnalysisFramesCollectionController.cs
+// * @brief Contains the AnalysisFramesCollectionController class
+// * @author Mohammed Haider( mohammed@ heddoko.com)
+// * @date 02 2017
+// * Copyright Heddoko(TM) 2017,  all rights reserved
+// */
+
+using System; 
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels;
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
+using Assets.Scripts.Body_Pipeline.Analysis.Arms;
+using Assets.Scripts.Body_Pipeline.Analysis.Legs;
+using Assets.Scripts.Body_Pipeline.Analysis.Serialization;
+using Assets.Scripts.Body_Pipeline.Analysis.Trunk;
+
+namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
+{
+    /// <summary>
+    /// Controls analysis frames collection
+    /// </summary>
+    public class AnalysisFramesCollectionController
+    {
+        private const int FRAME_OFFSET = 6;
+        /// <summary>
+        /// Body from which to collect analysis frames from
+        /// </summary>
+        private Body mNotifyingBody;
+
+        private bool mCollectingData;
+        private TPosedAnalysisFrame mCurrentAnalysisFrame;
+
+        private int mAnalysisSegmentCounter;
+        private int mTotalSingleSegmentsToCount;
+        private int mCurrentFrameIndex = -1;
+         /// <summary>
+        /// Frames serializer
+        /// </summary>
+        private IAnalysisFramesSerialization FramesSerializer { get; set; }
+
+        /// <summary>
+        /// the set to store analysis frames to
+        /// </summary>
+        private AnalysisFramesSet AnalysisFramesSet { get; set; }
+        /// <summary>
+        /// Create an instance with a serializer
+        /// </summary>
+        /// <param name="vSerializer"></param>
+        public AnalysisFramesCollectionController(IAnalysisFramesSerialization vSerializer)
+        {
+            FramesSerializer = vSerializer;
+        }
+        /// <summary>
+        /// Set the notifying body to the current instance.
+        /// </summary>
+        /// <param name="vBody">the new body.</param>
+        public void SetBody(Body vBody)
+        {
+            RemoveListeners();
+            if (vBody == null)
+            {
+                throw new NullReferenceException("Passed body to the AnalysisFramesCollectionController is null.");
+            }
+            mNotifyingBody = vBody;
+            var vAnalysisSegments = vBody.AnalysisSegments;
+            mTotalSingleSegmentsToCount = vAnalysisSegments.Count;
+            RegisterListener();
+        }
+
+        /// <summary>
+        /// Registers listeners to the Body
+        /// </summary>
+        private void RegisterListener()
+        {
+            if (mNotifyingBody != null)
+            {
+                var vView = mNotifyingBody.View;
+                vView.BodyFrameUpdatedEvent += BodyFrameUpdatedEvent;
+                vView.BodyFrameResetInitializedEvent += BodyFrameResetInitializedEvent;
+                var vAnalysisSegments = mNotifyingBody.AnalysisSegments;
+                //set up analysis listeners
+                foreach (var vKeyValue in vAnalysisSegments)
+                {
+                    vKeyValue.Value.AnalysisCompletedEvent += AnalysisCompletedEvent;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Serializes the set 
+        /// </summary>
+        /// <param name="vPath">the path to serialize to</param>
+        public void SerializeSet(string vPath)
+        {
+            FramesSerializer.Path = vPath;
+            FramesSerializer.Serialize(AnalysisFramesSet);
+            AnalysisFramesSet.Clear();
+        }
+
+        /// <summary>
+        /// Event listener to when the body has been iniatilized a reset
+        /// </summary>
+        /// <param name="vBodyFrame">the frame that has been reset to</param>
+        private void BodyFrameResetInitializedEvent(BodyFrame vBodyFrame)
+        {
+            //verify if the frame exists already in the set
+            var vFrame = AnalysisFramesSet.Get(mCurrentFrameIndex - FRAME_OFFSET);
+            if (vFrame != null)
+            {
+                vFrame.Status = TposeStatus.Tpose;
+            }
+            else if(mCurrentFrameIndex == vBodyFrame.Index )
+            {
+                mCurrentAnalysisFrame.Status = TposeStatus.Tpose;
+            }
+        }
+
+        /// <summary>
+        /// Event listener when the body updates its frame. 
+        /// </summary>
+        /// <param name="vNewFrame"></param>
+        private void BodyFrameUpdatedEvent(BodyFrame vNewFrame)
+        {
+            mCurrentFrameIndex = vNewFrame.Index;
+        }
+
+        /// <summary>
+        /// Analysis completed event
+        /// </summary>
+        /// <param name="vSegmentAnalysis"></param>
+        private void AnalysisCompletedEvent(SegmentAnalysis vSegmentAnalysis)
+        {
+            if (!mCollectingData)
+            {
+                return;
+            }
+            //Verify if the current set already has a an analysis frame
+            if (AnalysisFramesSet.ContainsFrameAt(mCurrentFrameIndex - FRAME_OFFSET))
+            {
+                throw new InvalidOperationException("Frame has already been analyzed.");
+            }
+            if (mAnalysisSegmentCounter == 0)
+            {
+                mCurrentAnalysisFrame = new TPosedAnalysisFrame();
+            }
+
+            SetSegmentAnalysisToCurrentAnalysisFrame(vSegmentAnalysis);
+            mAnalysisSegmentCounter++;
+            if (mAnalysisSegmentCounter == mTotalSingleSegmentsToCount)
+            {
+                mCurrentAnalysisFrame.Index = mCurrentFrameIndex;
+                AnalysisFramesSet.Add(mCurrentFrameIndex - FRAME_OFFSET, mCurrentAnalysisFrame);
+                mAnalysisSegmentCounter = 0;
+            }
+        }
+
+        /// <summary>
+        /// resets the data collection
+        /// </summary>
+        public void ResetCollection()
+        {
+            mAnalysisSegmentCounter = 0;
+            AnalysisFramesSet.Clear();
+        }
+
+        /// <summary>
+        /// Helper method to the analysis completion event
+        /// </summary>
+        /// <param name="vSegmentAnalysis"></param>
+        private void SetSegmentAnalysisToCurrentAnalysisFrame(SegmentAnalysis vSegmentAnalysis)
+        {
+            switch (vSegmentAnalysis.SegmentType)
+            {
+                case BodyStructureMap.SegmentTypes.SegmentType_Trunk:
+                    var vTrunkAnalysis = (TrunkAnalysis)vSegmentAnalysis;
+                    mCurrentAnalysisFrame.TrunkFlexionAngle = vTrunkAnalysis.TrunkFlexionAngle;
+                    mCurrentAnalysisFrame.TrunkFlexionSignedAngle = vTrunkAnalysis.TrunkFlexionSignedAngle;
+                    mCurrentAnalysisFrame.TrunkLateralAngle = vTrunkAnalysis.TrunkLateralAngle;
+                    mCurrentAnalysisFrame.TrunkLateralSignedAngle = vTrunkAnalysis.TrunkLateralSignedAngle;
+                    mCurrentAnalysisFrame.TrunkRotationAngle = vTrunkAnalysis.TrunkRotationAngle;
+                    mCurrentAnalysisFrame.TrunkRotationSignedAngle = vTrunkAnalysis.TrunkRotationSignedAngle;
+                     break;
+                case BodyStructureMap.SegmentTypes.SegmentType_LeftArm:
+                    var vLeftArmAnalysis = (LeftArmAnalysis)vSegmentAnalysis;
+                    mCurrentAnalysisFrame.LeftElbowFlexionAngle = vLeftArmAnalysis.LeftElbowFlexionAngle;
+                    mCurrentAnalysisFrame.LeftElbowFlexionSignedAngle = vLeftArmAnalysis.LeftElbowFlexionSignedAngle;
+                    mCurrentAnalysisFrame.LeftForeArmPronationSignedAngle = vLeftArmAnalysis.LeftForeArmPronationSignedAngle;
+                    mCurrentAnalysisFrame.LeftShoulderFlexionAngle = vLeftArmAnalysis.LeftShoulderFlexionAngle;
+                    mCurrentAnalysisFrame.LeftShoulderFlexionSignedAngle = vLeftArmAnalysis.LeftShoulderFlexionSignedAngle;
+                    mCurrentAnalysisFrame.LeftShoulderVertAbductionAngle = vLeftArmAnalysis.LeftShoulderVertAbductionAngle;
+                    mCurrentAnalysisFrame.LeftShoulderVerticalAbductionSignedAngle = vLeftArmAnalysis.LeftShoulderVerticalAbductionSignedAngle;
+                    mCurrentAnalysisFrame.LeftShoulderHorAbductionAngle = vLeftArmAnalysis.LeftShoulderHorAbductionAngle;
+                    mCurrentAnalysisFrame.LeftShoulderHorizontalAbductionSignedAngle = vLeftArmAnalysis.LeftShoulderHorizontalAbductionSignedAngle;
+                    mCurrentAnalysisFrame.LeftShoulderRotationSignedAngle = vLeftArmAnalysis.LeftShoulderRotationSignedAngle;
+                    mCurrentAnalysisFrame.LeftElbowFlexionAngularVelocity = vLeftArmAnalysis.LeftElbowFlexionAngularVelocity;
+                    mCurrentAnalysisFrame.LeftElbowFlexionPeakAngularVelocity = vLeftArmAnalysis.LeftElbowFlexionPeakAngularVelocity;
+                    mCurrentAnalysisFrame.LeftElbowFlexionAngularAcceleration = vLeftArmAnalysis.LeftElbowFlexionAngularAcceleration;
+                    mCurrentAnalysisFrame.LeftForeArmPronationAngularVelocity = vLeftArmAnalysis.LeftForeArmPronationAngularVelocity;
+                    mCurrentAnalysisFrame.LeftElbowPronationAngularAcceleration = vLeftArmAnalysis.LeftElbowPronationAngularAcceleration;
+                    mCurrentAnalysisFrame.LeftShoulderFlexionAngularVelocity = vLeftArmAnalysis.LeftShoulderFlexionAngularVelocity;
+                    mCurrentAnalysisFrame.LeftShoulderFlexionAngularAcceleration = vLeftArmAnalysis.LeftShoulderFlexionAngularAcceleration;
+                    mCurrentAnalysisFrame.LeftShoulderVertAbductionAngularVelocity = vLeftArmAnalysis.LeftShoulderVertAbductionAngularVelocity;
+                    mCurrentAnalysisFrame.LeftShoulderVertAbductionAngularAcceleration = vLeftArmAnalysis.LeftShoulderVertAbductionAngularAcceleration;
+                    mCurrentAnalysisFrame.LeftShoulderHorAbductionAngularVelocity = vLeftArmAnalysis.LeftShoulderHorAbductionAngularVelocity;
+                    mCurrentAnalysisFrame.LeftShoulderHorAbductionAngularAcceleration = vLeftArmAnalysis.LeftShoulderHorAbductionAngularAcceleration;
+                    mCurrentAnalysisFrame.LeftShoulderRotationAngularVelocity = vLeftArmAnalysis.LeftShoulderRotationAngularVelocity;
+                    mCurrentAnalysisFrame.LeftShoulderRotationAngularAcceleration = vLeftArmAnalysis.LeftShoulderRotationAngularAcceleration;
+                     break;
+                case BodyStructureMap.SegmentTypes.SegmentType_RightArm:
+                    var vRightArmAnalysis = (RightArmAnalysis)vSegmentAnalysis;
+                    mCurrentAnalysisFrame.RightElbowFlexionAngle = vRightArmAnalysis.RightElbowFlexionAngle;
+                    mCurrentAnalysisFrame.RightElbowFlexionSignedAngle = vRightArmAnalysis.RightElbowFlexionSignedAngle;
+                    mCurrentAnalysisFrame.RightForeArmPronationSignedAngle = vRightArmAnalysis.RightForeArmPronationSignedAngle;
+                    mCurrentAnalysisFrame.RightShoulderFlexionAngle = vRightArmAnalysis.RightShoulderFlexionAngle;
+                    mCurrentAnalysisFrame.RightShoulderFlexionSignedAngle = vRightArmAnalysis.RightShoulderFlexionSignedAngle;
+                    mCurrentAnalysisFrame.RightShoulderVertAbductionAngle = vRightArmAnalysis.RightShoulderVertAbductionAngle;
+                    mCurrentAnalysisFrame.RightShoulderVerticalAbductionSignedAngle = vRightArmAnalysis.RightShoulderVerticalAbductionSignedAngle;
+                    mCurrentAnalysisFrame.RightShoulderHorAbductionAngle = vRightArmAnalysis.RightShoulderHorAbductionAngle;
+                    mCurrentAnalysisFrame.RightShoulderHorizontalAbductionSignedAngle = vRightArmAnalysis.RightShoulderHorizontalAbductionSignedAngle;
+                    mCurrentAnalysisFrame.RightShoulderRotationSignedAngle = vRightArmAnalysis.RightShoulderRotationSignedAngle;
+                    mCurrentAnalysisFrame.RightElbowFlexionAngularVelocity = vRightArmAnalysis.RightElbowFlexionAngularVelocity;
+                    mCurrentAnalysisFrame.RightElbowFlexionPeakAngularVelocity = vRightArmAnalysis.RightElbowFlexionPeakAngularVelocity;
+                    mCurrentAnalysisFrame.RightElbowFlexionAngularAcceleration = vRightArmAnalysis.RightElbowFlexionAngularAcceleration;
+                    mCurrentAnalysisFrame.RightForeArmPronationAngularVelocity = vRightArmAnalysis.RightForeArmPronationAngularVelocity;
+                    mCurrentAnalysisFrame.RightForeArmPronationAngularAcceleration = vRightArmAnalysis.RightForeArmPronationAngularAcceleration;
+                    mCurrentAnalysisFrame.RightShoulderFlexionAngularVelocity = vRightArmAnalysis.RightShoulderFlexionAngularVelocity;
+                    mCurrentAnalysisFrame.RightShoulderFlexionAngularAcceleration = vRightArmAnalysis.RightShoulderFlexionAngularAcceleration;
+                    mCurrentAnalysisFrame.RightShoulderVertAbductionAngularVelocity = vRightArmAnalysis.RightShoulderVertAbductionAngularVelocity;
+                    mCurrentAnalysisFrame.RightShoulderVertAbductionAngularAcceleration = vRightArmAnalysis.RightShoulderVertAbductionAngularAcceleration;
+                    mCurrentAnalysisFrame.RightShoulderHorAbductionAngularVelocity = vRightArmAnalysis.RightShoulderHorAbductionAngularVelocity;
+                    mCurrentAnalysisFrame.RightShoulderHorAbductionAngularAcceleration = vRightArmAnalysis.RightShoulderHorAbductionAngularAcceleration;
+                    mCurrentAnalysisFrame.RightShoulderRotationAngularVelocity = vRightArmAnalysis.RightShoulderRotationAngularVelocity;
+                    mCurrentAnalysisFrame.RightShoulderRotationAngularAcceleration = vRightArmAnalysis.RightShoulderRotationAngularAcceleration;
+                     break;
+                case BodyStructureMap.SegmentTypes.SegmentType_LeftLeg:
+                    var vLeftLegAnalysis = (LeftLegAnalysis)vSegmentAnalysis;
+                    mCurrentAnalysisFrame.LeftKneeFlexionAngle = vLeftLegAnalysis.LeftKneeFlexionAngle;
+                    mCurrentAnalysisFrame.LeftKneeFlexionSignedAngle = vLeftLegAnalysis.LeftKneeFlexionSignedAngle;
+                    mCurrentAnalysisFrame.LeftKneeRotationSignedAngle = vLeftLegAnalysis.LeftKneeRotationSignedAngle;
+                    mCurrentAnalysisFrame.LeftHipFlexionAngle = vLeftLegAnalysis.LeftHipFlexionAngle;
+                    mCurrentAnalysisFrame.LeftHipFlexionSignedAngle = vLeftLegAnalysis.LeftHipFlexionSignedAngle;
+                    mCurrentAnalysisFrame.LeftHipAbductionAngle = vLeftLegAnalysis.LeftHipAbductionAngle;
+                    mCurrentAnalysisFrame.LeftHipAbductionSignedAngle = vLeftLegAnalysis.LeftHipAbductionSignedAngle;
+                    mCurrentAnalysisFrame.LeftHipRotationSignedAngle = vLeftLegAnalysis.LeftHipRotationSignedAngle;
+                    mCurrentAnalysisFrame.LeftKneeFlexionAngularVelocity = vLeftLegAnalysis.LeftKneeFlexionAngularVelocity;
+                    mCurrentAnalysisFrame.LeftKneeFlexionAngularAcceleration = vLeftLegAnalysis.LeftKneeFlexionAngularAcceleration;
+                    mCurrentAnalysisFrame.LeftKneeRotationAngularVelocity = vLeftLegAnalysis.LeftKneeRotationAngularVelocity;
+                    mCurrentAnalysisFrame.LeftKneeRotationAngularAcceleration = vLeftLegAnalysis.LeftKneeRotationAngularAcceleration;
+                    mCurrentAnalysisFrame.LeftHipFlexionAngularVelocity = vLeftLegAnalysis.LeftHipFlexionAngularVelocity;
+                    mCurrentAnalysisFrame.LeftHipFlexionAngularAcceleration = vLeftLegAnalysis.LeftHipFlexionAngularAcceleration;
+                    mCurrentAnalysisFrame.LeftHipAbductionAngularVelocity = vLeftLegAnalysis.LeftHipAbductionAngularVelocity;
+                    mCurrentAnalysisFrame.LeftHipAbductionAngularAcceleration = vLeftLegAnalysis.LeftHipAbductionAngularAcceleration;
+                    mCurrentAnalysisFrame.LeftHipRotationAngularVelocity = vLeftLegAnalysis.LeftHipRotationAngularVelocity;
+                    mCurrentAnalysisFrame.LeftHipRotationAngularAcceleration = vLeftLegAnalysis.LeftHipRotationAngularAcceleration;
+                    mCurrentAnalysisFrame.LeftLegHeight = vLeftLegAnalysis.LegHeight;
+                    mCurrentAnalysisFrame.LeftInitThighHeight = vLeftLegAnalysis.mInitThighHeight;
+                    mCurrentAnalysisFrame.LeftInitTibiaHeight = vLeftLegAnalysis.mInitTibiaHeight; 
+                     break;
+                case BodyStructureMap.SegmentTypes.SegmentType_RightLeg:
+                    var vRightLegtAnalysis = (RightLegAnalysis)vSegmentAnalysis;
+                    mCurrentAnalysisFrame.RightKneeFlexionAngle = vRightLegtAnalysis.RightKneeFlexionAngle;
+                    mCurrentAnalysisFrame.RightKneeFlexionSignedAngle = vRightLegtAnalysis.RightKneeFlexionSignedAngle;
+                    mCurrentAnalysisFrame.RightKneeRotationSignedAngle = vRightLegtAnalysis.RightKneeRotationSignedAngle;
+                    mCurrentAnalysisFrame.RightHipFlexionAngle = vRightLegtAnalysis.RightHipFlexionAngle;
+                    mCurrentAnalysisFrame.RightHipFlexionSignedAngle = vRightLegtAnalysis.RightHipFlexionSignedAngle;
+                    mCurrentAnalysisFrame.RightHipAbductionAngle = vRightLegtAnalysis.RightHipAbductionAngle;
+                    mCurrentAnalysisFrame.RightHipAbductionSignedAngle = vRightLegtAnalysis.RightHipAbductionSignedAngle;
+                    mCurrentAnalysisFrame.RightHipRotationSignedAngle = vRightLegtAnalysis.RightHipRotationSignedAngle;
+                    mCurrentAnalysisFrame.RightKneeFlexionAngularVelocity = vRightLegtAnalysis.RightKneeFlexionAngularVelocity;
+                    mCurrentAnalysisFrame.RightKneeFlexionAngularAcceleration = vRightLegtAnalysis.RightKneeFlexionAngularAcceleration;
+                    mCurrentAnalysisFrame.RightKneeRotationAngularVelocity = vRightLegtAnalysis.RightKneeRotationAngularVelocity;
+                    mCurrentAnalysisFrame.RightKneeRotationAngularAcceleration = vRightLegtAnalysis.RightKneeRotationAngularAcceleration;
+                    mCurrentAnalysisFrame.RightHipFlexionAngularVelocity = vRightLegtAnalysis.RightHipFlexionAngularVelocity;
+                    mCurrentAnalysisFrame.RightHipFlexionAngularAcceleration = vRightLegtAnalysis.RightHipFlexionAngularAcceleration;
+                    mCurrentAnalysisFrame.RightHipAbductionAngularVelocity = vRightLegtAnalysis.RightHipAbductionAngularVelocity;
+                    mCurrentAnalysisFrame.RightHipAbductionAngularAcceleration = vRightLegtAnalysis.RightHipAbductionAngularAcceleration;
+                    mCurrentAnalysisFrame.RightHipRotationAngularVelocity = vRightLegtAnalysis.RightHipRotationAngularVelocity;
+                    mCurrentAnalysisFrame.RightHipRotationAngularAcceleration = vRightLegtAnalysis.RightHipRotationAngularAcceleration;
+                    mCurrentAnalysisFrame.RightLegHeight = vRightLegtAnalysis.LegHeight;
+                    mCurrentAnalysisFrame.RightInitThighHeight = vRightLegtAnalysis.mInitThighHeight;
+                    mCurrentAnalysisFrame.RightInitTibiaHeight = vRightLegtAnalysis.mInitTibiaHeight;
+                     break;
+            }
+        }
+
+        /// <summary>
+        /// Remove all listeners from the body.
+        /// </summary>
+        private void RemoveListeners()
+        {
+            if (mNotifyingBody != null)
+            {
+                var vView = mNotifyingBody.View;
+                vView.BodyFrameUpdatedEvent -= BodyFrameUpdatedEvent;
+                vView.BodyFrameResetInitializedEvent -= BodyFrameResetInitializedEvent;
+                var vAnalysisSegments = mNotifyingBody.AnalysisSegments;
+                //set up analysis listeners
+                foreach (var vKeyValue in vAnalysisSegments)
+                {
+                    vKeyValue.Value.AnalysisCompletedEvent -= AnalysisCompletedEvent;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Start data collection
+        /// </summary>
+        public void Start()
+        {
+            mCollectingData = true;
+        }
+
+        public void Stop()
+        {
+            mCollectingData = false;
+        }
+
+        /// <summary>
+        /// Set the maximum count of frames
+        /// </summary>
+        /// <param name="vCount"></param>
+        public void SetMaxCount(int vCount)
+        {
+            if (AnalysisFramesSet == null)
+            {
+                AnalysisFramesSet = new AnalysisFramesSet(vCount);
+            }
+            else
+            {
+                AnalysisFramesSet.SetMaxFrameCount(vCount);
+            }
+        }
+    }
+}

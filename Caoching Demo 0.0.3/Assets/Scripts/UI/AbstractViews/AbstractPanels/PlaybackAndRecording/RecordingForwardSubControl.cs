@@ -27,6 +27,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public Sprite StepForward;
         private SubControlType mType = SubControlType.RecordingForwardSubControl;
         public PlaybackControlPanel ParentPanel;
+        public bool IsEnabled = true;
 
         private bool mIsPaused;
         public bool IsPaused
@@ -80,6 +81,10 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// </summary>
         private void StepForwardAction()
         {
+            if (!IsEnabled)
+            {
+                return;
+            }
             ParentPanel.Pause();
             if (Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift))
             {

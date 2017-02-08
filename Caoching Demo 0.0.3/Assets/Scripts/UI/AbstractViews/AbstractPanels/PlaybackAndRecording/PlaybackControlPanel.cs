@@ -36,7 +36,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     [UserRolePermission()]
     public class PlaybackControlPanel : AbstractControlPanel, IPermissionLevelContractor
     {
-        private RecordingPlaybackTask mPlaybackTask;
+        internal RecordingPlaybackTask mPlaybackTask;
         public event FinalFramePositionReached FinalFramePositionEvent;
         private Body mBody;
         public RecordingProgressSubControl RecordingProgressSliderSubControl;
@@ -135,6 +135,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 ChangeState(PlaybackState.Play);
             }
         }
+
+        
 
         public override ControlPanelType PanelType
         {
@@ -677,6 +679,16 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 }
             });
 
+        }
+
+        /// <summary>
+        /// Sets the slider control functionality
+        /// </summary>
+        /// <param name="vB">the state to set it to.</param>
+        public void SetSliderControlFunctionality(bool vB)
+        {
+            PlaybackProgressSubControl.PlaySlider.interactable = vB;
+            RecordingForwardSubControl.IsEnabled = RecordingRewindSubControl.IsEnabled = vB;
         }
     }
 
