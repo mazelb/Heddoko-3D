@@ -79,12 +79,12 @@ public class BodyStructureMap
     //Segment Types
     public enum SegmentTypes
     {
-        SegmentType_Trunk = 0,
-        SegmentType_RightArm = 1,
-        SegmentType_LeftArm = 2,
-        SegmentType_RightLeg = 3,
-        SegmentType_LeftLeg = 4,
-        SegmentType_Hips = 5,
+        SegmentType_Hips = 0,
+        SegmentType_Trunk =1,
+        SegmentType_RightArm = 2,
+        SegmentType_LeftArm = 3,
+        SegmentType_RightLeg = 4,
+        SegmentType_LeftLeg = 5,
         SegmentType_Count
     };
 

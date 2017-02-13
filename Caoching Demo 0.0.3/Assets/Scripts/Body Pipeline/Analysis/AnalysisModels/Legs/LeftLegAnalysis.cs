@@ -63,9 +63,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
         [AnalysisSerialization(IgnoreAttribute = true)]
         public float LegHeight;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        private float mInitThighHeight = 0.475f;
+        public float mInitThighHeight = 0.475f;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        private float mInitTibiaHeight = 0.475f;
+        public float mInitTibiaHeight = 0.475f;
 
         /// <summary>
         /// Extract angles from orientations for the right leg

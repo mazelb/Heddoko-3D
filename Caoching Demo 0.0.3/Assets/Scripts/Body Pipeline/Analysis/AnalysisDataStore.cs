@@ -27,7 +27,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         public List<Dictionary<FieldInfo, string>> SerializedList = new List<Dictionary<FieldInfo, string>>();
         private List<int> mFrameIndices = new List<int>();
         private List<float> mTimeStamps = new List<float>();
-                private List<BodyFrame> mBodyFrames = new List<BodyFrame>();
+        private List<BodyFrame> mBodyFrames = new List<BodyFrame>();
         private int[] mPoseSelectionIndicies;
         private int mFrameCount = -1;
         private bool mRemovePreviousSerializedInfo;
@@ -62,9 +62,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                 {
                     var vAnalysisDataStruct = new AnalysisFieldDataStructure { FieldInfoKey = vField };
                     vAnalysisTrackingDataStructure.Add(vField, vAnalysisDataStruct);
-
                     mFieldInfoCount++;
-
                 }
                 mStorage.Add(vKvPairing.Key, vAnalysisTrackingDataStructure);
             }
@@ -185,7 +183,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         {
             if (SerializedList.Count != 0 && SerializedList[SerializedList.Count - 1].Count == 0)
             {
-                Debug.Log("counter is "+ mCounter);
+                Debug.Log("counter is " + mCounter);
             }
             if (!mStorage.ContainsKey(vKey))
             {
@@ -220,17 +218,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                     var vPassedInValue = (float)vKvPair.Key.GetValue(vKey);
                     vKvPair.Value.Add(vPassedInValue);
                     //avoid floating point rounding values
-                    string vRoundedValue =((double)vPassedInValue).ToString("F2");
+                    string vRoundedValue = ((double)vPassedInValue).ToString("F2");
                     vList.Add(vKvPair.Key, vRoundedValue);
-                
-
                 }
                 catch (Exception vE)
                 {
-
                 }
                 mCounter++;
-
             }
             if (mCounter >= mFieldInfoCount)
             {
@@ -240,8 +234,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                 }
                 mCounter = 0;
             }
-            
-
         }
 
         /// <summary>
@@ -295,6 +287,5 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         {
             mFrameCount = vRawFramesCount;
         }
-        
     }
 }

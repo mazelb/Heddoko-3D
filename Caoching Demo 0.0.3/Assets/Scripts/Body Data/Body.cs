@@ -14,6 +14,7 @@ using System.Linq;
 using Assets.Scripts.Body_Data.CalibrationData;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Body_Pipeline.Analysis;
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
@@ -60,13 +61,15 @@ public class Body
     public LeftLegAnalysis LeftLegAnalysis;
     public RightLegAnalysis RightLegAnalysis;
     public TrunkAnalysis TorsoAnalysis;
-
-    //view associated with this model
+     //view associated with this model
     private BodyView mView;
     [SerializeField]
     private RenderedBody mRenderedBody;
-
     internal BodyFrameCalibrationContainer mBodyFrameCalibrationContainer = new BodyFrameCalibrationContainer();
+ 
+    public AnalysisFramesSet AnalysisFramesSet { get; set; }
+
+
     /**
     * View
     * @param 

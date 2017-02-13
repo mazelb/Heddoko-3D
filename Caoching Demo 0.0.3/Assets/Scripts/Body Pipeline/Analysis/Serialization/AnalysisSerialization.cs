@@ -18,9 +18,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
     public class AnalysisSerialization : System.Attribute, IComparable
     {
 
-        [JsonIgnore] public bool IgnoreAttribute;// { get; set; }
-        [JsonProperty] public string AttributeName;// { get; set; }
-        [JsonProperty] public int Order;// { get; set; }
+        [JsonIgnore] public bool IgnoreAttribute; 
+        [JsonProperty] public string AttributeName; 
+        [JsonProperty] public int Order; 
 
 
         /// <summary>

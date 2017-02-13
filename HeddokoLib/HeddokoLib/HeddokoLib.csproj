@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\Caoching Demo 0.0.3\Assets\Plugins\HeddokoLib\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -49,6 +49,7 @@
     <Compile Include="adt\WriterReaderQueue.cs" />
     <Compile Include="body pipeline\ImuFrame.cs" />
     <Compile Include="bodyData\analysis\Calibration.cs" />
+    <Compile Include="Body_Pipeline\AnalysisFrame.cs" />
     <Compile Include="genericPatterns\IListenable.cs" />
     <Compile Include="genericPatterns\IReleasableResource.cs" />
     <Compile Include="genericPatterns\Pool.cs" />
