@@ -19,6 +19,7 @@ using Assets.Scripts.UI.AbstractViews.Layouts;
 using Assets.Scripts.UI.AbstractViews.Permissions;
 using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.Utils;
+using Assets.Scripts.Utils.DebugContext;
 using HeddokoSDK.Models;
 using UnityEngine;
 using UnityEngine.UI;
@@ -59,8 +60,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         private PlaybackState mPrevState;
         private PlaybackSettings mPlaybackSettings = new PlaybackSettings();
         private bool mCanUse = true;
-        private bool mPreviousBodyLerpVal;
-        public PlaybackState CurrentState
+         public PlaybackState CurrentState
         {
             get
             {
@@ -95,8 +95,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         {
             get { return mPlaybackTask; }
         }
-
-
+ 
 
         /// <summary>
         /// Updates recording for the current playback panel
@@ -418,8 +417,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlayPauseSubControls.IsPaused = true;
             PlaybackSpeedModifierSubControl.IsPaused = true;
             PlaybackSpeedModifierSubControl.IsInteractable = false;
-            mPreviousBodyLerpVal = BodySegment.IsUsingInterpolation;
-            BodySegment.IsUsingInterpolation = false;
+             BodySegment.IsUsingInterpolation = false;
         }
 
 
@@ -435,7 +433,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlaybackSpeedModifierSubControl.IsPaused = false;
             PlaybackSpeedModifierSubControl.IsInteractable = true;
             PlaybackSpeedModifierSubControl.UpdateCurrentPlaybackSpeed(1f);
-            BodySegment.IsUsingInterpolation = mPreviousBodyLerpVal;
+            BodySegment.IsUsingInterpolation = true;
         }
 
         void BodyFrameUpdateHandler(BodyFrame vFrame)
@@ -460,17 +458,10 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                         mIsNewRecording = false;
                         UpdateRecording(mBody.MBodyFrameThread.PlaybackTask);
                     }
-
-
-
                 }
-
             }
-
         }
-
-
-
+        
         /// <summary>
         /// Get a timestamp for the frame 
         /// </summary>
@@ -479,7 +470,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public float GetTimeStampFromFrameIdx(int vIndex)
         {
             return mPlaybackTask.GetBodyFrameAtIndex(vIndex).Timestamp;
-
         }
 
         /// <summary>
@@ -528,10 +518,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             {
                 BodyUpdatedEvent(vBody);
             }
-            if (mBody != null)
-            {
-                mPreviousBodyLerpVal = BodySegment.IsUsingInterpolation;
-            }
+           
 
         }
 
@@ -629,8 +616,24 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlayPauseSubControls.RequestResources();
             RecordingForwardSubControl.RequestResources();
             RecordingRewindSubControl.RequestResources();
+            InputHandler.RegisterKeyboardAction(KeyCode.Home,ResetTpose);
         }
 
+        void OnDisable()
+        {
+            InputHandler.RemoveKeybinding(KeyCode.Home, ResetTpose);
+        }
+
+        void ResetTpose()
+        {
+            if (mBody != null)
+            {
+                var vFlag = BodySegment.IsUsingInterpolation;
+                BodySegment.IsUsingInterpolation = false;
+                mBody.View.ResetInitialFrame();
+                BodySegment.IsUsingInterpolation = vFlag;
+            }
+        }
         /// <summary>
         /// Stops the current player, resets the body
         /// </summary>
@@ -688,7 +691,9 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public void SetSliderControlFunctionality(bool vB)
         {
             PlaybackProgressSubControl.PlaySlider.interactable = vB;
-            RecordingForwardSubControl.IsEnabled = RecordingRewindSubControl.IsEnabled = vB;
+            RecordingForwardSubControl.IsEnabled = vB;
+          RecordingRewindSubControl.IsEnabled = vB;
+          
         }
     }
 

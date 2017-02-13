@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews;
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using UnityEngine.UI;
 
@@ -10,8 +11,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
     public class ElbowAnalysisTextView : AnaylsisTextView
     {
         private string mLabelName = "Elbow Analysis";
-        private RightArmAnalysis mRightArmAnalysis;
-        private LeftArmAnalysis mLeftArmAnalysis;
+
         public Text RightFlexionText;
         public Text LeftFlexionText;
 
@@ -22,69 +22,33 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
 
         protected override void BodyUpdated()
         {
-            //remove listeners
-            if (mRightArmAnalysis != null)
-            {
-                mRightArmAnalysis.AnalysisCompletedEvent -= UpdateRightArmTextView;
-            }
 
-            if (mLeftArmAnalysis != null)
-            {
-                mLeftArmAnalysis.AnalysisCompletedEvent -= UpdateLeftArmTextView;
-            }
-            if (BodyToAnalyze == null)
-            {
-                mRightArmAnalysis = null;
-                mLeftArmAnalysis = null;
-            }
-            else
-            {
-                mRightArmAnalysis = BodyToAnalyze.RightArmAnalysis;
-                mLeftArmAnalysis = BodyToAnalyze.LeftArmAnalysis;
-                //register listeners
-                if (mRightArmAnalysis != null)
-                {
-                    mRightArmAnalysis.AnalysisCompletedEvent += UpdateRightArmTextView;
-                }
-
-                if (mLeftArmAnalysis != null)
-                {
-                    mLeftArmAnalysis.AnalysisCompletedEvent += UpdateLeftArmTextView;
-                }
-            }
         }
 
-        private void UpdateLeftArmTextView(SegmentAnalysis vAnalysis)
+        public void UpdateLeftArmTextView(float vLeftElbowFlexionAngle)
         {
-            if (mLeftArmAnalysis != null)
-            {
-                LeftFlexionText.text = FeedbackAngleToString(mLeftArmAnalysis.LeftElbowFlexionAngle);
-            }
+            LeftFlexionText.text = FeedbackAngleToString(vLeftElbowFlexionAngle);
 
-            else
-            {
-                ClearText();
-            }
         }
 
-        private void UpdateRightArmTextView(SegmentAnalysis vAnalysis)
+        public void UpdateRightArmTextView(float vRightElbowFlexionAngle)
         {
-            if (mRightArmAnalysis != null)
-            {
-                RightFlexionText.text = FeedbackAngleToString(mRightArmAnalysis.RightElbowFlexionAngle);
 
-            }
-            else
-            {
-                ClearText();
-            }
+            RightFlexionText.text = FeedbackAngleToString(vRightElbowFlexionAngle);
+
         }
 
 
-        protected override void ClearText()
+        public override void ClearText()
         {
             RightFlexionText.text = "";
             LeftFlexionText.text = "";
+        }
+
+        public void UpdateView(TPosedAnalysisFrame vFrame)
+        {
+            UpdateLeftArmTextView(vFrame.LeftElbowFlexionSignedAngle);
+            UpdateRightArmTextView(vFrame.RightElbowFlexionSignedAngle);
         }
     }
 }

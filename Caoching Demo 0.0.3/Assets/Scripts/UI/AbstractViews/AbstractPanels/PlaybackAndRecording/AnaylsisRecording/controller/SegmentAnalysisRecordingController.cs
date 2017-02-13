@@ -44,7 +44,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             ExportDataButton.onClick.AddListener(OnStart);
             ExportDataButtonText.text = "COLLECT ANALYTICS";
 
-
         }
 
         public void DisableControl()
@@ -68,12 +67,9 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             }
            
             BodyModel = RecordingPlayerView.CurrBody;
-            
             //register listeners
             RecordingPlayerView.PbControlPanel.FinalFramePositionEvent += OnEnd;
             BodyModel.View.BodyFrameResetInitializedEvent += SliderMaskContainerController.TPoseRequestedHandler;
-           
-             
             //if the recording has been changed, finish data collection
             RecordingPlayerView.PbControlPanel.NewRecordingSelectedEvent += OnEnd;
             BodyModel.View.BodyFrameUpdatedEvent += CollectTimeStampData;
@@ -153,7 +149,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.An
             UniFileBrowser.use.CloseFileWindow();
             UniFileBrowser.use.enabled = true;
             UniFileBrowser.use.SaveFileWindow(SaveFile);
-
             UniFileBrowser.use.OnEscape = Escaped;
         }
 

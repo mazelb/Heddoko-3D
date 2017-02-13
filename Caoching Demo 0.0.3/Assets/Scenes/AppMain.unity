@@ -3688,24 +3688,6 @@ MonoBehaviour:
   LateralBendingAngle: {fileID: 406990661}
   InclinationAngle: {fileID: 24742752}
   RotationAngle: {fileID: 627725177}
-  mTorsoAnalysis:
-    DeltaTime: 0
-    TrunkFlexionAngle: 0
-    TrunkLateralAngle: 0
-    TrunkRotationAngle: 0
-    TrunkLateralSignedAngle: 0
-    TrunkRotationSignedAngle: 0
-    TrunkFlexionSignedAngle: 0
-    TrunkTransform: {fileID: 0}
-    HipGlobalTransform: {fileID: 0}
-    HipTransform: {fileID: 0}
-    KneeTransform: {fileID: 0}
-    TorsoFlexionAngularAcceleration: 0
-    TorsoFlexionAngularVelocity: 0
-    TorsoLateralAngularAcceleration: 0
-    TorsoLateralAngularVelocity: 0
-    TorsoRotationAngularAcceleration: 0
-    TorsoRotationAngularVelocity: 0
 --- !u!1 &128959882
 GameObject:
   m_ObjectHideFlags: 0
@@ -17900,7 +17882,7 @@ RectTransform:
   m_Father: {fileID: 1897158140}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.9999997}
+  m_AnchorMax: {x: 1, y: 0.9999998}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -19059,7 +19041,7 @@ MonoBehaviour:
   LiveViewButton: {fileID: 892415413}
   BrainpackConnectionSlider: {fileID: 2100874791}
   ResolutionSettingSlideBlock: {fileID: 1528181431}
-  SegmentAnalysisRecordingController: {fileID: 2090096977}
+  AnalysisFramesController: {fileID: 2090096979}
   ConnectionController: {fileID: 750031983}
   RecordingPlayerView: {fileID: 1103780630}
   SuitFeedView: {fileID: 1585398391}
@@ -26067,8 +26049,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 324985697}
   m_HandleRect: {fileID: 324985695}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.99999994
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -27568,6 +27550,8 @@ MonoBehaviour:
       LeftHipRotationAngularVelocity: 0
       LeftHipRotationAngularAcceleration: 0
       LegHeight: 0
+      mInitThighHeight: 0.475
+      mInitTibiaHeight: 0.475
     RightLegAnalysis:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
@@ -27591,6 +27575,8 @@ MonoBehaviour:
       RightHipRotationAngularVelocity: 0
       RightHipRotationAngularAcceleration: 0
       LegHeight: 0
+      mInitThighHeight: 0.475
+      mInitTibiaHeight: 0.475
     TorsoAnalysis:
       DeltaTime: 0
       TrunkFlexionAngle: 0
@@ -32087,6 +32073,7 @@ GameObject:
   - 224: {fileID: 1317791125}
   - 222: {fileID: 1317791130}
   - 114: {fileID: 1317791129}
+  - 114: {fileID: 1317791126}
   m_Layer: 5
   m_Name: Right Control Panel
   m_TagString: Untagged
@@ -32118,6 +32105,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1317791126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1317791124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2083807d37b583a4589191432bf79d6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ElbowText: {fileID: 1576815957}
+  KneeText: {fileID: 2062735189}
+  HipsText: {fileID: 1588596076}
+  ShoulderText: {fileID: 394348011}
+  TrunkText: {fileID: 128189281}
 --- !u!114 &1317791129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32302,6 +32305,8 @@ MonoBehaviour:
       LeftHipRotationAngularVelocity: 0
       LeftHipRotationAngularAcceleration: 0
       LegHeight: 0
+      mInitThighHeight: 0.475
+      mInitTibiaHeight: 0.475
     RightLegAnalysis:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
@@ -32325,6 +32330,8 @@ MonoBehaviour:
       RightHipRotationAngularVelocity: 0
       RightHipRotationAngularAcceleration: 0
       LegHeight: 0
+      mInitThighHeight: 0.475
+      mInitTibiaHeight: 0.475
     TorsoAnalysis:
       DeltaTime: 0
       TrunkFlexionAngle: 0
@@ -33302,7 +33309,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 890272456}
   m_HandleRect: {fileID: 890272455}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -34230,7 +34237,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000030517578}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 20.6}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1360788882
@@ -36571,7 +36578,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000030517578}
+  m_AnchoredPosition: {x: 0, y: 0.0000076293945}
   m_SizeDelta: {x: 0, y: 20.6}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1441013632
@@ -40129,8 +40136,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 117.65411, y: -25.644043}
-  m_SizeDelta: {x: 215.30823, y: 31.288086}
+  m_AnchoredPosition: {x: 114.37773, y: -25.060364}
+  m_SizeDelta: {x: 208.75546, y: 30.120728}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1577945283
 GameObject:
@@ -40467,6 +40474,8 @@ MonoBehaviour:
       LeftHipRotationAngularVelocity: 0
       LeftHipRotationAngularAcceleration: 0
       LegHeight: 0
+      mInitThighHeight: 0.475
+      mInitTibiaHeight: 0.475
     RightLegAnalysis:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
@@ -40490,6 +40499,8 @@ MonoBehaviour:
       RightHipRotationAngularVelocity: 0
       RightHipRotationAngularAcceleration: 0
       LegHeight: 0
+      mInitThighHeight: 0.475
+      mInitTibiaHeight: 0.475
     TorsoAnalysis:
       DeltaTime: 0
       TrunkFlexionAngle: 0
@@ -40920,8 +40931,8 @@ RectTransform:
   m_RootOrder: 5
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 239.63165, y: -312.90997}
-  m_SizeDelta: {x: 479.2633, y: 625.81995}
+  m_AnchoredPosition: {x: 231.13507, y: -304.06277}
+  m_SizeDelta: {x: 462.27014, y: 608.12555}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1605863462
 GameObject:
@@ -45383,7 +45394,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1716404035}
-  - 114: {fileID: 1716404036}
   m_Layer: 0
   m_Name: AppMainRoot
   m_TagString: Untagged
@@ -45412,18 +45422,6 @@ Transform:
   - {fileID: 1952815558}
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &1716404036
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1716404034}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73ec14218cf941543a01974cef60041a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SegmentAnalysisRecordingController: {fileID: 2090096977}
 --- !u!1 &1717317523
 GameObject:
   m_ObjectHideFlags: 0
@@ -46973,8 +46971,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 342.96234, y: -25.644043}
-  m_SizeDelta: {x: 215.30823, y: 31.288086}
+  m_AnchoredPosition: {x: 333.13318, y: -25.060364}
+  m_SizeDelta: {x: 208.75546, y: 30.120728}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1788273716
 GameObject:
@@ -50491,6 +50489,8 @@ MonoBehaviour:
       LeftHipRotationAngularVelocity: 0
       LeftHipRotationAngularAcceleration: 0
       LegHeight: 0
+      mInitThighHeight: 0.475
+      mInitTibiaHeight: 0.475
     RightLegAnalysis:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
@@ -50514,6 +50514,8 @@ MonoBehaviour:
       RightHipRotationAngularVelocity: 0
       RightHipRotationAngularAcceleration: 0
       LegHeight: 0
+      mInitThighHeight: 0.475
+      mInitTibiaHeight: 0.475
     TorsoAnalysis:
       DeltaTime: 0
       TrunkFlexionAngle: 0
@@ -50610,6 +50612,8 @@ MonoBehaviour:
       LeftHipRotationAngularVelocity: 0
       LeftHipRotationAngularAcceleration: 0
       LegHeight: 0
+      mInitThighHeight: 0.475
+      mInitTibiaHeight: 0.475
     RightLegAnalysis:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
@@ -50633,6 +50637,8 @@ MonoBehaviour:
       RightHipRotationAngularVelocity: 0
       RightHipRotationAngularAcceleration: 0
       LegHeight: 0
+      mInitThighHeight: 0.475
+      mInitTibiaHeight: 0.475
     TorsoAnalysis:
       DeltaTime: 0
       TrunkFlexionAngle: 0
@@ -52951,7 +52957,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 708447077}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999998
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -54299,7 +54305,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.046408564}
   m_AnchorMax: {x: 0.90300006, y: 1}
   m_AnchoredPosition: {x: 0.5, y: 0.000061035156}
-  m_SizeDelta: {x: 1, y: -424.98218}
+  m_SizeDelta: {x: 1, y: -413.04715}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &2068942971
 MonoBehaviour:
@@ -54721,8 +54727,8 @@ GameObject:
   - 222: {fileID: 2090096976}
   - 114: {fileID: 2090096975}
   - 114: {fileID: 2090096974}
-  - 114: {fileID: 2090096977}
   - 114: {fileID: 2090096978}
+  - 114: {fileID: 2090096979}
   m_Layer: 5
   m_Name: Data analytics control
   m_TagString: Untagged
@@ -54822,141 +54828,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2090096972}
---- !u!114 &2090096977
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2090096972}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6451edf61b68ae4899f5137aff9814d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ExportDataButton: {fileID: 2090096974}
-  ExportDataButtonText: {fileID: 502711378}
-  BodyModel:
-    BodyGuid: 
-    SuitGuid: 
-    BodyType: 0
-    LeftArmAnalysis:
-      DeltaTime: 0
-      LeftElbowFlexionAngle: 0
-      LeftElbowFlexionSignedAngle: 0
-      LeftForeArmPronationSignedAngle: 0
-      LeftShoulderFlexionAngle: 0
-      LeftShoulderFlexionSignedAngle: 0
-      LeftShoulderVertAbductionAngle: 0
-      LeftShoulderVerticalAbductionSignedAngle: 0
-      LeftShoulderHorAbductionAngle: 0
-      LeftShoulderHorizontalAbductionSignedAngle: 0
-      LeftShoulderRotationSignedAngle: 0
-      LeftElbowFlexionAngularVelocity: 0
-      LeftElbowFlexionPeakAngularVelocity: 0
-      LeftElbowFlexionAngularAcceleration: 0
-      LeftForeArmPronationAngularVelocity: 0
-      LeftElbowPronationAngularAcceleration: 0
-      LeftShoulderFlexionAngularVelocity: 0
-      LeftShoulderFlexionAngularAcceleration: 0
-      LeftShoulderVertAbductionAngularVelocity: 0
-      LeftShoulderVertAbductionAngularAcceleration: 0
-      LeftShoulderHorAbductionAngularVelocity: 0
-      LeftShoulderHorAbductionAngularAcceleration: 0
-      LeftShoulderRotationAngularVelocity: 0
-      LeftShoulderRotationAngularAcceleration: 0
-    RightArmAnalysis:
-      DeltaTime: 0
-      RightElbowFlexionAngle: 0
-      RightElbowFlexionSignedAngle: 0
-      RightForeArmPronationSignedAngle: 0
-      RightShoulderFlexionAngle: 0
-      RightShoulderFlexionSignedAngle: 0
-      RightShoulderVertAbductionAngle: 0
-      RightShoulderVerticalAbductionSignedAngle: 0
-      RightShoulderHorAbductionAngle: 0
-      RightShoulderHorizontalAbductionSignedAngle: 0
-      RightShoulderRotationSignedAngle: 0
-      RightElbowFlexionAngularVelocity: 0
-      RightElbowFlexionPeakAngularVelocity: 0
-      RightElbowFlexionAngularAcceleration: 0
-      RightForeArmPronationAngularVelocity: 0
-      RightForeArmPronationAngularAcceleration: 0
-      RightShoulderFlexionAngularVelocity: 0
-      RightShoulderFlexionAngularAcceleration: 0
-      RightShoulderVertAbductionAngularVelocity: 0
-      RightShoulderVertAbductionAngularAcceleration: 0
-      RightShoulderHorAbductionAngularVelocity: 0
-      RightShoulderHorAbductionAngularAcceleration: 0
-      RightShoulderRotationAngularVelocity: 0
-      RightShoulderRotationAngularAcceleration: 0
-    LeftLegAnalysis:
-      DeltaTime: 0
-      RightLegStride: {x: 0, y: 0, z: 0}
-      LeftLegStride: {x: 0, y: 0, z: 0}
-      LeftKneeFlexionAngle: 0
-      LeftKneeFlexionSignedAngle: 0
-      LeftKneeRotationSignedAngle: 0
-      LeftHipFlexionAngle: 0
-      LeftHipFlexionSignedAngle: 0
-      LeftHipAbductionAngle: 0
-      LeftHipAbductionSignedAngle: 0
-      LeftHipRotationSignedAngle: 0
-      LeftKneeFlexionAngularVelocity: 0
-      LeftKneeFlexionAngularAcceleration: 0
-      LeftKneeRotationAngularVelocity: 0
-      LeftKneeRotationAngularAcceleration: 0
-      LeftHipFlexionAngularVelocity: 0
-      LeftHipFlexionAngularAcceleration: 0
-      LeftHipAbductionAngularVelocity: 0
-      LeftHipAbductionAngularAcceleration: 0
-      LeftHipRotationAngularVelocity: 0
-      LeftHipRotationAngularAcceleration: 0
-      LegHeight: 0
-    RightLegAnalysis:
-      DeltaTime: 0
-      RightLegStride: {x: 0, y: 0, z: 0}
-      LeftLegStride: {x: 0, y: 0, z: 0}
-      RightKneeFlexionAngle: 0
-      RightKneeFlexionSignedAngle: 0
-      RightKneeRotationSignedAngle: 0
-      RightHipFlexionAngle: 0
-      RightHipFlexionSignedAngle: 0
-      RightHipAbductionAngle: 0
-      RightHipAbductionSignedAngle: 0
-      RightHipRotationSignedAngle: 0
-      RightKneeFlexionAngularVelocity: 0
-      RightKneeFlexionAngularAcceleration: 0
-      RightKneeRotationAngularVelocity: 0
-      RightKneeRotationAngularAcceleration: 0
-      RightHipFlexionAngularVelocity: 0
-      RightHipFlexionAngularAcceleration: 0
-      RightHipAbductionAngularVelocity: 0
-      RightHipAbductionAngularAcceleration: 0
-      RightHipRotationAngularVelocity: 0
-      RightHipRotationAngularAcceleration: 0
-      LegHeight: 0
-    TorsoAnalysis:
-      DeltaTime: 0
-      TrunkFlexionAngle: 0
-      TrunkLateralAngle: 0
-      TrunkRotationAngle: 0
-      TrunkLateralSignedAngle: 0
-      TrunkRotationSignedAngle: 0
-      TrunkFlexionSignedAngle: 0
-      TrunkTransform: {fileID: 0}
-      HipGlobalTransform: {fileID: 0}
-      HipTransform: {fileID: 0}
-      KneeTransform: {fileID: 0}
-      TorsoFlexionAngularAcceleration: 0
-      TorsoFlexionAngularVelocity: 0
-      TorsoLateralAngularAcceleration: 0
-      TorsoLateralAngularVelocity: 0
-      TorsoRotationAngularAcceleration: 0
-      TorsoRotationAngularVelocity: 0
-    mRenderedBody: {fileID: 0}
-  RecordingPlayerView: {fileID: 1103780630}
-  DisablingPanel: {fileID: 2110020488}
-  SliderMaskContainerController: {fileID: 2090096978}
 --- !u!114 &2090096978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54975,6 +54846,22 @@ MonoBehaviour:
     type: 2}
   PlayerView: {fileID: 1103780630}
   RenderingCam: {fileID: 1047580056}
+--- !u!114 &2090096979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2090096972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df685887f01c678409cad1cd2e5c6a75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerView: {fileID: 1103780630}
+  DisablingPanel: {fileID: 2110020488}
+  AnalysisTextViewController: {fileID: 1317791126}
+  ExportDataButton: {fileID: 2090096974}
+  ExportDataText: {fileID: 502711378}
 --- !u!1 &2094367924
 GameObject:
   m_ObjectHideFlags: 0

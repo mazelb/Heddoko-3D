@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections;
+using Assets.Scripts.Body_Pipeline.Analysis.Controller;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Communication.View;
 using Assets.Scripts.MainApp;
@@ -35,7 +36,8 @@ namespace Assets.Scripts.UI.Settings
         public LiveConnectionButton LiveViewButton;
         public SlideBlock BrainpackConnectionSlider;
         public SlideBlock ResolutionSettingSlideBlock;
-        public SegmentAnalysisRecordingController SegmentAnalysisRecordingController;
+        public UnityAnalysisFramesControllerWrapper AnalysisFramesController;
+  
         public BrainpackConnectionController ConnectionController;
         public RecordingPlayerView RecordingPlayerView;
         public LiveSuitFeedView SuitFeedView;
@@ -48,7 +50,7 @@ namespace Assets.Scripts.UI.Settings
             ExitApplicationButton.onClick.AddListener(QuitApplication);
             RenameRecordingButton.onClick.AddListener(() => RenameRecordingModule.Toggle());
             CloudLocalStorageViewManager.RecordingLoadingCompleteEvent +=
-                (vX) => SegmentAnalysisRecordingController.EnableControl();
+                (vX) => AnalysisFramesController.EnableControl();
            
             RenameRecordingModule.Init(ConnectionController);
             LiveViewButton.Disable();
@@ -76,7 +78,7 @@ namespace Assets.Scripts.UI.Settings
                 {
                     ResolutionSettingSlideBlock.Toggle();
                 }
-                SegmentAnalysisRecordingController.DisableControl();
+                AnalysisFramesController.DisableControl();
             });
             ResolutionSettingsButton.onClick.AddListener(() =>
             {
@@ -136,10 +138,6 @@ namespace Assets.Scripts.UI.Settings
              );
             ConnectionController.ConnectedStateEvent += LiveViewButton.Enable;
             ConnectionController.DisconnectedStateEvent += LiveViewButton.Disable;
-            SegmentAnalysisRecordingController.DataCollectionEndedEvent +=
-                () => LoadRecordingsButton.interactable = true;
-            SegmentAnalysisRecordingController.DataCollectionStartedEvent +=
-                () => LoadRecordingsButton.interactable = false;
             AppManager.OnLogoutEvent += OnLogout;
             AppManager.OnLoginEvent += InitComponents;
         }

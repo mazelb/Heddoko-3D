@@ -134,6 +134,10 @@
 				"CannotLoadRecording" : {
 				"SingularForm": "There was an issue loading this recording file. Please try another file or report this problem to support",
 				"PluralForm":  null
+				},
+				"NoAnalysisFrameSet" : {
+				"SingularForm": "The current frame has not been analyzed.",
+				"PluralForm":  null
 				}
 				
 				

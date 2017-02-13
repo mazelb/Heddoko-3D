@@ -12,7 +12,6 @@ using System;
 using System.Runtime.Serialization;
 using Assets.Scripts.Frames_Pipeline;
 using heddoko;
-using HeddokoLib.heddokoProtobuff;
 using HeddokoLib.utils;
 using Newtonsoft.Json;
 
@@ -57,8 +56,7 @@ public class BodyFrame
         get { return mTimeStamp; }
         set { mTimeStamp = value; }
     }
-
-
+    
     /**
     * ToString()
     * @brief Prepares the current body frame as a string 

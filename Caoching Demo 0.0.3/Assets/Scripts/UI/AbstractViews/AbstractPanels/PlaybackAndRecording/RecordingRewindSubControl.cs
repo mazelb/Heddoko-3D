@@ -26,7 +26,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         private SubControlType mType = SubControlType.RecordingRewindSubControl;
         public PlaybackControlPanel ParentPanel;
         private bool mIsPaused;
-    public bool IsEnabled;
+         public bool IsEnabled=true;
         public bool IsPaused
         {
             get { return mIsPaused; }

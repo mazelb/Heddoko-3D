@@ -6,7 +6,8 @@
 // * Copyright Heddoko(TM) 2017,  all rights reserved
 // */
 
-using System; 
+using System;
+using System.Linq;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
@@ -17,7 +18,7 @@ using Assets.Scripts.Body_Pipeline.Analysis.Trunk;
 namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
 {
     /// <summary>
-    /// Controls analysis frames collection
+    /// A controller for collecting frames. its responsiblity is to set rules on how a Body's analysis frames are collected,stored and serialized
     /// </summary>
     public class AnalysisFramesCollectionController
     {
@@ -26,27 +27,34 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// Body from which to collect analysis frames from
         /// </summary>
         private Body mNotifyingBody;
-
         private bool mCollectingData;
         private TPosedAnalysisFrame mCurrentAnalysisFrame;
-
         private int mAnalysisSegmentCounter;
         private int mTotalSingleSegmentsToCount;
         private int mCurrentFrameIndex = -1;
-         /// <summary>
-        /// Frames serializer
-        /// </summary>
-        private IAnalysisFramesSerialization FramesSerializer { get; set; }
+        internal bool MovementSet;
 
         /// <summary>
-        /// the set to store analysis frames to
+        /// Frames serializer
         /// </summary>
-        private AnalysisFramesSet AnalysisFramesSet { get; set; }
+        private IAnalysisFramesSerializer FramesSerializer { get; set; }
+
+        /// <summary>
+        /// the body 
+        /// </summary>
+        public Body Body
+        {
+            get
+            {
+                return mNotifyingBody;
+            }
+        }
+
         /// <summary>
         /// Create an instance with a serializer
         /// </summary>
         /// <param name="vSerializer"></param>
-        public AnalysisFramesCollectionController(IAnalysisFramesSerialization vSerializer)
+        public AnalysisFramesCollectionController(IAnalysisFramesSerializer vSerializer)
         {
             FramesSerializer = vSerializer;
         }
@@ -64,6 +72,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             mNotifyingBody = vBody;
             var vAnalysisSegments = vBody.AnalysisSegments;
             mTotalSingleSegmentsToCount = vAnalysisSegments.Count;
+            FramesSerializer.SetAnalysisSegments(vBody.AnalysisSegments.Values.ToList());
             RegisterListener();
         }
 
@@ -92,9 +101,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// <param name="vPath">the path to serialize to</param>
         public void SerializeSet(string vPath)
         {
-            FramesSerializer.Path = vPath;
-            FramesSerializer.Serialize(AnalysisFramesSet);
-            AnalysisFramesSet.Clear();
+            FramesSerializer.Serialize(mNotifyingBody.AnalysisFramesSet, vPath);
         }
 
         /// <summary>
@@ -103,16 +110,31 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// <param name="vBodyFrame">the frame that has been reset to</param>
         private void BodyFrameResetInitializedEvent(BodyFrame vBodyFrame)
         {
+            if (!MovementSet || !mCollectingData)
+            {
+                return;
+            }
             //verify if the frame exists already in the set
-            var vFrame = AnalysisFramesSet.Get(mCurrentFrameIndex - FRAME_OFFSET);
+            var vFrame = Body.AnalysisFramesSet.Get(mCurrentFrameIndex - FRAME_OFFSET);
             if (vFrame != null)
             {
-                vFrame.Status = TposeStatus.Tpose;
+                if (mCurrentFrameIndex == vBodyFrame.Index)
+                {
+                    mCurrentAnalysisFrame.Status = TposeStatus.Tpose;
+                }
+                else
+                {
+                    vFrame.Status = TposeStatus.Tpose;
+                }
+                //clear out frames after this current index
+                int vStartIndexClear = mCurrentFrameIndex - FRAME_OFFSET ;
+                int vMaxCount = Body.AnalysisFramesSet.MaxFramesCount;
+                for (int vI = vStartIndexClear; vI < vMaxCount; vI++)
+                {
+                    Body.AnalysisFramesSet.Remove(vI);
+                }
             }
-            else if(mCurrentFrameIndex == vBodyFrame.Index )
-            {
-                mCurrentAnalysisFrame.Status = TposeStatus.Tpose;
-            }
+
         }
 
         /// <summary>
@@ -122,6 +144,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         private void BodyFrameUpdatedEvent(BodyFrame vNewFrame)
         {
             mCurrentFrameIndex = vNewFrame.Index;
+            //todo: add time stamp as uint
         }
 
         /// <summary>
@@ -130,26 +153,26 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// <param name="vSegmentAnalysis"></param>
         private void AnalysisCompletedEvent(SegmentAnalysis vSegmentAnalysis)
         {
-            if (!mCollectingData)
+            if (!mCollectingData || !MovementSet)
             {
                 return;
             }
             //Verify if the current set already has a an analysis frame
-            if (AnalysisFramesSet.ContainsFrameAt(mCurrentFrameIndex - FRAME_OFFSET))
+            if (Body.AnalysisFramesSet.ContainsFrameAt(mCurrentFrameIndex - FRAME_OFFSET))
             {
-                throw new InvalidOperationException("Frame has already been analyzed.");
+                return;
             }
             if (mAnalysisSegmentCounter == 0)
             {
                 mCurrentAnalysisFrame = new TPosedAnalysisFrame();
             }
-
             SetSegmentAnalysisToCurrentAnalysisFrame(vSegmentAnalysis);
             mAnalysisSegmentCounter++;
             if (mAnalysisSegmentCounter == mTotalSingleSegmentsToCount)
             {
                 mCurrentAnalysisFrame.Index = mCurrentFrameIndex;
-                AnalysisFramesSet.Add(mCurrentFrameIndex - FRAME_OFFSET, mCurrentAnalysisFrame);
+                Body.AnalysisFramesSet.Add(mCurrentFrameIndex - FRAME_OFFSET, mCurrentAnalysisFrame);
+
                 mAnalysisSegmentCounter = 0;
             }
         }
@@ -160,7 +183,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         public void ResetCollection()
         {
             mAnalysisSegmentCounter = 0;
-            AnalysisFramesSet.Clear();
+            if (Body == null || Body.AnalysisFramesSet == null)
+            {
+                return;
+            }
+            Body.AnalysisFramesSet.Clear();
         }
 
         /// <summary>
@@ -179,7 +206,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
                     mCurrentAnalysisFrame.TrunkLateralSignedAngle = vTrunkAnalysis.TrunkLateralSignedAngle;
                     mCurrentAnalysisFrame.TrunkRotationAngle = vTrunkAnalysis.TrunkRotationAngle;
                     mCurrentAnalysisFrame.TrunkRotationSignedAngle = vTrunkAnalysis.TrunkRotationSignedAngle;
-                     break;
+                    break;
                 case BodyStructureMap.SegmentTypes.SegmentType_LeftArm:
                     var vLeftArmAnalysis = (LeftArmAnalysis)vSegmentAnalysis;
                     mCurrentAnalysisFrame.LeftElbowFlexionAngle = vLeftArmAnalysis.LeftElbowFlexionAngle;
@@ -205,7 +232,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
                     mCurrentAnalysisFrame.LeftShoulderHorAbductionAngularAcceleration = vLeftArmAnalysis.LeftShoulderHorAbductionAngularAcceleration;
                     mCurrentAnalysisFrame.LeftShoulderRotationAngularVelocity = vLeftArmAnalysis.LeftShoulderRotationAngularVelocity;
                     mCurrentAnalysisFrame.LeftShoulderRotationAngularAcceleration = vLeftArmAnalysis.LeftShoulderRotationAngularAcceleration;
-                     break;
+                    break;
                 case BodyStructureMap.SegmentTypes.SegmentType_RightArm:
                     var vRightArmAnalysis = (RightArmAnalysis)vSegmentAnalysis;
                     mCurrentAnalysisFrame.RightElbowFlexionAngle = vRightArmAnalysis.RightElbowFlexionAngle;
@@ -231,7 +258,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
                     mCurrentAnalysisFrame.RightShoulderHorAbductionAngularAcceleration = vRightArmAnalysis.RightShoulderHorAbductionAngularAcceleration;
                     mCurrentAnalysisFrame.RightShoulderRotationAngularVelocity = vRightArmAnalysis.RightShoulderRotationAngularVelocity;
                     mCurrentAnalysisFrame.RightShoulderRotationAngularAcceleration = vRightArmAnalysis.RightShoulderRotationAngularAcceleration;
-                     break;
+                    break;
                 case BodyStructureMap.SegmentTypes.SegmentType_LeftLeg:
                     var vLeftLegAnalysis = (LeftLegAnalysis)vSegmentAnalysis;
                     mCurrentAnalysisFrame.LeftKneeFlexionAngle = vLeftLegAnalysis.LeftKneeFlexionAngle;
@@ -254,8 +281,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
                     mCurrentAnalysisFrame.LeftHipRotationAngularAcceleration = vLeftLegAnalysis.LeftHipRotationAngularAcceleration;
                     mCurrentAnalysisFrame.LeftLegHeight = vLeftLegAnalysis.LegHeight;
                     mCurrentAnalysisFrame.LeftInitThighHeight = vLeftLegAnalysis.mInitThighHeight;
-                    mCurrentAnalysisFrame.LeftInitTibiaHeight = vLeftLegAnalysis.mInitTibiaHeight; 
-                     break;
+                    mCurrentAnalysisFrame.LeftInitTibiaHeight = vLeftLegAnalysis.mInitTibiaHeight;
+                    break;
                 case BodyStructureMap.SegmentTypes.SegmentType_RightLeg:
                     var vRightLegtAnalysis = (RightLegAnalysis)vSegmentAnalysis;
                     mCurrentAnalysisFrame.RightKneeFlexionAngle = vRightLegtAnalysis.RightKneeFlexionAngle;
@@ -279,7 +306,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
                     mCurrentAnalysisFrame.RightLegHeight = vRightLegtAnalysis.LegHeight;
                     mCurrentAnalysisFrame.RightInitThighHeight = vRightLegtAnalysis.mInitThighHeight;
                     mCurrentAnalysisFrame.RightInitTibiaHeight = vRightLegtAnalysis.mInitTibiaHeight;
-                     break;
+                    break;
             }
         }
 
@@ -288,12 +315,12 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// </summary>
         private void RemoveListeners()
         {
-            if (mNotifyingBody != null)
+            if (Body != null)
             {
-                var vView = mNotifyingBody.View;
+                var vView = Body.View;
                 vView.BodyFrameUpdatedEvent -= BodyFrameUpdatedEvent;
                 vView.BodyFrameResetInitializedEvent -= BodyFrameResetInitializedEvent;
-                var vAnalysisSegments = mNotifyingBody.AnalysisSegments;
+                var vAnalysisSegments = Body.AnalysisSegments;
                 //set up analysis listeners
                 foreach (var vKeyValue in vAnalysisSegments)
                 {
@@ -321,13 +348,30 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// <param name="vCount"></param>
         public void SetMaxCount(int vCount)
         {
-            if (AnalysisFramesSet == null)
+            if (Body.AnalysisFramesSet == null)
             {
-                AnalysisFramesSet = new AnalysisFramesSet(vCount);
+                Body.AnalysisFramesSet = new AnalysisFramesSet(vCount);
             }
             else
             {
-                AnalysisFramesSet.SetMaxFrameCount(vCount);
+                Body.AnalysisFramesSet.SetMaxFrameCount(vCount);
+            }
+        }
+
+        /// <summary>
+        /// Returns an analysis frame at the given index
+        /// </summary>
+        /// <param name="vIndex"></param>
+        /// <returns></returns>
+        public TPosedAnalysisFrame GetAnalysisFrame(int vIndex)
+        {
+            if (Body == null || Body.AnalysisFramesSet == null)
+            {
+                return null;
+            }
+            else
+            {
+                return Body.AnalysisFramesSet.Get(vIndex - FRAME_OFFSET);
             }
         }
     }

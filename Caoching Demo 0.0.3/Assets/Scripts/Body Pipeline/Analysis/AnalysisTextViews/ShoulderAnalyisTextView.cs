@@ -7,6 +7,7 @@
 */
 
 using Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews;
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using UnityEngine.UI;
 
@@ -18,9 +19,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
     public class ShoulderAnalyisTextView : AnaylsisTextView
     {
         private string mLabelName = "Shoulder Analysis";
-        private RightArmAnalysis mRightArmAnalysis;
-        private LeftArmAnalysis mLeftArmAnalysis;
-
         public Text RightShoulderFlexionText;
         public Text LeftShoulderFlexionText;
         public Text RightShoulderAbductionText;
@@ -32,83 +30,41 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
 
         protected override void BodyUpdated()
         {
-
-            if (BodyToAnalyze != null)
-            {
-                //remove listeners first
-                if (mLeftArmAnalysis != null)
-                {
-                    mLeftArmAnalysis.AnalysisCompletedEvent -= UpdateLeftShoulderTextView;
-                }
-                if (mRightArmAnalysis != null)
-                {
-                    mRightArmAnalysis.AnalysisCompletedEvent -= UpdateRightArmTextView;
-
-                }
-                //Register listeners
-                mLeftArmAnalysis = BodyToAnalyze.LeftArmAnalysis;
-                mRightArmAnalysis = BodyToAnalyze.RightArmAnalysis;
-                mLeftArmAnalysis.AnalysisCompletedEvent += UpdateLeftShoulderTextView;
-                mRightArmAnalysis.AnalysisCompletedEvent += UpdateRightArmTextView;
-
-
-            }
-            else
-            {
-                //remove listeners first
-                if (mLeftArmAnalysis != null)
-                {
-                    mLeftArmAnalysis.AnalysisCompletedEvent -= UpdateLeftShoulderTextView;
-                }
-                if (mRightArmAnalysis != null)
-                {
-                    mRightArmAnalysis.AnalysisCompletedEvent -= UpdateRightArmTextView;
-
-                }
-                mRightArmAnalysis = null;
-                mLeftArmAnalysis = null;
-                ClearText();
-            }
+            //show text field maybe?
         }
 
-        private void UpdateLeftShoulderTextView(SegmentAnalysis vAnalysis)
+        private void UpdateLeftShoulderTextView(float vLeftShoulderFlexionSignedAngle, float vLeftShoulderVerticalAbductionSignedAngle)
         {
-            if (mLeftArmAnalysis != null)
-            {
-                LeftShoulderFlexionText.text = FeedbackAngleToString(mLeftArmAnalysis.LeftShoulderFlexionSignedAngle);
-                LeftShoulderAbductionText.text = FeedbackAngleToString(mLeftArmAnalysis.LeftShoulderVerticalAbductionSignedAngle);
-            }
 
-            else
-            {
-                ClearText();
-            }
+            LeftShoulderFlexionText.text = FeedbackAngleToString(vLeftShoulderFlexionSignedAngle);
+            LeftShoulderAbductionText.text = FeedbackAngleToString(vLeftShoulderVerticalAbductionSignedAngle);
+
         }
 
-        private void UpdateRightArmTextView(SegmentAnalysis vAnalysis)
+        private void UpdateRightArmTextView(float vRightShoulderFlexionSignedAngle, float vRightShoulderVerticalAbductionSignedAngle)
         {
-            if (mRightArmAnalysis != null)
-            {
-                RightShoulderFlexionText.text = FeedbackAngleToString(mRightArmAnalysis.RightShoulderFlexionSignedAngle);
-                RightShoulderAbductionText.text = FeedbackAngleToString(mRightArmAnalysis.RightShoulderVerticalAbductionSignedAngle);
-            }
-            else
-            {
-                ClearText();
-            }
+            RightShoulderFlexionText.text = FeedbackAngleToString(vRightShoulderFlexionSignedAngle);
+            RightShoulderAbductionText.text = FeedbackAngleToString(vRightShoulderVerticalAbductionSignedAngle);
+
         }
 
 
         /// <summary>
         /// Clears the text
         /// </summary>
-        protected override void ClearText()
+        public override void ClearText()
         {
             RightShoulderFlexionText.text = "";
             LeftShoulderFlexionText.text = "";
             RightShoulderAbductionText.text = "";
             LeftShoulderAbductionText.text = "";
 
+        }
+
+        public void UpdateView(TPosedAnalysisFrame vFrame)
+        {
+            UpdateLeftShoulderTextView(vFrame.LeftShoulderFlexionSignedAngle, vFrame.LeftShoulderVerticalAbductionSignedAngle);
+            UpdateRightArmTextView(vFrame.RightShoulderFlexionSignedAngle, vFrame.RightShoulderVerticalAbductionSignedAngle);
         }
     }
 }

@@ -241,7 +241,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
         {
             if (vDictionary.ContainsKey(vKey) && vDictionary[vKey].Count > 0)
             {
-                //vDictionary[vKey].Clear();
                 return;
             }
             //get all the field information the analysis segments that are of type System.Single

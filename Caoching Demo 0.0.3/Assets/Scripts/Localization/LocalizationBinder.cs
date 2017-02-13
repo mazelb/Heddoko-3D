@@ -71,6 +71,7 @@ namespace Assets.Scripts.Localization
         BadKitUpload2,
         CannotLoadRecording,
         MessageFromServerReceived,
-        ReturnToLoginScreen
+        ReturnToLoginScreen,
+        NoAnalysisFrameSet
     }
 }

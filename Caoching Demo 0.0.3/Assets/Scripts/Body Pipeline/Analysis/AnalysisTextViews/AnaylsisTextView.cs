@@ -77,7 +77,7 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews
 
         protected abstract void BodyUpdated();
 
-        protected abstract void ClearText();
+        public abstract void ClearText();
 
 
         /// <summary>

@@ -15,14 +15,16 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels
     /// </summary>
     public class TPosedAnalysisFrame : AnalysisFrame
     {
-         public TposeStatus Status { get; set; }
+        public TposeStatus Status { get; set; }
         public int Index { get; set; }
+
+        
     }
 
     public enum TposeStatus
     {
-        NonTPose,
-        PossibleTpose,
-        Tpose
+        NonTPose=0,
+        PossibleTpose =1,
+        Tpose =2
     }
 }
