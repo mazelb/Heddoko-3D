@@ -134,7 +134,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
                     Body.AnalysisFramesSet.Remove(vI);
                 }
             }
-
         }
 
         /// <summary>
@@ -144,6 +143,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         private void BodyFrameUpdatedEvent(BodyFrame vNewFrame)
         {
             mCurrentFrameIndex = vNewFrame.Index;
+            if (mCurrentAnalysisFrame != null)
+            {
+                mCurrentAnalysisFrame.TimeStamp = vNewFrame.Timestamp;
+            }
             //todo: add time stamp as uint
         }
 
@@ -164,7 +167,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             }
             if (mAnalysisSegmentCounter == 0)
             {
-                mCurrentAnalysisFrame = new TPosedAnalysisFrame();
+                mCurrentAnalysisFrame = new TPosedAnalysisFrame(); 
             }
             SetSegmentAnalysisToCurrentAnalysisFrame(vSegmentAnalysis);
             mAnalysisSegmentCounter++;

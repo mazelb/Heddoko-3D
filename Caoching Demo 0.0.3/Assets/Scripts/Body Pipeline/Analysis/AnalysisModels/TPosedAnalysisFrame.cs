@@ -17,8 +17,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels
     {
         public TposeStatus Status { get; set; }
         public int Index { get; set; }
+        /// <summary>
+        /// override AnalysisFrame's timestamp
+        /// </summary>
+        public new float TimeStamp { get; set; }
 
-        
     }
 
     public enum TposeStatus
