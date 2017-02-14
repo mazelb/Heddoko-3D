@@ -72,6 +72,7 @@ namespace Assets.Scripts.Localization
         CannotLoadRecording,
         MessageFromServerReceived,
         ReturnToLoginScreen,
-        NoAnalysisFrameSet
+        NoAnalysisFrameSet,
+        PlayingRecording
     }
 }

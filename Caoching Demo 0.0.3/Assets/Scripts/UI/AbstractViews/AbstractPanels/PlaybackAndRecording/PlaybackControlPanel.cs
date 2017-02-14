@@ -13,6 +13,7 @@ using Assets.Scripts.Body_Data;
 using Assets.Scripts.Frames_Pipeline;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.Localization;
+using Assets.Scripts.Notification;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Layouts;
@@ -558,8 +559,10 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 if (BodyUpdatedEvent != null)
                 {
                     BodyUpdatedEvent(mBody);
-                }
-                Debug.Log("playing back " + vNewCsvBodyFramesRecording.Title);
+                } 
+                var vNotificationMsg = LocalizationBinderContainer.GetString(KeyMessage.PlayingRecording);
+                vNotificationMsg += vNewCsvBodyFramesRecording.Title;
+                NotificationManager.CreateNotification(vNotificationMsg, NotificationManager.NotificationUrgency.Low);
             }
             mIsNewRecording = true;
         }

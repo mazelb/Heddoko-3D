@@ -86,4 +86,6 @@ MonoBehaviour:
     : {\r\n\t\t\t\t\"SingularForm\": \"There was an issue loading this recording file.
     Please try another file or report this problem to support\",\r\n\t\t\t\t\"PluralForm\":
     \ null\r\n\t\t\t\t},\r\n\t\t\t\t\"NoAnalysisFrameSet\" : {\r\n\t\t\t\t\"SingularForm\":
-    \"The current frame has not been analyzed.\",\r\n\t\t\t\t\"PluralForm\":  null\r\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\t\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}"
+    \"The current frame has not been analyzed.\",\r\n\t\t\t\t\"PluralForm\":  null\r\n\t\t\t\t},\r\n\t\t\t\t\"PlayingRecording\"
+    : {\r\n\t\t\t\t\"SingularForm\": \"Playing recording: \",\r\n\t\t\t\t\"PluralForm\":
+    \ null\r\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\t\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}"

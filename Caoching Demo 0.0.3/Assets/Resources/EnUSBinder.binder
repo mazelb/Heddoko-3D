@@ -138,6 +138,10 @@
 				"NoAnalysisFrameSet" : {
 				"SingularForm": "The current frame has not been analyzed.",
 				"PluralForm":  null
+				},
+				"PlayingRecording" : {
+				"SingularForm": "Playing recording: ",
+				"PluralForm":  null
 				}
 				
 				
