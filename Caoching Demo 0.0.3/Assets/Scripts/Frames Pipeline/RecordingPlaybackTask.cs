@@ -62,8 +62,6 @@ namespace Assets.Scripts.Frames_Pipeline
         /// </summary>
         public bool ConversionCompleted { get; private set; }
 
-      
-
         public float PlaybackSpeed
         {
             get { return mPlaybackSpeed; }
