@@ -14,7 +14,7 @@ namespace Assets.Scripts.Utils
     /// <summary>
     /// A script for dev build creations
     /// </summary>
-    public class DevBuildPipeline
+    public static class DevBuildPipeline 
     {
         private static string[] EnabledLevels()
         {
