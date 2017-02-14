@@ -21,6 +21,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         private string mLabelName = "Shoulder Analysis";
         public Text RightShoulderFlexionText;
         public Text LeftShoulderFlexionText;
+        public Text LeftShoulderHorizontalAdductionText;
+        public Text RightShoulderHorizontalAdductionText;
+        public Text LeftInternalExternalRotation;
+        public Text RightInternalExternalRotation;
         public Text RightShoulderAbductionText;
         public Text LeftShoulderAbductionText;
         public override string LabelName
@@ -30,22 +34,32 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
 
         protected override void BodyUpdated()
         {
-            //show text field maybe?
+            
         }
 
-        private void UpdateLeftShoulderTextView(float vLeftShoulderFlexionSignedAngle, float vLeftShoulderVerticalAbductionSignedAngle)
+        /// <summary>
+        /// Updates the left arm text view
+        /// </summary>
+        /// <param name="vFrame"></param>
+        private void UpdateLeftShoulderTextView(TPosedAnalysisFrame vFrame)
         {
 
-            LeftShoulderFlexionText.text = FeedbackAngleToString(vLeftShoulderFlexionSignedAngle);
-            LeftShoulderAbductionText.text = FeedbackAngleToString(vLeftShoulderVerticalAbductionSignedAngle);
-
+            LeftShoulderFlexionText.text = FeedbackAngleToString(vFrame.LeftShoulderFlexionSignedAngle);
+            LeftShoulderAbductionText.text = FeedbackAngleToString(vFrame.LeftShoulderVerticalAbductionSignedAngle);
+            LeftShoulderHorizontalAdductionText.text = FeedbackAngleToString(vFrame.LeftShoulderHorizontalAbductionSignedAngle);
+            LeftInternalExternalRotation.text = FeedbackAngleToString(vFrame.LeftShoulderRotationSignedAngle);
         }
 
-        private void UpdateRightArmTextView(float vRightShoulderFlexionSignedAngle, float vRightShoulderVerticalAbductionSignedAngle)
+        /// <summary>
+        /// Updates the right arm text view
+        /// </summary>
+        /// <param name="vFrame"></param>
+        private void UpdateRightArmTextView(TPosedAnalysisFrame vFrame)
         {
-            RightShoulderFlexionText.text = FeedbackAngleToString(vRightShoulderFlexionSignedAngle);
-            RightShoulderAbductionText.text = FeedbackAngleToString(vRightShoulderVerticalAbductionSignedAngle);
-
+            RightShoulderFlexionText.text = FeedbackAngleToString(vFrame.RightShoulderFlexionSignedAngle);
+            RightShoulderAbductionText.text = FeedbackAngleToString(vFrame.RightShoulderVerticalAbductionSignedAngle);
+            RightShoulderHorizontalAdductionText.text = FeedbackAngleToString(vFrame.RightShoulderHorizontalAbductionSignedAngle);
+            RightInternalExternalRotation.text = FeedbackAngleToString(vFrame.RightShoulderRotationSignedAngle);
         }
 
 
@@ -63,8 +77,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
 
         public void UpdateView(TPosedAnalysisFrame vFrame)
         {
-            UpdateLeftShoulderTextView(vFrame.LeftShoulderFlexionSignedAngle, vFrame.LeftShoulderVerticalAbductionSignedAngle);
-            UpdateRightArmTextView(vFrame.RightShoulderFlexionSignedAngle, vFrame.RightShoulderVerticalAbductionSignedAngle);
+            UpdateLeftShoulderTextView(vFrame);
+            UpdateRightArmTextView(vFrame);
         }
     }
 }

@@ -14,6 +14,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
 
         public Text RightFlexionText;
         public Text LeftFlexionText;
+        public Text RightElbowPronation;
+        public Text LeftElbowPronation;
 
         public override string LabelName
         {
@@ -25,17 +27,17 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
 
         }
 
-        public void UpdateLeftArmTextView(float vLeftElbowFlexionAngle)
+        public void UpdateLeftArmTextView(TPosedAnalysisFrame vFrame)
         {
-            LeftFlexionText.text = FeedbackAngleToString(vLeftElbowFlexionAngle);
-
+            LeftFlexionText.text = FeedbackAngleToString(vFrame.LeftElbowFlexionAngle);
+            LeftElbowPronation.text = FeedbackAngleToString(vFrame.LeftForeArmPronationSignedAngle);
         }
 
-        public void UpdateRightArmTextView(float vRightElbowFlexionAngle)
+        public void UpdateRightArmTextView(TPosedAnalysisFrame vFrame)
         {
 
-            RightFlexionText.text = FeedbackAngleToString(vRightElbowFlexionAngle);
-
+            RightFlexionText.text = FeedbackAngleToString(vFrame.RightElbowFlexionAngle);
+            RightElbowPronation.text = FeedbackAngleToString(vFrame.RightForeArmPronationSignedAngle);
         }
 
 
@@ -44,11 +46,14 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
             RightFlexionText.text = "";
             LeftFlexionText.text = "";
         }
-
+        /// <summary>
+        /// updates the text view
+        /// </summary>
+        /// <param name="vFrame"></param>
         public void UpdateView(TPosedAnalysisFrame vFrame)
         {
-            UpdateLeftArmTextView(vFrame.LeftElbowFlexionSignedAngle);
-            UpdateRightArmTextView(vFrame.RightElbowFlexionSignedAngle);
+            UpdateLeftArmTextView(vFrame);
+            UpdateRightArmTextView(vFrame);
         }
     }
 }
