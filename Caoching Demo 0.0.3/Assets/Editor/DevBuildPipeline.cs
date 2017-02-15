@@ -19,8 +19,8 @@ public class DevBuildPipeline
         return (from vScene in EditorBuildSettings.scenes where vScene.enabled select vScene.path).ToArray();
     }
     public static void DevelopmentBuild()
-    {
-        BuildPipeline.BuildPlayer(new []{ "AppMain" }, "\\\\HeddokoQnap\\Heddoko\\02_SOFTWARE\\RESOURCES\\TempBuildOutput\\WindowsApp\\Dev\\HeddokoDesktop.exe",
+    { 
+        BuildPipeline.BuildPlayer(new []{ "Assets/Scenes/AppMain.unity" }, "\\\\HeddokoQnap\\Heddoko\\02_SOFTWARE\\RESOURCES\\TempBuildOutput\\WindowsApp\\Dev\\HeddokoDesktop.exe",
             BuildTarget.StandaloneWindows, BuildOptions.Development );
     }
 }
