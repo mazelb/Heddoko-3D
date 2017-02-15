@@ -50,10 +50,13 @@ namespace Assets.Scripts.UI.RecordingLoading
         public AnaylsisTextContainer AnaylsisTextContainer;
         public event RecordingPlayerViewLayoutCreated RecordingPlayerViewLayoutCreatedEvent;
         public CloudLocalStorageViewManager CloudLocalStorageViewManager;
+        public Action<RecordingPlayerView> RecordingPlayerViewLayoutEnabled;
         public PanelNode RootNode
         {
             get { return mPanelNodes[0]; }
         }
+
+        public bool Initialized { get; set; }
 
         void Awake()
         {
@@ -62,15 +65,18 @@ namespace Assets.Scripts.UI.RecordingLoading
             List<ControlPanelType> vRightSide = new List<ControlPanelType>();
             vRightSide.Add(ControlPanelType.RecordingPlaybackControlPanel);
             ControlPanelTypeList.Add(vLeftSide);
-            ControlPanelTypeList.Add(vRightSide);
-            //SingleRecordingSelection.Instance.StartLoadingEvent += StartLoadHookFunc;
-            //SingleRecordingSelection.Instance.FinishLoadingEvent += StopLoadHookFunc;
-            //PbControlPanel.SingleRecordingLoadSubControl.OnRecordingSelected += () =>
-            //{ SingleRecordingSelection.Instance.OpenFileBrowseDialog(PbControlPanel.NewRecordingSelected); };
+            ControlPanelTypeList.Add(vRightSide); 
             Hide();
 
         }
 
+        void OnEnable()
+        {
+            if (RecordingPlayerViewLayoutEnabled != null)
+            {
+                RecordingPlayerViewLayoutEnabled(this);
+            }
+        }
         /// <summary>
         /// A hooking function to enable the progress bar when a recording is beginning to load
         /// </summary>
@@ -111,9 +117,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                     mPanelNodes[0].PanelSettings.GetPanelOfType(ControlPanelType.RecordingPlaybackControlPanel);
             PbControlPanel.BodyUpdatedEvent += SetNewBody;
             CloudLocalStorageViewManager.RecordingLoadingCompleteEvent += PbControlPanel.NewRecordingSelected;
-
-            //  PbControlPanel.SingleRecordingLoadSubControl.SetNewButtonControl(LoadRecordingButton);
-            if (RecordingPlayerViewLayoutCreatedEvent != null)
+             if (RecordingPlayerViewLayoutCreatedEvent != null)
             {
                 RecordingPlayerViewLayoutCreatedEvent(this);
             }
@@ -121,7 +125,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             //setup error handler
             RecordingErrorHandlerManager.Instance.AddErrorHandler("ErrorParsing", new RecordingErrorHandler(HandleErrorLoadingFile));
             RecordingErrorHandlerManager.Instance.AddErrorHandler("IssueLoading", new RecordingErrorHandler(HandleErrorLoadingFile));
-
+            Initialized = true;
         }
 
         private void HandleErrorLoadingFile(BodyFramesRecordingBase vObj)

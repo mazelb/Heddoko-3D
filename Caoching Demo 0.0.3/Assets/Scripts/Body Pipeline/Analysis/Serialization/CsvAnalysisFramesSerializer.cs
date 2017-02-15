@@ -32,7 +32,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Serialization
         /// </summary>
         /// <param name="vSet">the set to serialize</param>
         /// <param name="vPath">the path to serialize to</param>
-        public void Serialize(AnalysisFramesSet vSet, string vPath)
+        public void Serialize(IAnalysisFramesSet vSet, string vPath)
         {
             if (!vPath.EndsWith(".csv"))
             {

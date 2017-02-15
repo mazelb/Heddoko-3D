@@ -25,7 +25,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Serialization
         /// </summary>
         /// <param name="vSet">The object to serialize</param>
         /// <param name="vPath">the path to serialize to</param>
-        void Serialize(AnalysisFramesSet vSet, string vPath);
+        void Serialize(IAnalysisFramesSet vSet, string vPath);
 
         void SetAnalysisSegments(List<SegmentAnalysis> vSegments);
 

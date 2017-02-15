@@ -175,7 +175,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             {
                 mCurrentAnalysisFrame.Index = mCurrentFrameIndex;
                 Body.AnalysisFramesSet.Add(mCurrentFrameIndex - FRAME_OFFSET, mCurrentAnalysisFrame);
-
                 mAnalysisSegmentCounter = 0;
             }
         }
@@ -345,21 +344,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             mCollectingData = false;
         }
 
-        /// <summary>
-        /// Set the maximum count of frames
-        /// </summary>
-        /// <param name="vCount"></param>
-        public void SetMaxCount(int vCount)
-        {
-            if (Body.AnalysisFramesSet == null)
-            {
-                Body.AnalysisFramesSet = new AnalysisFramesSet(vCount);
-            }
-            else
-            {
-                Body.AnalysisFramesSet.SetMaxFrameCount(vCount);
-            }
-        }
+  
+        
 
         /// <summary>
         /// Returns an analysis frame at the given index

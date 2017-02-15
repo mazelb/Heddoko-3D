@@ -49,9 +49,6 @@ namespace Assets.Scripts.UI.Settings
         {
             ExitApplicationButton.onClick.AddListener(QuitApplication);
             RenameRecordingButton.onClick.AddListener(() => RenameRecordingModule.Toggle());
-            CloudLocalStorageViewManager.RecordingLoadingCompleteEvent +=
-                (vX) => AnalysisFramesController.EnableControl();
-           
             RenameRecordingModule.Init(ConnectionController);
             LiveViewButton.Disable();
             LoadRecordingsButton.onClick.AddListener(() =>
@@ -78,8 +75,7 @@ namespace Assets.Scripts.UI.Settings
                 {
                     ResolutionSettingSlideBlock.Toggle();
                 }
-                AnalysisFramesController.DisableControl();
-            });
+             });
             ResolutionSettingsButton.onClick.AddListener(() =>
             {
                 if (!ResolutionSettingSlideBlock.IsOpen)

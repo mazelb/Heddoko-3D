@@ -67,7 +67,7 @@ public class Body
     private RenderedBody mRenderedBody;
     internal BodyFrameCalibrationContainer mBodyFrameCalibrationContainer = new BodyFrameCalibrationContainer();
  
-    public AnalysisFramesSet AnalysisFramesSet { get; set; }
+    public IAnalysisFramesSet AnalysisFramesSet { get; set; }
 
 
     /**

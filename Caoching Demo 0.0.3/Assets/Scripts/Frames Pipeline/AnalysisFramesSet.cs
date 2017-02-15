@@ -17,7 +17,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
     /// <summary>
     /// A collection set of AnalysisFrames.
     /// </summary>
-    public class AnalysisFramesSet
+    public class AnalysisFramesSet : IAnalysisFramesSet
     {
         private TPosedAnalysisFrame[] mCollection;
         public int MaxFramesCount { get; set; }

@@ -18586,7 +18586,7 @@ RectTransform:
   m_Father: {fileID: 1897158140}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.99999976}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -19837,7 +19837,7 @@ MonoBehaviour:
   LiveViewButton: {fileID: 892415413}
   BrainpackConnectionSlider: {fileID: 2100874791}
   ResolutionSettingSlideBlock: {fileID: 1528181431}
-  AnalysisFramesController: {fileID: 2090096979}
+  AnalysisFramesController: {fileID: 0}
   ConnectionController: {fileID: 750031983}
   RecordingPlayerView: {fileID: 1103780630}
   SuitFeedView: {fileID: 1585398391}
@@ -34354,7 +34354,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 890272455}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999999
+  m_Size: 0.9999998
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -41367,8 +41367,8 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 114.37773, y: -25.060364}
-  m_SizeDelta: {x: 208.75546, y: 30.120728}
+  m_AnchoredPosition: {x: 79.39788, y: -18.793411}
+  m_SizeDelta: {x: 138.79576, y: 17.586823}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1577945283
 GameObject:
@@ -42162,8 +42162,8 @@ RectTransform:
   m_RootOrder: 5
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 231.13507, y: -304.06277}
-  m_SizeDelta: {x: 462.27014, y: 608.12555}
+  m_AnchoredPosition: {x: 140.42116, y: -209.07227}
+  m_SizeDelta: {x: 280.84232, y: 418.14453}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1605863462
 GameObject:
@@ -44623,6 +44623,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1652885650}
+  - 114: {fileID: 1652885649}
   m_Layer: 0
   m_Name: Controllers and managers
   m_TagString: Controllers
@@ -44630,6 +44631,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1652885649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1652885648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df685887f01c678409cad1cd2e5c6a75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LiveSuitFeedView: {fileID: 1585398391}
+  PlayerView: {fileID: 1103780630}
+  DisablingPanel: {fileID: 2110020488}
+  AnalysisTextViewController: {fileID: 1317791126}
+  ExportDataButton: {fileID: 2090096974}
+  ExportDataText: {fileID: 502711378}
 --- !u!4 &1652885650
 Transform:
   m_ObjectHideFlags: 0
@@ -48294,8 +48312,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 333.13318, y: -25.060364}
-  m_SizeDelta: {x: 208.75546, y: 30.120728}
+  m_AnchoredPosition: {x: 228.19363, y: -18.793411}
+  m_SizeDelta: {x: 138.79576, y: 17.586823}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1788273716
 GameObject:
@@ -54280,7 +54298,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 708447077}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999998
+  m_Size: 0.99999976
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -55628,7 +55646,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.046408564}
   m_AnchorMax: {x: 0.90300006, y: 1}
   m_AnchoredPosition: {x: 0.5, y: 0.000061035156}
-  m_SizeDelta: {x: 1, y: -413.04715}
+  m_SizeDelta: {x: 1, y: -284.9032}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &2068942971
 MonoBehaviour:
@@ -56051,7 +56069,6 @@ GameObject:
   - 114: {fileID: 2090096975}
   - 114: {fileID: 2090096974}
   - 114: {fileID: 2090096978}
-  - 114: {fileID: 2090096979}
   m_Layer: 5
   m_Name: Data analytics control
   m_TagString: Untagged
@@ -56169,22 +56186,6 @@ MonoBehaviour:
     type: 2}
   PlayerView: {fileID: 1103780630}
   RenderingCam: {fileID: 1047580056}
---- !u!114 &2090096979
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2090096972}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df685887f01c678409cad1cd2e5c6a75, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerView: {fileID: 1103780630}
-  DisablingPanel: {fileID: 2110020488}
-  AnalysisTextViewController: {fileID: 1317791126}
-  ExportDataButton: {fileID: 2090096974}
-  ExportDataText: {fileID: 502711378}
 --- !u!1 &2094367924
 GameObject:
   m_ObjectHideFlags: 0

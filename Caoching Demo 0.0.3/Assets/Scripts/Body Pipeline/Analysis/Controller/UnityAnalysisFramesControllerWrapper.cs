@@ -7,6 +7,7 @@
 // */
 
 using Assets.Scripts.Body_Pipeline.Analysis.Serialization;
+using Assets.Scripts.Frames_Pipeline;
 using Assets.Scripts.Localization;
 using Assets.Scripts.Notification;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
@@ -22,11 +23,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
     public class UnityAnalysisFramesControllerWrapper : MonoBehaviour
     {
         private AnalysisFramesCollectionController mController;
+        public LiveSuitFeedView LiveSuitFeedView;
         public RecordingPlayerView PlayerView;
         private PlaybackControlPanel mPlaybackControlPanel;
-        private bool mCollectingData;
-        //   public UnityEngine.UI.Button CollectDataButton;
-        //   public UnityEngine.UI.Text CollectDataButtonText;
+        private bool mCollectingData; 
 
         public GameObject DisablingPanel;
         private Body mCurrentBody;
@@ -38,9 +38,60 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         {
             IAnalysisFramesSerializer vSerializer = new CsvAnalysisFramesSerializer();
             mController = new AnalysisFramesCollectionController(vSerializer);
-            PlayerView.RecordingPlayerViewLayoutCreatedEvent += RecordingPlayerViewLayoutCreatedEvent;
+            PlayerView.RecordingPlayerViewLayoutCreatedEvent += RecordingPlayerViewLayoutCreatedHandler;
+            LiveSuitFeedView.LiveSuitFeedViewLayoutCreatedEvent += LiveSuitFeedViewLayoutCreatedHandler;
+            LiveSuitFeedView.LiveSuitFeedViewLayoutEnabled += LiveSuitFeedViewLayoutEnabledHandler;
+            PlayerView.RecordingPlayerViewLayoutEnabled += RecordingPlayerViewLayoutEnabledHandler;
             ExportDataButton.enabled = false;
             ExportDataButton.onClick.AddListener(LaunchSaveFileWindow);
+        }
+
+        private void RecordingPlayerViewLayoutEnabledHandler(RecordingPlayerView vObj)
+        {
+            if (LiveSuitFeedView.Initialized)
+            {
+                UnRegisterLiveSuitFeedViewHandlers(LiveSuitFeedView);
+            }
+            RegisterPlayerViewHandlers(PlayerView);
+        }
+
+        private void LiveSuitFeedViewLayoutEnabledHandler(LiveSuitFeedView vObj)
+        {
+            if (LiveSuitFeedView.Initialized)
+            {
+                UnRegisterPlayerViewHandlers(PlayerView); 
+            }
+           
+            RegisterLiveSuitFeedViewHandlers(LiveSuitFeedView);
+            
+        }
+
+        private void LiveSuitFeedViewLayoutCreatedHandler(LiveSuitFeedView vView)
+        {
+            if (PlayerView.Initialized)
+            {
+                UnRegisterPlayerViewHandlers(PlayerView);
+            }
+            vView.BrainpackBody.AnalysisFramesSet = new LiveAnalysisFramesSet();
+            RegisterLiveSuitFeedViewHandlers(vView);
+         
+        }
+
+        private void RegisterLiveSuitFeedViewHandlers(LiveSuitFeedView vView)
+        {
+            vView.BrainpackBody.View.BodyFrameUpdatedEvent += BodyFrameUpdatedEvent;
+            vView.BrainpackBody.View.TrackingUpdateEvent += UpdateViews; 
+            mController.SetBody(vView.BrainpackBody);
+            mController.MovementSet = true;
+            mController.Start();
+        }
+
+        private void UnRegisterLiveSuitFeedViewHandlers(LiveSuitFeedView vView)
+        {
+            vView.BrainpackBody.View.BodyFrameUpdatedEvent -= BodyFrameUpdatedEvent;
+            vView.BrainpackBody.View.TrackingUpdateEvent -= UpdateViews;
+            mController.MovementSet = false;
+            mController.Stop();
         }
 
         void OnDisable()
@@ -53,9 +104,32 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// event when the recording playerview has been created. 
         /// </summary>
         /// <param name="vView"></param>
-        private void RecordingPlayerViewLayoutCreatedEvent(RecordingPlayerView vView)
+        private void RecordingPlayerViewLayoutCreatedHandler(RecordingPlayerView vView)
         {
+            if (LiveSuitFeedView.Initialized)
+            {
+                UnRegisterLiveSuitFeedViewHandlers(LiveSuitFeedView);
+            }
             mController.SetBody(vView.CurrBody);
+            RegisterPlayerViewHandlers(vView);
+        }
+
+        private void UnRegisterPlayerViewHandlers(RecordingPlayerView vView)
+        {
+            mPlaybackControlPanel = vView.PbControlPanel;
+            mPlaybackControlPanel.RecordingUpdatedEvent -= RecordingUpdatedEvent;
+            mPlaybackControlPanel.NewRecordingSelectedEvent -= mController.ResetCollection;
+            mPlaybackControlPanel.NewRecordingSelectedEvent -= () => mController.MovementSet = true;
+            vView.CurrBody.View.BodyFrameUpdatedEvent -= BodyFrameUpdatedEvent;
+            vView.CurrBody.View.TrackingUpdateEvent -= UpdateViews;
+            mPlaybackControlPanel.NewRecordingSelectedEvent -= StopDataCollection;
+        }
+        void RegisterPlayerViewHandlers(RecordingPlayerView vView)
+        {
+            if (LiveSuitFeedView.Initialized)
+            {
+                UnRegisterLiveSuitFeedViewHandlers(LiveSuitFeedView);
+            }
             mPlaybackControlPanel = vView.PbControlPanel;
             mPlaybackControlPanel.RecordingUpdatedEvent += RecordingUpdatedEvent;
             mPlaybackControlPanel.NewRecordingSelectedEvent += mController.ResetCollection;
@@ -67,11 +141,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
 
         private void UpdateViews(BodyFrame vNewFrame)
         {
+            Debug.Log("updating views in");
             int vIndex = vNewFrame.Index;
             var vFrame = mController.GetAnalysisFrame(vIndex);
             if (vFrame == null)
             {
-
                 //give the option to collect all data frames or single data frame
                 //frame hasn't been analyzed yet
                 var vMessage = LocalizationBinderContainer.GetString(KeyMessage.NoAnalysisFrameSet);
@@ -95,7 +169,16 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         private void RecordingUpdatedEvent(PlaybackControlPanel vControlPanel)
         {
             ExportDataButton.enabled = true;
-            mController.SetMaxCount(vControlPanel.mPlaybackTask.ConvertedFrames.Count);
+            if (PlayerView.CurrBody.AnalysisFramesSet == null)
+            {
+                PlayerView.CurrBody.AnalysisFramesSet =
+                    new AnalysisFramesSet(vControlPanel.mPlaybackTask.ConvertedFrames.Count);
+            }
+            else
+            {
+                PlayerView.CurrBody.AnalysisFramesSet.SetMaxFrameCount(vControlPanel.mPlaybackTask.ConvertedFrames.Count);
+            }
+            mController.SetBody(PlayerView.CurrBody);
             mController.ResetCollection();
             mController.Body.AnalysisFramesSet.MaxFramesReachedEvent += AnalysisFramesSetMaxFramesReachedEvent;
             StartDataCollection();
@@ -120,7 +203,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         void OnApplicationQuit()
         {
             mPlaybackControlPanel.RecordingUpdatedEvent -= RecordingUpdatedEvent;
-            PlayerView.RecordingPlayerViewLayoutCreatedEvent -= RecordingPlayerViewLayoutCreatedEvent;
+            PlayerView.RecordingPlayerViewLayoutCreatedEvent -= RecordingPlayerViewLayoutCreatedHandler;
         }
         /// <summary>
         /// Stops data collection  
@@ -193,19 +276,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             mController.Start();
         }
 
-        /// <summary>
-        /// Enable controls
-        /// </summary>
-        public void EnableControl()
-        {
-            //    CollectDataButton.interactable = true;
-        }
-        /// <summary>
-        /// Disable controls
-        /// </summary>
-        public void DisableControl()
-        {
-            //       CollectDataButton.interactable = true;
-        }
+     
     }
 }

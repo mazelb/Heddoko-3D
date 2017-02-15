@@ -69,7 +69,7 @@ namespace Assets.Scripts.UI.Settings
                 }
                 else
                 {
-                    sPreferedRecordingsFolder = Application.dataPath + "\\DemoRecordings";
+                    sPreferedRecordingsFolder = Application.persistentDataPath + "\\DemoRecordings";
                 }
             }
         }
