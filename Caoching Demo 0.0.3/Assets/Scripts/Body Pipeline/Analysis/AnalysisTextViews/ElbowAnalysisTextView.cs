@@ -29,14 +29,14 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
 
         public void UpdateLeftArmTextView(TPosedAnalysisFrame vFrame)
         {
-            LeftFlexionText.text = FeedbackAngleToString(vFrame.LeftElbowFlexionAngle);
+            LeftFlexionText.text = FeedbackAngleToString(vFrame.LeftElbowFlexionSignedAngle);
             LeftElbowPronation.text = FeedbackAngleToString(vFrame.LeftForeArmPronationSignedAngle);
         }
 
         public void UpdateRightArmTextView(TPosedAnalysisFrame vFrame)
         {
 
-            RightFlexionText.text = FeedbackAngleToString(vFrame.RightElbowFlexionAngle);
+            RightFlexionText.text = FeedbackAngleToString(vFrame.RightElbowFlexionSignedAngle);
             RightElbowPronation.text = FeedbackAngleToString(vFrame.RightForeArmPronationSignedAngle);
         }
 
