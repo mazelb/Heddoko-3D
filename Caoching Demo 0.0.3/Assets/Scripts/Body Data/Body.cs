@@ -191,7 +191,7 @@ public class Body
         //Get the list of segments from the bodystructuremap 
         List<BodyStructureMap.SegmentTypes> vSegmentList = BodyStructureMap.Instance.BodyToSegmentMap[vBodyType];
         TrunkAnalysis vTorsoSegmentAnalysis = new TrunkAnalysis();
-        vTorsoSegmentAnalysis.SegmentType = BodyStructureMap.SegmentTypes.SegmentType_Torso;
+        vTorsoSegmentAnalysis.SegmentType = BodyStructureMap.SegmentTypes.SegmentType_Trunk;
 
 
         foreach (BodyStructureMap.SegmentTypes type in vSegmentList)
@@ -200,16 +200,17 @@ public class Body
             vSegment.SegmentType = type;
             vSegment.InitializeBodySegment(type);
             vSegment.ParentBody = this;
+
             //set the reference to the BodyFrameCalibrationContainer
             vSegment.BodyFrameCalibrationContainer = mBodyFrameCalibrationContainer;
             BodySegments.Add(type, vSegment);
             vSegment.AssociatedView.transform.parent = View.transform;
 
             //Todo: this can can be abstracted and mapped nicely. 
-            if (type == BodyStructureMap.SegmentTypes.SegmentType_Torso)
+            if (type == BodyStructureMap.SegmentTypes.SegmentType_Trunk)
             {
                 vSegment.mCurrentAnalysisSegment = vTorsoSegmentAnalysis;
-                AnalysisSegments.Add(BodyStructureMap.SegmentTypes.SegmentType_Torso, vTorsoSegmentAnalysis);
+                AnalysisSegments.Add(BodyStructureMap.SegmentTypes.SegmentType_Trunk, vTorsoSegmentAnalysis);
                 TorsoAnalysis = vTorsoSegmentAnalysis;
             }
             if (type == BodyStructureMap.SegmentTypes.SegmentType_LeftArm)
@@ -473,7 +474,7 @@ public class Body
     public static void ApplyTracking(Body vBody, Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic)
     {
         //get the list of segments of the speicfied vBody
-         foreach (var vBodySegment in vBody.BodySegments)
+        foreach (var vBodySegment in vBody.BodySegments)
         {
             List<BodyStructureMap.SensorPositions> vSensPosList =
              BodyStructureMap.Instance.SegmentToSensorPosMap[vBodySegment.Key];
@@ -491,12 +492,10 @@ public class Body
                 }
             }
             //check current segment  and the filtered dictionary. 
-
             vBodySegment.Value.UpdateSegment(vFilteredDictionary);
         }
-
-
     }
+
     /**
     * GetTracking()
     * @brief  Play a recording from the given recording UUID. 

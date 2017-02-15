@@ -23,6 +23,7 @@ namespace Assets.Scripts.Body_Data
         public BodyStructureMap.SubSegmentTypes SubsegmentType;
         public Quaternion SubsegmentOrientation = Quaternion.identity;
         public Vector3 SubSegmentPosition;
+        public Vector3 SubSegmentGravity = Vector3.zero;
         public BodyStructureMap.SubSegmentOrientationType SubsegmentOrientationType;
         public BodySubsegmentView AssociatedView;
 
@@ -34,11 +35,12 @@ namespace Assets.Scripts.Body_Data
             AssociatedView.ResetTransforms();
         }
 
-       /**
-       *  UpdateSubsegmentOrientation(float[,] vOrientationMatrix)
-       * @param  vOrientation: the orientation that will update the subsegment's orientation
-       * @brief  Updates the subsegments orientation
-        */
+        /// <summary>
+        /// Updates the subsegments Orientation
+        /// <summary>
+        /// <param name="vNewOrientation">the new SubSegment orientation</param>
+        /// <param name="vNewDisplacement">Apply it locally or globaly ?</param>
+        /// <param name="vNewDisplacement">reset the current orientation before applying new one or cumulate?</param>
         public void UpdateSubsegmentOrientation(Quaternion vNewOrientation, int vApplyLocal = 0, bool vResetRotation = false)
         {
             //update the view
@@ -46,19 +48,10 @@ namespace Assets.Scripts.Body_Data
             AssociatedView.UpdateOrientation(vNewOrientation, vApplyLocal, vResetRotation);
         }
 
-   
-
-        public Transform GetSubSegmentTransform()
-        {
-            return AssociatedView.SubsegmentTransform;
-        }
-
-
-        /**
-    * UpdateSubsegmentPosition(Vector3 vNewPosition)
-    * @param  vOrientation: the orientation that will update the subsegment's orientation
-    * @brief  Updates the subsegments orientation
-    */
+        /// <summary>
+        /// Updates the subsegments position
+        /// <summary>
+        /// <param name="vNewDisplacement">the new SubSegment displacement vector</param>
         public void UpdateSubsegmentPosition(Vector3 vNewDisplacement)
         {
             //update the view
@@ -66,11 +59,28 @@ namespace Assets.Scripts.Body_Data
             AssociatedView.UpdatePosition(vNewDisplacement);
         }
 
-        /**
-    *  InitializeBodySubsegment(BodyStructureMap.SubSegmentTypes sstype)
-    * @param  sstype: the desired SubSegment Type
-    * @brief Initializes a new  subsegment structure's internal properties with the desired subsegment Type 
-    */
+        /// <summary>
+        /// Update the acceleration data for each segment (mainly to get the gravity vector).
+        /// </summary>
+        /// <param name="vNewAccelData">new acceleration value.</param>
+        public void UpdateSubSegmentGravity(Vector3 vNewAccelData)
+        {
+            if (SubSegmentGravity.Equals(Vector3.zero))
+            {
+                SubSegmentGravity = vNewAccelData;
+            }
+            else
+            {
+                //Use lowpass filter to extract the gravity vector from cumulative acceleration data
+                SubSegmentGravity = Vector3.Lerp(SubSegmentGravity, vNewAccelData, 0.15f);
+            }
+        }
+
+
+        /// <summary>
+        /// Initializes a new  subsegment structure's internal properties with the desired subsegment Type s
+        /// <summary>
+        /// <param name="vSubsegmentType">the desired SubSegment Type</param>
         internal void InitializeBodySubsegment(BodyStructureMap.SubSegmentTypes vSubsegmentType)
         {
             GameObject go = new GameObject(vSubsegmentType.GetName());

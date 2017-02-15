@@ -44,33 +44,11 @@ public class BodyStructureMap
                 instance.CreateSensorPosToSensorIDMap();
                 instance.CreateSensorPosToSensorTypeMap();
                 instance.CreateSensorPosToSegmentType();
-                instance.CreatePniSensorRotationToSegmentMap();
                 instance.isInitialized = true;
 
             }
             return instance;
         }
-    }
-
-    /// <summary>
-    /// Start sensor to segment rotation map
-    /// </summary>
-    private void CreatePniSensorRotationToSegmentMap()
-    {
-        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_UpperSpine, Quaternion.Euler(new Vector3(0, -90, 0)));
-        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_LowerSpine, Quaternion.Euler(new Vector3(0, -90, 0)));
-        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_RightUpperArm, Quaternion.Euler(new Vector3(-90, 0, 90)));
-        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_RightForeArm, Quaternion.Euler(new Vector3(-90, 0, 90)));
-        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_RightElbow, Quaternion.Euler(new Vector3(-90, 0, 90)));
-        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_LeftUpperArm, Quaternion.Euler(new Vector3(90, 0, -90)));
-        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_LeftForeArm, Quaternion.Euler(new Vector3(90, 0, -90)));
-        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_LeftElbow, Quaternion.Euler(new Vector3(90, 0, -90)));
-        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_RightThigh, Quaternion.Euler(new Vector3(0, -90, 0)));
-        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_RightCalf, Quaternion.Euler(new Vector3(0, -90, 0)));
-        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_RightKnee, Quaternion.Euler(new Vector3(0, -90, 0)));
-        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_LeftThigh, Quaternion.Euler(new Vector3(0, -90, 0)));
-        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_LeftCalf, Quaternion.Euler(new Vector3(0, -90, 0)));
-        PniSensorRotationToSegmentMap.Add(SensorPositions.SP_LeftKnee, Quaternion.Euler(new Vector3(0, -90, 0)));
     }
 
     #endregion
@@ -104,6 +82,7 @@ public class BodyStructureMap
         /// the current(newest) frame's gyro data
         /// </summary>
         public Vector3 CurrGyroData;
+
         ///  <summary>
         /// intialize an instance of the tracking structure from a given body frame
         ///  </summary> 
@@ -121,8 +100,7 @@ public class BodyStructureMap
             InitGyroData = vInitialFrame.GyroFrameData[vPosition];
             CurrGyroData = vNewBodyFrame.GyroFrameData[vPosition];
         }
- 
-    };
+     };
 
     public struct CalibrationStructure
     {
@@ -146,7 +124,7 @@ public class BodyStructureMap
     //Segment Types
     public enum SegmentTypes
     {
-        SegmentType_Torso = 0,
+        SegmentType_Trunk = 0,
         SegmentType_RightArm = 1,
         SegmentType_LeftArm = 2,
         SegmentType_RightLeg = 3,
@@ -208,12 +186,10 @@ public class BodyStructureMap
     [JsonProperty]
     public Dictionary<SegmentTypes, List<SensorPositions>> SegmentToSensorPosMap = new Dictionary<SegmentTypes, List<SensorPositions>>();
     public Dictionary<SensorPositions, SegmentTypes> SensorPosToSegmentType = new Dictionary<SensorPositions, SegmentTypes>();
-
     [JsonProperty]
     public Dictionary<SensorPositions, SensorTypes> SensorPosToSensorTypeMap = new Dictionary<SensorPositions, SensorTypes>();
     [JsonProperty]
     public Dictionary<SensorPositions, int> SensorPosToSensorIDMap = new Dictionary<SensorPositions, int>();
-    
     public Dictionary<SensorPositions, UnityEngine.Quaternion> PniSensorRotationToSegmentMap = new Dictionary<SensorPositions, Quaternion>();
     
     //Build body structure maps
@@ -245,9 +221,6 @@ public class BodyStructureMap
         vBSm = null; //discard bsm
     }
 
-
-
-
     /// <summary>
     /// Writes a bodystructure map to file
     /// </summary>
@@ -259,8 +232,8 @@ public class BodyStructureMap
 
     public void CreateSensorPosToSegmentType()
     {
-        SensorPosToSegmentType.Add(SensorPositions.SP_UpperSpine, SegmentTypes.SegmentType_Torso);
-        SensorPosToSegmentType.Add(SensorPositions.SP_LowerSpine, SegmentTypes.SegmentType_Torso);
+        SensorPosToSegmentType.Add(SensorPositions.SP_UpperSpine, SegmentTypes.SegmentType_Trunk);
+        SensorPosToSegmentType.Add(SensorPositions.SP_LowerSpine, SegmentTypes.SegmentType_Trunk);
         SensorPosToSegmentType.Add(SensorPositions.SP_RightUpperArm, SegmentTypes.SegmentType_RightArm);
         SensorPosToSegmentType.Add(SensorPositions.SP_RightForeArm, SegmentTypes.SegmentType_RightArm);
         SensorPosToSegmentType.Add(SensorPositions.SP_LeftUpperArm, SegmentTypes.SegmentType_LeftArm);
@@ -273,7 +246,6 @@ public class BodyStructureMap
         SensorPosToSegmentType.Add(SensorPositions.SP_RightElbow, SegmentTypes.SegmentType_RightArm);
         SensorPosToSegmentType.Add(SensorPositions.SP_LeftElbow, SegmentTypes.SegmentType_LeftArm);
         SensorPosToSegmentType.Add(SensorPositions.SP_RightKnee, SegmentTypes.SegmentType_RightLeg);
-
     }
 
     public void CreateBodyToSegmentMap()
@@ -304,7 +276,7 @@ public class BodyStructureMap
                 case BodyTypes.BodyType_UpperBody:
                     {
                         List<SegmentTypes> vUpperBodySegments = new List<SegmentTypes>();
-                        vUpperBodySegments.Add(SegmentTypes.SegmentType_Torso);
+                        vUpperBodySegments.Add(SegmentTypes.SegmentType_Trunk);
                         vUpperBodySegments.Add(SegmentTypes.SegmentType_RightArm);
                         vUpperBodySegments.Add(SegmentTypes.SegmentType_LeftArm);
                         BodyToSegmentMap.Add(BodyTypes.BodyType_UpperBody, vUpperBodySegments);
@@ -341,12 +313,12 @@ public class BodyStructureMap
         {
             switch (vSegmentType)
             {
-                case SegmentTypes.SegmentType_Torso:
+                case SegmentTypes.SegmentType_Trunk:
                     {
                         List<SubSegmentTypes> vTorsoSubSegments = new List<SubSegmentTypes>();
                         vTorsoSubSegments.Add(SubSegmentTypes.SubsegmentType_LowerSpine);
                         vTorsoSubSegments.Add(SubSegmentTypes.SubsegmentType_UpperSpine);
-                        SegmentToSubSegmentMap.Add(SegmentTypes.SegmentType_Torso, vTorsoSubSegments);
+                        SegmentToSubSegmentMap.Add(SegmentTypes.SegmentType_Trunk, vTorsoSubSegments);
                     }
                     break;
                 case SegmentTypes.SegmentType_RightArm:
@@ -398,12 +370,12 @@ public class BodyStructureMap
         {
             switch (vSegmentType)
             {
-                case SegmentTypes.SegmentType_Torso:
+                case SegmentTypes.SegmentType_Trunk:
                     {
                         List<SensorPositions> vTorsoSensorPos = new List<SensorPositions>();
                         vTorsoSensorPos.Add(SensorPositions.SP_UpperSpine);
                         vTorsoSensorPos.Add(SensorPositions.SP_LowerSpine);
-                        SegmentToSensorPosMap.Add(SegmentTypes.SegmentType_Torso, vTorsoSensorPos);
+                        SegmentToSensorPosMap.Add(SegmentTypes.SegmentType_Trunk, vTorsoSensorPos);
                     }
                     break;
                 case SegmentTypes.SegmentType_RightArm:

@@ -35,10 +35,7 @@ public class Sensor
     {
         SensorGuid = "";
         SensorData = new SensorsData();
-        
     }
-
-
 
     /**
     * Sensor(Sensor sensor)
@@ -47,7 +44,6 @@ public class Sensor
     * @note 
     * @return returns the view associated with this body
     */
-
     public Sensor(Sensor vSensor)
     {
         this.SensorType = vSensor.SensorType;
