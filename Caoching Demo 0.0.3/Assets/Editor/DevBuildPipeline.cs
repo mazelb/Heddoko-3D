@@ -20,7 +20,7 @@ public class DevBuildPipeline
     }
     public static void DevelopmentBuild()
     { 
-        BuildPipeline.BuildPlayer(new []{ "Assets/Scenes/AppMain.unity" }, "\\\\HeddokoQnap\\Heddoko\\02_SOFTWARE\\RESOURCES\\TempBuildOutput\\WindowsApp\\Dev\\HeddokoDesktop.exe",
+        BuildPipeline.BuildPlayer(new []{ "Assets/Scenes/AppMain.unity" }, "\\\\HeddokoQnap\\Heddoko\\02_SOFTWARE\\RESOURCES\\TempBuildOutput\\WindowsApp\\HeddokoDesktop.exe",
             BuildTarget.StandaloneWindows, BuildOptions.Development );
     }
 }
