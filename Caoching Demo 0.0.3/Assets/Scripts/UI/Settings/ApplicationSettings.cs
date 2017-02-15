@@ -40,7 +40,7 @@ namespace Assets.Scripts.UI.Settings
             {
                 if (string.IsNullOrEmpty(sPreferedRecordingsFolder))
                 {
-                    DirectoryInfo vDirectoryInfo = new DirectoryInfo(Application.dataPath);
+                    DirectoryInfo vDirectoryInfo = new DirectoryInfo(Application.persistentDataPath);
                     if (Directory.Exists(vDirectoryInfo.Name))
                     {
                         sPreferedRecordingsFolder = vDirectoryInfo.Parent.ToString() + Path.DirectorySeparatorChar + "DemoRecordings";
@@ -53,7 +53,7 @@ namespace Assets.Scripts.UI.Settings
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    DirectoryInfo vDirectoryInfo = new DirectoryInfo(Application.dataPath);
+                    DirectoryInfo vDirectoryInfo = new DirectoryInfo(Application.persistentDataPath);
                     if (Directory.Exists(vDirectoryInfo.Name))
                     {
                         sPreferedRecordingsFolder = vDirectoryInfo.Parent.ToString() + Path.DirectorySeparatorChar + "DemoRecordings";
