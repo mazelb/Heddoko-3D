@@ -70,7 +70,7 @@ namespace Assets.Scripts.MainApp
         {
             mCurrentProfileModel = vProfileModel;
             var vUserRole = vProfileModel.User.RoleType;
-            var vAttribute =
+            var vAttribute = 
                 (UserRolePermission)Attribute.GetCustomAttribute(typeof(RecordingPlayerView), typeof(UserRolePermission));
             List<UserRoleType> vType = vAttribute.AllowedRoles.ToList();
             if (vUserRole == UserRoleType.Worker)
