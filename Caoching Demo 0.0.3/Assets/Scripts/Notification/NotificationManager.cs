@@ -66,14 +66,14 @@ namespace Assets.Scripts.Notification
         /// Removes a notification. IF the notification has an associated view, this is disabled as well. 
         /// </summary>
         /// <param name="vNotice"></param>
-        public static void RemoveNotification(Notice vNotice)
+          public static void RemoveNotification(Notice vNotice)
         {
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
                 vNotice.NotifyViewObject.Hide();
                 gInstance.NotificationList.Remove(vNotice);
             });
-
+     
         }
 
         public enum NotificationUrgency

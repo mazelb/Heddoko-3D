@@ -62,7 +62,7 @@ namespace Assets.Scripts.Licensing.Model
                         }
                     }
                 }
-                else if (User.RoleType == UserRoleType.Worker)
+                else if(User.RoleType == UserRoleType.Worker )
                 {
                     if (User.Kit != null)
                     {
@@ -77,6 +77,6 @@ namespace Assets.Scripts.Licensing.Model
                 }
             }
             return vKitId;
-        }
+        } 
     }
 }

@@ -1,6 +1,10 @@
 fileFormatVersion: 2
 guid: 97be6e8b996afd64997a8efba620afc6
+<<<<<<< HEAD
 timeCreated: 1484844000
+=======
+timeCreated: 1484583022
+>>>>>>> feature_NotificationSystem
 licenseType: Pro
 TextScriptImporter:
   userData: 

@@ -44,7 +44,6 @@ namespace Assets.Scripts.UI.RecordingLoading
             mCardContentUploadController.ProblemUploadingContentEvent += ProblemUploadEventHandler;
             mCardContentUploadController.DriveDisconnectedEvent += DriveDisconnectedHandler;
             mCardContentUploadController.UploadingStartEvent += UploadingItemStarted;
-
         }
 
         /// <summary>
@@ -72,10 +71,9 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         public void BeginUpload()
         {
-
             mErrorCount = 0;
-            var vMsg = LocalizationBinderContainer.GetString(KeyMessage.BeginUploadProcessMsg);
-            NotificationManager.CreateNotification(vMsg, NotificationManager.NotificationUrgency.Low);
+            var vMsg = LocalizationBinderContainer.GetString(KeyMessage.BeginUploadProcessMsg); 
+            NotificationManager.CreateNotification(vMsg,NotificationManager.NotificationUrgency.Low);
             mCardContentUploadController.StartContentUpload();
         }
         /// <summary>
@@ -139,7 +137,8 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
             DebugLogger.Instance.LogMessage(LogType.Uploading, vMsg);
             string vErrMsg = LocalizationBinderContainer.GetString(KeyMessage.IssueUploadingRecordingsMsg) + DebugLogger.Instance.GetLogPath(LogType.Uploading);
-             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => NotificationManager.CreateNotification(vErrMsg, NotificationManager.NotificationUrgency.Medium));
+         //   OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => Notify.Template("fade").Show(vErrMsg, customHideDelay: 15f));
+               OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => NotificationManager.CreateNotification(vErrMsg, NotificationManager.NotificationUrgency.Medium));
         }
 
         /// <summary>
@@ -168,7 +167,8 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
-                 int vCount = mCardContentUploadController.FoundRecordingsList.Count;
+                //   string vMsg = LocalizationBinderContainer.GetString(KeyMessage.UploadCompleteMsg) ;
+                int vCount = mCardContentUploadController.FoundRecordingsList.Count;
                 int vFailCount = mErrorCount;
                 int vSucess = vCount - vFailCount;
                 string vMsg = String.Format("The total number of sucessful uploads is {0} and failed uploads {1}",

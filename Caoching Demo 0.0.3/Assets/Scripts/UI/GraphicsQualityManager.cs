@@ -98,12 +98,15 @@ namespace Assets.Scripts.UI
         }
 
         /// <summary>
-        /// Sets the app screen to fullscreen mode depending on the flag
+        /// Sets the application to windowed mode
         /// </summary>
-        /// <param name="vFlag">the flag to set full screen mode to.</param>
+        /// <param name="vFlag"></param>
         public void SetToWindowedMode(bool vFlag)
         {
             Screen.fullScreen = vFlag;
         }
+
+       
+
     }
 }

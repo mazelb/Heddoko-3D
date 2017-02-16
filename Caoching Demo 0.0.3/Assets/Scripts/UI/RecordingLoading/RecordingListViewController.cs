@@ -17,7 +17,9 @@ using Assets.Scripts.UI.RecordingLoading.Model;
 using Assets.Scripts.UI.RecordingLoading.View;
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.Utils;
+using HeddokoSDK;
 using HeddokoSDK.Models;
+using HeddokoSDK.Models.Requests;
 using UIWidgets;
 using UnityEngine;
 
@@ -47,7 +49,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         private float mFetchTime = 12f;
         void Start()
         {
-
+            
         }
 
         public void Init()
@@ -67,6 +69,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
         }
 
+       
         private void ExceptionHandler(Exception vE)
         {
             Debug.Log(vE.Message);
@@ -84,6 +87,9 @@ namespace Assets.Scripts.UI.RecordingLoading
                 View.LoadData(mRecordingItems);
             });
         }
+
+      
+        
 
         /// <summary>
         /// Double click checker
@@ -240,8 +246,8 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// Reset the list
         /// </summary>
         public void ResetDownloadList()
-        {
-            Invoke("WaitThenReDownload", 2f);
+        { 
+           Invoke("WaitThenReDownload",1.5f);
         }
 
 
@@ -251,7 +257,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         /// <param name="vSeconds"></param>
         /// <returns></returns>
-        private void WaitThenReDownload()
+        private void WaitThenReDownload( )
         {
             Clear();
             mListFetcher.Start();

@@ -1,6 +1,10 @@
 fileFormatVersion: 2
 guid: 0cadabffa5b36194f9032c0dd2073714
+<<<<<<< HEAD
 timeCreated: 1486595169
+=======
+timeCreated: 1484839749
+>>>>>>> feature_NotificationSystem
 licenseType: Pro
 DefaultImporter:
   userData: 

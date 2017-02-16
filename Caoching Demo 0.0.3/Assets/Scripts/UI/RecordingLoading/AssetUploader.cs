@@ -8,9 +8,11 @@
 
 
 using System;
+using System.Collections.Generic;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.UI.RecordingLoading.Model;
 using HeddokoSDK.Models;
+using HeddokoSDK.Models.Requests;
 
 namespace Assets.Scripts.UI.RecordingLoading
 {
@@ -42,14 +44,21 @@ namespace Assets.Scripts.UI.RecordingLoading
             try
             {
                 UploadableListItem vUploadableItem = (UploadableListItem)vItem;
-                Asset vAsset = mProfile.Client.Upload(new AssetRequest()
+                int vKitId = 0;
+               
+                var vRequest = new RecordRequest
                 {
+                    //Label = "SN0001", //optional should be set Kit Label or Kit ID or Brainpack Label - that settings should be useful when you parse files from sd cards mostly only for Data analyst uploading
+                    Label = vUploadableItem.BrainpackSerialNumber,
                     KitID = mProfile.GetKitIdFromBrainpackLabel(vUploadableItem.BrainpackSerialNumber),
-                    Serial = vUploadableItem.BrainpackSerialNumber,
-                    Type = vUploadableItem.AssetType
-                }, vUploadableItem.RelativePath);
+                    Files = new List<AssetFile>
+                    { 
+                        new AssetFile { FileName =vUploadableItem.RelativePath ,Type =AssetType.RawFrameData }
+                    }
+                };
+                Record vRecord= mProfile.Client.UploadRecord(vRequest);
                 vItemName = vUploadableItem.RelativePath;
-                if (vAsset.IsOk)
+                if (vRecord.IsOk)
                 {
                     if (UploadCompleteEvent != null)
                     {
@@ -58,7 +67,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                 }
                 else
                 {
-                    ErrorCollection vCollection = vAsset.Errors;
+                    ErrorCollection vCollection = vRecord.Errors;
                     ErrorUploadEventArgs vObj = new ErrorUploadEventArgs()
                     {
                         Object = (UploadableListItem)vItem,

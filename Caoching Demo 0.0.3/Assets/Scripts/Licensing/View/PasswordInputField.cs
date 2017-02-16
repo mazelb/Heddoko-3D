@@ -64,6 +64,6 @@ namespace Assets.Scripts.Licensing.Authentication
         {
             InputField.text = "";
         }
-
+         
     }
 }

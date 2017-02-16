@@ -125,5 +125,6 @@ namespace Assets.Scripts.Licensing.Controller
             }
             return true;
         }
+
     }
 }

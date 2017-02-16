@@ -16,14 +16,14 @@ using Assets.Scripts.Localization;
 using Assets.Scripts.Notification;
 using Assets.Scripts.UI;
 using Assets.Scripts.UI.AbstractViews.Permissions;
-using Assets.Scripts.UI.RecordingLoading;
+ using Assets.Scripts.UI.RecordingLoading;
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.Utils;
 using HeddokoSDK.Models;
 using HeddokoSDK.Models.Activity;
 using HeddokoSDK.Models.Enum;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.EventSystems; 
 
 namespace Assets.Scripts.MainApp
 {
@@ -51,10 +51,11 @@ namespace Assets.Scripts.MainApp
         public RecordingPlayerView RecordingPlayer;
         public ControlPanel ControlPanel;
         private UserProfileModel mCurrentProfileModel;
+        private ActivitiesManager mActivitiesManager;
         public UploadController UploadController;
         public UnityLoginControl LoginController;
+        public OrganizationViewController OrganizationViewController;
         public GraphicsQualityManager GraphicsQualityManager;
-        public NotificationActivitiesManager NotificationActivitiesManager;
         void Awake()
         {
             OutterThreadToUnityThreadIntermediary.Instance.Init();
@@ -89,6 +90,14 @@ namespace Assets.Scripts.MainApp
             RegisterNotificationEvents();
             UploadController.Initialize();
             LoginController.Clear();
+            if (mCurrentProfileModel.User.RoleType == UserRoleType.LicenseUniversal)
+            {
+                OrganizationViewController.gameObject.SetActive(true);
+            }
+            else
+            {
+                OrganizationViewController.gameObject.SetActive(false);
+            }
         }
 
         /// <summary>
@@ -96,19 +105,19 @@ namespace Assets.Scripts.MainApp
         /// </summary>
         private void RegisterNotificationEvents()
         {
-            if (NotificationActivitiesManager == null)
+            if (mActivitiesManager == null)
             {
-                NotificationActivitiesManager = new NotificationActivitiesManager(mCurrentProfileModel);
+                mActivitiesManager = new ActivitiesManager(mCurrentProfileModel);
             }
-            NotificationActivitiesManager.AddNotificationMessageEventHandler(UserEventType.StreamChannelOpened, StreamChannelOpened);
-            NotificationActivitiesManager.AddNotificationMessageEventHandler(UserEventType.StreamChannelClosed, StreamChannelClosed);
-            NotificationActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseAddedToOrganization, LicenseAddedToOrganization);
-            NotificationActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseAddedToUser, LicenseAddedToUser);
-            NotificationActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseRemovedFromUser, LicenseRemovedFromUser);
-            NotificationActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseChangedForUser, LicenseChangedForUser);
-            NotificationActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseExpiring, LicenseExpiring);
-            NotificationActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseExpired, LicenseExpired);
-            NotificationActivitiesManager.Start();
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.StreamChannelOpened, StreamChannelOpened);
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.StreamChannelClosed, StreamChannelClosed);
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseAddedToOrganization, LicenseAddedToOrganization);
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseAddedToUser, LicenseAddedToUser);
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseRemovedFromUser, LicenseRemovedFromUser);
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseChangedForUser, LicenseChangedForUser);
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseExpiring, LicenseExpiring);
+            mActivitiesManager.AddNotificationMessageEventHandler(UserEventType.LicenseExpired, LicenseExpired);
+            mActivitiesManager.Start();
         }
 
         /// <summary>
@@ -116,15 +125,15 @@ namespace Assets.Scripts.MainApp
         /// </summary>
         private void RemoveNotificationEvents()
         {
-            NotificationActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.StreamChannelOpened, StreamChannelOpened);
-            NotificationActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.StreamChannelClosed, StreamChannelClosed);
-            NotificationActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseAddedToOrganization, LicenseAddedToOrganization);
-            NotificationActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseAddedToUser, LicenseAddedToUser);
-            NotificationActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseRemovedFromUser, LicenseRemovedFromUser);
-            NotificationActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseChangedForUser, LicenseChangedForUser);
-            NotificationActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseExpiring, LicenseExpiring);
-            NotificationActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseExpired, LicenseExpired);
-            NotificationActivitiesManager.Dispose();
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.StreamChannelOpened, StreamChannelOpened);
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.StreamChannelClosed, StreamChannelClosed);
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseAddedToOrganization, LicenseAddedToOrganization);
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseAddedToUser, LicenseAddedToUser);
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseRemovedFromUser, LicenseRemovedFromUser);
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseChangedForUser, LicenseChangedForUser);
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseExpiring, LicenseExpiring);
+            mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseExpired, LicenseExpired);
+            mActivitiesManager.Dispose();
 
         }
 
@@ -272,7 +281,7 @@ namespace Assets.Scripts.MainApp
 
         void OnApplicationQuit()
         {
-            NotificationActivitiesManager.Dispose();
+            mActivitiesManager.Dispose();
         }
         /// <summary>
         /// exits the application

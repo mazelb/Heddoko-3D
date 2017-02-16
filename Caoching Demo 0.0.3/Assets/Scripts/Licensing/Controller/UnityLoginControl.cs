@@ -16,15 +16,15 @@ using System.Threading;
 using Assets.Scripts.Licensing.Authentication;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.Localization;
+using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.Utils;
 using HeddokoSDK;
 using HeddokoSDK.Models;
-using UIWidgets;
+ using UIWidgets;
 using UnityEngine;
 
-// ReSharper disable DelegateSubtraction
-
+ 
 namespace Assets.Scripts.Licensing.Controller
 {
     public delegate void OnLoginSuccess(UserProfileModel vModel);
@@ -42,7 +42,6 @@ namespace Assets.Scripts.Licensing.Controller
         internal OnLoginSuccess LoginSuccessEvent;
         private Thread mConnectionThread;
         private string mUrl;
-        private string mUrlExt;
         private string mSecret;
         private const int RECONNECTION_ATTEMPTS = 10;
         private const int RECONNECTION_DELAY = 2000;
@@ -53,15 +52,13 @@ namespace Assets.Scripts.Licensing.Controller
 
         internal void Awake()
         {
-            mUrlExt = "api/v1";
-            mUrl = "https://app.heddoko.com/";
-            mSecret = "HEDFstcKsx0NHjPSsjcndjnckSDJjknCCSjcnsJSK89SJDkvVBrk";
+            mUrl = GlobalConfig.MainServer;
+            mSecret = GlobalConfig.MainServerKey;
 
-#if DEBUG
-            mUrl = "http://dev.app.heddoko.com/";
-            mSecret = "HEDFstcKsx0NHjPSsjfSDJdsDkvdfdkFJPRGldfgdfgvVBrk";
+            mUrl = GlobalConfig.DevServer;
+            mSecret = GlobalConfig.DevServerKey;
 #endif
-            HeddokoConfig vConfig = new HeddokoConfig(mUrl, mSecret, RECONNECTION_ATTEMPTS, RECONNECTION_DELAY);
+            HeddokoConfig vConfig = new HeddokoConfig(mUrl + mUrlExt, mSecret);
             mClient = new HeddokoClient(vConfig);
             ServicePointManager.ServerCertificateValidationCallback += RemoteCertificateValidationCallback;
             mLoginController = new LoginController();
@@ -77,6 +74,7 @@ namespace Assets.Scripts.Licensing.Controller
             mLoginController.AddErrorHandler(LoginErrorType.Other, vX => EnableControls());
             mLoginController.AddLoginSubmissionHandler(SubmitLogin);
             OutterThreadToUnityThreadIntermediary.Instance.Init();
+
         }
         /// <summary>
         /// No internet connection error handler. 
@@ -87,6 +85,7 @@ namespace Assets.Scripts.Licensing.Controller
             DisplayErrorNotification(vVmsg);
             EnableControls();
         }
+
 
         /// <summary>
         /// enable login controls
@@ -191,7 +190,7 @@ namespace Assets.Scripts.Licensing.Controller
                 if (vUser.IsOk)
                 {
                     token = mClient.GenerateDeviceToken();
-                    UserProfileModel vProfileModel = new UserProfileModel()
+                     UserProfileModel vProfileModel = new UserProfileModel()
                     {
                         User = vUser,
                         LicenseInfo = vLicense,
@@ -278,7 +277,7 @@ namespace Assets.Scripts.Licensing.Controller
                         LocalizationBinderContainer.GetString(KeyMessage.ReportErrorCodeMsg) +
                         " " + vE.Message);
                 });
-
+           
             }
         }
 

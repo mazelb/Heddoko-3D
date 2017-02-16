@@ -27,7 +27,7 @@ namespace Assets.Scripts.Licensing.Controller
         public ApplicationBouncer Bouncer = new ApplicationBouncer();
         public UnityViewFactory UnityViewFactory;
         public HeddokoAppStart Appstart;
-
+        public IViewFactory ViewFactory { get; private set; }
         /// <summary>
         /// Initializes parameters
         /// </summary>
@@ -36,11 +36,9 @@ namespace Assets.Scripts.Licensing.Controller
             Init();
             ViewFactory = UnityViewFactory;
         }
-
-
-
-        public IViewFactory ViewFactory { get; private set; }
-
+        /// <summary>
+        /// Initializes the object
+        /// </summary>
         public void Init()
         {
             Bouncer.RegisterLicenseAccessActionEvent(LicenseStatusType.Active, ActiveLicenseHandler);
@@ -73,7 +71,6 @@ namespace Assets.Scripts.Licensing.Controller
         /// </summary> 
         public void BannedUserHandler(UserProfileModel vProfileModel)
         {
-
             string vMsg = LocalizationBinderContainer.GetString(KeyMessage.BannedAccountMsg);
               //   "This account has been banned. ";
             Notify.Template("fade")
@@ -110,9 +107,7 @@ namespace Assets.Scripts.Licensing.Controller
             Notify.Template("fade")
                .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
         }
-
-
-
+        
         /// <summary>
         /// Handler for expired license event
         /// </summary> 
@@ -122,7 +117,6 @@ namespace Assets.Scripts.Licensing.Controller
             Notify.Template("fade")
                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
             LoginControl.EnableControls();
-
 
         }/// <summary>
          /// Handler for deleted license event
@@ -135,9 +129,7 @@ namespace Assets.Scripts.Licensing.Controller
                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
             LoginControl.EnableControls();
         }
-
-
-
+        
         internal void OnApplicationQuit()
         {
             Appstart.CleanUpOnQuit();

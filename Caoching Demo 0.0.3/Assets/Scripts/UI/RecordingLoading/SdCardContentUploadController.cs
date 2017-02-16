@@ -265,7 +265,6 @@ namespace Assets.Scripts.UI.RecordingLoading
                         vIndices.Push(i);
                     }
                 }
-
             }
             while (vIndices.Count > 0)
             {
@@ -303,9 +302,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                     }
                     mUploader.UploadSingleItem(vUploadItem);
                 }
-
                 UploadBrainpackLogData();
-
             }
 
             //On completion handle errors and succesful uploads
@@ -318,13 +315,14 @@ namespace Assets.Scripts.UI.RecordingLoading
                 }
             }
 
-
             if (ContentsCompletedUploadEvent != null)
             {
                 ContentsCompletedUploadEvent();
             }
             if (mUploadRecordingStatus.ProblematicUploads != null)
-            { mUploadRecordingStatus.ProblematicUploads.Clear(); }
+            {
+                mUploadRecordingStatus.ProblematicUploads.Clear();
+            }
         }
 
         /// <summary>
@@ -379,8 +377,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             //get brainpack serial number
             string vBpSerial = mSearcher.GetSerialNumFromSdCard();
-            //    var vLogFileInfo = new FileInfo(mSearcher.HeddokoSdCardStruct.LogFileDirectoryPath);
-            var vLogFileInfo = mSearcher.HeddokoSdCardStruct;
+             var vLogFileInfo = mSearcher.HeddokoSdCardStruct;
             if (vBpSerial != null)
             {
                 BrainpackLogFileItem = new UploadableListItem()
@@ -390,7 +387,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                     BrainpackSerialNumber = vBpSerial,
                     AssetType = AssetType.Log
                 };
-            }
+            } 
         }
     }
 
