@@ -26,6 +26,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         private bool mIsWorking;
         private int mTimer = 10000;
         private int mRemainderRecordingsLeft;
+        private object mIsWorkingLock = new object();
         /// <summary>
         /// Skips the number of items to download
         /// </summary>

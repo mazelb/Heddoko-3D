@@ -1,11 +1,5 @@
 fileFormatVersion: 2
 guid: 7e5d8289d7f6ef94393789fd409c90c9
-<<<<<<< HEAD:Caoching Demo 0.0.3/Assets/Plugins/HeddokoSDK/System.Threading.dll.meta
-timeCreated: 1484843994
-=======
-timeCreated: 1479144509
->>>>>>> feature_NotificationSystem:Caoching Demo 0.0.3/Assets/Plugins/HeddokoSDK/System.Threading.dll.meta
-licenseType: Pro
 PluginImporter:
   serializedVersion: 1
   iconMap: {}

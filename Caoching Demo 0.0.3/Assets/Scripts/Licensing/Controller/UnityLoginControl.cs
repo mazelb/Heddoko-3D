@@ -54,11 +54,11 @@ namespace Assets.Scripts.Licensing.Controller
         {
             mUrl = GlobalConfig.MainServer;
             mSecret = GlobalConfig.MainServerKey;
-
+#if DEBUG
             mUrl = GlobalConfig.DevServer;
             mSecret = GlobalConfig.DevServerKey;
 #endif
-            HeddokoConfig vConfig = new HeddokoConfig(mUrl + mUrlExt, mSecret);
+            HeddokoConfig vConfig = new HeddokoConfig(mUrl, mSecret, RECONNECTION_ATTEMPTS, RECONNECTION_DELAY);
             mClient = new HeddokoClient(vConfig);
             ServicePointManager.ServerCertificateValidationCallback += RemoteCertificateValidationCallback;
             mLoginController = new LoginController();
