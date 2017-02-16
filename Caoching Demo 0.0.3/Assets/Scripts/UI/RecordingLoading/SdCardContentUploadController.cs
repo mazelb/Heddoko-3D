@@ -131,6 +131,9 @@ namespace Assets.Scripts.UI.RecordingLoading
                 case AssetType.Record:
                     RecordingUploadHander(vItem);
                     break;
+                case AssetType.RawFrameData:
+                    RecordingUploadHander(vItem);
+                    break;
             }
 
         }
@@ -290,7 +293,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                         break;
                     }
                     var vUploadItem = new UploadableListItem();
-                    vUploadItem.AssetType = AssetType.Record;
+                    vUploadItem.AssetType = AssetType.RawFrameData;
                     vUploadItem.RelativePath = vRecItem.FullName;
                     vUploadItem.FileName = vRecItem.Name;
                     vUploadItem.IsNew = true;

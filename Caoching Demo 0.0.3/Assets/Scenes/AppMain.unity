@@ -11164,7 +11164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BodyControlPanel: {fileID: 415361737}
   LocalRecordingView: {fileID: 1754098892}
-  RecordingListViewController: {fileID: 0}
+  RecordingListViewController: {fileID: 2004191321}
   Tabs: {fileID: 532605588}
   RenderingCamera: {fileID: 1185097638}
 --- !u!1 &481595649
@@ -44212,7 +44212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4ebb64debc78b44e9290277618720fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RecordingListViewController: {fileID: 0}
+  RecordingListViewController: {fileID: 2004191321}
 --- !u!1 &1808922382
 GameObject:
   m_ObjectHideFlags: 0
@@ -49337,6 +49337,12 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 28}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &2004191321 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11443538, guid: 5dd700239b5fe1d4fa0e27066a71446b,
+    type: 2}
+  m_PrefabInternal: {fileID: 70532935}
+  m_Script: {fileID: 11500000, guid: d925fa4073aed6b4ab3fa2c8d60cee8d, type: 3}
 --- !u!1 &2020081054
 GameObject:
   m_ObjectHideFlags: 0

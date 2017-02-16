@@ -11,7 +11,7 @@ using Assets.Scripts.Frames_Pipeline;
 using Assets.Scripts.Localization;
 using Assets.Scripts.Notification;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
- using Assets.Scripts.UI.RecordingLoading;
+using Assets.Scripts.UI.RecordingLoading;
 using UIWidgets;
 using UnityEngine;
 
@@ -26,7 +26,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         public LiveSuitFeedView LiveSuitFeedView;
         public RecordingPlayerView PlayerView;
         private PlaybackControlPanel mPlaybackControlPanel;
-        private bool mCollectingData; 
+        private bool mCollectingData;
 
         public GameObject DisablingPanel;
         private Body mCurrentBody;
@@ -59,11 +59,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         {
             if (LiveSuitFeedView.Initialized)
             {
-                UnRegisterPlayerViewHandlers(PlayerView); 
+                UnRegisterPlayerViewHandlers(PlayerView);
             }
-           
+
             RegisterLiveSuitFeedViewHandlers(LiveSuitFeedView);
-            
+
         }
 
         private void LiveSuitFeedViewLayoutCreatedHandler(LiveSuitFeedView vView)
@@ -74,13 +74,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             }
             vView.BrainpackBody.AnalysisFramesSet = new LiveAnalysisFramesSet();
             RegisterLiveSuitFeedViewHandlers(vView);
-         
+
         }
 
         private void RegisterLiveSuitFeedViewHandlers(LiveSuitFeedView vView)
         {
             vView.BrainpackBody.View.BodyFrameUpdatedEvent += BodyFrameUpdatedEvent;
-            vView.BrainpackBody.View.TrackingUpdateEvent += UpdateViews; 
+            vView.BrainpackBody.View.TrackingUpdateEvent += UpdateViews;
             mController.SetBody(vView.BrainpackBody);
             mController.MovementSet = true;
             mController.Start();
@@ -159,7 +159,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
 
         private void BodyFrameUpdatedEvent(BodyFrame vNewFrame)
         {
-           
+
         }
 
         /// <summary>
@@ -202,8 +202,14 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
 
         void OnApplicationQuit()
         {
-            mPlaybackControlPanel.RecordingUpdatedEvent -= RecordingUpdatedEvent;
-            PlayerView.RecordingPlayerViewLayoutCreatedEvent -= RecordingPlayerViewLayoutCreatedHandler;
+            if (mPlaybackControlPanel != null)
+            {
+                mPlaybackControlPanel.RecordingUpdatedEvent -= RecordingUpdatedEvent;
+            }
+            if (PlayerView != null)
+            {
+                PlayerView.RecordingPlayerViewLayoutCreatedEvent -= RecordingPlayerViewLayoutCreatedHandler;
+            }
         }
         /// <summary>
         /// Stops data collection  
@@ -276,6 +282,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             mController.Start();
         }
 
-     
+
     }
 }

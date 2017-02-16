@@ -43,7 +43,7 @@ namespace Assets.Scripts.Licensing.Model
                         {
                             if (User.Kit.Brainpack.Label.Equals(vLabel))
                             {
-                                return User.Kit.Brainpack.ID;
+                                return User.Kit.ID;
                             }
                         }
                     }
