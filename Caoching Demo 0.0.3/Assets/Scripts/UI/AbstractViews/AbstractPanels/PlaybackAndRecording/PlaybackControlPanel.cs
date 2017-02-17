@@ -61,7 +61,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         private PlaybackState mPrevState;
         private PlaybackSettings mPlaybackSettings = new PlaybackSettings();
         private bool mCanUse = true;
-         public PlaybackState CurrentState
+        public PlaybackState CurrentState
         {
             get
             {
@@ -96,7 +96,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         {
             get { return mPlaybackTask; }
         }
- 
+
 
         /// <summary>
         /// Updates recording for the current playback panel
@@ -136,7 +136,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             }
         }
 
-        
+
 
         public override ControlPanelType PanelType
         {
@@ -378,15 +378,19 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// </summary>
         public void SetPlayState()
         {
-            bool vIsPaused = mPlaybackTask.IsPaused;
-            if (vIsPaused)
+            if (mPlaybackTask != null)
             {
-                ChangeState(PlaybackState.Play);
+                bool vIsPaused = mPlaybackTask.IsPaused;
+                if (vIsPaused)
+                {
+                    ChangeState(PlaybackState.Play);
+                }
+                else
+                {
+                    ChangeState(PlaybackState.Pause);
+                }
             }
-            else
-            {
-                ChangeState(PlaybackState.Pause);
-            }
+
         }
 
         /// <summary>
@@ -418,7 +422,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlayPauseSubControls.IsPaused = true;
             PlaybackSpeedModifierSubControl.IsPaused = true;
             PlaybackSpeedModifierSubControl.IsInteractable = false;
-             BodySegment.IsUsingInterpolation = false;
+            BodySegment.IsUsingInterpolation = false;
         }
 
 
@@ -462,7 +466,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 }
             }
         }
-        
+
         /// <summary>
         /// Get a timestamp for the frame 
         /// </summary>
@@ -519,7 +523,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             {
                 BodyUpdatedEvent(vBody);
             }
-           
+
 
         }
 
@@ -559,7 +563,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 if (BodyUpdatedEvent != null)
                 {
                     BodyUpdatedEvent(mBody);
-                } 
+                }
                 var vNotificationMsg = LocalizationBinderContainer.GetString(KeyMessage.PlayingRecording);
                 vNotificationMsg += vNewCsvBodyFramesRecording.Title;
                 NotificationManager.CreateNotification(vNotificationMsg, NotificationManager.NotificationUrgency.Low);
@@ -619,12 +623,14 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlayPauseSubControls.RequestResources();
             RecordingForwardSubControl.RequestResources();
             RecordingRewindSubControl.RequestResources();
-            InputHandler.RegisterKeyboardAction(KeyCode.Home,ResetTpose);
+            InputHandler.RegisterKeyboardAction(KeyCode.Home, ResetTpose);
+            InputHandler.RegisterKeyboardAction(KeyCode.Space, SetPlayState);
         }
 
         void OnDisable()
         {
             InputHandler.RemoveKeybinding(KeyCode.Home, ResetTpose);
+            InputHandler.RemoveKeybinding(KeyCode.Space, SetPlayState);
         }
 
         void ResetTpose()
@@ -656,6 +662,10 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlayPauseSubControls.ReleaseResources();
             RecordingForwardSubControl.ReleaseResources();
             RecordingRewindSubControl.ReleaseResources();
+            if (mPlaybackTask != null)
+            {
+                mPlaybackTask.IsPaused = true;
+            }
         }
 
         /// <summary>
@@ -695,8 +705,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         {
             PlaybackProgressSubControl.PlaySlider.interactable = vB;
             RecordingForwardSubControl.IsEnabled = vB;
-          RecordingRewindSubControl.IsEnabled = vB;
-          
+            RecordingRewindSubControl.IsEnabled = vB;
+
         }
     }
 

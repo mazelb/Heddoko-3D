@@ -157,7 +157,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             Vector3 vHorizontalShoulderAbdProjection = Vector3.ProjectOnPlane(vShoulderAxisRight, vTrunkAxisUp);
 
             //check if the arm is above the head 
-            if (vAngleShoulderVertAbductionNew >= 165 || RightShoulderVerticalAbductionSignedAngle <= 0)
+            if (vAngleShoulderVertAbductionNew >= 165 || RightShoulderVerticalAbductionSignedAngle <= -160)
             {
                 vHorizontalShoulderAbdProjection = Vector3.ProjectOnPlane(vShoulderAxisRight, vTrunkAxisRight);
             }
@@ -173,7 +173,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
                 {
                     vAngleShoulderHorAbductionNew = Vector3.Angle(vTrunkAxisUp, vHorizontalShoulderAbdProjection);
                 }
-                else if (RightShoulderVerticalAbductionSignedAngle <= 0)
+                else if (RightShoulderVerticalAbductionSignedAngle <= -160)
                 { 
                     vAngleShoulderHorAbductionNew = Vector3.Angle(-vTrunkAxisUp, vHorizontalShoulderAbdProjection);
                     Debug.DrawLine(UpArTransform.position, (UpArTransform.position + vTrunkAxisUp) * 3f, Color.blue);

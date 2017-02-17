@@ -204,16 +204,7 @@ namespace Assets.Scripts.Body_Data.view
         }
 
  
-        /// <summary>
-        /// Handles inputs related to the body view
-        /// </summary>
-        private void InputHandler()
-        {
-            if (Input.GetKeyDown(HeddokoDebugKeyMappings.ResetFrame))
-            {
-                ResetInitialFrame();
-            }
-        }
+ 
 
         /// <summary>
         /// Automatically called by Unity when the game object awakes. In this case, look for the debug gameobject in the scene 
