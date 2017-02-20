@@ -31,9 +31,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         private TPosedAnalysisFrame mCurrentAnalysisFrame;
         private int mAnalysisSegmentCounter;
         private int mTotalSingleSegmentsToCount;
-        private int mCurrentFrameIndex = -1;
-        internal bool MovementSet;
-
+         internal bool MovementSet;
+        private BodyFrame mCurrentBodyFrame;
         /// <summary>
         /// Frames serializer
         /// </summary>
@@ -115,10 +114,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
                 return;
             }
             //verify if the frame exists already in the set
-            var vFrame = Body.AnalysisFramesSet.Get(mCurrentFrameIndex - FRAME_OFFSET);
+            var vFrame = Body.AnalysisFramesSet.Get(mCurrentBodyFrame.Index - FRAME_OFFSET);
             if (vFrame != null)
             {
-                if (mCurrentFrameIndex == vBodyFrame.Index)
+                if (mCurrentBodyFrame.Index == vBodyFrame.Index)
                 {
                     mCurrentAnalysisFrame.Status = TposeStatus.Tpose;
                 }
@@ -127,7 +126,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
                     vFrame.Status = TposeStatus.Tpose;
                 }
                 //clear out frames after this current index
-                int vStartIndexClear = mCurrentFrameIndex - FRAME_OFFSET  +1;
+                int vStartIndexClear = mCurrentBodyFrame.Index - FRAME_OFFSET + 1;
                 int vMaxCount = Body.AnalysisFramesSet.MaxFramesCount;
                 for (int vI = vStartIndexClear; vI < vMaxCount; vI++)
                 {
@@ -142,11 +141,12 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// <param name="vNewFrame"></param>
         private void BodyFrameUpdatedEvent(BodyFrame vNewFrame)
         {
-            mCurrentFrameIndex = vNewFrame.Index;
-            if (mCurrentAnalysisFrame != null)
-            {
-                mCurrentAnalysisFrame.TimeStamp = vNewFrame.Timestamp;
-            }
+            //mCurrentFrameIndex = vNewFrame.Index;
+            //if (mCurrentAnalysisFrame != null)
+            //{
+            //    mCurrentAnalysisFrame.TimeStamp = vNewFrame.Timestamp;
+            //}
+            mCurrentBodyFrame = vNewFrame;
             //todo: add time stamp as uint
         }
 
@@ -161,20 +161,22 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
                 return;
             }
             //Verify if the current set already has a an analysis frame
-            if (Body.AnalysisFramesSet.ContainsFrameAt(mCurrentFrameIndex - FRAME_OFFSET))
+            if (Body.AnalysisFramesSet.ContainsFrameAt(mCurrentBodyFrame.Index - FRAME_OFFSET))
             {
                 return;
             }
             if (mAnalysisSegmentCounter == 0)
             {
-                mCurrentAnalysisFrame = new TPosedAnalysisFrame(); 
+                mCurrentAnalysisFrame = new TPosedAnalysisFrame();
+                mCurrentAnalysisFrame.Index = mCurrentBodyFrame.Index;
+                mCurrentAnalysisFrame.TimeStamp = mCurrentBodyFrame.Timestamp;
             }
             SetSegmentAnalysisToCurrentAnalysisFrame(vSegmentAnalysis);
             mAnalysisSegmentCounter++;
             if (mAnalysisSegmentCounter == mTotalSingleSegmentsToCount)
             {
-                mCurrentAnalysisFrame.Index = mCurrentFrameIndex;
-                Body.AnalysisFramesSet.Add(mCurrentFrameIndex - FRAME_OFFSET, mCurrentAnalysisFrame);
+                mCurrentAnalysisFrame.Index = mCurrentBodyFrame.Index;
+                Body.AnalysisFramesSet.Add(mCurrentBodyFrame.Index - FRAME_OFFSET, mCurrentAnalysisFrame);
                 mAnalysisSegmentCounter = 0;
             }
         }
@@ -344,8 +346,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             mCollectingData = false;
         }
 
-  
-        
+
+
 
         /// <summary>
         /// Returns an analysis frame at the given index

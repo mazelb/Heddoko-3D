@@ -114,7 +114,7 @@ namespace Assets.Scripts.Body_Data.view
                 }
                 if (BodyFrameResetInitializedEvent != null)
                 {
-                    BodyFrameResetInitializedEvent(vTempBodyFrame); 
+                    BodyFrameResetInitializedEvent(vTempBodyFrame);
                 }
                 AssociatedBody.SetInitialFrame(vTempBodyFrame);
                 UpdateViewTracking(vTempBodyFrame);
@@ -143,9 +143,6 @@ namespace Assets.Scripts.Body_Data.view
                     TrackingUpdateEvent(vBodyFrame);
                 }
             }
-
-           
-
         }
 
         /// <summary>
@@ -196,15 +193,13 @@ namespace Assets.Scripts.Body_Data.view
                         }
                         UpdateViewTracking(vBodyFrame);
                         CurrentIndex = vBodyFrame.Index;
-                       
                     }
-
                 }
             }
         }
 
- 
- 
+
+
 
         /// <summary>
         /// Automatically called by Unity when the game object awakes. In this case, look for the debug gameobject in the scene 
