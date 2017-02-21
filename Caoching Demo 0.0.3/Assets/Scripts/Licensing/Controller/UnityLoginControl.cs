@@ -171,7 +171,9 @@ namespace Assets.Scripts.Licensing.Controller
             try
             {
                 UserRequest vRequest = vModel.UserRequest; 
+                Debug.Log("pre sign in");
                 User vUser = mClient.SignIn(vRequest); 
+                Debug.Log("post sign in");
                 if (!vUser.IsOk)
                 { 
                     OutterThreadToUnityThreadIntermediary.QueueActionInUnity(EnableControls);

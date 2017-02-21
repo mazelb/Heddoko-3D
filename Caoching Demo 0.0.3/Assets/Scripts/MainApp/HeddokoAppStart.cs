@@ -45,22 +45,15 @@ namespace Assets.Scripts.MainApp
             mTaggingManager = new TaggingManager();
             InitializeFilePaths();
             InitialiazePools();
-            InitializeLoggers();
-            InitializeDatabase();
-            InjectDatabaseDependents();
-            InjectTaggingManagerDependents();
+            InitializeLoggers(); 
 
-            QualitySettings.vSyncCount = 0;
-            bool vAppSafelyLaunched; 
+            QualitySettings.vSyncCount = 0; 
             HVector3.Vector3MathServiceProvider = new UVector3MathServiceProvider();
             BodySegment.IsTrackingHeight = false;
  
             if (!IsDemo)
-            {
-
-                mDbAccess = new LocalDBAccess();
-                EnableObjects(true);
-                mDbAccess.SetApplicationSettings();
+            { 
+                EnableObjects(true); 
             }
         }
 
@@ -69,8 +62,7 @@ namespace Assets.Scripts.MainApp
         /// </summary>
         private void InitializeFilePaths()
         {
-            var vBpDlPath =ApplicationSettings.BrainpackDownloadCacheFolderPath;
-            var vDlPath = ApplicationSettings.DownloadCacheFolderPath;
+            ApplicationSettings.InitializeFilePaths();
         }
 
         // ReSharper disable once UnusedMember.Local
@@ -131,7 +123,6 @@ namespace Assets.Scripts.MainApp
         {
             GameObject vRenderedBodyGroup = GameObject.FindWithTag("RenderedBodyGroup");
             GameObject vPanelCameraGroup = GameObject.FindWithTag("PanelCameraGroup");
-
             RenderedBodyPool.ParentGroupTransform = vRenderedBodyGroup.transform;
             PanelCameraPool.CameraParent = vPanelCameraGroup.transform;
         }

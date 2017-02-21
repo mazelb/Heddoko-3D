@@ -29,12 +29,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         private bool mCollectingData;
 
         public GameObject DisablingPanel;
-        private Body mCurrentBody;
         public AnalysisTextViewController AnalysisTextViewController;
         public UnityEngine.UI.Button ExportDataButton;
         public UnityEngine.UI.Text ExportDataText;
 
-        void Awake()
+        internal void Awake()
         {
             IAnalysisFramesSerializer vSerializer = new CsvAnalysisFramesSerializer();
             mController = new AnalysisFramesCollectionController(vSerializer);
@@ -94,7 +93,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             mController.Stop();
         }
 
-        void OnDisable()
+        internal void OnDisable()
         {
             mController.MovementSet = false;
             StopDataCollection();
@@ -141,14 +140,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
 
         private void UpdateViews(BodyFrame vNewFrame)
         {
-            Debug.Log("updating views in");
             int vIndex = vNewFrame.Index;
             var vFrame = mController.GetAnalysisFrame(vIndex);
             if (vFrame == null)
             {
                 //give the option to collect all data frames or single data frame
                 //frame hasn't been analyzed yet
-                var vMessage = LocalizationBinderContainer.GetString(KeyMessage.NoAnalysisFrameSet);
+                LocalizationBinderContainer.GetString(KeyMessage.NoAnalysisFrameSet);
             }
             else
             {
@@ -200,7 +198,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             NotificationManager.CreateNotification(vMessage, NotificationManager.NotificationUrgency.Low);
         }
 
-        void OnApplicationQuit()
+       internal void OnApplicationQuit()
         {
             if (mPlaybackControlPanel != null)
             {
@@ -246,8 +244,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             UniFileBrowser.use.CloseMessageWindow(false);
             UniFileBrowser.use.CloseFileWindow();
             UniFileBrowser.use.enabled = true;
-            UniFileBrowser.use.SaveFileWindow(ExportCSVData);
-
+            UniFileBrowser.use.SaveFileWindow(ExportCsvData);
             UniFileBrowser.use.OnEscape = Escaped;
         }
         /// <summary>
@@ -263,7 +260,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// export set to a csv file
         /// </summary>
         /// <param name="vArg0"></param>
-        private void ExportCSVData(string vArg0)
+        private void ExportCsvData(string vArg0)
         {
             mController.SerializeSet(vArg0);
             string vMsg = LocalizationBinderContainer.GetString(KeyMessage.AnalysisSaveMsg);
