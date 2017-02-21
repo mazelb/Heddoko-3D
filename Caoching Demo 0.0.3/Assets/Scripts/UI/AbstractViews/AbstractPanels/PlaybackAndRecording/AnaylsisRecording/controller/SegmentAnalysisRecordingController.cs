@@ -9,6 +9,7 @@
 
 using System.Linq;
 using System.Collections.Generic;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Data.CalibrationData.TposeSelection;
 using Assets.Scripts.Body_Pipeline.Analysis;
 using Assets.Scripts.Localization;

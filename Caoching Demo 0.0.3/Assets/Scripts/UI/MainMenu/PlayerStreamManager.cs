@@ -8,7 +8,8 @@
 */
  
 using System.Collections.Generic;
- using Assets.Scripts.Body_Data.View;
+using Assets.Scripts.Body_Data;
+using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
  using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Frames_Recorder.FramesRecording;

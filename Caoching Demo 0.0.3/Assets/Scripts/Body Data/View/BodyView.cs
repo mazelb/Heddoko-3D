@@ -136,7 +136,7 @@ namespace Assets.Scripts.Body_Data.view
 
             if (vDic != null)
             {
-                AssociatedBody.mBodyFrameCalibrationContainer.UpdateCalibrationContainer(vDic, vBodyFrame.Timestamp);
+                AssociatedBody.BodyFrameCalibrationContainer.UpdateCalibrationContainer(vDic, vBodyFrame.Timestamp);
                 Body.ApplyTracking(AssociatedBody, vDic);
                 if (TrackingUpdateEvent != null)
                 {

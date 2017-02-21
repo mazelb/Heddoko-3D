@@ -30,10 +30,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// </summary>
         public virtual void AngleExtraction()
         {
-
-
         }
- 
 
         /// <summary>
         /// Adds an analysis completed listener 
@@ -41,7 +38,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <param name="vListener"></param>
         internal void AddAnalysisCompletionListener(AnalysisComplete vListener)
         {
-            AnalysisCompletedEvent += vListener; 
+            AnalysisCompletedEvent += vListener;
         }
 
         /// <summary>

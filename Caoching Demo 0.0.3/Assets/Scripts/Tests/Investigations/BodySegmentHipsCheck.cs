@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.UI.RecordingLoading;
+﻿using Assets.Scripts.Body_Data;
+using Assets.Scripts.UI.RecordingLoading;
 using UnityEngine;
 
 namespace Assets.Scripts.Tests.Investigations

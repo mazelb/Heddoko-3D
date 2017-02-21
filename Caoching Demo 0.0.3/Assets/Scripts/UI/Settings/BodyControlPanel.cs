@@ -6,6 +6,7 @@
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
 
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Pipeline.Analysis.Views;
 using Assets.Scripts.Communication.View.Table;
 using Assets.Scripts.UI.RecordingLoading;
@@ -41,7 +42,7 @@ namespace Assets.Scripts.UI.Settings
             set { mBody = value; }
         }
 
-        void Awake()
+       internal void Awake()
         {
             ScreenResolutionManager.Instance.NewResolutionSetEvent += BodyContentSlider.ResetPosition;
             ScreenResolutionManager.Instance.NewResolutionSetEvent += BodyFrameSlider.ResetPosition;

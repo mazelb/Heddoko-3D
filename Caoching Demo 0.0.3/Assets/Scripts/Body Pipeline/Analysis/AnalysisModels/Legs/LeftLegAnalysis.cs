@@ -34,7 +34,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
         public float LeftHipAbductionAngle;
         [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip Add/Abd", Order = 14)]
         public float LeftHipAbductionSignedAngle;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LHip Int/Ext Rot", Order = 16)]
+        [AnalysisSerialization(IgnoreAttribute = true, AttributeName = "LHip Int/Ext Rot", Order = 16)]
         public float LeftHipRotationSignedAngle;
 
         //Accelerations and velocities
@@ -130,10 +130,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Legs
             LeftHipAbductionAngle = vAngleHipAbductionNew;
             vCross = Vector3.Cross(vThighUpAxisProjectedOnHipForward, -vHipAxisUp);
             vSign = Mathf.Sign(Vector3.Dot(vHipAxisForward, vCross));
-            LeftHipAbductionSignedAngle = vSign * LeftHipAbductionAngle * -1f;//GetSign("System.Single RightHipAbductionAngle");
+            LeftHipAbductionSignedAngle = vSign * LeftHipAbductionAngle * -1f; 
 
             //calculate the Hip Rotation angle
-            float vAngleHipRotationNew = ThighTransform.rotation.eulerAngles.y;// 180 - Mathf.Abs(180 - ThighTransform.rotation.eulerAngles.y);
+            float vAngleHipRotationNew = ThighTransform.rotation.eulerAngles.y; 
             if (vAngleHipRotationNew > 180)
             {
                 vAngleHipRotationNew = ThighTransform.rotation.eulerAngles.y- 360f ;

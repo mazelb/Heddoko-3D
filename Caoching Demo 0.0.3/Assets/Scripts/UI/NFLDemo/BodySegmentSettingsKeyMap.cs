@@ -7,6 +7,7 @@
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
 
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.UI.MainMenu;
 using Assets.Scripts.Utils.DebugContext;
 using UnityEngine;

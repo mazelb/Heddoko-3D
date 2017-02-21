@@ -3,7 +3,7 @@ using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Layouts;
 
 using System.Collections.Generic;
-
+using Assets.Scripts.Body_Data;
 using UnityEngine.UI;
 namespace Assets.Scripts.Tests
 {

@@ -8,7 +8,8 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics; 
+using System.Diagnostics;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Data.View; 
 using Assets.Scripts.Body_Pipeline.Analysis; 
 using Assets.Scripts.UI.Loading;

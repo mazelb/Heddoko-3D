@@ -36,7 +36,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
         public float RightHipAbductionAngle;
         [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip Add/Abd", Order = 13)]
         public float RightHipAbductionSignedAngle;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "RHip Int/Ext Rot", Order = 15)]
+        [AnalysisSerialization(IgnoreAttribute = true, AttributeName = "RHip Int/Ext Rot", Order = 15)]
         public float RightHipRotationSignedAngle;
 
         //Accelerations and velocities
@@ -144,7 +144,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs
                 vRotationProjection = Vector3.ProjectOnPlane(vThighAxisForward, vHipAxisForward);
                 vAngleHipRotationNew = Vector3.Angle(vRotationProjection, vHipAxisUp);
                 vCross = Vector3.Cross(vHipAxisUp,vRotationProjection);
-                vSign = Mathf.Sign(Vector3.Dot(vHipAxisForward, vCross)); RightHipRotationSignedAngle = vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
+                vSign = Mathf.Sign(Vector3.Dot(vHipAxisForward, vCross));
+                RightHipRotationSignedAngle = vAngleHipRotationNew * GetSign("System.Single RightHipRotationAngle");
             }
             else
             {

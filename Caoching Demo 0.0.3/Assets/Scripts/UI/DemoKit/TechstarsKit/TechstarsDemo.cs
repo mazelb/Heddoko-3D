@@ -8,6 +8,7 @@
 
 using System;
 using System.Collections;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Data.View.Anaylsis;
 using Assets.Scripts.UI.AbstractViews.camera;
 using Assets.Scripts.UI.Settings;
