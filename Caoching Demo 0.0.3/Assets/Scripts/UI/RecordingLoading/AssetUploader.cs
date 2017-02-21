@@ -44,18 +44,23 @@ namespace Assets.Scripts.UI.RecordingLoading
             try
             {
                 UploadableListItem vUploadableItem = (UploadableListItem)vItem;
-                int vKitId = 0;
-               
+                int vKitId =   mProfile.GetKitIdFromBrainpackLabel(vUploadableItem.BrainpackSerialNumber);
+                //invalid kit id number
+                if (vKitId == -1)
+                {
+                    throw new InvalidOperationException("The brainpack could not be associated to a valid kit. Are you sure that you are authorized to upload these contents?");
+                }
                 var vRequest = new RecordRequest
                 {
                     //Label = "SN0001", //optional should be set Kit Label or Kit ID or Brainpack Label - that settings should be useful when you parse files from sd cards mostly only for Data analyst uploading
                     Label = vUploadableItem.BrainpackSerialNumber,
-                    KitID = mProfile.GetKitIdFromBrainpackLabel(vUploadableItem.BrainpackSerialNumber),
+                    KitID =  vKitId,
                     Files = new List<AssetFile>
                     { 
                         new AssetFile { FileName =vUploadableItem.RelativePath ,Type =AssetType.RawFrameData }
                     }
                 };
+
                 Record vRecord= mProfile.Client.UploadRecord(vRequest);
                 vItemName = vUploadableItem.RelativePath;
                 if (vRecord.IsOk)

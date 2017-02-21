@@ -129,10 +129,10 @@ namespace Assets.Scripts.UI.RecordingLoading
                     BrainpackLogFileUploadHandler();
                     break;
                 case AssetType.Record:
-                    RecordingUploadHander(vItem);
+                    RecordingUploadHandler(vItem);
                     break;
                 case AssetType.RawFrameData:
-                    RecordingUploadHander(vItem);
+                    RecordingUploadHandler(vItem);
                     break;
             }
 
@@ -142,7 +142,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// A handler on successful recording upload
         /// </summary>
         /// <param name="vItem"></param>
-        void RecordingUploadHander(UploadableListItem vItem)
+        void RecordingUploadHandler(UploadableListItem vItem)
         {
             mUploadRecordingStatus.SucessfullyUploadedRecordings.Add(vItem);
             if (SingleUploadEndEvent != null)

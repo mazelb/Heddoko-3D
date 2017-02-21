@@ -39,11 +39,16 @@ namespace Assets.Scripts.UI.RecordingLoading
             mCardContentUploadController = new SdCardContentUploadController(UserSessionManager.Instance.UserProfile);
             mCardContentUploadController.DriveFoundEvent += DriveFoundHandler;
             mCardContentUploadController.ContentsCompletedUploadEvent += ContentsCompletedUploadingEvent;
-
+            mCardContentUploadController.SingleUploadEndEvent += CardContentUploadController_SingleUploadEndEventHandler;
             mCardContentUploadController.FoundFileListEvent += FoundFileListHandler;
             mCardContentUploadController.ProblemUploadingContentEvent += ProblemUploadEventHandler;
             mCardContentUploadController.DriveDisconnectedEvent += DriveDisconnectedHandler;
             mCardContentUploadController.UploadingStartEvent += UploadingItemStarted;
+        }
+
+        private void CardContentUploadController_SingleUploadEndEventHandler(UploadableListItem vItem)
+        {
+
         }
 
         /// <summary>
@@ -58,6 +63,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             mCardContentUploadController.ProblemUploadingContentEvent -= ProblemUploadEventHandler;
             mCardContentUploadController.DriveDisconnectedEvent -= DriveDisconnectedHandler;
             mCardContentUploadController.UploadingStartEvent -= UploadingItemStarted;
+            mCardContentUploadController.SingleUploadEndEvent -= CardContentUploadController_SingleUploadEndEventHandler;
 
             mCardContentUploadController.CleanUp();
         }
@@ -72,8 +78,8 @@ namespace Assets.Scripts.UI.RecordingLoading
         public void BeginUpload()
         {
             mErrorCount = 0;
-            var vMsg = LocalizationBinderContainer.GetString(KeyMessage.BeginUploadProcessMsg); 
-            NotificationManager.CreateNotification(vMsg,NotificationManager.NotificationUrgency.Low);
+            var vMsg = LocalizationBinderContainer.GetString(KeyMessage.BeginUploadProcessMsg);
+            NotificationManager.CreateNotification(vMsg, NotificationManager.NotificationUrgency.Low);
             mCardContentUploadController.StartContentUpload();
         }
         /// <summary>
@@ -137,8 +143,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
             DebugLogger.Instance.LogMessage(LogType.Uploading, vMsg);
             string vErrMsg = LocalizationBinderContainer.GetString(KeyMessage.IssueUploadingRecordingsMsg) + DebugLogger.Instance.GetLogPath(LogType.Uploading);
-         //   OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => Notify.Template("fade").Show(vErrMsg, customHideDelay: 15f));
-               OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => NotificationManager.CreateNotification(vErrMsg, NotificationManager.NotificationUrgency.Medium));
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => NotificationManager.CreateNotification(vErrMsg, NotificationManager.NotificationUrgency.Medium));
         }
 
         /// <summary>
@@ -167,7 +172,6 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
-                //   string vMsg = LocalizationBinderContainer.GetString(KeyMessage.UploadCompleteMsg) ;
                 int vCount = mCardContentUploadController.FoundRecordingsList.Count;
                 int vFailCount = mErrorCount;
                 int vSucess = vCount - vFailCount;
