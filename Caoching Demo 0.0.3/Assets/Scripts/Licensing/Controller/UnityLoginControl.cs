@@ -112,7 +112,11 @@ namespace Assets.Scripts.Licensing.Controller
         {
             if (LoginSuccessEvent != null)
             {
-                LoginSuccessEvent -= vHandler;
+                // ReSharper disable once DelegateSubtraction
+                if (vHandler != null)
+                {
+                    LoginSuccessEvent -= vHandler;
+                }
             }
         }
 
@@ -166,13 +170,10 @@ namespace Assets.Scripts.Licensing.Controller
             bool vIsHandled = false;
             try
             {
-                UserRequest vRequest = vModel.UserRequest;
-                string token = "";
-                User vUser = mClient.SignIn(vRequest);
+                UserRequest vRequest = vModel.UserRequest; 
+                User vUser = mClient.SignIn(vRequest); 
                 if (!vUser.IsOk)
-                {
-
-                    //  mClient.SetToken(vUser.Token);
+                { 
                     OutterThreadToUnityThreadIntermediary.QueueActionInUnity(EnableControls);
                     var vErrorMsg = FormatLoginNoOkError(vUser.Errors);
                     string vMsg = LocalizationBinderContainer.GetString(KeyMessage.LoginFailureMsg);
@@ -189,13 +190,13 @@ namespace Assets.Scripts.Licensing.Controller
 
                 if (vUser.IsOk)
                 {
-                    token = mClient.GenerateDeviceToken();
+                    var vToken = mClient.GenerateDeviceToken();
                      UserProfileModel vProfileModel = new UserProfileModel()
                     {
                         User = vUser,
                         LicenseInfo = vLicense,
                         Client = mClient,
-                        DeviceToken = token
+                        DeviceToken = vToken
                     };
                     //if user is an analyst
                     if (vUser.RoleType == UserRoleType.Analyst)
