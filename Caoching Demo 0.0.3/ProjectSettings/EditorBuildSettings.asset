@@ -9,3 +9,5 @@ EditorBuildSettings:
     path: Assets/Scenes/AppMain.unity
   - enabled: 0
     path: Assets/Scenes/LoginView.unity
+  - enabled: 0
+    path: Assets/Scenes/AppmainProtobufHack.unity

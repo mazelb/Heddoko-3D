@@ -7,6 +7,7 @@
 */
 using System;
 using System.Collections;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using UnityEngine;
@@ -70,13 +71,13 @@ namespace Assets.Scripts.UI.Metrics
             if (mVelAccumulator[0] < 0 && mVelAccumulator[1] < 0)
             {
                 mVelAccumulator[0] = 0;
-                mVelAccumulator[0] += Mathf.Abs(mRightLegAnalysis.AngularVelocityKneeFlexion);
+                mVelAccumulator[0] += Mathf.Abs(mRightLegAnalysis.RightKneeFlexionAngularVelocity);
                 //  mCurrentFrameCheck += Time.deltaTime;
                 mCurrentFrameCheck =0;
                 return -1f;
             }
 
-            mVelAccumulator[mVelAccIndex] += Mathf.Abs(mRightLegAnalysis.AngularVelocityKneeFlexion);
+            mVelAccumulator[mVelAccIndex] += Mathf.Abs(mRightLegAnalysis.RightKneeFlexionAngularVelocity);
             mCurrentFrameCheck += Time.deltaTime;
 
             if (mCurrentFrameCheck >= mNumberOfFramesToCheck)

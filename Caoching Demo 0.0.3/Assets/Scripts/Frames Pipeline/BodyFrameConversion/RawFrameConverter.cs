@@ -85,7 +85,8 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
         {
             float vTimeStamp = 0;
 
-            vTimeStamp = (float)(Convert.ToInt32(vRawData[0]));
+            //  vTimeStamp = (float)(Convert.ToInt32(vRawData[0]));
+            float.TryParse(vRawData[0], out vTimeStamp);
             vTimeStamp = (vTimeStamp / 1000f) - sStartTime;
             Int16 vBitmask = Convert.ToInt16(((string)vRawData[1]), 16);
 
@@ -108,11 +109,6 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                     vFinalVals.x = ConversionTools.ConvertHexStringToFloat(v3data[1]);
                     vFinalVals.y = ConversionTools.ConvertHexStringToFloat(v3data[0]);
 
-                    //for (int j = 0; j < vLength; j++)
-                    //{
-                    //    vFinalVals[j] = ConversionTools.ConvertHexStringToFloat(v3data[j]); 
-                    //} 
-
                     try
                     {
                         PreviouslyValidOrientations[vSetterIndex] = vFinalVals;
@@ -128,6 +124,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
 
             BodyFrame vBodyFrame = CreateBodyFrame(PreviouslyValidOrientations);
             vBodyFrame.Timestamp = vTimeStamp;
+            vBodyFrame.Index = vRawData.Index;
             return vBodyFrame;
         }
 
@@ -135,7 +132,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
         {
             float vTimestamp = 0;
             float.TryParse(rawData.RawFrameData[0], out vTimestamp);
-
+            
             //from startIndex to endIndex, we check the subframes and extrapolate the IMU data. 
             int vStartIndex = 1;
             int vEndIndex = 20;
@@ -171,6 +168,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                                 vFinishLoop = true;
                             }
                         }
+
                         if (vFinishLoop)
                         {
                             //set the start index for the next iteration
@@ -181,7 +179,6 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                     int.TryParse(rawData.RawFrameData[i], out vKey);
                     vKey--;
                     vSensorPosAsKey = ImuSensorFromPos(vKey);
-
                     vBodyFrame.FrameData.Add(vSensorPosAsKey, vPlaceholderV3);
                 }
 
@@ -200,7 +197,6 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
 
                     vBodyFrame.FrameData[vSensorPosAsKey] = vFinalVals;
                 }
-
             }
 
             //check if lower spine exists

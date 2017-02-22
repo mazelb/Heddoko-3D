@@ -127,7 +127,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
     /// </summary>
     public enum CalibrationType
     {
-        Invalid = -1,
+        NULL = -1,
         NullToTPose = 0,
         Tpose=1,
         TPoseToArmsForward=2,

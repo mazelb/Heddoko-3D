@@ -10,7 +10,7 @@ namespace UnityEngine.UI.Extensions
 
         public ShineEffect effector;
         [SerializeField, HideInInspector]
-        GameObject effectRoot;
+     public   GameObject effectRoot;
         [Range(-1, 1)]
         public float yOffset = -1;
 

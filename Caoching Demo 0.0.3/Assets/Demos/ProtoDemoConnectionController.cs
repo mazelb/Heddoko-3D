@@ -20,7 +20,7 @@ namespace Assets.Demos
             get { return mSerialPort; }
         }
 
-        internal void Awake()
+        internal new void Awake()
         {
             mInstance = this;
         }
@@ -45,7 +45,7 @@ namespace Assets.Demos
                             ConnectedStateEvent();
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         mCurrentConnectionState = BrainpackConnectionState.Disconnected;
 
@@ -54,11 +54,7 @@ namespace Assets.Demos
                             DisconnectedStateEvent();
                         }
                     }
-
-
                 }
-
-
             }
         }
 
@@ -111,7 +107,8 @@ namespace Assets.Demos
         }
 
         public bool IsOpen;
-        new void Update()
+
+        internal new void Update()
         {
             if (!ProtoDemoController.UseProtoBuff)
             {

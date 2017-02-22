@@ -2,16 +2,20 @@
 // * @file UploadController.cs
 // * @brief Contains the UploadController
 // * @author Mohammed Haider( mohammed@heddoko.com)
-// * @date 08 2016
+// * @date August 2016
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
+using Assets.Scripts.Localization;
 using Assets.Scripts.MainApp;
+using Assets.Scripts.Notification;
 using Assets.Scripts.UI.RecordingLoading.Model;
 using Assets.Scripts.Utils;
 using Assets.Scripts.Utils.DebugContext.logging;
+using HeddokoSDK.Models;
 using UIWidgets;
 using UnityEngine;
 using LogType = Assets.Scripts.Utils.DebugContext.logging.LogType;
@@ -25,49 +29,67 @@ namespace Assets.Scripts.UI.RecordingLoading
     {
         private SdCardContentUploadController mCardContentUploadController;
         public RecordingListViewController RecordingListViewController;
+        private int mErrorCount;
 
-        void Start()
+        /// <summary>
+        /// Initalizes the upload controller
+        /// </summary>
+        public void Initialize()
         {
             mCardContentUploadController = new SdCardContentUploadController(UserSessionManager.Instance.UserProfile);
             mCardContentUploadController.DriveFoundEvent += DriveFoundHandler;
             mCardContentUploadController.ContentsCompletedUploadEvent += ContentsCompletedUploadingEvent;
-            mCardContentUploadController.SingleUploadEndEvent += x =>
-            {
-               OutterThreadToUnityThreadIntermediary.QueueActionInUnity(RecordingListViewController.ResetDownloadList);
-            };
-
+            mCardContentUploadController.SingleUploadEndEvent += CardContentUploadController_SingleUploadEndEventHandler;
             mCardContentUploadController.FoundFileListEvent += FoundFileListHandler;
             mCardContentUploadController.ProblemUploadingContentEvent += ProblemUploadEventHandler;
             mCardContentUploadController.DriveDisconnectedEvent += DriveDisconnectedHandler;
             mCardContentUploadController.UploadingStartEvent += UploadingItemStarted;
         }
 
-        void OnApplicationQuit()
+        private void CardContentUploadController_SingleUploadEndEventHandler(UploadableListItem vItem)
+        {
+
+        }
+
+        /// <summary>
+        /// Stops the service
+        /// </summary>
+        public void Stop()
         {
             mCardContentUploadController.DriveFoundEvent -= DriveFoundHandler;
             mCardContentUploadController.ContentsCompletedUploadEvent -= ContentsCompletedUploadingEvent;
-            mCardContentUploadController.SingleUploadEndEvent -= x =>
-            {
-                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(RecordingListViewController.ResetDownloadList);
-            };
 
             mCardContentUploadController.FoundFileListEvent -= FoundFileListHandler;
             mCardContentUploadController.ProblemUploadingContentEvent -= ProblemUploadEventHandler;
             mCardContentUploadController.DriveDisconnectedEvent -= DriveDisconnectedHandler;
             mCardContentUploadController.UploadingStartEvent -= UploadingItemStarted;
+            mCardContentUploadController.SingleUploadEndEvent -= CardContentUploadController_SingleUploadEndEventHandler;
+
+            mCardContentUploadController.CleanUp();
         }
+        void OnApplicationQuit()
+        {
+            Stop();
+        }
+
+        /// <summary>
+        /// Begin the upload proces
+        /// </summary>
         public void BeginUpload()
         {
-            Notify.Template("fade").Show("Beginning upload process, please ensure SD card is inserted and secured in place", 5f, sequenceType: NotifySequence.First);
-
-            mCardContentUploadController.StartRecordingsUpload();
+            mErrorCount = 0;
+            var vMsg = LocalizationBinderContainer.GetString(KeyMessage.BeginUploadProcessMsg);
+            NotificationManager.CreateNotification(vMsg, NotificationManager.NotificationUrgency.Low);
+            mCardContentUploadController.StartContentUpload();
         }
         /// <summary>
         /// Handles events when the detected heddoko device has been disconnected
         /// </summary>
         private void DriveDisconnectedHandler()
         {
-            Notify.Template("fade").Show("Heddoko SD card has been disconnected", 5f, sequenceType: NotifySequence.First);
+            var vMsg = LocalizationBinderContainer.GetString(KeyMessage.DisconnectedSDCardWithLogMsg);
+            //Notify.Template("fade").Show(vMsg, 5f, sequenceType: NotifySequence.First);
+            NotificationManager.CreateNotification(vMsg, NotificationManager.NotificationUrgency.Low);
         }
 
         void UploadingItemStarted(UploadableListItem vItem)
@@ -75,20 +97,53 @@ namespace Assets.Scripts.UI.RecordingLoading
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => Debug.Log("started uploading " + vItem.FileName));
 
         }
-        private void ProblemUploadEventHandler(ErrorUploadEventArgs vItem)
+        private void ProblemUploadEventHandler(List<ErrorUploadEventArgs> vErrorList)
         {
             //append to log file
-            for (int i = 0; i < vItem.ErrorCollection.Errors.Count; i++)
+            mErrorCount = vErrorList.Count;
+            int vLogFileError = 0;
+            string vMsg = "Error Uploading: ";
+            for (int i = 0; i < mErrorCount; i++)
             {
-                string vMsg = "Error Uploading: ";
-                if (vItem.Object != null)
+                var vItem = vErrorList[i];
+                try
                 {
-                    vMsg += vItem.Object.FileName;
+                    if (vItem.Object.AssetType != AssetType.Record)
+                    {
+                        vLogFileError++;
+                        continue;
+                    }
+                    if (vItem.Object != null && vItem.Object.FileName != null)
+                    {
+                        vMsg += vItem.Object.FileName;
+                    }
+                    if (vItem.ErrorCollection != null && vItem.ErrorCollection.Errors[0] != null)
+                    {
+                        vMsg += " ERROR CODE " + vItem.ErrorCollection.Errors[0].Code + ";";
+                    }
+                    if (vItem.ErrorCollection != null && vItem.ErrorCollection.Errors[0] != null && vItem.ErrorCollection.Errors[0].Message != null)
+                    {
+                        vMsg += " ERROR MSG " + vItem.ErrorCollection.Errors[0].Message + ";";
+                    }
+                    if (vItem.ExceptionArgs != null)
+                    {
+                        vMsg += " EXCEPTION " + vItem.ExceptionArgs;
+                    }
                 }
-                vMsg += " ERROR CODE "+ vItem.ErrorCollection.Errors[i].Code + " ERROR MSG "+ vItem.ErrorCollection.Errors[i].Message;
-                DebugLogger.Instance.LogMessage(LogType.Uploading, vMsg);
+                catch (Exception vE)
+
+                {
+                    UnityEngine.Debug.Log("err:  " + vE);
+
+                }
             }
-            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => Notify.Template("fade").Show("There was an issue uploading one or more recording files. For more details please see log file " + DebugLogger.Instance.GetLogPath(LogType.Uploading),customHideDelay:15f));
+            if (mErrorCount > 0)
+            {
+                mErrorCount -= vLogFileError;
+            }
+            DebugLogger.Instance.LogMessage(LogType.Uploading, vMsg);
+            string vErrMsg = LocalizationBinderContainer.GetString(KeyMessage.IssueUploadingRecordingsMsg) + DebugLogger.Instance.GetLogPath(LogType.Uploading);
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => NotificationManager.CreateNotification(vErrMsg, NotificationManager.NotificationUrgency.Medium));
         }
 
         /// <summary>
@@ -99,18 +154,12 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
-             
+
                 int vCount = vFileInfos.Count;
+
                 if (vCount > 0)
                 {
-                    string vRecString = "recording";
-                    if (vCount == 1)
-                    {
-                        vRecString = "recordings";
-                    }
-
-                    var vMsg = "New " + vRecString + " on the SD file were found. Click the Sync button to start uploading";
-                   // Notify.Template("SyncNotification").Show(vMsg, 5f, sequenceType: NotifySequence.First);
+                    string vMsg = LocalizationBinderContainer.GetString(KeyMessage.NewRecFoundSyncBeginMsg, vCount > 1);
                     var vTemp = Notify.Template("SyncNotification");
                     vTemp.gameObject.GetComponent<NotifyWithButtonExtension>()
                         .RegisterCallbackAndRemovePreviousCallback(BeginUpload);
@@ -123,11 +172,15 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
-                Notify.Template("fade").Show("Upload complete", 15f, sequenceType: NotifySequence.First);
+                int vCount = mCardContentUploadController.FoundRecordingsList.Count;
+                int vFailCount = mErrorCount;
+                int vSucess = vCount - vFailCount;
+                string vMsg = String.Format("The total number of sucessful uploads is {0} and failed uploads {1}",
+                    vSucess, vFailCount);
+                Notify.Template("fade").Show(vMsg, 15f, sequenceType: NotifySequence.First);
+                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(RecordingListViewController.ResetDownloadList);
+
             });
-
-
-
         }
 
         private void DriveFoundHandler(DirectoryInfo vVdrive)

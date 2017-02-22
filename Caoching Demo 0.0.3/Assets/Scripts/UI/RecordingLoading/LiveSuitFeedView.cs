@@ -10,6 +10,7 @@ using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.Layouts;
 using System.Collections.Generic;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Pipeline.Analysis.Views;
 using Assets.Scripts.Communication.View.Table;
 using Assets.Scripts.UI.AbstractViews.Enums;
@@ -33,11 +34,15 @@ namespace Assets.Scripts.UI.RecordingLoading
         internal LiveFeedViewControlPanel mLiveFeedViewControlPanel;
         internal bool mIsInitialized = false;
         public BodyFrameDataControl BodyFrameDataControl;
-        public BodyFrameGraphControl FrameGraphControl; 
+        public BodyFrameGraphControl FrameGraphControl;
         public AnaylsisTextContainer AnaylsisTextContainer;
         public Button RenameRecordingButton;
         public Image RenameRecordingImage;
         public Text RenameRecordingText;
+        public event Action<LiveSuitFeedView> LiveSuitFeedViewLayoutCreatedEvent;
+        public event Action<LiveSuitFeedView> LiveSuitFeedViewLayoutEnabled;
+        public event Action<LiveSuitFeedView> LiveSuitFeedViewLayoutDisabled;
+        public bool Initialized { get; set; }
         public PanelNode RootNode { get { return mRootNode; } }
         void Awake()
         {
@@ -68,6 +73,11 @@ namespace Assets.Scripts.UI.RecordingLoading
             mLiveFeedViewControlPanel.Show();
             mIsInitialized = true;
             BpController.ConnectedStateEvent += () => BrainpackBody.StreamFromBrainpack();
+            if (LiveSuitFeedViewLayoutCreatedEvent != null)
+            {
+                LiveSuitFeedViewLayoutCreatedEvent(this);
+            }
+            Initialized = true;
         }
 
 
@@ -116,19 +126,35 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// Set information relative to the context of this view
         /// </summary>
         private void SetContextualInfo()
-        {   
+        {
             BodyFrameDataControl.SetBody(BrainpackBody);
             FrameGraphControl.SetBody(BrainpackBody);
             AnaylsisTextContainer.BodyToAnalyze = BrainpackBody;
         }
 
+        void OnEnable()
+        {
+            if (LiveSuitFeedViewLayoutEnabled != null)
+            {
+                LiveSuitFeedViewLayoutEnabled(this);
+            }
+        }
+
+        void OnDisabled()
+        {
+            if (LiveSuitFeedViewLayoutDisabled != null)
+            {
+                LiveSuitFeedViewLayoutDisabled(this);
+            }
+
+        }
         public override void Hide()
         {
             bool vIsLerp = BodySegment.IsUsingInterpolation;
             try
             {
                 BodySegment.IsUsingInterpolation = false;
-                BrainpackBody.View.ResetInitialFrame(); 
+                BrainpackBody.View.ResetInitialFrame();
             }
             catch
             {
@@ -150,10 +176,10 @@ namespace Assets.Scripts.UI.RecordingLoading
             BpController.ConnectedStateEvent -= SetRenameRecordingInteractibility;
             BpController.DisconnectedStateEvent -= UnsetRenameRecordingInteractibility;
             UnsetRenameRecordingInteractibility();
-           
-           
+
+
             try
-            { 
+            {
                 BrainpackBody.StopThread();
             }
             catch
@@ -185,6 +211,6 @@ namespace Assets.Scripts.UI.RecordingLoading
             RenameRecordingText.color = vColorText;
         }
 
-       
+
     }
 }

@@ -13,6 +13,7 @@ using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.UI.MainMenu;
 using UnityEngine;
 using System.Collections.Generic;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.UI.Metrics.View;
 using Assets.Scripts.Utils;
@@ -126,7 +127,7 @@ namespace Assets.Scripts.UI.Metrics
                         {
                             if (mCurrentCountOfFrames < NumberOfFrameToCount)
                             {
-                                mRightKneeAvg += Mathf.Abs(vRightLegAnalysis.AngularVelocityKneeFlexion);
+                                mRightKneeAvg += Mathf.Abs(vRightLegAnalysis.RightKneeFlexionAngularVelocity);
                             }
 
                         }
@@ -140,7 +141,7 @@ namespace Assets.Scripts.UI.Metrics
                         {
                             if (mCurrentCountOfFrames < NumberOfFrameToCount)
                             {
-                                mLeftKneeVelAvg += Mathf.Abs(vLeftLegAnalysis.AngularVelocityKneeFlexion);
+                                mLeftKneeVelAvg += Mathf.Abs(vLeftLegAnalysis.LeftKneeFlexionAngularVelocity);
                             }
 
                         }

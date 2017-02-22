@@ -8,6 +8,7 @@
 
 using Assets.Scripts.Licensing.Authentication;
 using Assets.Scripts.Licensing.Model;
+using Assets.Scripts.Localization;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI;
 using HeddokoSDK.Models;
@@ -26,7 +27,7 @@ namespace Assets.Scripts.Licensing.Controller
         public ApplicationBouncer Bouncer = new ApplicationBouncer();
         public UnityViewFactory UnityViewFactory;
         public HeddokoAppStart Appstart;
-
+        public IViewFactory ViewFactory { get; private set; }
         /// <summary>
         /// Initializes parameters
         /// </summary>
@@ -35,11 +36,9 @@ namespace Assets.Scripts.Licensing.Controller
             Init();
             ViewFactory = UnityViewFactory;
         }
-
-
-
-        public IViewFactory ViewFactory { get; private set; }
-
+        /// <summary>
+        /// Initializes the object
+        /// </summary>
         public void Init()
         {
             Bouncer.RegisterLicenseAccessActionEvent(LicenseStatusType.Active, ActiveLicenseHandler);
@@ -72,8 +71,8 @@ namespace Assets.Scripts.Licensing.Controller
         /// </summary> 
         public void BannedUserHandler(UserProfileModel vProfileModel)
         {
-            string vMsg =
-                 "This account has been banned. ";
+            string vMsg = LocalizationBinderContainer.GetString(KeyMessage.BannedAccountMsg);
+              //   "This account has been banned. ";
             Notify.Template("fade")
                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
             LoginControl.EnableControls();
@@ -84,8 +83,8 @@ namespace Assets.Scripts.Licensing.Controller
         /// </summary> 
         public void InactiveUserHandler(UserProfileModel vProfileModel)
         {
-            string vMsg =
-                "This account is not active. Please contact your license administrator for further support.";
+            string vMsg = LocalizationBinderContainer.GetString(KeyMessage.InactiveAccountMsg);
+          //  "This account is not active. Please contact your license administrator for further support.";
             Notify.Template("fade")
                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
             LoginControl.EnableControls();
@@ -104,25 +103,20 @@ namespace Assets.Scripts.Licensing.Controller
         /// </summary> 
         public void InActiveLicenseHandler(UserProfileModel vProfileModel)
         {
-            string vMsg =
-                "The provided license is inactive. Please contact your license administator for further support.";
+            string vMsg = LocalizationBinderContainer.GetString(KeyMessage.InactiveLicenseMsg);
             Notify.Template("fade")
                .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
         }
-
-
-
+        
         /// <summary>
         /// Handler for expired license event
         /// </summary> 
         public void ExpiredLicenseHandler(UserProfileModel vProfileModel)
         {
-            string vMsg =
-                  "The provided license has expired. Please contact your license administator for further support.";
+            string vMsg = LocalizationBinderContainer.GetString(KeyMessage.ExpiredLicenseMsg); 
             Notify.Template("fade")
                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
             LoginControl.EnableControls();
-
 
         }/// <summary>
          /// Handler for deleted license event
@@ -130,16 +124,12 @@ namespace Assets.Scripts.Licensing.Controller
          /// <param name="vProfileModel"></param>
         public void DeletedLicenseHandler(UserProfileModel vProfileModel)
         {
-            string vMsg =
-                 "We could not find a license associated with your account. Please contact your license administator for further support.";
+            string vMsg = LocalizationBinderContainer.GetString(KeyMessage.DeletedLicenseMsg);
             Notify.Template("fade")
                 .Show(vMsg, customHideDelay: 5f, sequenceType: NotifySequence.First, clearSequence: true);
             LoginControl.EnableControls();
-
         }
-
-
-
+        
         internal void OnApplicationQuit()
         {
             Appstart.CleanUpOnQuit();

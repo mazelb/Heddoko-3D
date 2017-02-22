@@ -8,6 +8,7 @@
 */
 
 using System.Collections;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.Cameras;
 using Assets.Scripts.UI.MainMenu;

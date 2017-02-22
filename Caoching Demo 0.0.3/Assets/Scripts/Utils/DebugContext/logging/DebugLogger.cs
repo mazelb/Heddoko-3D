@@ -243,14 +243,12 @@ namespace Assets.Scripts.Utils.DebugContext.logging
         {
             mContinueWorking = true;
             Thread vThread = new Thread(Instance.WorkerTask);
-            vThread.Start();
-            // mFileMonitor.Start();
+            vThread.Start(); 
         }
 
         public void Stop()
         {
-            mContinueWorking = false;
-            //    mFileMonitor.Stop();
+            mContinueWorking = false; 
         }
         private void WorkerTask()
         {

@@ -304,8 +304,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 452732121}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0.12162162, y: 0}
-  m_AnchorMax: {x: 0.12162162, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: -0.0000076293945, y: 0}
   m_SizeDelta: {x: 10.1, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3269,76 +3269,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 99844596}
---- !u!1 &104517060
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 180002, guid: 1a283e1b36debd243bb82aa668dbd2bf, type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  serializedVersion: 4
-  m_Component:
-  - 224: {fileID: 104517061}
-  - 222: {fileID: 104517063}
-  - 114: {fileID: 104517062}
-  m_Layer: 5
-  m_Name: TPose
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &104517061
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 22480816, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 104517060}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 487568316}
-  m_RootOrder: 1
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.099999994, y: 0.0024967194}
-  m_SizeDelta: {x: 26.7, y: 38.005}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &104517062
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11472520, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 104517060}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 4795689f554946a489e564faca847497, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 1
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
---- !u!222 &104517063
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 22204674, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 104517060}
 --- !u!1 &105533554
 GameObject:
   m_ObjectHideFlags: 0
@@ -3789,26 +3719,22 @@ MonoBehaviour:
   RotationAngle: {fileID: 627725177}
   mTorsoAnalysis:
     DeltaTime: 0
-    AngleTorsoFlexion: 0
-    AngleTorsoLateral: 0
-    SignedAngleTorsoLateral: 0
-    AngleTorsoRotation: 0
-    SignedAngleTorsoRotation: 0
-    TorsoTransform: {fileID: 0}
+    TrunkFlexionAngle: 0
+    TrunkLateralAngle: 0
+    TrunkRotationAngle: 0
+    TrunkLateralSignedAngle: 0
+    TrunkRotationSignedAngle: 0
+    TrunkFlexionSignedAngle: 0
+    TrunkTransform: {fileID: 0}
     HipGlobalTransform: {fileID: 0}
     HipTransform: {fileID: 0}
     KneeTransform: {fileID: 0}
-    SignedTorsoFlexion: 0
-    AngularAccelerationTorsoFlexion: 0
-    AngularVelocityTorsoFlexion: 0
-    AngularAccelerationTorsoLateral: 0
-    AngularVelocityTorsoLateral: 0
-    AngularAccelerationTorsoRotation: 0
-    AngularVelocityTorsoRotation: 0
-    AngleIntegrationTurns: 0
-    AngleIntegrationFlips: 0
-    NumberOfTurns: 0
-    NumberOfFlips: 0
+    TorsoFlexionAngularAcceleration: 0
+    TorsoFlexionAngularVelocity: 0
+    TorsoLateralAngularAcceleration: 0
+    TorsoLateralAngularVelocity: 0
+    TorsoRotationAngularAcceleration: 0
+    TorsoRotationAngularVelocity: 0
 --- !u!1 &128959882
 GameObject:
   m_ObjectHideFlags: 0
@@ -6792,244 +6718,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 244317818}
---- !u!1001 &254738646
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1103780629}
-    m_Modifications:
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_Pivot.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_Pivot.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 131630, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_Name
-      value: PlaybackControls
-      objectReference: {fileID: 0}
-    - target: {fileID: 22408350, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22489194, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22425464, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22425464, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22409646, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22409646, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22409646, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 131630, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 22423688, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22423688, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22423688, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchoredPosition.x
-      value: 24.179855
-      objectReference: {fileID: 0}
-    - target: {fileID: 22423688, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: -23.45
-      objectReference: {fileID: 0}
-    - target: {fileID: 22423688, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_SizeDelta.x
-      value: 48.35971
-      objectReference: {fileID: 0}
-    - target: {fileID: 22423688, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_SizeDelta.y
-      value: 46.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 22420102, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22420102, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22420102, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchoredPosition.x
-      value: 79.13407
-      objectReference: {fileID: 0}
-    - target: {fileID: 22420102, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: -23.45
-      objectReference: {fileID: 0}
-    - target: {fileID: 22420102, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_SizeDelta.x
-      value: 61.54872
-      objectReference: {fileID: 0}
-    - target: {fileID: 22420102, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_SizeDelta.y
-      value: 46.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 22439980, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22439980, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22439980, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchoredPosition.x
-      value: 24.626505
-      objectReference: {fileID: 0}
-    - target: {fileID: 22439980, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: -23.45
-      objectReference: {fileID: 0}
-    - target: {fileID: 22439980, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_SizeDelta.x
-      value: 39.25301
-      objectReference: {fileID: 0}
-    - target: {fileID: 22439980, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_SizeDelta.y
-      value: 46.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 22445416, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22445416, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22445416, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchoredPosition.x
-      value: 142.57228
-      objectReference: {fileID: 0}
-    - target: {fileID: 22445416, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: -23.45
-      objectReference: {fileID: 0}
-    - target: {fileID: 22445416, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_SizeDelta.x
-      value: 176.63855
-      objectReference: {fileID: 0}
-    - target: {fileID: 22445416, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_SizeDelta.y
-      value: 46.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 22483356, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMin.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22483356, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchorMax.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22483356, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchoredPosition.x
-      value: 295.84576
-      objectReference: {fileID: 0}
-    - target: {fileID: 22483356, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_AnchoredPosition.y
-      value: -23.45
-      objectReference: {fileID: 0}
-    - target: {fileID: 22483356, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_SizeDelta.x
-      value: 109.90843
-      objectReference: {fileID: 0}
-    - target: {fileID: 22483356, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-      propertyPath: m_SizeDelta.y
-      value: 46.9
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 2cd4ff158f0246a45a76676428c8cfd4, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &261777275
 GameObject:
   m_ObjectHideFlags: 0
@@ -7340,12 +7028,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &268217800 stripped
-MonoBehaviour:
-  m_PrefabParentObject: {fileID: 11449332, guid: 2cd4ff158f0246a45a76676428c8cfd4,
-    type: 2}
-  m_PrefabInternal: {fileID: 254738646}
-  m_Script: {fileID: 11500000, guid: 78dbde19146910c45b972f4a2dd4a9fb, type: 3}
 --- !u!1 &269598389
 GameObject:
   m_ObjectHideFlags: 0
@@ -8914,7 +8596,7 @@ RectTransform:
   m_Father: {fileID: 1308170104}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -9313,10 +8995,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1622478348}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 30, y: -7}
-  m_SizeDelta: {x: 40, y: 10}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &348080990
 MonoBehaviour:
@@ -11032,121 +10714,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 440148719}
---- !u!1 &445586411
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 128074, guid: 1a283e1b36debd243bb82aa668dbd2bf, type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  serializedVersion: 4
-  m_Component:
-  - 224: {fileID: 499727732}
-  - 222: {fileID: 445586415}
-  - 114: {fileID: 445586414}
-  - 114: {fileID: 445586413}
-  - 114: {fileID: 445586412}
-  m_Layer: 5
-  m_Name: Right Handle
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &445586412
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11498048, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 445586411}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 030978d9a6ba12f43887c9d2f56ccb8f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PoseSliderMask: {fileID: 0}
-  Button: {fileID: 445586413}
-  mPreviousPos: {x: 0, y: 0}
-  mCurrPos: {x: 0, y: 0}
-  Direction: 0
-  Width: 0
-  RenderingCam: {fileID: 0}
---- !u!114 &445586413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11477938, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 445586411}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1392445389, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 445586414}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!114 &445586414
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11471084, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 445586411}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 4db017495c69e8140a56a0e2b669e3f8, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 1
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
---- !u!222 &445586415
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 22271622, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 445586411}
 --- !u!1 &446816380
 GameObject:
   m_ObjectHideFlags: 0
@@ -11843,27 +11410,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1a283e1b36debd243bb82aa668dbd2bf, type: 2}
   m_IsPrefabParent: 0
---- !u!224 &487568316
+--- !u!224 &487568316 stripped
 RectTransform:
-  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 22416060, guid: 1a283e1b36debd243bb82aa668dbd2bf,
     type: 2}
   m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1544102114}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1241842232}
-  - {fileID: 104517061}
-  - {fileID: 499727732}
-  m_Father: {fileID: 1569508881}
-  m_RootOrder: 2
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -155.2, y: -194.9}
-  m_SizeDelta: {x: 298, y: 68}
-  m_Pivot: {x: 0.5, y: 0.5000001}
 --- !u!1 &499665883
 GameObject:
   m_ObjectHideFlags: 0
@@ -11931,26 +11482,11 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 499665883}
---- !u!224 &499727732
+--- !u!224 &499727732 stripped
 RectTransform:
-  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 22446152, guid: 1a283e1b36debd243bb82aa668dbd2bf,
     type: 2}
   m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 445586411}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071067}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 505640781}
-  - {fileID: 1385374168}
-  m_Father: {fileID: 487568316}
-  m_RootOrder: 2
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: -43}
-  m_SizeDelta: {x: 15, y: 13}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &502711376
 GameObject:
   m_ObjectHideFlags: 0
@@ -12403,6 +11939,7 @@ MonoBehaviour:
       PublicKeyToken=null
   LocalPositionZReset: 0
   NameRow: {fileID: 1863163897}
+  UserRow: {fileID: 0}
   ButtonContainer: {fileID: 1545135291}
 --- !u!224 &518393764
 RectTransform:
@@ -16599,6 +16136,245 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 680093134}
+--- !u!1001 &682898731
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1103780629}
+    m_Modifications:
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.000009536743
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.000012397766
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 0.000015258789
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 0.000024795532
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 0.9999998
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 22493772, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22493286, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22454550, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22454550, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22454550, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 24.179855
+      objectReference: {fileID: 0}
+    - target: {fileID: 22454550, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -23.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 22454550, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 48.35971
+      objectReference: {fileID: 0}
+    - target: {fileID: 22454550, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 46.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 22420446, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22420446, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22420446, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 79.13407
+      objectReference: {fileID: 0}
+    - target: {fileID: 22420446, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -23.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 22420446, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 61.54872
+      objectReference: {fileID: 0}
+    - target: {fileID: 22420446, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 46.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 22461792, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22461792, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22461792, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 24.626505
+      objectReference: {fileID: 0}
+    - target: {fileID: 22461792, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -23.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 22461792, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 39.25301
+      objectReference: {fileID: 0}
+    - target: {fileID: 22461792, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 46.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 22488456, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22488456, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22488456, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 142.57228
+      objectReference: {fileID: 0}
+    - target: {fileID: 22488456, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -23.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 22488456, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 176.63855
+      objectReference: {fileID: 0}
+    - target: {fileID: 22488456, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 46.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 22438948, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22438948, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22438948, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchoredPosition.x
+      value: 295.84576
+      objectReference: {fileID: 0}
+    - target: {fileID: 22438948, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -23.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 22438948, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_SizeDelta.x
+      value: 109.90843
+      objectReference: {fileID: 0}
+    - target: {fileID: 22438948, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_SizeDelta.y
+      value: 46.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 22447816, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22447816, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413502, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMin.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413502, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22413502, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 186800, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: c8d43394d5d2a0d4385f624bb7deaf7b, type: 2}
+  m_IsPrefabParent: 0
+--- !u!224 &682898732 stripped
+RectTransform:
+  m_PrefabParentObject: {fileID: 22413392, guid: c8d43394d5d2a0d4385f624bb7deaf7b,
+    type: 2}
+  m_PrefabInternal: {fileID: 682898731}
 --- !u!1 &683073014
 GameObject:
   m_ObjectHideFlags: 0
@@ -17570,7 +17346,7 @@ RectTransform:
   m_Father: {fileID: 1897158140}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.9999998}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -18050,6 +17826,7 @@ MonoBehaviour:
   - {fileID: 109601350}
   - {fileID: 570543143}
   - {fileID: 667098664}
+  SliderMaskContainerController: {fileID: 2090096978}
   Escapables:
   - {fileID: 2064524570}
   - {fileID: 290831611}
@@ -18774,49 +18551,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SelectedColorBlock:
-    m_NormalColor:
-      r: 0
-      g: 0.6745098
-      b: 0.82745105
-      a: 0
-    m_HighlightedColor:
-      r: 0
-      g: 0.6745098
-      b: 0.82745105
-      a: 0
-    m_PressedColor:
-      r: 0.8745099
-      g: 0.8745099
-      b: 0.8745099
-      a: 0
-    m_DisabledColor:
-      r: 0
-      g: 0
-      b: 0
-      a: 0
+    m_NormalColor: {r: 0, g: 0.6745098, b: 0.82745105, a: 0}
+    m_HighlightedColor: {r: 0, g: 0.6745098, b: 0.82745105, a: 0}
+    m_PressedColor: {r: 0.8745099, g: 0.8745099, b: 0.8745099, a: 0}
+    m_DisabledColor: {r: 0, g: 0, b: 0, a: 0}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.2
   UnSelectedColorBlock:
-    m_NormalColor:
-      r: 0
-      g: 0
-      b: 0
-      a: 0
-    m_HighlightedColor:
-      r: 1
-      g: 1
-      b: 1
-      a: 0
-    m_PressedColor:
-      r: 1
-      g: 1
-      b: 1
-      a: 0
-    m_DisabledColor:
-      r: 1
-      g: 1
-      b: 1
-      a: 0
+    m_NormalColor: {r: 0, g: 0, b: 0, a: 0}
+    m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0}
+    m_PressedColor: {r: 1, g: 1, b: 1, a: 0}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 0}
     m_ColorMultiplier: 1
     m_FadeDuration: 0
   LoadRecordingsButton: {fileID: 409676876}
@@ -23827,6 +23572,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   EndScrollDelay: 0.3
+  CanDoubleClick: 1
 --- !u!114 &982120768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23874,12 +23620,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d925fa4073aed6b4ab3fa2c8d60cee8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Cam: {fileID: 0}
   DisablingPanel: {fileID: 791728095}
   View: {fileID: 982120767}
   mClickCount: 0
   mPreviousItemIndex: -1
   mDoubleClickTimer: 1
   mTimer: 0
+  ScrollRectEvents: {fileID: 0}
 --- !u!114 &982120770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24557,121 +24305,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1039883693}
---- !u!1 &1044067469
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 134834, guid: 1a283e1b36debd243bb82aa668dbd2bf, type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  serializedVersion: 4
-  m_Component:
-  - 224: {fileID: 1241842232}
-  - 222: {fileID: 1044067473}
-  - 114: {fileID: 1044067472}
-  - 114: {fileID: 1044067471}
-  - 114: {fileID: 1044067470}
-  m_Layer: 5
-  m_Name: Left Handle
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1044067470
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11441960, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1044067469}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 030978d9a6ba12f43887c9d2f56ccb8f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PoseSliderMask: {fileID: 0}
-  Button: {fileID: 1044067471}
-  mPreviousPos: {x: 0, y: 0}
-  mCurrPos: {x: 0, y: 0}
-  Direction: 0
-  Width: 0
-  RenderingCam: {fileID: 0}
---- !u!114 &1044067471
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11470694, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1044067469}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 1392445389, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 3
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 1044067472}
-  m_OnClick:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!114 &1044067472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11491604, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1044067469}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: 4db017495c69e8140a56a0e2b669e3f8, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 1
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
---- !u!222 &1044067473
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 22215706, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1044067469}
 --- !u!1 &1044598511
 GameObject:
   m_ObjectHideFlags: 0
@@ -25411,7 +25044,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 324985695}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -26392,6 +26025,7 @@ MonoBehaviour:
       PublicKeyToken=null
   LocalPositionZReset: 0
   NameRow: {fileID: 1626305206}
+  UserRow: {fileID: 0}
   ButtonContainer: {fileID: 60639966}
 --- !u!114 &1095930310
 MonoBehaviour:
@@ -26810,7 +26444,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 2113984285}
+  - {fileID: 682898732}
   - {fileID: 2090096973}
   m_Father: {fileID: 337596913}
   m_RootOrder: 1
@@ -26832,7 +26466,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NextView: {fileID: 0}
   PreviousView: {fileID: 0}
-  PbControlPanel: {fileID: 268217800}
+  PbControlPanel: {fileID: 0}
   CurrBody:
     BodyGuid: 
     SuitGuid: 
@@ -26840,127 +26474,117 @@ MonoBehaviour:
     LeftArmAnalysis:
       DeltaTime: 0
       LeftElbowFlexionAngle: 0
+      LeftElbowFlexionSignedAngle: 0
+      LeftForeArmPronationSignedAngle: 0
+      LeftShoulderFlexionAngle: 0
       LeftShoulderFlexionSignedAngle: 0
-      SignedAngleElbowFlexion: 0
-      AngleElbowPronation: 0
-      AngleShoulderFlexion: 0
-      AngleShoulderVertAbduction: 0
+      LeftShoulderVertAbductionAngle: 0
       LeftShoulderVerticalAbductionSignedAngle: 0
-      AngleShoulderHorAbduction: 0
-      AngleShoulderRotation: 0
-      AngularVelocityElbowFlexion: 0
-      PeakAngularVelocityElbowFlexion: 0
-      AngularAccelerationElbowFlexion: 0
-      AngularVelocityPronation: 0
-      AngularAccelerationElbowPronation: 0
-      AngularVelocityShoulderFlexion: 0
-      AngularAccelerationShoulderFlexion: 0
-      AngularVelocityShoulderVertAbduction: 0
-      AngularAccelerationShoulderVertAbduction: 0
-      AngularVelocityShoulderHorAbduction: 0
-      AngularAccelerationShoulderHorAbduction: 0
-      AngularVelocityShoulderRotation: 0
-      AngularAccelerationShoulderRotation: 0
+      LeftShoulderHorAbductionAngle: 0
+      LeftShoulderHorizontalAbductionSignedAngle: 0
+      LeftShoulderRotationSignedAngle: 0
+      LeftElbowFlexionAngularVelocity: 0
+      LeftElbowFlexionPeakAngularVelocity: 0
+      LeftElbowFlexionAngularAcceleration: 0
+      LeftForeArmPronationAngularVelocity: 0
+      LeftElbowPronationAngularAcceleration: 0
+      LeftShoulderFlexionAngularVelocity: 0
+      LeftShoulderFlexionAngularAcceleration: 0
+      LeftShoulderVertAbductionAngularVelocity: 0
+      LeftShoulderVertAbductionAngularAcceleration: 0
+      LeftShoulderHorAbductionAngularVelocity: 0
+      LeftShoulderHorAbductionAngularAcceleration: 0
+      LeftShoulderRotationAngularVelocity: 0
+      LeftShoulderRotationAngularAcceleration: 0
     RightArmAnalysis:
       DeltaTime: 0
       RightElbowFlexionAngle: 0
-      SignedAngleElbowFlexion: 0
-      AngleElbowPronation: 0
-      AngleShoulderFlexion: 0
+      RightElbowFlexionSignedAngle: 0
+      RightForeArmPronationSignedAngle: 0
+      RightShoulderFlexionAngle: 0
       RightShoulderFlexionSignedAngle: 0
-      AngleShoulderVertAbduction: 0
+      RightShoulderVertAbductionAngle: 0
       RightShoulderVerticalAbductionSignedAngle: 0
-      AngleShoulderHorAbduction: 0
-      AngleShoulderRotation: 0
-      AngleShoulderReference: 0
-      AngleShoulderReferenceXY: 0
-      AngleShoulderReferenceXZ: 0
-      AngleShoulderReferenceYZ: 0
-      AngularVelocityElbowFlexion: 0
-      PeakAngularVelocityElbowFlexion: 0
-      AngularAccelerationElbowFlexion: 0
-      AngularVelocityPronation: 0
-      AngularAccelerationElbowPronation: 0
-      AngularVelocityShoulderFlexion: 0
-      AngularAccelerationShoulderFlexion: 0
-      AngularVelocityShoulderVertAbduction: 0
-      AngularAccelerationShoulderVertAbduction: 0
-      AngularVelocityShoulderHorAbduction: 0
-      AngularAccelerationShoulderHorAbduction: 0
-      AngularVelocityShoulderRotation: 0
-      AngularAccelerationShoulderRotation: 0
+      RightShoulderHorAbductionAngle: 0
+      RightShoulderHorizontalAbductionSignedAngle: 0
+      RightShoulderRotationSignedAngle: 0
+      RightElbowFlexionAngularVelocity: 0
+      RightElbowFlexionPeakAngularVelocity: 0
+      RightElbowFlexionAngularAcceleration: 0
+      RightForeArmPronationAngularVelocity: 0
+      RightForeArmPronationAngularAcceleration: 0
+      RightShoulderFlexionAngularVelocity: 0
+      RightShoulderFlexionAngularAcceleration: 0
+      RightShoulderVertAbductionAngularVelocity: 0
+      RightShoulderVertAbductionAngularAcceleration: 0
+      RightShoulderHorAbductionAngularVelocity: 0
+      RightShoulderHorAbductionAngularAcceleration: 0
+      RightShoulderRotationAngularVelocity: 0
+      RightShoulderRotationAngularAcceleration: 0
     LeftLegAnalysis:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      LeftKneeFlexion: 0
-      AngleKneeRotation: 0
-      AngleHipFlexion: 0
-      UseGlobalReference: 0
-      LeftSignedHipFlexionAngle: 0
-      AngleHipAbduction: 0
-      LeftSignedHipAbductionAngle: 0
-      LeftHipRotationAngle: 0
-      AngularVelocityKneeFlexion: 0
-      AngularAccelerationKneeFlexion: 0
-      AngularVelocityKneeRotation: 0
-      AngularAccelerationKneeRotation: 0
-      AngularVelocityHipFlexion: 0
-      AngularAccelerationHipFlexion: 0
-      AngularVelocityHipAbduction: 0
-      AngularAccelerationHipAbduction: 0
-      AngularVelocityHipRotation: 0
-      AngularAccelerationHipRotation: 0
-      NumberofSquats: 0
-      AngleSum: 0
+      LeftKneeFlexionAngle: 0
+      LeftKneeFlexionSignedAngle: 0
+      LeftKneeRotationSignedAngle: 0
+      LeftHipFlexionAngle: 0
+      LeftHipFlexionSignedAngle: 0
+      LeftHipAbductionAngle: 0
+      LeftHipAbductionSignedAngle: 0
+      LeftHipRotationSignedAngle: 0
+      LeftKneeFlexionAngularVelocity: 0
+      LeftKneeFlexionAngularAcceleration: 0
+      LeftKneeRotationAngularVelocity: 0
+      LeftKneeRotationAngularAcceleration: 0
+      LeftHipFlexionAngularVelocity: 0
+      LeftHipFlexionAngularAcceleration: 0
+      LeftHipAbductionAngularVelocity: 0
+      LeftHipAbductionAngularAcceleration: 0
+      LeftHipRotationAngularVelocity: 0
+      LeftHipRotationAngularAcceleration: 0
       LegHeight: 0
     RightLegAnalysis:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      RightKneeFlexion: 0
-      AngleKneeRotation: 0
-      UseGlobalReference: 0
-      AngleHipFlexion: 0
-      SignedRightHipAbductionAngle: 0
-      SignedAngleHipFlexion: 0
-      RightHipAbduction: 0
-      SignedRightHipRotation: 0
-      AngularVelocityKneeFlexion: 0
-      AngularAccelerationKneeFlexion: 0
-      AngularVelocityKneeRotation: 0
-      AngularAccelerationKneeRotation: 0
-      AngularVelocityHipFlexion: 0
-      AngularAccelerationHipFlexion: 0
-      AngularVelocityHipAbduction: 0
-      AngularAccelerationHipAbduction: 0
-      AngularVelocityHipRotation: 0
-      AngularAccelerationHipRotation: 0
-      NumberofSquats: 0
-      AngleSum: 0
+      RightKneeFlexionAngle: 0
+      RightKneeFlexionSignedAngle: 0
+      RightKneeRotationSignedAngle: 0
+      RightHipFlexionAngle: 0
+      RightHipFlexionSignedAngle: 0
+      RightHipAbductionAngle: 0
+      RightHipAbductionSignedAngle: 0
+      RightHipRotationSignedAngle: 0
+      RightKneeFlexionAngularVelocity: 0
+      RightKneeFlexionAngularAcceleration: 0
+      RightKneeRotationAngularVelocity: 0
+      RightKneeRotationAngularAcceleration: 0
+      RightHipFlexionAngularVelocity: 0
+      RightHipFlexionAngularAcceleration: 0
+      RightHipAbductionAngularVelocity: 0
+      RightHipAbductionAngularAcceleration: 0
+      RightHipRotationAngularVelocity: 0
+      RightHipRotationAngularAcceleration: 0
       LegHeight: 0
     TorsoAnalysis:
       DeltaTime: 0
-      AngleTorsoFlexion: 0
-      AngleTorsoLateral: 0
-      SignedAngleTorsoLateral: 0
-      AngleTorsoRotation: 0
-      SignedAngleTorsoRotation: 0
-      TorsoTransform: {fileID: 0}
+      TrunkFlexionAngle: 0
+      TrunkLateralAngle: 0
+      TrunkRotationAngle: 0
+      TrunkLateralSignedAngle: 0
+      TrunkRotationSignedAngle: 0
+      TrunkFlexionSignedAngle: 0
+      TrunkTransform: {fileID: 0}
       HipGlobalTransform: {fileID: 0}
       HipTransform: {fileID: 0}
       KneeTransform: {fileID: 0}
-      SignedTorsoFlexion: 0
-      AngularAccelerationTorsoFlexion: 0
-      AngularVelocityTorsoFlexion: 0
-      AngularAccelerationTorsoLateral: 0
-      AngularVelocityTorsoLateral: 0
-      AngularAccelerationTorsoRotation: 0
-      AngularVelocityTorsoRotation: 0
-      AngleIntegrationTurns: 0
-      AngleIntegrationFlips: 0
-      NumberOfTurns: 0
-      NumberOfFlips: 0
+      TorsoFlexionAngularAcceleration: 0
+      TorsoFlexionAngularVelocity: 0
+      TorsoLateralAngularAcceleration: 0
+      TorsoLateralAngularVelocity: 0
+      TorsoRotationAngularAcceleration: 0
+      TorsoRotationAngularVelocity: 0
     mRenderedBody: {fileID: 0}
   BodyFrameDataControl: {fileID: 1959099060}
   FrameGraphControl: {fileID: 1395310998}
@@ -29585,26 +29209,11 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1239192635}
---- !u!224 &1241842232
+--- !u!224 &1241842232 stripped
 RectTransform:
-  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 22461660, guid: 1a283e1b36debd243bb82aa668dbd2bf,
     type: 2}
   m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1044067469}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071066, w: -0.70710695}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 2022181025}
-  - {fileID: 1970089583}
-  m_Father: {fileID: 487568316}
-  m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 3.7, y: 41.5}
-  m_SizeDelta: {x: 15, y: 13}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1244593422
 GameObject:
   m_ObjectHideFlags: 0
@@ -30076,7 +29685,7 @@ RectTransform:
   m_Father: {fileID: 1096241691}
   m_RootOrder: 0
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.12162162, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -30306,7 +29915,7 @@ RectTransform:
   m_RootOrder: 3
   m_AnchorMin: {x: 0.7093023, y: 0.7933884}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -846.128, y: -155.28925}
+  m_AnchoredPosition: {x: -654.6162, y: -123.88431}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1277785188
@@ -30988,127 +30597,117 @@ MonoBehaviour:
     LeftArmAnalysis:
       DeltaTime: 0
       LeftElbowFlexionAngle: 0
+      LeftElbowFlexionSignedAngle: 0
+      LeftForeArmPronationSignedAngle: 0
+      LeftShoulderFlexionAngle: 0
       LeftShoulderFlexionSignedAngle: 0
-      SignedAngleElbowFlexion: 0
-      AngleElbowPronation: 0
-      AngleShoulderFlexion: 0
-      AngleShoulderVertAbduction: 0
+      LeftShoulderVertAbductionAngle: 0
       LeftShoulderVerticalAbductionSignedAngle: 0
-      AngleShoulderHorAbduction: 0
-      AngleShoulderRotation: 0
-      AngularVelocityElbowFlexion: 0
-      PeakAngularVelocityElbowFlexion: 0
-      AngularAccelerationElbowFlexion: 0
-      AngularVelocityPronation: 0
-      AngularAccelerationElbowPronation: 0
-      AngularVelocityShoulderFlexion: 0
-      AngularAccelerationShoulderFlexion: 0
-      AngularVelocityShoulderVertAbduction: 0
-      AngularAccelerationShoulderVertAbduction: 0
-      AngularVelocityShoulderHorAbduction: 0
-      AngularAccelerationShoulderHorAbduction: 0
-      AngularVelocityShoulderRotation: 0
-      AngularAccelerationShoulderRotation: 0
+      LeftShoulderHorAbductionAngle: 0
+      LeftShoulderHorizontalAbductionSignedAngle: 0
+      LeftShoulderRotationSignedAngle: 0
+      LeftElbowFlexionAngularVelocity: 0
+      LeftElbowFlexionPeakAngularVelocity: 0
+      LeftElbowFlexionAngularAcceleration: 0
+      LeftForeArmPronationAngularVelocity: 0
+      LeftElbowPronationAngularAcceleration: 0
+      LeftShoulderFlexionAngularVelocity: 0
+      LeftShoulderFlexionAngularAcceleration: 0
+      LeftShoulderVertAbductionAngularVelocity: 0
+      LeftShoulderVertAbductionAngularAcceleration: 0
+      LeftShoulderHorAbductionAngularVelocity: 0
+      LeftShoulderHorAbductionAngularAcceleration: 0
+      LeftShoulderRotationAngularVelocity: 0
+      LeftShoulderRotationAngularAcceleration: 0
     RightArmAnalysis:
       DeltaTime: 0
       RightElbowFlexionAngle: 0
-      SignedAngleElbowFlexion: 0
-      AngleElbowPronation: 0
-      AngleShoulderFlexion: 0
+      RightElbowFlexionSignedAngle: 0
+      RightForeArmPronationSignedAngle: 0
+      RightShoulderFlexionAngle: 0
       RightShoulderFlexionSignedAngle: 0
-      AngleShoulderVertAbduction: 0
+      RightShoulderVertAbductionAngle: 0
       RightShoulderVerticalAbductionSignedAngle: 0
-      AngleShoulderHorAbduction: 0
-      AngleShoulderRotation: 0
-      AngleShoulderReference: 0
-      AngleShoulderReferenceXY: 0
-      AngleShoulderReferenceXZ: 0
-      AngleShoulderReferenceYZ: 0
-      AngularVelocityElbowFlexion: 0
-      PeakAngularVelocityElbowFlexion: 0
-      AngularAccelerationElbowFlexion: 0
-      AngularVelocityPronation: 0
-      AngularAccelerationElbowPronation: 0
-      AngularVelocityShoulderFlexion: 0
-      AngularAccelerationShoulderFlexion: 0
-      AngularVelocityShoulderVertAbduction: 0
-      AngularAccelerationShoulderVertAbduction: 0
-      AngularVelocityShoulderHorAbduction: 0
-      AngularAccelerationShoulderHorAbduction: 0
-      AngularVelocityShoulderRotation: 0
-      AngularAccelerationShoulderRotation: 0
+      RightShoulderHorAbductionAngle: 0
+      RightShoulderHorizontalAbductionSignedAngle: 0
+      RightShoulderRotationSignedAngle: 0
+      RightElbowFlexionAngularVelocity: 0
+      RightElbowFlexionPeakAngularVelocity: 0
+      RightElbowFlexionAngularAcceleration: 0
+      RightForeArmPronationAngularVelocity: 0
+      RightForeArmPronationAngularAcceleration: 0
+      RightShoulderFlexionAngularVelocity: 0
+      RightShoulderFlexionAngularAcceleration: 0
+      RightShoulderVertAbductionAngularVelocity: 0
+      RightShoulderVertAbductionAngularAcceleration: 0
+      RightShoulderHorAbductionAngularVelocity: 0
+      RightShoulderHorAbductionAngularAcceleration: 0
+      RightShoulderRotationAngularVelocity: 0
+      RightShoulderRotationAngularAcceleration: 0
     LeftLegAnalysis:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      LeftKneeFlexion: 0
-      AngleKneeRotation: 0
-      AngleHipFlexion: 0
-      UseGlobalReference: 0
-      LeftSignedHipFlexionAngle: 0
-      AngleHipAbduction: 0
-      LeftSignedHipAbductionAngle: 0
-      LeftHipRotationAngle: 0
-      AngularVelocityKneeFlexion: 0
-      AngularAccelerationKneeFlexion: 0
-      AngularVelocityKneeRotation: 0
-      AngularAccelerationKneeRotation: 0
-      AngularVelocityHipFlexion: 0
-      AngularAccelerationHipFlexion: 0
-      AngularVelocityHipAbduction: 0
-      AngularAccelerationHipAbduction: 0
-      AngularVelocityHipRotation: 0
-      AngularAccelerationHipRotation: 0
-      NumberofSquats: 0
-      AngleSum: 0
+      LeftKneeFlexionAngle: 0
+      LeftKneeFlexionSignedAngle: 0
+      LeftKneeRotationSignedAngle: 0
+      LeftHipFlexionAngle: 0
+      LeftHipFlexionSignedAngle: 0
+      LeftHipAbductionAngle: 0
+      LeftHipAbductionSignedAngle: 0
+      LeftHipRotationSignedAngle: 0
+      LeftKneeFlexionAngularVelocity: 0
+      LeftKneeFlexionAngularAcceleration: 0
+      LeftKneeRotationAngularVelocity: 0
+      LeftKneeRotationAngularAcceleration: 0
+      LeftHipFlexionAngularVelocity: 0
+      LeftHipFlexionAngularAcceleration: 0
+      LeftHipAbductionAngularVelocity: 0
+      LeftHipAbductionAngularAcceleration: 0
+      LeftHipRotationAngularVelocity: 0
+      LeftHipRotationAngularAcceleration: 0
       LegHeight: 0
     RightLegAnalysis:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      RightKneeFlexion: 0
-      AngleKneeRotation: 0
-      UseGlobalReference: 0
-      AngleHipFlexion: 0
-      SignedRightHipAbductionAngle: 0
-      SignedAngleHipFlexion: 0
-      RightHipAbduction: 0
-      SignedRightHipRotation: 0
-      AngularVelocityKneeFlexion: 0
-      AngularAccelerationKneeFlexion: 0
-      AngularVelocityKneeRotation: 0
-      AngularAccelerationKneeRotation: 0
-      AngularVelocityHipFlexion: 0
-      AngularAccelerationHipFlexion: 0
-      AngularVelocityHipAbduction: 0
-      AngularAccelerationHipAbduction: 0
-      AngularVelocityHipRotation: 0
-      AngularAccelerationHipRotation: 0
-      NumberofSquats: 0
-      AngleSum: 0
+      RightKneeFlexionAngle: 0
+      RightKneeFlexionSignedAngle: 0
+      RightKneeRotationSignedAngle: 0
+      RightHipFlexionAngle: 0
+      RightHipFlexionSignedAngle: 0
+      RightHipAbductionAngle: 0
+      RightHipAbductionSignedAngle: 0
+      RightHipRotationSignedAngle: 0
+      RightKneeFlexionAngularVelocity: 0
+      RightKneeFlexionAngularAcceleration: 0
+      RightKneeRotationAngularVelocity: 0
+      RightKneeRotationAngularAcceleration: 0
+      RightHipFlexionAngularVelocity: 0
+      RightHipFlexionAngularAcceleration: 0
+      RightHipAbductionAngularVelocity: 0
+      RightHipAbductionAngularAcceleration: 0
+      RightHipRotationAngularVelocity: 0
+      RightHipRotationAngularAcceleration: 0
       LegHeight: 0
     TorsoAnalysis:
       DeltaTime: 0
-      AngleTorsoFlexion: 0
-      AngleTorsoLateral: 0
-      SignedAngleTorsoLateral: 0
-      AngleTorsoRotation: 0
-      SignedAngleTorsoRotation: 0
-      TorsoTransform: {fileID: 0}
+      TrunkFlexionAngle: 0
+      TrunkLateralAngle: 0
+      TrunkRotationAngle: 0
+      TrunkLateralSignedAngle: 0
+      TrunkRotationSignedAngle: 0
+      TrunkFlexionSignedAngle: 0
+      TrunkTransform: {fileID: 0}
       HipGlobalTransform: {fileID: 0}
       HipTransform: {fileID: 0}
       KneeTransform: {fileID: 0}
-      SignedTorsoFlexion: 0
-      AngularAccelerationTorsoFlexion: 0
-      AngularVelocityTorsoFlexion: 0
-      AngularAccelerationTorsoLateral: 0
-      AngularVelocityTorsoLateral: 0
-      AngularAccelerationTorsoRotation: 0
-      AngularVelocityTorsoRotation: 0
-      AngleIntegrationTurns: 0
-      AngleIntegrationFlips: 0
-      NumberOfTurns: 0
-      NumberOfFlips: 0
+      TorsoFlexionAngularAcceleration: 0
+      TorsoFlexionAngularVelocity: 0
+      TorsoLateralAngularAcceleration: 0
+      TorsoLateralAngularVelocity: 0
+      TorsoRotationAngularAcceleration: 0
+      TorsoRotationAngularVelocity: 0
     mRenderedBody: {fileID: 0}
   NoBodyWarningPanel: {fileID: 1598039206}
   TrunkAnalysis: {fileID: 128189281}
@@ -32182,7 +31781,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 890272455}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99999994
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -33604,76 +33203,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1381323078}
---- !u!1 &1385374167
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 105786, guid: 1a283e1b36debd243bb82aa668dbd2bf, type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  serializedVersion: 4
-  m_Component:
-  - 224: {fileID: 1385374168}
-  - 222: {fileID: 1385374170}
-  - 114: {fileID: 1385374169}
-  m_Layer: 5
-  m_Name: Image (1)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1385374168
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 22427216, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1385374167}
-  m_LocalRotation: {x: 0, y: 0, z: 1, w: -0.00000014901161}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 499727732}
-  m_RootOrder: 1
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 17.9, y: 0.8}
-  m_SizeDelta: {x: 33.6, y: 3.1}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1385374169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11453912, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1385374167}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
---- !u!222 &1385374170
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 22265176, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1385374167}
 --- !u!1 &1387720160
 GameObject:
   m_ObjectHideFlags: 0
@@ -37513,140 +37042,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1534596100}
---- !u!1 &1544102114
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 123166, guid: 1a283e1b36debd243bb82aa668dbd2bf, type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  serializedVersion: 4
-  m_Component:
-  - 224: {fileID: 487568316}
-  - 222: {fileID: 1544102119}
-  - 114: {fileID: 1544102118}
-  - 114: {fileID: 1544102117}
-  - 114: {fileID: 1544102116}
-  - 114: {fileID: 1544102115}
-  m_Layer: 5
-  m_Name: SliderMask
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1544102115
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11418230, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1544102114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc661f80f4e0009498513cabde6b461b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Selectable: {fileID: 1544102117}
-  LeftDragger: {fileID: 1044067470}
-  RightDragger: {fileID: 445586412}
-  OffsetMaxRight: {x: 0, y: 0}
-  OffsetMinLeft: {x: 0, y: 0}
-  Background: {fileID: 0}
-  Foreground: {fileID: 487568316}
-  Slider: {fileID: 0}
-  PoseMarker: {fileID: 104517062}
-  mPosePos: 0
-  Rectransform: {fileID: 0}
-  mPoseMarkerPosition: {x: 0, y: 0}
-  mIsSelected: 0
-  Outline: {fileID: 1544102116}
-  RenderingCam: {fileID: 0}
---- !u!114 &1544102116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11488062, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1544102114}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -900027084, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EffectColor: {r: 1, g: 1, b: 1, a: 0.5}
-  m_EffectDistance: {x: 1, y: -1}
-  m_UseGraphicAlpha: 1
---- !u!114 &1544102117
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11420426, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1544102114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -234403039, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Navigation:
-    m_Mode: 0
-    m_SelectOnUp: {fileID: 0}
-    m_SelectOnDown: {fileID: 0}
-    m_SelectOnLeft: {fileID: 0}
-    m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
-  m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
-    m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
-  m_SpriteState:
-    m_HighlightedSprite: {fileID: 0}
-    m_PressedSprite: {fileID: 0}
-    m_DisabledSprite: {fileID: 0}
-  m_AnimationTriggers:
-    m_NormalTrigger: Normal
-    m_HighlightedTrigger: Highlighted
-    m_PressedTrigger: Pressed
-    m_DisabledTrigger: Disabled
-  m_Interactable: 1
-  m_TargetGraphic: {fileID: 1544102118}
---- !u!114 &1544102118
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11492514, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1544102114}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.12870193, g: 0, b: 0.39705884, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
---- !u!222 &1544102119
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 22271836, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1544102114}
 --- !u!1 &1544175310
 GameObject:
   m_ObjectHideFlags: 0
@@ -38487,10 +37882,10 @@ RectTransform:
   - {fileID: 914512519}
   m_Father: {fileID: 29128119}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 118.52136, y: -25.797668}
-  m_SizeDelta: {x: 217.04272, y: 31.595337}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1577945283
 GameObject:
@@ -38647,19 +38042,19 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_AnchoredPosition.x
-      value: 128.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -9.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_SizeDelta.x
-      value: 15
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_SizeDelta.y
-      value: 14.6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_AnchorMin.x
@@ -38667,7 +38062,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_AnchorMax.x
@@ -38675,7 +38070,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22495874, guid: dc8eef87d7a26024e88a26c6be96ee0b, type: 2}
       propertyPath: m_Pivot.x
@@ -38748,267 +38143,128 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bddf5788ce1b57b4ca3108ab818fa544, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mCurRectTransform: {fileID: 0}
   NextView: {fileID: 0}
   PreviousView: {fileID: 0}
-  LayoutType: 4
-  mPanelNodes: []
-  mRootNode: {fileID: 0}
   BrainpackBody:
     BodyGuid: 
     SuitGuid: 
     BodyType: 0
     LeftArmAnalysis:
       DeltaTime: 0
-      SegmentType: 0
-      mLastTimeCalled: 0
-      <UpArTransform>k__BackingField: {fileID: 0}
-      <LoArTransform>k__BackingField: {fileID: 0}
-      <ReferenceVector>k__BackingField: {x: 0, y: 0, z: 0}
-      <TorsoAnalysisSegment>k__BackingField:
-        DeltaTime: 0
-        SegmentType: 0
-        mLastTimeCalled: 0
-        AngleTorsoFlexion: 0
-        AngleTorsoLateral: 0
-        SignedAngleTorsoLateral: 0
-        AngleTorsoRotation: 0
-        SignedAngleTorsoRotation: 0
-        TorsoTransform: {fileID: 0}
-        HipGlobalTransform: {fileID: 0}
-        HipTransform: {fileID: 0}
-        KneeTransform: {fileID: 0}
-        SignedTorsoFlexion: 0
-        AngularAccelerationTorsoFlexion: 0
-        AngularVelocityTorsoFlexion: 0
-        AngularAccelerationTorsoLateral: 0
-        AngularVelocityTorsoLateral: 0
-        AngularAccelerationTorsoRotation: 0
-        AngularVelocityTorsoRotation: 0
-        AngleIntegrationTurns: 0
-        AngleIntegrationFlips: 0
-        NumberOfTurns: 0
-        NumberOfFlips: 0
       LeftElbowFlexionAngle: 0
+      LeftElbowFlexionSignedAngle: 0
+      LeftForeArmPronationSignedAngle: 0
+      LeftShoulderFlexionAngle: 0
       LeftShoulderFlexionSignedAngle: 0
-      SignedAngleElbowFlexion: 0
-      AngleElbowPronation: 0
-      AngleShoulderFlexion: 0
-      AngleShoulderVertAbduction: 0
+      LeftShoulderVertAbductionAngle: 0
       LeftShoulderVerticalAbductionSignedAngle: 0
-      AngleShoulderHorAbduction: 0
-      AngleShoulderRotation: 0
-      AngularVelocityElbowFlexion: 0
-      PeakAngularVelocityElbowFlexion: 0
-      AngularAccelerationElbowFlexion: 0
-      AngularVelocityPronation: 0
-      AngularAccelerationElbowPronation: 0
-      AngularVelocityShoulderFlexion: 0
-      AngularAccelerationShoulderFlexion: 0
-      AngularVelocityShoulderVertAbduction: 0
-      AngularAccelerationShoulderVertAbduction: 0
-      AngularVelocityShoulderHorAbduction: 0
-      AngularAccelerationShoulderHorAbduction: 0
-      AngularVelocityShoulderRotation: 0
-      AngularAccelerationShoulderRotation: 0
+      LeftShoulderHorAbductionAngle: 0
+      LeftShoulderHorizontalAbductionSignedAngle: 0
+      LeftShoulderRotationSignedAngle: 0
+      LeftElbowFlexionAngularVelocity: 0
+      LeftElbowFlexionPeakAngularVelocity: 0
+      LeftElbowFlexionAngularAcceleration: 0
+      LeftForeArmPronationAngularVelocity: 0
+      LeftElbowPronationAngularAcceleration: 0
+      LeftShoulderFlexionAngularVelocity: 0
+      LeftShoulderFlexionAngularAcceleration: 0
+      LeftShoulderVertAbductionAngularVelocity: 0
+      LeftShoulderVertAbductionAngularAcceleration: 0
+      LeftShoulderHorAbductionAngularVelocity: 0
+      LeftShoulderHorAbductionAngularAcceleration: 0
+      LeftShoulderRotationAngularVelocity: 0
+      LeftShoulderRotationAngularAcceleration: 0
     RightArmAnalysis:
       DeltaTime: 0
-      SegmentType: 0
-      mLastTimeCalled: 0
-      <UpArTransform>k__BackingField: {fileID: 0}
-      <LoArTransform>k__BackingField: {fileID: 0}
-      <ReferenceVector>k__BackingField: {x: 0, y: 0, z: 0}
-      <TorsoAnalysisSegment>k__BackingField:
-        DeltaTime: 0
-        SegmentType: 0
-        mLastTimeCalled: 0
-        AngleTorsoFlexion: 0
-        AngleTorsoLateral: 0
-        SignedAngleTorsoLateral: 0
-        AngleTorsoRotation: 0
-        SignedAngleTorsoRotation: 0
-        TorsoTransform: {fileID: 0}
-        HipGlobalTransform: {fileID: 0}
-        HipTransform: {fileID: 0}
-        KneeTransform: {fileID: 0}
-        SignedTorsoFlexion: 0
-        AngularAccelerationTorsoFlexion: 0
-        AngularVelocityTorsoFlexion: 0
-        AngularAccelerationTorsoLateral: 0
-        AngularVelocityTorsoLateral: 0
-        AngularAccelerationTorsoRotation: 0
-        AngularVelocityTorsoRotation: 0
-        AngleIntegrationTurns: 0
-        AngleIntegrationFlips: 0
-        NumberOfTurns: 0
-        NumberOfFlips: 0
       RightElbowFlexionAngle: 0
-      SignedAngleElbowFlexion: 0
-      AngleElbowPronation: 0
-      AngleShoulderFlexion: 0
+      RightElbowFlexionSignedAngle: 0
+      RightForeArmPronationSignedAngle: 0
+      RightShoulderFlexionAngle: 0
       RightShoulderFlexionSignedAngle: 0
-      AngleShoulderVertAbduction: 0
+      RightShoulderVertAbductionAngle: 0
       RightShoulderVerticalAbductionSignedAngle: 0
-      AngleShoulderHorAbduction: 0
-      AngleShoulderRotation: 0
-      AngleShoulderReference: 0
-      AngleShoulderReferenceXY: 0
-      AngleShoulderReferenceXZ: 0
-      AngleShoulderReferenceYZ: 0
-      AngularVelocityElbowFlexion: 0
-      PeakAngularVelocityElbowFlexion: 0
-      AngularAccelerationElbowFlexion: 0
-      AngularVelocityPronation: 0
-      AngularAccelerationElbowPronation: 0
-      AngularVelocityShoulderFlexion: 0
-      AngularAccelerationShoulderFlexion: 0
-      AngularVelocityShoulderVertAbduction: 0
-      AngularAccelerationShoulderVertAbduction: 0
-      AngularVelocityShoulderHorAbduction: 0
-      AngularAccelerationShoulderHorAbduction: 0
-      AngularVelocityShoulderRotation: 0
-      AngularAccelerationShoulderRotation: 0
+      RightShoulderHorAbductionAngle: 0
+      RightShoulderHorizontalAbductionSignedAngle: 0
+      RightShoulderRotationSignedAngle: 0
+      RightElbowFlexionAngularVelocity: 0
+      RightElbowFlexionPeakAngularVelocity: 0
+      RightElbowFlexionAngularAcceleration: 0
+      RightForeArmPronationAngularVelocity: 0
+      RightForeArmPronationAngularAcceleration: 0
+      RightShoulderFlexionAngularVelocity: 0
+      RightShoulderFlexionAngularAcceleration: 0
+      RightShoulderVertAbductionAngularVelocity: 0
+      RightShoulderVertAbductionAngularAcceleration: 0
+      RightShoulderHorAbductionAngularVelocity: 0
+      RightShoulderHorAbductionAngularAcceleration: 0
+      RightShoulderRotationAngularVelocity: 0
+      RightShoulderRotationAngularAcceleration: 0
     LeftLegAnalysis:
       DeltaTime: 0
-      SegmentType: 0
-      mLastTimeCalled: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      <ThighTransform>k__BackingField: {fileID: 0}
-      <KneeTransform>k__BackingField: {fileID: 0}
-      <TorsoAnalysisSegment>k__BackingField:
-        DeltaTime: 0
-        SegmentType: 0
-        mLastTimeCalled: 0
-        AngleTorsoFlexion: 0
-        AngleTorsoLateral: 0
-        SignedAngleTorsoLateral: 0
-        AngleTorsoRotation: 0
-        SignedAngleTorsoRotation: 0
-        TorsoTransform: {fileID: 0}
-        HipGlobalTransform: {fileID: 0}
-        HipTransform: {fileID: 0}
-        KneeTransform: {fileID: 0}
-        SignedTorsoFlexion: 0
-        AngularAccelerationTorsoFlexion: 0
-        AngularVelocityTorsoFlexion: 0
-        AngularAccelerationTorsoLateral: 0
-        AngularVelocityTorsoLateral: 0
-        AngularAccelerationTorsoRotation: 0
-        AngularVelocityTorsoRotation: 0
-        AngleIntegrationTurns: 0
-        AngleIntegrationFlips: 0
-        NumberOfTurns: 0
-        NumberOfFlips: 0
-      LeftKneeFlexion: 0
-      AngleKneeRotation: 0
-      AngleHipFlexion: 0
-      UseGlobalReference: 0
-      LeftSignedHipFlexionAngle: 0
-      AngleHipAbduction: 0
-      LeftSignedHipAbductionAngle: 0
-      LeftHipRotationAngle: 0
-      AngularVelocityKneeFlexion: 0
-      AngularAccelerationKneeFlexion: 0
-      AngularVelocityKneeRotation: 0
-      AngularAccelerationKneeRotation: 0
-      AngularVelocityHipFlexion: 0
-      AngularAccelerationHipFlexion: 0
-      AngularVelocityHipAbduction: 0
-      AngularAccelerationHipAbduction: 0
-      AngularVelocityHipRotation: 0
-      AngularAccelerationHipRotation: 0
-      NumberofSquats: 0
-      AngleSum: 0
-      mStartCountingSquats: 1
+      LeftKneeFlexionAngle: 0
+      LeftKneeFlexionSignedAngle: 0
+      LeftKneeRotationSignedAngle: 0
+      LeftHipFlexionAngle: 0
+      LeftHipFlexionSignedAngle: 0
+      LeftHipAbductionAngle: 0
+      LeftHipAbductionSignedAngle: 0
+      LeftHipRotationSignedAngle: 0
+      LeftKneeFlexionAngularVelocity: 0
+      LeftKneeFlexionAngularAcceleration: 0
+      LeftKneeRotationAngularVelocity: 0
+      LeftKneeRotationAngularAcceleration: 0
+      LeftHipFlexionAngularVelocity: 0
+      LeftHipFlexionAngularAcceleration: 0
+      LeftHipAbductionAngularVelocity: 0
+      LeftHipAbductionAngularAcceleration: 0
+      LeftHipRotationAngularVelocity: 0
+      LeftHipRotationAngularAcceleration: 0
       LegHeight: 0
-      mInitThighHeight: 0.475
-      mInitTibiaHeight: 0.475
     RightLegAnalysis:
       DeltaTime: 0
-      SegmentType: 0
-      mLastTimeCalled: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      <ThighTransform>k__BackingField: {fileID: 0}
-      <KneeTransform>k__BackingField: {fileID: 0}
-      <TorsoAnalysisSegment>k__BackingField:
-        DeltaTime: 0
-        SegmentType: 0
-        mLastTimeCalled: 0
-        AngleTorsoFlexion: 0
-        AngleTorsoLateral: 0
-        SignedAngleTorsoLateral: 0
-        AngleTorsoRotation: 0
-        SignedAngleTorsoRotation: 0
-        TorsoTransform: {fileID: 0}
-        HipGlobalTransform: {fileID: 0}
-        HipTransform: {fileID: 0}
-        KneeTransform: {fileID: 0}
-        SignedTorsoFlexion: 0
-        AngularAccelerationTorsoFlexion: 0
-        AngularVelocityTorsoFlexion: 0
-        AngularAccelerationTorsoLateral: 0
-        AngularVelocityTorsoLateral: 0
-        AngularAccelerationTorsoRotation: 0
-        AngularVelocityTorsoRotation: 0
-        AngleIntegrationTurns: 0
-        AngleIntegrationFlips: 0
-        NumberOfTurns: 0
-        NumberOfFlips: 0
-      RightKneeFlexion: 0
-      AngleKneeRotation: 0
-      UseGlobalReference: 0
-      AngleHipFlexion: 0
-      SignedRightHipAbductionAngle: 0
-      SignedAngleHipFlexion: 0
-      RightHipAbduction: 0
-      SignedRightHipRotation: 0
-      AngularVelocityKneeFlexion: 0
-      AngularAccelerationKneeFlexion: 0
-      AngularVelocityKneeRotation: 0
-      AngularAccelerationKneeRotation: 0
-      AngularVelocityHipFlexion: 0
-      AngularAccelerationHipFlexion: 0
-      AngularVelocityHipAbduction: 0
-      AngularAccelerationHipAbduction: 0
-      AngularVelocityHipRotation: 0
-      AngularAccelerationHipRotation: 0
-      NumberofSquats: 0
-      AngleSum: 0
-      mStartCountingSquats: 1
+      RightKneeFlexionAngle: 0
+      RightKneeFlexionSignedAngle: 0
+      RightKneeRotationSignedAngle: 0
+      RightHipFlexionAngle: 0
+      RightHipFlexionSignedAngle: 0
+      RightHipAbductionAngle: 0
+      RightHipAbductionSignedAngle: 0
+      RightHipRotationSignedAngle: 0
+      RightKneeFlexionAngularVelocity: 0
+      RightKneeFlexionAngularAcceleration: 0
+      RightKneeRotationAngularVelocity: 0
+      RightKneeRotationAngularAcceleration: 0
+      RightHipFlexionAngularVelocity: 0
+      RightHipFlexionAngularAcceleration: 0
+      RightHipAbductionAngularVelocity: 0
+      RightHipAbductionAngularAcceleration: 0
+      RightHipRotationAngularVelocity: 0
+      RightHipRotationAngularAcceleration: 0
       LegHeight: 0
-      mInitThighHeight: 0.475
-      mInitTibiaHeight: 0.475
     TorsoAnalysis:
       DeltaTime: 0
-      SegmentType: 0
-      mLastTimeCalled: 0
-      AngleTorsoFlexion: 0
-      AngleTorsoLateral: 0
-      SignedAngleTorsoLateral: 0
-      AngleTorsoRotation: 0
-      SignedAngleTorsoRotation: 0
-      TorsoTransform: {fileID: 0}
+      TrunkFlexionAngle: 0
+      TrunkLateralAngle: 0
+      TrunkRotationAngle: 0
+      TrunkLateralSignedAngle: 0
+      TrunkRotationSignedAngle: 0
+      TrunkFlexionSignedAngle: 0
+      TrunkTransform: {fileID: 0}
       HipGlobalTransform: {fileID: 0}
       HipTransform: {fileID: 0}
       KneeTransform: {fileID: 0}
-      SignedTorsoFlexion: 0
-      AngularAccelerationTorsoFlexion: 0
-      AngularVelocityTorsoFlexion: 0
-      AngularAccelerationTorsoLateral: 0
-      AngularVelocityTorsoLateral: 0
-      AngularAccelerationTorsoRotation: 0
-      AngularVelocityTorsoRotation: 0
-      AngleIntegrationTurns: 0
-      AngleIntegrationFlips: 0
-      NumberOfTurns: 0
-      NumberOfFlips: 0
-    mView: {fileID: 0}
+      TorsoFlexionAngularAcceleration: 0
+      TorsoFlexionAngularVelocity: 0
+      TorsoLateralAngularAcceleration: 0
+      TorsoLateralAngularVelocity: 0
+      TorsoRotationAngularAcceleration: 0
+      TorsoRotationAngularVelocity: 0
     mRenderedBody: {fileID: 0}
   BpController: {fileID: 750031983}
-  mLiveFeedViewControlPanel: {fileID: 0}
-  mIsInitialized: 0
   BodyFrameDataControl: {fileID: 1959099060}
   FrameGraphControl: {fileID: 1395310998}
   AnaylsisTextContainer: {fileID: 1318448005}
@@ -39417,10 +38673,10 @@ RectTransform:
   - {fileID: 207300207}
   m_Father: {fileID: 1318448003}
   m_RootOrder: 5
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 241.88092, y: -315.2381}
-  m_SizeDelta: {x: 483.76184, y: 630.4762}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1605863462
 GameObject:
@@ -42481,7 +41737,7 @@ RectTransform:
   m_RootOrder: 0
   m_AnchorMin: {x: 0.7093023, y: 0.7933884}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -846.128, y: -10}
+  m_AnchoredPosition: {x: -654.6162, y: -10}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &1682346561
@@ -43808,7 +43064,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1716404035
 Transform:
   m_ObjectHideFlags: 0
@@ -43872,10 +43128,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1622478348}
   m_RootOrder: 1
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 80.5, y: -7}
-  m_SizeDelta: {x: 57, y: 10}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1717317527
 MonoBehaviour:
@@ -45018,7 +44274,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1785145545
 GameObject:
   m_ObjectHideFlags: 0
@@ -45276,10 +44532,10 @@ RectTransform:
   - {fileID: 1575493094}
   m_Father: {fileID: 29128119}
   m_RootOrder: 1
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 345.5641, y: -25.797668}
-  m_SizeDelta: {x: 217.04272, y: 31.595337}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1788273716
 GameObject:
@@ -45425,6 +44681,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4ebb64debc78b44e9290277618720fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RecordingListViewController: {fileID: 0}
 --- !u!1 &1808922382
 GameObject:
   m_ObjectHideFlags: 0
@@ -45674,10 +44931,10 @@ RectTransform:
   - {fileID: 1357047609}
   m_Father: {fileID: 228028942}
   m_RootOrder: 0
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 225, y: -22}
+  m_SizeDelta: {x: 450, y: 34}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1822030460
 MonoBehaviour:
@@ -46821,10 +46078,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 518393764}
   m_RootOrder: 2
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 64.5, y: -8}
-  m_SizeDelta: {x: 109, y: 12}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1863163896
 CanvasRenderer:
@@ -48628,127 +47885,117 @@ MonoBehaviour:
     LeftArmAnalysis:
       DeltaTime: 0
       LeftElbowFlexionAngle: 0
+      LeftElbowFlexionSignedAngle: 0
+      LeftForeArmPronationSignedAngle: 0
+      LeftShoulderFlexionAngle: 0
       LeftShoulderFlexionSignedAngle: 0
-      SignedAngleElbowFlexion: 0
-      AngleElbowPronation: 0
-      AngleShoulderFlexion: 0
-      AngleShoulderVertAbduction: 0
+      LeftShoulderVertAbductionAngle: 0
       LeftShoulderVerticalAbductionSignedAngle: 0
-      AngleShoulderHorAbduction: 0
-      AngleShoulderRotation: 0
-      AngularVelocityElbowFlexion: 0
-      PeakAngularVelocityElbowFlexion: 0
-      AngularAccelerationElbowFlexion: 0
-      AngularVelocityPronation: 0
-      AngularAccelerationElbowPronation: 0
-      AngularVelocityShoulderFlexion: 0
-      AngularAccelerationShoulderFlexion: 0
-      AngularVelocityShoulderVertAbduction: 0
-      AngularAccelerationShoulderVertAbduction: 0
-      AngularVelocityShoulderHorAbduction: 0
-      AngularAccelerationShoulderHorAbduction: 0
-      AngularVelocityShoulderRotation: 0
-      AngularAccelerationShoulderRotation: 0
+      LeftShoulderHorAbductionAngle: 0
+      LeftShoulderHorizontalAbductionSignedAngle: 0
+      LeftShoulderRotationSignedAngle: 0
+      LeftElbowFlexionAngularVelocity: 0
+      LeftElbowFlexionPeakAngularVelocity: 0
+      LeftElbowFlexionAngularAcceleration: 0
+      LeftForeArmPronationAngularVelocity: 0
+      LeftElbowPronationAngularAcceleration: 0
+      LeftShoulderFlexionAngularVelocity: 0
+      LeftShoulderFlexionAngularAcceleration: 0
+      LeftShoulderVertAbductionAngularVelocity: 0
+      LeftShoulderVertAbductionAngularAcceleration: 0
+      LeftShoulderHorAbductionAngularVelocity: 0
+      LeftShoulderHorAbductionAngularAcceleration: 0
+      LeftShoulderRotationAngularVelocity: 0
+      LeftShoulderRotationAngularAcceleration: 0
     RightArmAnalysis:
       DeltaTime: 0
       RightElbowFlexionAngle: 0
-      SignedAngleElbowFlexion: 0
-      AngleElbowPronation: 0
-      AngleShoulderFlexion: 0
+      RightElbowFlexionSignedAngle: 0
+      RightForeArmPronationSignedAngle: 0
+      RightShoulderFlexionAngle: 0
       RightShoulderFlexionSignedAngle: 0
-      AngleShoulderVertAbduction: 0
+      RightShoulderVertAbductionAngle: 0
       RightShoulderVerticalAbductionSignedAngle: 0
-      AngleShoulderHorAbduction: 0
-      AngleShoulderRotation: 0
-      AngleShoulderReference: 0
-      AngleShoulderReferenceXY: 0
-      AngleShoulderReferenceXZ: 0
-      AngleShoulderReferenceYZ: 0
-      AngularVelocityElbowFlexion: 0
-      PeakAngularVelocityElbowFlexion: 0
-      AngularAccelerationElbowFlexion: 0
-      AngularVelocityPronation: 0
-      AngularAccelerationElbowPronation: 0
-      AngularVelocityShoulderFlexion: 0
-      AngularAccelerationShoulderFlexion: 0
-      AngularVelocityShoulderVertAbduction: 0
-      AngularAccelerationShoulderVertAbduction: 0
-      AngularVelocityShoulderHorAbduction: 0
-      AngularAccelerationShoulderHorAbduction: 0
-      AngularVelocityShoulderRotation: 0
-      AngularAccelerationShoulderRotation: 0
+      RightShoulderHorAbductionAngle: 0
+      RightShoulderHorizontalAbductionSignedAngle: 0
+      RightShoulderRotationSignedAngle: 0
+      RightElbowFlexionAngularVelocity: 0
+      RightElbowFlexionPeakAngularVelocity: 0
+      RightElbowFlexionAngularAcceleration: 0
+      RightForeArmPronationAngularVelocity: 0
+      RightForeArmPronationAngularAcceleration: 0
+      RightShoulderFlexionAngularVelocity: 0
+      RightShoulderFlexionAngularAcceleration: 0
+      RightShoulderVertAbductionAngularVelocity: 0
+      RightShoulderVertAbductionAngularAcceleration: 0
+      RightShoulderHorAbductionAngularVelocity: 0
+      RightShoulderHorAbductionAngularAcceleration: 0
+      RightShoulderRotationAngularVelocity: 0
+      RightShoulderRotationAngularAcceleration: 0
     LeftLegAnalysis:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      LeftKneeFlexion: 0
-      AngleKneeRotation: 0
-      AngleHipFlexion: 0
-      UseGlobalReference: 0
-      LeftSignedHipFlexionAngle: 0
-      AngleHipAbduction: 0
-      LeftSignedHipAbductionAngle: 0
-      LeftHipRotationAngle: 0
-      AngularVelocityKneeFlexion: 0
-      AngularAccelerationKneeFlexion: 0
-      AngularVelocityKneeRotation: 0
-      AngularAccelerationKneeRotation: 0
-      AngularVelocityHipFlexion: 0
-      AngularAccelerationHipFlexion: 0
-      AngularVelocityHipAbduction: 0
-      AngularAccelerationHipAbduction: 0
-      AngularVelocityHipRotation: 0
-      AngularAccelerationHipRotation: 0
-      NumberofSquats: 0
-      AngleSum: 0
+      LeftKneeFlexionAngle: 0
+      LeftKneeFlexionSignedAngle: 0
+      LeftKneeRotationSignedAngle: 0
+      LeftHipFlexionAngle: 0
+      LeftHipFlexionSignedAngle: 0
+      LeftHipAbductionAngle: 0
+      LeftHipAbductionSignedAngle: 0
+      LeftHipRotationSignedAngle: 0
+      LeftKneeFlexionAngularVelocity: 0
+      LeftKneeFlexionAngularAcceleration: 0
+      LeftKneeRotationAngularVelocity: 0
+      LeftKneeRotationAngularAcceleration: 0
+      LeftHipFlexionAngularVelocity: 0
+      LeftHipFlexionAngularAcceleration: 0
+      LeftHipAbductionAngularVelocity: 0
+      LeftHipAbductionAngularAcceleration: 0
+      LeftHipRotationAngularVelocity: 0
+      LeftHipRotationAngularAcceleration: 0
       LegHeight: 0
     RightLegAnalysis:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      RightKneeFlexion: 0
-      AngleKneeRotation: 0
-      UseGlobalReference: 0
-      AngleHipFlexion: 0
-      SignedRightHipAbductionAngle: 0
-      SignedAngleHipFlexion: 0
-      RightHipAbduction: 0
-      SignedRightHipRotation: 0
-      AngularVelocityKneeFlexion: 0
-      AngularAccelerationKneeFlexion: 0
-      AngularVelocityKneeRotation: 0
-      AngularAccelerationKneeRotation: 0
-      AngularVelocityHipFlexion: 0
-      AngularAccelerationHipFlexion: 0
-      AngularVelocityHipAbduction: 0
-      AngularAccelerationHipAbduction: 0
-      AngularVelocityHipRotation: 0
-      AngularAccelerationHipRotation: 0
-      NumberofSquats: 0
-      AngleSum: 0
+      RightKneeFlexionAngle: 0
+      RightKneeFlexionSignedAngle: 0
+      RightKneeRotationSignedAngle: 0
+      RightHipFlexionAngle: 0
+      RightHipFlexionSignedAngle: 0
+      RightHipAbductionAngle: 0
+      RightHipAbductionSignedAngle: 0
+      RightHipRotationSignedAngle: 0
+      RightKneeFlexionAngularVelocity: 0
+      RightKneeFlexionAngularAcceleration: 0
+      RightKneeRotationAngularVelocity: 0
+      RightKneeRotationAngularAcceleration: 0
+      RightHipFlexionAngularVelocity: 0
+      RightHipFlexionAngularAcceleration: 0
+      RightHipAbductionAngularVelocity: 0
+      RightHipAbductionAngularAcceleration: 0
+      RightHipRotationAngularVelocity: 0
+      RightHipRotationAngularAcceleration: 0
       LegHeight: 0
     TorsoAnalysis:
       DeltaTime: 0
-      AngleTorsoFlexion: 0
-      AngleTorsoLateral: 0
-      SignedAngleTorsoLateral: 0
-      AngleTorsoRotation: 0
-      SignedAngleTorsoRotation: 0
-      TorsoTransform: {fileID: 0}
+      TrunkFlexionAngle: 0
+      TrunkLateralAngle: 0
+      TrunkRotationAngle: 0
+      TrunkLateralSignedAngle: 0
+      TrunkRotationSignedAngle: 0
+      TrunkFlexionSignedAngle: 0
+      TrunkTransform: {fileID: 0}
       HipGlobalTransform: {fileID: 0}
       HipTransform: {fileID: 0}
       KneeTransform: {fileID: 0}
-      SignedTorsoFlexion: 0
-      AngularAccelerationTorsoFlexion: 0
-      AngularVelocityTorsoFlexion: 0
-      AngularAccelerationTorsoLateral: 0
-      AngularVelocityTorsoLateral: 0
-      AngularAccelerationTorsoRotation: 0
-      AngularVelocityTorsoRotation: 0
-      AngleIntegrationTurns: 0
-      AngleIntegrationFlips: 0
-      NumberOfTurns: 0
-      NumberOfFlips: 0
+      TorsoFlexionAngularAcceleration: 0
+      TorsoFlexionAngularVelocity: 0
+      TorsoLateralAngularAcceleration: 0
+      TorsoLateralAngularVelocity: 0
+      TorsoRotationAngularAcceleration: 0
+      TorsoRotationAngularVelocity: 0
     mRenderedBody: {fileID: 0}
   mRecordingPlayerBoedy:
     BodyGuid: 
@@ -48757,127 +48004,117 @@ MonoBehaviour:
     LeftArmAnalysis:
       DeltaTime: 0
       LeftElbowFlexionAngle: 0
+      LeftElbowFlexionSignedAngle: 0
+      LeftForeArmPronationSignedAngle: 0
+      LeftShoulderFlexionAngle: 0
       LeftShoulderFlexionSignedAngle: 0
-      SignedAngleElbowFlexion: 0
-      AngleElbowPronation: 0
-      AngleShoulderFlexion: 0
-      AngleShoulderVertAbduction: 0
+      LeftShoulderVertAbductionAngle: 0
       LeftShoulderVerticalAbductionSignedAngle: 0
-      AngleShoulderHorAbduction: 0
-      AngleShoulderRotation: 0
-      AngularVelocityElbowFlexion: 0
-      PeakAngularVelocityElbowFlexion: 0
-      AngularAccelerationElbowFlexion: 0
-      AngularVelocityPronation: 0
-      AngularAccelerationElbowPronation: 0
-      AngularVelocityShoulderFlexion: 0
-      AngularAccelerationShoulderFlexion: 0
-      AngularVelocityShoulderVertAbduction: 0
-      AngularAccelerationShoulderVertAbduction: 0
-      AngularVelocityShoulderHorAbduction: 0
-      AngularAccelerationShoulderHorAbduction: 0
-      AngularVelocityShoulderRotation: 0
-      AngularAccelerationShoulderRotation: 0
+      LeftShoulderHorAbductionAngle: 0
+      LeftShoulderHorizontalAbductionSignedAngle: 0
+      LeftShoulderRotationSignedAngle: 0
+      LeftElbowFlexionAngularVelocity: 0
+      LeftElbowFlexionPeakAngularVelocity: 0
+      LeftElbowFlexionAngularAcceleration: 0
+      LeftForeArmPronationAngularVelocity: 0
+      LeftElbowPronationAngularAcceleration: 0
+      LeftShoulderFlexionAngularVelocity: 0
+      LeftShoulderFlexionAngularAcceleration: 0
+      LeftShoulderVertAbductionAngularVelocity: 0
+      LeftShoulderVertAbductionAngularAcceleration: 0
+      LeftShoulderHorAbductionAngularVelocity: 0
+      LeftShoulderHorAbductionAngularAcceleration: 0
+      LeftShoulderRotationAngularVelocity: 0
+      LeftShoulderRotationAngularAcceleration: 0
     RightArmAnalysis:
       DeltaTime: 0
       RightElbowFlexionAngle: 0
-      SignedAngleElbowFlexion: 0
-      AngleElbowPronation: 0
-      AngleShoulderFlexion: 0
+      RightElbowFlexionSignedAngle: 0
+      RightForeArmPronationSignedAngle: 0
+      RightShoulderFlexionAngle: 0
       RightShoulderFlexionSignedAngle: 0
-      AngleShoulderVertAbduction: 0
+      RightShoulderVertAbductionAngle: 0
       RightShoulderVerticalAbductionSignedAngle: 0
-      AngleShoulderHorAbduction: 0
-      AngleShoulderRotation: 0
-      AngleShoulderReference: 0
-      AngleShoulderReferenceXY: 0
-      AngleShoulderReferenceXZ: 0
-      AngleShoulderReferenceYZ: 0
-      AngularVelocityElbowFlexion: 0
-      PeakAngularVelocityElbowFlexion: 0
-      AngularAccelerationElbowFlexion: 0
-      AngularVelocityPronation: 0
-      AngularAccelerationElbowPronation: 0
-      AngularVelocityShoulderFlexion: 0
-      AngularAccelerationShoulderFlexion: 0
-      AngularVelocityShoulderVertAbduction: 0
-      AngularAccelerationShoulderVertAbduction: 0
-      AngularVelocityShoulderHorAbduction: 0
-      AngularAccelerationShoulderHorAbduction: 0
-      AngularVelocityShoulderRotation: 0
-      AngularAccelerationShoulderRotation: 0
+      RightShoulderHorAbductionAngle: 0
+      RightShoulderHorizontalAbductionSignedAngle: 0
+      RightShoulderRotationSignedAngle: 0
+      RightElbowFlexionAngularVelocity: 0
+      RightElbowFlexionPeakAngularVelocity: 0
+      RightElbowFlexionAngularAcceleration: 0
+      RightForeArmPronationAngularVelocity: 0
+      RightForeArmPronationAngularAcceleration: 0
+      RightShoulderFlexionAngularVelocity: 0
+      RightShoulderFlexionAngularAcceleration: 0
+      RightShoulderVertAbductionAngularVelocity: 0
+      RightShoulderVertAbductionAngularAcceleration: 0
+      RightShoulderHorAbductionAngularVelocity: 0
+      RightShoulderHorAbductionAngularAcceleration: 0
+      RightShoulderRotationAngularVelocity: 0
+      RightShoulderRotationAngularAcceleration: 0
     LeftLegAnalysis:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      LeftKneeFlexion: 0
-      AngleKneeRotation: 0
-      AngleHipFlexion: 0
-      UseGlobalReference: 0
-      LeftSignedHipFlexionAngle: 0
-      AngleHipAbduction: 0
-      LeftSignedHipAbductionAngle: 0
-      LeftHipRotationAngle: 0
-      AngularVelocityKneeFlexion: 0
-      AngularAccelerationKneeFlexion: 0
-      AngularVelocityKneeRotation: 0
-      AngularAccelerationKneeRotation: 0
-      AngularVelocityHipFlexion: 0
-      AngularAccelerationHipFlexion: 0
-      AngularVelocityHipAbduction: 0
-      AngularAccelerationHipAbduction: 0
-      AngularVelocityHipRotation: 0
-      AngularAccelerationHipRotation: 0
-      NumberofSquats: 0
-      AngleSum: 0
+      LeftKneeFlexionAngle: 0
+      LeftKneeFlexionSignedAngle: 0
+      LeftKneeRotationSignedAngle: 0
+      LeftHipFlexionAngle: 0
+      LeftHipFlexionSignedAngle: 0
+      LeftHipAbductionAngle: 0
+      LeftHipAbductionSignedAngle: 0
+      LeftHipRotationSignedAngle: 0
+      LeftKneeFlexionAngularVelocity: 0
+      LeftKneeFlexionAngularAcceleration: 0
+      LeftKneeRotationAngularVelocity: 0
+      LeftKneeRotationAngularAcceleration: 0
+      LeftHipFlexionAngularVelocity: 0
+      LeftHipFlexionAngularAcceleration: 0
+      LeftHipAbductionAngularVelocity: 0
+      LeftHipAbductionAngularAcceleration: 0
+      LeftHipRotationAngularVelocity: 0
+      LeftHipRotationAngularAcceleration: 0
       LegHeight: 0
     RightLegAnalysis:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      RightKneeFlexion: 0
-      AngleKneeRotation: 0
-      UseGlobalReference: 0
-      AngleHipFlexion: 0
-      SignedRightHipAbductionAngle: 0
-      SignedAngleHipFlexion: 0
-      RightHipAbduction: 0
-      SignedRightHipRotation: 0
-      AngularVelocityKneeFlexion: 0
-      AngularAccelerationKneeFlexion: 0
-      AngularVelocityKneeRotation: 0
-      AngularAccelerationKneeRotation: 0
-      AngularVelocityHipFlexion: 0
-      AngularAccelerationHipFlexion: 0
-      AngularVelocityHipAbduction: 0
-      AngularAccelerationHipAbduction: 0
-      AngularVelocityHipRotation: 0
-      AngularAccelerationHipRotation: 0
-      NumberofSquats: 0
-      AngleSum: 0
+      RightKneeFlexionAngle: 0
+      RightKneeFlexionSignedAngle: 0
+      RightKneeRotationSignedAngle: 0
+      RightHipFlexionAngle: 0
+      RightHipFlexionSignedAngle: 0
+      RightHipAbductionAngle: 0
+      RightHipAbductionSignedAngle: 0
+      RightHipRotationSignedAngle: 0
+      RightKneeFlexionAngularVelocity: 0
+      RightKneeFlexionAngularAcceleration: 0
+      RightKneeRotationAngularVelocity: 0
+      RightKneeRotationAngularAcceleration: 0
+      RightHipFlexionAngularVelocity: 0
+      RightHipFlexionAngularAcceleration: 0
+      RightHipAbductionAngularVelocity: 0
+      RightHipAbductionAngularAcceleration: 0
+      RightHipRotationAngularVelocity: 0
+      RightHipRotationAngularAcceleration: 0
       LegHeight: 0
     TorsoAnalysis:
       DeltaTime: 0
-      AngleTorsoFlexion: 0
-      AngleTorsoLateral: 0
-      SignedAngleTorsoLateral: 0
-      AngleTorsoRotation: 0
-      SignedAngleTorsoRotation: 0
-      TorsoTransform: {fileID: 0}
+      TrunkFlexionAngle: 0
+      TrunkLateralAngle: 0
+      TrunkRotationAngle: 0
+      TrunkLateralSignedAngle: 0
+      TrunkRotationSignedAngle: 0
+      TrunkFlexionSignedAngle: 0
+      TrunkTransform: {fileID: 0}
       HipGlobalTransform: {fileID: 0}
       HipTransform: {fileID: 0}
       KneeTransform: {fileID: 0}
-      SignedTorsoFlexion: 0
-      AngularAccelerationTorsoFlexion: 0
-      AngularVelocityTorsoFlexion: 0
-      AngularAccelerationTorsoLateral: 0
-      AngularVelocityTorsoLateral: 0
-      AngularAccelerationTorsoRotation: 0
-      AngularVelocityTorsoRotation: 0
-      AngleIntegrationTurns: 0
-      AngleIntegrationFlips: 0
-      NumberOfTurns: 0
-      NumberOfFlips: 0
+      TorsoFlexionAngularAcceleration: 0
+      TorsoFlexionAngularVelocity: 0
+      TorsoLateralAngularAcceleration: 0
+      TorsoLateralAngularVelocity: 0
+      TorsoRotationAngularAcceleration: 0
+      TorsoRotationAngularVelocity: 0
     mRenderedBody: {fileID: 0}
 --- !u!1 &1953092618
 GameObject:
@@ -49785,76 +49022,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1967977274}
---- !u!1 &1970089582
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 163028, guid: 1a283e1b36debd243bb82aa668dbd2bf, type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  serializedVersion: 4
-  m_Component:
-  - 224: {fileID: 1970089583}
-  - 222: {fileID: 1970089585}
-  - 114: {fileID: 1970089584}
-  m_Layer: 5
-  m_Name: Image
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &1970089583
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 22467264, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1970089582}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1241842232}
-  m_RootOrder: 1
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 16.9, y: -0.6}
-  m_SizeDelta: {x: 33.6, y: 2.6}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1970089584
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11427882, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1970089582}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
---- !u!222 &1970089585
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 22226068, guid: 1a283e1b36debd243bb82aa668dbd2bf,
-    type: 2}
-  m_PrefabInternal: {fileID: 487568315}
-  m_GameObject: {fileID: 1970089582}
 --- !u!1 &1970129005
 GameObject:
   m_ObjectHideFlags: 0
@@ -49994,10 +49161,10 @@ RectTransform:
   - {fileID: 1366449301}
   m_Father: {fileID: 228028942}
   m_RootOrder: 1
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 225, y: -71}
+  m_SizeDelta: {x: 450, y: 34}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1970336680
 MonoBehaviour:
@@ -50981,7 +50148,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 708447077}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.9999999
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -52396,7 +51563,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0.046408564}
   m_AnchorMax: {x: 0.90300006, y: 1}
   m_AnchoredPosition: {x: 0.5, y: 0.000061035156}
-  m_SizeDelta: {x: 1, y: -428.12292}
+  m_SizeDelta: {x: 1, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &2068942971
 MonoBehaviour:
@@ -52939,130 +52106,121 @@ MonoBehaviour:
     LeftArmAnalysis:
       DeltaTime: 0
       LeftElbowFlexionAngle: 0
+      LeftElbowFlexionSignedAngle: 0
+      LeftForeArmPronationSignedAngle: 0
+      LeftShoulderFlexionAngle: 0
       LeftShoulderFlexionSignedAngle: 0
-      SignedAngleElbowFlexion: 0
-      AngleElbowPronation: 0
-      AngleShoulderFlexion: 0
-      AngleShoulderVertAbduction: 0
+      LeftShoulderVertAbductionAngle: 0
       LeftShoulderVerticalAbductionSignedAngle: 0
-      AngleShoulderHorAbduction: 0
-      AngleShoulderRotation: 0
-      AngularVelocityElbowFlexion: 0
-      PeakAngularVelocityElbowFlexion: 0
-      AngularAccelerationElbowFlexion: 0
-      AngularVelocityPronation: 0
-      AngularAccelerationElbowPronation: 0
-      AngularVelocityShoulderFlexion: 0
-      AngularAccelerationShoulderFlexion: 0
-      AngularVelocityShoulderVertAbduction: 0
-      AngularAccelerationShoulderVertAbduction: 0
-      AngularVelocityShoulderHorAbduction: 0
-      AngularAccelerationShoulderHorAbduction: 0
-      AngularVelocityShoulderRotation: 0
-      AngularAccelerationShoulderRotation: 0
+      LeftShoulderHorAbductionAngle: 0
+      LeftShoulderHorizontalAbductionSignedAngle: 0
+      LeftShoulderRotationSignedAngle: 0
+      LeftElbowFlexionAngularVelocity: 0
+      LeftElbowFlexionPeakAngularVelocity: 0
+      LeftElbowFlexionAngularAcceleration: 0
+      LeftForeArmPronationAngularVelocity: 0
+      LeftElbowPronationAngularAcceleration: 0
+      LeftShoulderFlexionAngularVelocity: 0
+      LeftShoulderFlexionAngularAcceleration: 0
+      LeftShoulderVertAbductionAngularVelocity: 0
+      LeftShoulderVertAbductionAngularAcceleration: 0
+      LeftShoulderHorAbductionAngularVelocity: 0
+      LeftShoulderHorAbductionAngularAcceleration: 0
+      LeftShoulderRotationAngularVelocity: 0
+      LeftShoulderRotationAngularAcceleration: 0
     RightArmAnalysis:
       DeltaTime: 0
       RightElbowFlexionAngle: 0
-      SignedAngleElbowFlexion: 0
-      AngleElbowPronation: 0
-      AngleShoulderFlexion: 0
+      RightElbowFlexionSignedAngle: 0
+      RightForeArmPronationSignedAngle: 0
+      RightShoulderFlexionAngle: 0
       RightShoulderFlexionSignedAngle: 0
-      AngleShoulderVertAbduction: 0
+      RightShoulderVertAbductionAngle: 0
       RightShoulderVerticalAbductionSignedAngle: 0
-      AngleShoulderHorAbduction: 0
-      AngleShoulderRotation: 0
-      AngleShoulderReference: 0
-      AngleShoulderReferenceXY: 0
-      AngleShoulderReferenceXZ: 0
-      AngleShoulderReferenceYZ: 0
-      AngularVelocityElbowFlexion: 0
-      PeakAngularVelocityElbowFlexion: 0
-      AngularAccelerationElbowFlexion: 0
-      AngularVelocityPronation: 0
-      AngularAccelerationElbowPronation: 0
-      AngularVelocityShoulderFlexion: 0
-      AngularAccelerationShoulderFlexion: 0
-      AngularVelocityShoulderVertAbduction: 0
-      AngularAccelerationShoulderVertAbduction: 0
-      AngularVelocityShoulderHorAbduction: 0
-      AngularAccelerationShoulderHorAbduction: 0
-      AngularVelocityShoulderRotation: 0
-      AngularAccelerationShoulderRotation: 0
+      RightShoulderHorAbductionAngle: 0
+      RightShoulderHorizontalAbductionSignedAngle: 0
+      RightShoulderRotationSignedAngle: 0
+      RightElbowFlexionAngularVelocity: 0
+      RightElbowFlexionPeakAngularVelocity: 0
+      RightElbowFlexionAngularAcceleration: 0
+      RightForeArmPronationAngularVelocity: 0
+      RightForeArmPronationAngularAcceleration: 0
+      RightShoulderFlexionAngularVelocity: 0
+      RightShoulderFlexionAngularAcceleration: 0
+      RightShoulderVertAbductionAngularVelocity: 0
+      RightShoulderVertAbductionAngularAcceleration: 0
+      RightShoulderHorAbductionAngularVelocity: 0
+      RightShoulderHorAbductionAngularAcceleration: 0
+      RightShoulderRotationAngularVelocity: 0
+      RightShoulderRotationAngularAcceleration: 0
     LeftLegAnalysis:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      LeftKneeFlexion: 0
-      AngleKneeRotation: 0
-      AngleHipFlexion: 0
-      UseGlobalReference: 0
-      LeftSignedHipFlexionAngle: 0
-      AngleHipAbduction: 0
-      LeftSignedHipAbductionAngle: 0
-      LeftHipRotationAngle: 0
-      AngularVelocityKneeFlexion: 0
-      AngularAccelerationKneeFlexion: 0
-      AngularVelocityKneeRotation: 0
-      AngularAccelerationKneeRotation: 0
-      AngularVelocityHipFlexion: 0
-      AngularAccelerationHipFlexion: 0
-      AngularVelocityHipAbduction: 0
-      AngularAccelerationHipAbduction: 0
-      AngularVelocityHipRotation: 0
-      AngularAccelerationHipRotation: 0
-      NumberofSquats: 0
-      AngleSum: 0
+      LeftKneeFlexionAngle: 0
+      LeftKneeFlexionSignedAngle: 0
+      LeftKneeRotationSignedAngle: 0
+      LeftHipFlexionAngle: 0
+      LeftHipFlexionSignedAngle: 0
+      LeftHipAbductionAngle: 0
+      LeftHipAbductionSignedAngle: 0
+      LeftHipRotationSignedAngle: 0
+      LeftKneeFlexionAngularVelocity: 0
+      LeftKneeFlexionAngularAcceleration: 0
+      LeftKneeRotationAngularVelocity: 0
+      LeftKneeRotationAngularAcceleration: 0
+      LeftHipFlexionAngularVelocity: 0
+      LeftHipFlexionAngularAcceleration: 0
+      LeftHipAbductionAngularVelocity: 0
+      LeftHipAbductionAngularAcceleration: 0
+      LeftHipRotationAngularVelocity: 0
+      LeftHipRotationAngularAcceleration: 0
       LegHeight: 0
     RightLegAnalysis:
       DeltaTime: 0
       RightLegStride: {x: 0, y: 0, z: 0}
       LeftLegStride: {x: 0, y: 0, z: 0}
-      RightKneeFlexion: 0
-      AngleKneeRotation: 0
-      UseGlobalReference: 0
-      AngleHipFlexion: 0
-      SignedRightHipAbductionAngle: 0
-      SignedAngleHipFlexion: 0
-      RightHipAbduction: 0
-      SignedRightHipRotation: 0
-      AngularVelocityKneeFlexion: 0
-      AngularAccelerationKneeFlexion: 0
-      AngularVelocityKneeRotation: 0
-      AngularAccelerationKneeRotation: 0
-      AngularVelocityHipFlexion: 0
-      AngularAccelerationHipFlexion: 0
-      AngularVelocityHipAbduction: 0
-      AngularAccelerationHipAbduction: 0
-      AngularVelocityHipRotation: 0
-      AngularAccelerationHipRotation: 0
-      NumberofSquats: 0
-      AngleSum: 0
+      RightKneeFlexionAngle: 0
+      RightKneeFlexionSignedAngle: 0
+      RightKneeRotationSignedAngle: 0
+      RightHipFlexionAngle: 0
+      RightHipFlexionSignedAngle: 0
+      RightHipAbductionAngle: 0
+      RightHipAbductionSignedAngle: 0
+      RightHipRotationSignedAngle: 0
+      RightKneeFlexionAngularVelocity: 0
+      RightKneeFlexionAngularAcceleration: 0
+      RightKneeRotationAngularVelocity: 0
+      RightKneeRotationAngularAcceleration: 0
+      RightHipFlexionAngularVelocity: 0
+      RightHipFlexionAngularAcceleration: 0
+      RightHipAbductionAngularVelocity: 0
+      RightHipAbductionAngularAcceleration: 0
+      RightHipRotationAngularVelocity: 0
+      RightHipRotationAngularAcceleration: 0
       LegHeight: 0
     TorsoAnalysis:
       DeltaTime: 0
-      AngleTorsoFlexion: 0
-      AngleTorsoLateral: 0
-      SignedAngleTorsoLateral: 0
-      AngleTorsoRotation: 0
-      SignedAngleTorsoRotation: 0
-      TorsoTransform: {fileID: 0}
+      TrunkFlexionAngle: 0
+      TrunkLateralAngle: 0
+      TrunkRotationAngle: 0
+      TrunkLateralSignedAngle: 0
+      TrunkRotationSignedAngle: 0
+      TrunkFlexionSignedAngle: 0
+      TrunkTransform: {fileID: 0}
       HipGlobalTransform: {fileID: 0}
       HipTransform: {fileID: 0}
       KneeTransform: {fileID: 0}
-      SignedTorsoFlexion: 0
-      AngularAccelerationTorsoFlexion: 0
-      AngularVelocityTorsoFlexion: 0
-      AngularAccelerationTorsoLateral: 0
-      AngularVelocityTorsoLateral: 0
-      AngularAccelerationTorsoRotation: 0
-      AngularVelocityTorsoRotation: 0
-      AngleIntegrationTurns: 0
-      AngleIntegrationFlips: 0
-      NumberOfTurns: 0
-      NumberOfFlips: 0
+      TorsoFlexionAngularAcceleration: 0
+      TorsoFlexionAngularVelocity: 0
+      TorsoLateralAngularAcceleration: 0
+      TorsoLateralAngularVelocity: 0
+      TorsoRotationAngularAcceleration: 0
+      TorsoRotationAngularVelocity: 0
     mRenderedBody: {fileID: 0}
   RecordingPlayerView: {fileID: 1103780630}
   DisablingPanel: {fileID: 2110020488}
+  SliderMaskContainerController: {fileID: 2090096978}
 --- !u!114 &2090096978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53079,7 +52237,6 @@ MonoBehaviour:
   Background: {fileID: 0}
   PoseSliderMaskPrefab: {fileID: 11418230, guid: 1a283e1b36debd243bb82aa668dbd2bf,
     type: 2}
-  mLiveList: []
   PlayerView: {fileID: 1103780630}
   RenderingCam: {fileID: 1047580056}
 --- !u!1 &2094367924
@@ -53691,11 +52848,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2112460730}
---- !u!224 &2113984285 stripped
-RectTransform:
-  m_PrefabParentObject: {fileID: 22440332, guid: 2cd4ff158f0246a45a76676428c8cfd4,
-    type: 2}
-  m_PrefabInternal: {fileID: 254738646}
 --- !u!1 &2116033297
 GameObject:
   m_ObjectHideFlags: 0

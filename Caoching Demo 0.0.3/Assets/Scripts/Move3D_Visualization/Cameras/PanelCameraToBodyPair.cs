@@ -6,6 +6,7 @@
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
 
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.UI.AbstractViews.camera;
 using UnityEngine;
 

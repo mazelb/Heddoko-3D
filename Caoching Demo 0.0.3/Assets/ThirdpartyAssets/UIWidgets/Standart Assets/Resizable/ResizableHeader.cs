@@ -395,7 +395,7 @@ namespace UIWidgets
 		/// </summary>
 		/// <returns><c>true</c>, if point in the left region, <c>false</c> otherwise.</returns>
 		/// <param name="childRectTransform">RectTransform.</param>
-		/// <param name="point">Point.</param>
+		/// <param name="point">AdvertisingEndPoint.</param>
 		bool CheckLeft(RectTransform childRectTransform, Vector2 point)
 		{
 			var r = childRectTransform.rect;
@@ -410,7 +410,7 @@ namespace UIWidgets
 		/// </summary>
 		/// <returns><c>true</c>, if right was checked, <c>false</c> otherwise.</returns>
 		/// <param name="childRectTransform">Child rect transform.</param>
-		/// <param name="point">Point.</param>
+		/// <param name="point">AdvertisingEndPoint.</param>
 		bool CheckRight(RectTransform childRectTransform, Vector2 point)
 		{
 			var r = childRectTransform.rect;

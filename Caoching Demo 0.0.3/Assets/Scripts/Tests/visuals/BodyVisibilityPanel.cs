@@ -7,6 +7,7 @@
 */
 
 using System;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.UI.DemoKit;
 using UIWidgets;

@@ -7,6 +7,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.Body_Data;
 using UnityEngine;
 using UnityEngine.UI;
 

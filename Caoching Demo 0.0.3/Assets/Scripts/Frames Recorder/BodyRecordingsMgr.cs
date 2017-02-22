@@ -147,11 +147,6 @@ public class BodyRecordingsMgr : IDatabaseConsumer
                 AddNewRecording(vRecordingBase);
             }
         }
-        //if (vTempReader.ReadFile(vTempReader.FilePath) > 0)
-        //{
-
-        //}
-
     }
 
     /// <summary>
@@ -246,33 +241,7 @@ public class BodyRecordingsMgr : IDatabaseConsumer
         }
     }
 
-    //   /**
-    //* AddNewRecording()
-    //* @param vRecordingLines: The recording file content in lines
-    //* @brief Adds a recording to the list
-    //*/
-    //   public void AddNewRecording(BodyFramesRecordingBase vRecordingBase)
-    //   {
-
-    //       // CsvBodyFramesRecording vTempRecording = new CsvBodyFramesRecording();
-
-    //       vTempRecording.ExtractRecordingUUIDs(vRecordingLines);
-
-    //       //If recording already exists, do nothing
-    //       if (!RecordingExist(vTempRecording.BodyRecordingGuid))
-    //       {
-    //           vTempRecording.ExtractRawFramesData(vRecordingLines);
-
-    //           //Add body to the body manager
-    //           BodiesManager.Instance.AddNewBody(vTempRecording.BodyGuid);
-
-    //           //Map Body to Recording for future play
-    //           MapRecordingToBody(vTempRecording.BodyGuid, vTempRecording.BodyRecordingGuid);
-
-    //           //Add recording to the list 
-    //           Recordings.Add(vTempRecording);
-    //       }
-    //   }
+  
     /// <summary>
     /// Adds a recording to the list, with a callback performed on completion
     /// </summary>

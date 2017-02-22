@@ -12,11 +12,11 @@ using System.IO;
 using System.Threading;
 using Assets.Scripts.Communication.DatabaseConnectionPipe;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
+using Assets.Scripts.Localization;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.AbstractViews.SelectableGridList;
 using Assets.Scripts.UI.AbstractViews.SelectableGridList.Descriptors;
-using Assets.Scripts.UI.Tagging;
-using Assets.Scripts.Utils.DatabaseAccess;
+using Assets.Scripts.UI.Tagging; 
 using UIWidgets;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,16 +37,16 @@ namespace Assets.Scripts.UI.AbstractViews.ContextSpecificContainers.Importation
         public Text CurrentFileProgressText;
         private List<ImportTaskStructure> mTotalExportedItems;
         private Stack<RecordingItemDescriptor> mItemStack;
-        private bool mIsImporting = false;
+        private bool mIsImporting  ;
         public Button CancelButton;
         public Button CloseButton;
         public ImportTaskStructure CurrentImportTask;
         private int mMaxItems;
         private string mTemplateName = "ImportProgressDialog";
-        private bool mIsInitialized = false;
+        private bool mIsInitialized  ;
         public HeddokoAppStart AppStarter;
         public  ExportViewSelectableGridList GridList { get; set; }
-        public TaggingManager mTaggingManager;
+        private TaggingManager mTaggingManager;
         public bool IsTemplate { get; set; }
 
         public string TemplateName
@@ -151,9 +151,9 @@ namespace Assets.Scripts.UI.AbstractViews.ContextSpecificContainers.Importation
                 mIsImporting = true;
                 mTotalExportedItems = new List<ImportTaskStructure>(vSelectedItems.Count);
                 mItemStack = new Stack<RecordingItemDescriptor>();
-                for (int i = vSelectedItems.Count - 1; i >= 0; i--)
+                for (int vI = vSelectedItems.Count - 1; vI >= 0; vI--)
                 {
-                    mItemStack.Push(vSelectedItems[i]);
+                    mItemStack.Push(vSelectedItems[vI]);
                 }
                 Database.Connection.ContinueWorking = true;
                 mMaxItems = TotalProgress.Max = mItemStack.Count;
@@ -196,17 +196,33 @@ namespace Assets.Scripts.UI.AbstractViews.ContextSpecificContainers.Importation
         {
             int vTotalImportCount = mTotalExportedItems.Count;
             //remove items that were succesfully imported
-            for (int i = 0; i < vTotalImportCount; i ++)
+            for (int vI = 0; vI < vTotalImportCount; vI ++)
             {
-                GridList.DataSource.Remove(mTotalExportedItems[i].ItemDescriptor);
+                GridList.DataSource.Remove(mTotalExportedItems[vI].ItemDescriptor);
             }
             CloseButton.gameObject.SetActive(true);
             CancelButton.gameObject.SetActive(false);
             mIsImporting = false;
             //send notification that import has been completed
-    
-            var message = string.Format("{0} movements have been exported ", vTotalImportCount); 
-            Notify.Template("FadingFadoutNotifyTemplate").Show(message, 4.5f, hideAnimation :  
+            string vMsg = "";
+            if (vTotalImportCount == 1)
+            {
+                vMsg = string.Format(
+                    "{0}" + LocalizationBinderContainer.GetString(KeyMessage.NumberOfExportedItemsMsg),
+                    vTotalImportCount);
+            }
+            else if (vTotalImportCount > 1)
+            {
+                vMsg = string.Format(
+             "{0}" + LocalizationBinderContainer.GetString(KeyMessage.NumberOfExportedItemsMsg,true),
+             vTotalImportCount);
+            }
+            else
+            {
+                vMsg = LocalizationBinderContainer.GetString(KeyMessage.NoItemsWereExportedMsg);
+            }
+             
+            Notify.Template("FadingFadoutNotifyTemplate").Show(vMsg, 4.5f, hideAnimation :  
                 Notify.FadeOutAnimation, showAnimation: Notify.FadeInAnimation, sequenceType: NotifySequence.First );
 
         }
@@ -232,9 +248,9 @@ namespace Assets.Scripts.UI.AbstractViews.ContextSpecificContainers.Importation
                     File.Delete(CurrentImportTask.ItemDescriptor.FilePath);
                     GridList.DataSource.Remove(CurrentImportTask.ItemDescriptor);
                 }
-                catch (Exception e)
+                catch (Exception vE)
                 {
-                    Debug.Log("Exception e");
+                    Debug.Log("Exception e" +vE );
                 }
             
             }
@@ -242,11 +258,12 @@ namespace Assets.Scripts.UI.AbstractViews.ContextSpecificContainers.Importation
             CurrentFileProgress.Max = CurrentImportTask.MaxCount;
             mTotalExportedItems.Add(CurrentImportTask);
             Thread vNextThread = new Thread(() => Database.Connection.CreateRecording(vRecording, vCurrItemDescriptor, UpdateCurrentFileProgress));
+            vNextThread.IsBackground = true;
             TaggingManager.AttachTagSetToRecording(vCurrItemDescriptor.TagSet,vRecording);
             vNextThread.Start();
         }
 
-        private void OnApplicationQuit()
+        internal void OnApplicationQuit()
         {
             if (Database != null)
             {

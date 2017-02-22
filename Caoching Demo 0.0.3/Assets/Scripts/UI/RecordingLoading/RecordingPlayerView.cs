@@ -11,9 +11,14 @@ using System;
 using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Layouts;
 using System.Collections.Generic;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Pipeline.Analysis.Views;
 using Assets.Scripts.Communication.View.Table;
+using Assets.Scripts.ErrorHandling;
+using Assets.Scripts.ErrorHandling.Model;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.Licensing.Model;
+using Assets.Scripts.Localization;
 using Assets.Scripts.Tests;
 using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
@@ -31,7 +36,7 @@ namespace Assets.Scripts.UI.RecordingLoading
     /// <summary>
     /// Single Player view
     /// </summary>
-    [UserRolePermission(new []{UserRoleType.Analyst})]
+    [UserRolePermission(new[] { UserRoleType.Analyst })]
     public class RecordingPlayerView : AbstractView
     {
         private LayoutType LayoutType = LayoutType.Single;
@@ -42,14 +47,17 @@ namespace Assets.Scripts.UI.RecordingLoading
         private bool mIsInitialized = false;
         public Body CurrBody;
         public BodyFrameDataControl BodyFrameDataControl;
-        public BodyFrameGraphControl FrameGraphControl; 
+        public BodyFrameGraphControl FrameGraphControl;
         public AnaylsisTextContainer AnaylsisTextContainer;
         public event RecordingPlayerViewLayoutCreated RecordingPlayerViewLayoutCreatedEvent;
         public CloudLocalStorageViewManager CloudLocalStorageViewManager;
+        public Action<RecordingPlayerView> RecordingPlayerViewLayoutEnabled;
         public PanelNode RootNode
         {
             get { return mPanelNodes[0]; }
         }
+
+        public bool Initialized { get; set; }
 
         void Awake()
         {
@@ -58,15 +66,18 @@ namespace Assets.Scripts.UI.RecordingLoading
             List<ControlPanelType> vRightSide = new List<ControlPanelType>();
             vRightSide.Add(ControlPanelType.RecordingPlaybackControlPanel);
             ControlPanelTypeList.Add(vLeftSide);
-            ControlPanelTypeList.Add(vRightSide);
-            //SingleRecordingSelection.Instance.StartLoadingEvent += StartLoadHookFunc;
-            //SingleRecordingSelection.Instance.FinishLoadingEvent += StopLoadHookFunc;
-            //PbControlPanel.SingleRecordingLoadSubControl.OnRecordingSelected += () =>
-            //{ SingleRecordingSelection.Instance.OpenFileBrowseDialog(PbControlPanel.NewRecordingSelected); };
+            ControlPanelTypeList.Add(vRightSide); 
             Hide();
 
         }
 
+        void OnEnable()
+        {
+            if (RecordingPlayerViewLayoutEnabled != null)
+            {
+                RecordingPlayerViewLayoutEnabled(this);
+            }
+        }
         /// <summary>
         /// A hooking function to enable the progress bar when a recording is beginning to load
         /// </summary>
@@ -107,13 +118,30 @@ namespace Assets.Scripts.UI.RecordingLoading
                     mPanelNodes[0].PanelSettings.GetPanelOfType(ControlPanelType.RecordingPlaybackControlPanel);
             PbControlPanel.BodyUpdatedEvent += SetNewBody;
             CloudLocalStorageViewManager.RecordingLoadingCompleteEvent += PbControlPanel.NewRecordingSelected;
-
-            //  PbControlPanel.SingleRecordingLoadSubControl.SetNewButtonControl(LoadRecordingButton);
-            if (RecordingPlayerViewLayoutCreatedEvent != null)
+             if (RecordingPlayerViewLayoutCreatedEvent != null)
             {
                 RecordingPlayerViewLayoutCreatedEvent(this);
             }
+
+            //setup error handler
+            RecordingErrorHandlerManager.Instance.AddErrorHandler("ErrorParsing", new RecordingErrorHandler(HandleErrorLoadingFile));
+            RecordingErrorHandlerManager.Instance.AddErrorHandler("IssueLoading", new RecordingErrorHandler(HandleErrorLoadingFile));
+            Initialized = true;
         }
+
+        private void HandleErrorLoadingFile(BodyFramesRecordingBase vObj)
+        {
+            OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
+                () =>
+                {
+                    PbControlPanel.ReleaseResources();
+                    LoadingBoard.StopLoadingAnimation();
+                    string vErr = LocalizationBinderContainer.GetString(KeyMessage.CannotLoadRecording);
+                    ModalWindow.ModalPanel.SingleChoice("ERROR", vErr, () => { });
+                }
+           );
+        }
+
 
         /// <summary>
         /// releases current resources

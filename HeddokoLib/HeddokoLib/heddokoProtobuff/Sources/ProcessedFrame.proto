@@ -1,0 +1,44 @@
+// @file heddokoPacket.proto
+// @brief Contains the heddokoPacket protobuffer file definition
+// @author Mohammed Haider (mohammed@heddoko.com)
+// @date November 2016
+// @version 1.0
+// Copyright Heddoko(TM) 2016, all rights reserved
+syntax = "proto2";
+package Heddoko;
+message Vector4{
+	required float x = 1;
+	required float y = 2 ; 
+	required float z = 3;
+	required float w = 4;
+}
+message MappedOrientation{	
+	required SensorPosition sensorPosition = 1;
+	required Vector4 vector4 = 2;	
+}
+message ProcessedFrame{
+	repeated MappedOrientation mappedOrientation = 1; 
+	required uint64 TimeStamp = 2;
+	required uint32 UserID = 3;
+	required string KitID =4;
+	required double Longitude = 5;
+	required double Latitute =6; 
+}
+
+enum SensorPosition{
+	SP_UpperSpine = 0;
+    SP_LowerSpine = 1;
+	SP_RightUpperArm = 2;
+	SP_RightForeArm = 3;
+	SP_LeftUpperArm = 4;
+	SP_LeftForeArm = 5;
+	SP_RightThigh = 6;
+	SP_RightCalf = 7;
+	SP_LeftThigh = 8;
+	SP_LeftCalf = 9;
+	SP_RightElbow = 10;
+	SP_LeftElbow = 11;
+	SP_RightKnee = 12;
+	SP_LeftKnee = 13;
+}
+ 

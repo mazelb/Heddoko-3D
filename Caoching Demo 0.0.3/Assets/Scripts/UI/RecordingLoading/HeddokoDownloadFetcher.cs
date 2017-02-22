@@ -15,7 +15,11 @@ namespace Assets.Scripts.UI.RecordingLoading
     /// </summary>
     public class HeddokoDownloadFetcher
     {
-        public string CacheDirectory;  
+        public string RecCacheDirectory;
+        /// <summary>
+        /// the brainpack configuration cache directory
+        /// </summary>
+        public string BrainpackConfigCacheDir;
 
         public DownloadCompleted DownloadCompletedHandler;
         public ErrorDownloadingException ErrorDownloadingExceptionHandler;
@@ -51,6 +55,8 @@ namespace Assets.Scripts.UI.RecordingLoading
                 }
             }
         }
+
+         
     }
     public struct DataFetchingStructure
     {

@@ -97,5 +97,12 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
                 Tags.Add(vTag);
             }
         }
+
+        /// <summary>
+        /// Remove frame at index
+        /// </summary>
+        /// <param name="vI"></param>
+        public abstract void RemoveAt(int vI);
+
     }
 }

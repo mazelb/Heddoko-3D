@@ -35,7 +35,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// <summary>
         /// Formats Milliseconds to a string in the following format HH:MM:SS
         /// </summary>
-        /// <param name="vTotalTime"></param>
+        /// <param name="vTotalTime"></param> 
        public static string FormatSecondsToTimeString(int vTotalTime)
         {
             //seperate the total time passed in into three ints. 

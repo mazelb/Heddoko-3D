@@ -7,6 +7,7 @@
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
 
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.UI.MainMenu; 
@@ -67,22 +68,6 @@ namespace Assets.Scripts.UI.Metrics
                 RightLegAnalysis vRightLegAnalysis =
                     vCurrentBody.AnalysisSegments[BodyStructureMap.SegmentTypes.SegmentType_RightLeg] as
                         RightLegAnalysis;
-                vRightLegAnalysis.StartCountingSquats(true);
-                //NumberSquatsOfText.text = "Total number = " + vRightLegAnalysis.NumberofRightSquats;
-                float vAngleKneeflex = Mathf.Abs(vRightLegAnalysis.RightKneeFlexion);
-
-
-                float vPositionOfSquat = vAngleKneeflex / mMaxKneeFlexion;
-                if (vPositionOfSquat > 1)
-                {
-                    VisualSquatFeedback.fillAmount = 1;
-                }
-                else
-                {
-                    VisualSquatFeedback.fillAmount = vPositionOfSquat;
-                }
-                int vCurrentSquats = Mathf.FloorToInt(vRightLegAnalysis.NumberofSquats);
-                UpdateSquatsCount(vCurrentSquats);
             }
         }
 

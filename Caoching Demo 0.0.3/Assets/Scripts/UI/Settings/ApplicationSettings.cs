@@ -6,9 +6,6 @@
 * Copyright Heddoko(TM) 2016, all rights reserved
 
 */
-
-
-using System;
 using System.IO;
 using Assets.Scripts.Utils.DatabaseAccess;
 using UnityEngine;
@@ -26,9 +23,12 @@ namespace Assets.Scripts.UI.Settings
         private static int sResHeight;
         private static string sAnalysisAttributeSettingsFile;
         private static bool sAppLaunchedSafely;
-        private static string sCacheFolderPath;
+        private static string sDownloadCacheFolderPath;
+        private static string sBrainpackCacheFolderPath;
         //set it to -1 to  force a registry check
-        private static int sCacheSize = 0;
+        private static int sCacheSize;
+        private static int sTftpPortNum = 8845;
+        private const string PREFERED_RECORDINGS_FOLDER_KEY = "PreferedRecordingsFolder";
         /// <summary>
         /// provides and sets the the prefered recordings folder for the application
         /// </summary>
@@ -38,12 +38,23 @@ namespace Assets.Scripts.UI.Settings
             {
                 if (string.IsNullOrEmpty(sPreferedRecordingsFolder))
                 {
-                    DirectoryInfo vDirectoryInfo = new DirectoryInfo(Application.dataPath);
-                    if (Directory.Exists(vDirectoryInfo.Name))
+                    //get from registry. 
+                    sPreferedRecordingsFolder = PlayerPrefsPathChecker(PREFERED_RECORDINGS_FOLDER_KEY);
+                    if (string.IsNullOrEmpty(sPreferedRecordingsFolder))
                     {
-                        sPreferedRecordingsFolder = vDirectoryInfo.Parent.ToString() + Path.DirectorySeparatorChar + "DemoRecordings";
-                        Directory.CreateDirectory(sPreferedRecordingsFolder);
+                        //create a default directory.
+                        DirectoryInfo vDirectoryInfo = new DirectoryInfo(Application.persistentDataPath);
+                        if (!Directory.Exists(vDirectoryInfo.Name))
+                        {
+                            if (vDirectoryInfo.Parent != null)
+                            {
+                                sPreferedRecordingsFolder = vDirectoryInfo.Parent.ToString() + Path.DirectorySeparatorChar + "DemoRecordings";
+                                Directory.CreateDirectory(sPreferedRecordingsFolder);
+                                PlayerPrefsPathSetter(PREFERED_RECORDINGS_FOLDER_KEY, sPreferedRecordingsFolder);
+                            }
+                        }
                     }
+                     
                 }
                 return sPreferedRecordingsFolder;
             }
@@ -51,61 +62,82 @@ namespace Assets.Scripts.UI.Settings
             {
                 if (string.IsNullOrEmpty(value))
                 {
-                    DirectoryInfo vDirectoryInfo = new DirectoryInfo(Application.dataPath);
-                    if (Directory.Exists(vDirectoryInfo.Name))
+                    DirectoryInfo vDirectoryInfo = new DirectoryInfo(Application.persistentDataPath);
+                    if (!Directory.Exists(vDirectoryInfo.Name))
                     {
-                        sPreferedRecordingsFolder = vDirectoryInfo.Parent.ToString() + Path.DirectorySeparatorChar + "DemoRecordings";
-                        Directory.CreateDirectory(sPreferedRecordingsFolder);
-                        value = sPreferedRecordingsFolder;
+                        if (vDirectoryInfo.Parent != null)
+                        {
+                            sPreferedRecordingsFolder = vDirectoryInfo.Parent.ToString() + Path.DirectorySeparatorChar + "DemoRecordings";
+                            Directory.CreateDirectory(sPreferedRecordingsFolder);
+                            value = sPreferedRecordingsFolder;
+                            PlayerPrefsPathSetter(PREFERED_RECORDINGS_FOLDER_KEY, sPreferedRecordingsFolder);
+                        }
                     }
                 }
 
                 //make sure that this folder exists. else set it to the default application folder
-                if (Directory.Exists(value))
+                if (value != null && Directory.Exists(value))
                 {
                     sPreferedRecordingsFolder = value;
+                    PlayerPrefsPathSetter(PREFERED_RECORDINGS_FOLDER_KEY, sPreferedRecordingsFolder);
                 }
                 else
                 {
                     sPreferedRecordingsFolder = Application.dataPath + "\\DemoRecordings";
+                    PlayerPrefsPathSetter(PREFERED_RECORDINGS_FOLDER_KEY, sPreferedRecordingsFolder);
                 }
             }
         }
 
         /// <summary>
-        /// Getter/setter property : returns and sets the cache folder.
+        /// Getter  property : returns and sets the cache folder.
         /// </summary>
-        public static string CacheFolderPath
+        public static string DownloadCacheFolderPath
         {
             get
             {
-                if (string.IsNullOrEmpty(sCacheFolderPath))
+                if (string.IsNullOrEmpty(sDownloadCacheFolderPath))
                 {
                     //check player prefs
-                    string vVal = PlayerPrefs.GetString("RecCache");
-                    if (string.IsNullOrEmpty(vVal))
+                    string vVal = Application.persistentDataPath + Path.DirectorySeparatorChar + "RecCache";
+                    if (!Directory.Exists(vVal))
                     {
-                        //set the default to the current executable's directory + cache
-                        vVal = Application.dataPath + Path.DirectorySeparatorChar + "RecCache";
-                        if (!Directory.Exists(vVal))
-                        {
-                            Directory.CreateDirectory(vVal);
-                        }
-                        PlayerPrefs.SetString("RecCache", vVal);
+                        Directory.CreateDirectory(vVal);
                     }
-                    sCacheFolderPath = vVal;
+                    sDownloadCacheFolderPath = vVal;
                 }
-                return sCacheFolderPath;
+                return sDownloadCacheFolderPath;
             }
-            set
+
+        }
+
+        /// <summary>
+        /// Getter property : returns and sets the cache folder.
+        /// </summary>
+        public static string BrainpackDownloadCacheFolderPath
+        {
+            get
             {
-                if (value == null)
+                if (string.IsNullOrEmpty(sBrainpackCacheFolderPath))
                 {
-                    throw new NullReferenceException("The cached folder's cannot be an empty string");
+                    //check player prefs
+                    string vVal = Application.persistentDataPath + Path.DirectorySeparatorChar + "BpRecCache";
+                    if (!Directory.Exists(vVal))
+                    {
+                        Directory.CreateDirectory(vVal);
+                    }
+                    sBrainpackCacheFolderPath = vVal;
                 }
-                sCacheFolderPath = value;
-                PlayerPrefs.SetString("RecCache", sCacheFolderPath);
+                return sBrainpackCacheFolderPath;
             }
+        }
+        /// <summary>
+        /// Port property for the local tftp server 
+        /// </summary>
+        public static int TftpPort
+        {
+            get { return sTftpPortNum; }
+            set { sTftpPortNum = value; }
         }
 
         /// <summary>
@@ -136,6 +168,27 @@ namespace Assets.Scripts.UI.Settings
                 }
                 PlayerPrefs.SetInt("RecCacheSize", sCacheSize);
             }
+        }
+
+
+        /// <summary>
+        /// Checks player preferences. If the item is not found, creates a key registry 
+        /// </summary>
+        /// <param name="vKey"></param>
+        /// <returns></returns>
+        private static string PlayerPrefsPathChecker(string vKey)
+        {
+            return PlayerPrefs.GetString(vKey);
+        }
+
+        /// <summary>
+        /// Sets a value into player preferences. 
+        /// </summary>
+        /// <param name="vKey"></param>
+        /// <param name="vValue"></param>
+        private static void PlayerPrefsPathSetter(string vKey, string vValue)
+        {
+            PlayerPrefs.SetString(vKey, vValue);
         }
         /// <summary>
         /// Prefered connection name
@@ -184,21 +237,30 @@ namespace Assets.Scripts.UI.Settings
         {
             get
             {
-                string vVal = PlayerPrefs.GetString("AnalysisSettings");
-                if (string.IsNullOrEmpty(vVal))
-                {
-                    //set the default to the current executable's directory + cache
-                    vVal = Application.dataPath + Path.DirectorySeparatorChar + "AnalysisSettings";
-                    if (!Directory.Exists(vVal))
-                    {
-                        Directory.CreateDirectory(vVal);
-                    }
-                    PlayerPrefs.SetString("AnalysisSettings", vVal);
-                }
-                sAnalysisAttributeSettingsFile = vVal;
-                return sAnalysisAttributeSettingsFile + ".txt";
+                return Application.persistentDataPath + Path.DirectorySeparatorChar + "AnalysisSettings.txt";
+
             }
-            
+
+        }
+
+        public static string AnalysisAttributeSettingsFile
+        {
+            get { return sAnalysisAttributeSettingsFile; }
+            set { sAnalysisAttributeSettingsFile = value; }
+        }
+
+        /// <summary>
+        /// Initializes data paths and returns an array of data paths
+        /// </summary>
+        /// <returns>array of data paths. Array[0] is the brainpack download cach folder path and Array[1] is the download cache folder path</returns>
+        public static string[]  InitializeFilePaths()
+        {
+            var vBpDlPath = BrainpackDownloadCacheFolderPath;
+            var vDlPath = DownloadCacheFolderPath;
+            string[] vRet = new string[2];
+            vRet[0] = vBpDlPath;
+            vRet[1] = vDlPath;
+            return vRet;
         }
     }
 }

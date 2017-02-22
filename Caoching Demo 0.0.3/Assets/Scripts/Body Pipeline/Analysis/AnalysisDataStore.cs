@@ -7,9 +7,10 @@
 */
 
 using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection; 
+using System.Reflection;
+using Assets.Scripts.Body_Data.CalibrationData.TposeSelection;
 using Assets.Scripts.Body_Pipeline.Analysis.Settings;
 using UnityEngine;
 
@@ -21,15 +22,31 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
     public class AnalysisDataStore
     {
         private Dictionary<SegmentAnalysis, Dictionary<FieldInfo, AnalysisFieldDataStructure>> mStorage = new Dictionary<SegmentAnalysis, Dictionary<FieldInfo, AnalysisFieldDataStructure>>();
+        //Keep track of the body frames
+
         public List<Dictionary<FieldInfo, string>> SerializedList = new List<Dictionary<FieldInfo, string>>();
         private List<int> mFrameIndices = new List<int>();
         private List<float> mTimeStamps = new List<float>();
+        private List<BodyFrame> mBodyFrames = new List<BodyFrame>();
+        private int[] mPoseSelectionIndicies;
+        private int mFrameCount = -1;
+        private bool mRemovePreviousSerializedInfo;
+
         internal AnaylsisDataStoreSettings AnaylsisDataStoreSettings;
-        public AnalysisDataStoreSerialization mSerialization;
+        public AnalysisDataStoreSerialization Serialization;
         private int mFieldInfoCount;
         private int mCounter;
         private int mSubCount = 0;
-        public bool Ignore { get; set; }
+
+        public void IgnorePreviousFrame(BodyFrame vNewBodyFrame)
+        {
+            mRemovePreviousSerializedInfo = true;
+        }
+
+        public List<BodyFrame> BodyFrames
+        {
+            get { return mBodyFrames; }
+        }
 
         /// <summary>
         /// Constructor accepting a list of analysis segment, using reflection, sifts through fields with AnalysisAttributes marked as do not ignore.  
@@ -37,7 +54,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         public AnalysisDataStore(List<SegmentAnalysis> vAnalysisSegments)
         {
             AnaylsisDataStoreSettings = new AnaylsisDataStoreSettings(vAnalysisSegments);
-            mSerialization = new AnalysisDataStoreSerialization(this);
+            Serialization = new AnalysisDataStoreSerialization(this);
             foreach (var vKvPairing in AnaylsisDataStoreSettings.StoredAnalysisFields)
             {
                 var vAnalysisTrackingDataStructure = new Dictionary<FieldInfo, AnalysisFieldDataStructure>(vKvPairing.Value.Count);
@@ -45,9 +62,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                 {
                     var vAnalysisDataStruct = new AnalysisFieldDataStructure { FieldInfoKey = vField };
                     vAnalysisTrackingDataStructure.Add(vField, vAnalysisDataStruct);
-
                     mFieldInfoCount++;
-
                 }
                 mStorage.Add(vKvPairing.Key, vAnalysisTrackingDataStructure);
             }
@@ -63,13 +78,51 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         {
             set { mFrameIndices = value; }
             get { return mFrameIndices; }
-        } 
+        }
 
         public List<float> TimeStamps
         {
             set { mTimeStamps = value; }
             get { return mTimeStamps; }
         }
+
+        private List<TPoseSelection> mPoseSelections;
+        public List<TPoseSelection> PoseSelectionList
+        {
+            get
+            {
+                return mPoseSelections;
+            }
+            set
+            {
+                mPoseSelections = value;
+                mPoseSelectionIndicies = new int[mFrameCount];
+                if (mPoseSelections != null)
+                {
+                    //Initializes the tpose selection index account to the passed in selecton list
+                    for (int vI = 0; vI < mPoseSelections.Count; vI++)
+                    {
+                        var vObj = mPoseSelections[vI];
+                        //set the main pose to 1
+                        mPoseSelectionIndicies[vObj.PoseIndex] = 1;
+                        for (int vJ = vObj.PoseIndexLeft; vJ <= vObj.PoseIndexRight; vJ++)
+                        {
+                            if (mPoseSelectionIndicies[vJ] != 1)
+                            {
+                                mPoseSelectionIndicies[vJ] = 2;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public int[] PoseSelectionIndicies
+        {
+            get { return mPoseSelectionIndicies; }
+        }
+
+        public bool Ignore { get; set; }
 
 
         /// <summary>
@@ -118,6 +171,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         public void Update(BodyFrame vFrame)
         {
             mTimeStamps.Add(vFrame.Timestamp);
+            mBodyFrames.Add(vFrame);
             mFrameIndices.Add(vFrame.Index);
         }
 
@@ -127,13 +181,27 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <param name="vKey"></param>
         public void UpdateSegmentFieldInfo(SegmentAnalysis vKey)
         {
-            if (Ignore)
+            if (SerializedList.Count != 0 && SerializedList[SerializedList.Count - 1].Count == 0)
             {
-                return;
+                Debug.Log("counter is " + mCounter);
             }
             if (!mStorage.ContainsKey(vKey))
             {
                 Debug.Log("no key found");
+                return;
+            }
+            if (Ignore)
+            {
+                return;
+            }
+            //Remove the previous element if called for
+            if (mRemovePreviousSerializedInfo)
+            {
+                mRemovePreviousSerializedInfo = false;
+                SerializedList.RemoveAt(SerializedList.Count - 1);
+                mTimeStamps.RemoveAt(mTimeStamps.Count - 1);
+                mBodyFrames.RemoveAt(mBodyFrames.Count - 1);
+                mFrameIndices.RemoveAt(mFrameIndices.Count - 1);
                 return;
             }
             var vFields = mStorage[vKey];
@@ -149,21 +217,23 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
                 {
                     var vPassedInValue = (float)vKvPair.Key.GetValue(vKey);
                     vKvPair.Value.Add(vPassedInValue);
-                    vList.Add(vKvPair.Key, vPassedInValue + "");
-                    mCounter++;
-
+                    //avoid floating point rounding values
+                    string vRoundedValue = ((double)vPassedInValue).ToString("F2");
+                    vList.Add(vKvPair.Key, vRoundedValue);
                 }
                 catch (Exception vE)
                 {
-
                 }
-
+                mCounter++;
             }
             if (mCounter >= mFieldInfoCount)
             {
+                if (SerializedList.Count != 0 && SerializedList[SerializedList.Count - 1].Count == 0)
+                {
+                    Debug.Log("2 counter is " + mCounter);
+                }
                 mCounter = 0;
             }
-
         }
 
         /// <summary>
@@ -193,9 +263,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             SerializedList.Clear();
             mTimeStamps.Clear();
             mFrameIndices.Clear();
+            mBodyFrames.Clear();
             mCounter = 0;
             mSubCount = 0;
-
         }
 
         /// <summary>
@@ -207,6 +277,15 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
             {
                 SerializedList.RemoveAt(SerializedList.Count - 1);
             }
+        }
+
+        /// <summary>
+        /// Sets the total number of indicies 
+        /// </summary>
+        /// <param name="vRawFramesCount"></param>
+        public void SetNumberOfIndices(int vRawFramesCount)
+        {
+            mFrameCount = vRawFramesCount;
         }
     }
 }

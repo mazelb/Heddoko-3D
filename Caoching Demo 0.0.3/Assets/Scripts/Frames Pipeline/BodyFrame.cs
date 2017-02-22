@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System;
 using System.Runtime.Serialization;
 using Assets.Scripts.Frames_Pipeline;
+using heddoko;
 using HeddokoLib.heddokoProtobuff;
 using HeddokoLib.utils;
 using Newtonsoft.Json;
@@ -30,10 +31,11 @@ public class BodyFrame
     [JsonProperty]
     private float mTimeStamp;
 
+   
     /// <summary>
     /// Index of the item
     /// </summary>
-    public int Index;
+    public int Index { get; set; }
     [JsonIgnore]
     internal Dictionary<BodyStructureMap.SensorPositions, Vect4> FrameData
     {
@@ -92,6 +94,22 @@ public class BodyFrame
         }
         return vOutput;
     }
+
+   /// <summary>
+   /// To a csv string without the timestamp or key included. Default seperator is ','
+   /// </summary>
+   /// <param name="vSeperator"></param>
+   /// <returns></returns>
+
+    public string ToCSVNoTSNoKeyIncluded(string vSeperator = ",")
+    {
+        string vOutput = "";
+        foreach (KeyValuePair<BodyStructureMap.SensorPositions, Vect4> vPair in FrameData)
+        {
+            vOutput +=  vPair.Value.x + vSeperator + vPair.Value.y + vSeperator + vPair.Value.z + vSeperator + vPair.Value.w + vSeperator;
+        }
+        return vOutput;
+    }
     public BodyFrame( int vIndex)
     {
         Index = vIndex;
@@ -141,17 +159,7 @@ public class BodyFrame
             vVect.z = vDataFrame.quat_z_roll;
             vVect.w = vDataFrame.quat_w;
             FrameData.Add(vSensorId, vVect);
-
-            //if (FrameData.ContainsKey(vSensorId))
-            //{
-            //    CountError(i);
-            //}
-            //else
-            //{
-            //    FrameData.Add(vSensorId, vVect);
-            //}
         }
-        
     }
     /**
     * ConvertRawFrame(BodyRawFrame rawData)

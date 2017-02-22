@@ -7,7 +7,8 @@
 */
 
 using System.Collections.Generic;
- using HeddokoLib.body_pipeline;
+using heddoko;
+using HeddokoLib.body_pipeline;
 using HeddokoLib.heddokoProtobuff;
 
 namespace Assets.Scripts.Frames_Pipeline

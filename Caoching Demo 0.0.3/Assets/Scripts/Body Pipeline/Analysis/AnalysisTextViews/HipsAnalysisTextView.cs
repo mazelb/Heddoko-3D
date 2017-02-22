@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews;
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using UnityEngine.UI;
@@ -15,8 +16,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         public Text RightHipRotation;
         public Text LeftHipRotationText;
 
-        private LeftLegAnalysis mLeftLegAnalysis;
-        private RightLegAnalysis mRightLegAnalysis;
 
         public override string LabelName
         {
@@ -28,37 +27,30 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
 
         protected override void BodyUpdated()
         {
-            if (BodyToAnalyze == null)
-            {
-                mLeftLegAnalysis = null;
-                mRightLegAnalysis = null;
-                ClearText();
-            }
-            else
-            {
-                mLeftLegAnalysis = BodyToAnalyze.LeftLegAnalysis;
-                mRightLegAnalysis = BodyToAnalyze.RightLegAnalysis;
-            }
+            //todo: display a panel that the values for the current analysis frame have not been computed. 
+            //this is in the controller.   
         }
 
-        protected override void BodyFrameUpdated(BodyFrame vFrame)
+
+        private void UpdateLeftHipTextView(float vLeftHipFlexionSignedAngle, float vLeftHipAbductionSignedAngle, float vLeftHipRotationSignedAngle)
         {
-            if (mLeftLegAnalysis != null && mRightLegAnalysis != null)
-            {
-                RightHipFlexionText.text = FeedbackAngleToString(mRightLegAnalysis.SignedAngleHipFlexion);
-                LeftHipFlexionText.text = FeedbackAngleToString(mLeftLegAnalysis.LeftSignedHipFlexionAngle);
-                RightHipAbductionText.text = FeedbackAngleToString(mRightLegAnalysis.SignedRightHipAbductionAngle);
-                LeftHipAbductionText.text = FeedbackAngleToString(-1f*mLeftLegAnalysis.LeftSignedHipAbductionAngle);
-                RightHipRotation.text = FeedbackAngleToString(mRightLegAnalysis.SignedRightHipRotation);
-                LeftHipRotationText.text = FeedbackAngleToString(mLeftLegAnalysis.LeftHipRotationAngle);
-            }
-            else
-            {
-                ClearText();
-            }
+
+            LeftHipFlexionText.text = FeedbackAngleToString(vLeftHipFlexionSignedAngle);
+            LeftHipAbductionText.text = FeedbackAngleToString(vLeftHipAbductionSignedAngle);
+            LeftHipRotationText.text = FeedbackAngleToString(vLeftHipRotationSignedAngle);
+
         }
 
-        protected override void ClearText()
+        private void UpdateRightHipTextView(float vRightHipFlexionSignedAngle, float vRightHipAbductionSignedAngle, float vRightHipRotationSignedAngle)
+        {
+
+            RightHipFlexionText.text = FeedbackAngleToString(vRightHipFlexionSignedAngle);
+            RightHipAbductionText.text = FeedbackAngleToString(vRightHipAbductionSignedAngle);
+            RightHipRotation.text = FeedbackAngleToString(vRightHipRotationSignedAngle);
+        }
+
+
+        public override void ClearText()
         {
             RightHipFlexionText.text = "";
             LeftHipFlexionText.text = "";
@@ -69,6 +61,12 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         }
 
 
-
+        public void UpdateView(TPosedAnalysisFrame vFrame)
+        {
+            UpdateLeftHipTextView(vFrame.LeftHipFlexionSignedAngle, vFrame.LeftHipAbductionSignedAngle,
+                vFrame.LeftHipRotationSignedAngle);
+            UpdateRightHipTextView(vFrame.RightHipFlexionSignedAngle, vFrame.RightHipAbductionSignedAngle,
+                vFrame.RightHipRotationSignedAngle);
+        }
     }
 }

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Interfaces;
+using Assets.Scripts.Localization;
 using Assets.Scripts.UI.Loading;
 using Assets.Scripts.Utils.UnityUtilities;
 using HeddokoLib.networking;
@@ -101,6 +102,7 @@ namespace Assets.Scripts.UI.MainMenu.View
             //Verify the number of found items
             if (vObj.Count > 0)
             {
+                PairButton.interactable = true;
                 List<Dropdown.OptionData> vList = new List<Dropdown.OptionData>();
                 mDropdownItems = vObj;
                 foreach (var vKvPair in vObj)
@@ -113,9 +115,10 @@ namespace Assets.Scripts.UI.MainMenu.View
                 ConnectionController.BrainpackComPort = mDropdownItems[vKey];
 
                 var vMsg =
-                    "Found " + vObj.Count + " Battery pack";
-                //plural
-                vMsg += vObj.Count > 1 ? "s" : string.Empty;
+                    string.Format(
+                        LocalizationBinderContainer.GetString(KeyMessage.NumberOfBatteryPacksFoundMsg) + " {0}",
+                        vObj.Count); 
+                
                 Notify.Template("fade").Show(
                vMsg,
               customHideDelay: 3f,
@@ -124,10 +127,10 @@ namespace Assets.Scripts.UI.MainMenu.View
             }
             else
             {
-                var message =
-                    "Could not locate any Battery packs. Please try again.";
+                PairButton.enabled = false;
+                var vMsg = LocalizationBinderContainer.GetString(KeyMessage.NoBatteryPacksFoundMsg);
                 Notify.Template("fade").Show(
-                 message,
+                 vMsg,
                 customHideDelay: 4f,
                 hideAnimation: Notify.AnimationCollapse
             );
@@ -181,10 +184,17 @@ namespace Assets.Scripts.UI.MainMenu.View
             UnpairButton.interactable = false;
             UnpairButton.gameObject.SetActive(false);
             PairButton.gameObject.SetActive(true);
-            PairButton.interactable = true;
+            SetPairButtonInteraction();
             HaloForHaloman.gameObject.SetActive(false);
         }
 
+        public void SetPairButtonInteraction()
+        {
+            if (DropDownList.options.Count > 1)
+            {
+                PairButton.interactable = true;
+            }
+        }
         /// <summary>
         ///  Display the failed connection views
         /// </summary> 
@@ -193,7 +203,7 @@ namespace Assets.Scripts.UI.MainMenu.View
             UnpairButton.interactable = false;
             UnpairButton.gameObject.SetActive(false);
             PairButton.gameObject.SetActive(true);
-            PairButton.interactable = true;
+            SetPairButtonInteraction();
             FadeInFadeOutEffect.enabled = true;
             HaloForHaloman.enabled = true;
             HaloForHaloman.gameObject.SetActive(true);
@@ -250,6 +260,7 @@ namespace Assets.Scripts.UI.MainMenu.View
                 (Input.GetKey(KeyCode.RightShift) && Input.GetKeyDown(KeyCode.C)))
             {
                 BrainpackComPortInput.SetActive(!BrainpackComPortInput.activeInHierarchy);
+                PairButton.enabled = true;
             }
         }
     }

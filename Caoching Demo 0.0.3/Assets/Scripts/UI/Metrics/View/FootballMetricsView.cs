@@ -7,6 +7,7 @@
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
 
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.UI.MainMenu;
 using Assets.Scripts.UI.NFLDemo;
@@ -59,11 +60,11 @@ namespace Assets.Scripts.UI.Metrics.View
                                 RightArmAnalysis;
                     if (vRightArmAnalysis != null)
                     {
-                        float vElbowFlexionVel = vRightArmAnalysis.AngularVelocityElbowFlexion;
+                        float vElbowFlexionVel = vRightArmAnalysis.RightElbowFlexionAngularVelocity;
                         mRightElbowVelSum += Mathf.Abs(vElbowFlexionVel);
-                        if (mPeakAngularVelocity < vRightArmAnalysis.PeakAngularVelocityElbowFlexion)
+                        if (mPeakAngularVelocity < vRightArmAnalysis.RightElbowFlexionPeakAngularVelocity)
                         {
-                            mPeakAngularVelocity = vRightArmAnalysis.PeakAngularVelocityElbowFlexion;
+                            mPeakAngularVelocity = vRightArmAnalysis.RightElbowFlexionPeakAngularVelocity;
                             AnalysisContentPanel.UpdatePeakValueText(mPeakAngularVelocity);
                         }
 

@@ -8,23 +8,27 @@
 
 using UnityEngine;
 using System.Collections.Generic;
-using Assets.Scripts.Body_Data.view;
-using Assets.Scripts.Body_Data.View.Anaylsis;
+using Assets.Scripts.Body_Pipeline.Analysis.Serialization;
 using Assets.Scripts.Utils.DebugContext;
-
-
 
 namespace Assets.Scripts.Body_Data.view
 {
+    public delegate void BodyFrameUpdated(BodyFrame vNewFrame);
+
+    public delegate void OnTrackingUpdate(BodyFrame vNewFrame);
+
+    public delegate void BodyFrameResetInitialized(BodyFrame vBodyFrame);
     /// <summary>
     /// BodyView class: Contains the view for a body and allows the body to fetch data from a pipeline fed buffer on a frame by frame basis
     /// </summary>
     public class BodyView : MonoBehaviour
     {
-        public delegate void BodyFrameUpdated(BodyFrame vNewFrame);
         public event BodyFrameUpdated BodyFrameUpdatedEvent;
+        public event BodyFrameResetInitialized BodyFrameResetInitializedEvent;
+        public event OnTrackingUpdate TrackingUpdateEvent;
         //private BodyFrameBuffer mBuffer;
         private BodyFrameBuffer mBuffer;
+        public int CurrentIndex = 0;
         [SerializeField]
         private Body mAssociatedBody;
         private BodyFrame mCurreBodyFrame;
@@ -108,7 +112,10 @@ namespace Assets.Scripts.Body_Data.view
                 {
                     vTempBodyFrame = vBodyFrame;
                 }
-
+                if (BodyFrameResetInitializedEvent != null)
+                {
+                    BodyFrameResetInitializedEvent(vTempBodyFrame);
+                }
                 AssociatedBody.SetInitialFrame(vTempBodyFrame);
                 UpdateViewTracking(vTempBodyFrame);
             }
@@ -120,20 +127,22 @@ namespace Assets.Scripts.Body_Data.view
         /// <param name="vBodyFrame">the body frame to update to</param>
         public void UpdateViewTracking(BodyFrame vBodyFrame)
         {
+            if (BodyFrameUpdatedEvent != null)
+            {
+                BodyFrameUpdatedEvent(vBodyFrame);
+            }
             AssociatedBody.UpdateBody(vBodyFrame);
             Dictionary<BodyStructureMap.SensorPositions, BodyStructureMap.TrackingStructure> vDic = Body.GetTracking(AssociatedBody);
 
             if (vDic != null)
             {
-                AssociatedBody.mBodyFrameCalibrationContainer.UpdateCalibrationContainer(vDic, vBodyFrame.Timestamp);
+                AssociatedBody.BodyFrameCalibrationContainer.UpdateCalibrationContainer(vDic, vBodyFrame.Timestamp);
                 Body.ApplyTracking(AssociatedBody, vDic);
+                if (TrackingUpdateEvent != null)
+                {
+                    TrackingUpdateEvent(vBodyFrame);
+                }
             }
-
-            if (BodyFrameUpdatedEvent != null && vBodyFrame != null)
-            {
-                BodyFrameUpdatedEvent(vBodyFrame);
-            }
-
         }
 
         /// <summary>
@@ -183,23 +192,14 @@ namespace Assets.Scripts.Body_Data.view
                             ResetInitialFrame(vBodyFrame);
                         }
                         UpdateViewTracking(vBodyFrame);
-
+                        CurrentIndex = vBodyFrame.Index;
                     }
-
                 }
             }
         }
 
-        /// <summary>
-        /// Handles inputs related to the body view
-        /// </summary>
-        private void InputHandler()
-        {
-            if (Input.GetKeyDown(HeddokoDebugKeyMappings.ResetFrame))
-            {
-                ResetInitialFrame();
-            }
-        }
+
+
 
         /// <summary>
         /// Automatically called by Unity when the game object awakes. In this case, look for the debug gameobject in the scene 

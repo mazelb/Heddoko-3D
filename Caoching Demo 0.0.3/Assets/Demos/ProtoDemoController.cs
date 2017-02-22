@@ -18,19 +18,20 @@ namespace Assets.Demos
     [Serializable]
     public class ProtoDemoController : MonoBehaviour
     {
-        public static bool UseProtoBuff = true;
-        private Body mPlaceholder;
+        public static bool UseProtoBuff = true; 
         public ProtoDemoConnectionController DemoConnectionController;
-        private ProtoStreamDecoder mProtoStreamDecoder;
+        private StreamToRawPacketDecoder mProtoStreamDecoder;
         public ProtobuffFrameRouter FrameRouter;
 
 
         void Start()
         {
             DemoConnectionController.ConnectedStateEvent += BridgeStreams;
-
         }
 
+        /// <summary>
+        /// Bridges streams together with the stream decoder
+        /// </summary>
         void BridgeStreams()
         {
             if (mProtoStreamDecoder != null)
@@ -44,7 +45,7 @@ namespace Assets.Demos
                 FrameRouter.StopIfWorking();
             }
             var vStream = DemoConnectionController.Port.BaseStream;
-            mProtoStreamDecoder = new ProtoStreamDecoder(vStream, 4096);
+            mProtoStreamDecoder = new StreamToRawPacketDecoder(vStream, 4096);
             mProtoStreamDecoder.StartPacketizeStream(OnStreamComplete, ProtoStreamDecoderExceptionHandler);
             CircularQueue<RawPacket> mRawPacketBuffer = mProtoStreamDecoder.OutputBuffer;
             BodyFrameBuffer vbodyframebuffer = new BodyFrameBuffer(4096);
@@ -64,7 +65,7 @@ namespace Assets.Demos
                 FrameRouter.StopIfWorking();
             }
           
-            mProtoStreamDecoder = new ProtoStreamDecoder(vStream, 4096);
+            mProtoStreamDecoder = new StreamToRawPacketDecoder(vStream, 4096);
             mProtoStreamDecoder.StartPacketizeStream(OnStreamComplete, ProtoStreamDecoderExceptionHandler);
             CircularQueue<RawPacket> mRawPacketBuffer = mProtoStreamDecoder.OutputBuffer;
             BodyFrameBuffer vbodyframebuffer = new BodyFrameBuffer(4096);

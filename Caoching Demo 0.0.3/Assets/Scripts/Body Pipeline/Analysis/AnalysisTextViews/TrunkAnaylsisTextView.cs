@@ -7,7 +7,8 @@
 */
 
 using Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews;
-using Assets.Scripts.Body_Pipeline.Analysis.Torso;
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels;
+using Assets.Scripts.Body_Pipeline.Analysis.Trunk;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,8 +23,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         public Text LateralBendingAngle;
         public Text InclinationAngle;
         public Text RotationAngle;
-        [SerializeField]
-        private TorsoAnalysis mTorsoAnalysis;
+
 
 
         public override string LabelName
@@ -35,32 +35,30 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         /// </summary>
         protected override void BodyUpdated()
         {
-            if (BodyToAnalyze != null)
-            {
-                mTorsoAnalysis = BodyToAnalyze.TorsoAnalysis;
-            }
-            else
-            {
-                mTorsoAnalysis = null;
-                ClearText();
-            }
+
         }
 
-        protected override void BodyFrameUpdated(BodyFrame vFrame)
+
+        private void UpdateTrunkAnalysisTextView(float vTrunkLateralSignedAngle, float vTrunkFlexionSignedAngle, float vTrunkRotationSignedAngle)
         {
-            if (mTorsoAnalysis != null)
-            {
-                LateralBendingAngle.text = FeedbackAngleToString(mTorsoAnalysis.AngleTorsoLateral);
-                InclinationAngle.text = FeedbackAngleToString(mTorsoAnalysis.AngleTorsoFlexion);
-                RotationAngle.text = FeedbackAngleToString( mTorsoAnalysis.AngleTorsoRotation);
-            }
+
+            LateralBendingAngle.text = FeedbackAngleToString(vTrunkLateralSignedAngle);
+            InclinationAngle.text = FeedbackAngleToString(vTrunkFlexionSignedAngle);
+            RotationAngle.text = FeedbackAngleToString(vTrunkRotationSignedAngle);
+
         }
 
-        protected override void ClearText()
+        public override void ClearText()
         {
             LateralBendingAngle.text = "";
             InclinationAngle.text = "";
             RotationAngle.text = "";
+        }
+
+        public void UpdateView(TPosedAnalysisFrame vFrame)
+        {
+            UpdateTrunkAnalysisTextView(vFrame.TrunkLateralSignedAngle, vFrame.TrunkFlexionSignedAngle,
+                vFrame.TrunkRotationSignedAngle);
         }
     }
 }

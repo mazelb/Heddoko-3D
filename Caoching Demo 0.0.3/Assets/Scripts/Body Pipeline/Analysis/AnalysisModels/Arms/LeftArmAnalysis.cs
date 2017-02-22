@@ -8,6 +8,7 @@
 
 using UnityEngine;
 using System;
+
 namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
 {
     /**
@@ -18,85 +19,80 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
     public class LeftArmAnalysis : ArmAnalysis
     {
         //Elbow Angles
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LElbow F/E", Order = 13)]
-        public float LeftElbowFlexionAngle = 0;
-
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LShould F/E", Order = 4)]
-        public float LeftShoulderFlexionSignedAngle = 0;
-        public float SignedAngleElbowFlexion = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngleElbowPronation = 0;
+        public float LeftElbowFlexionAngle = 0;
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LElbow F/E", Order = 18)]
+        public float LeftElbowFlexionSignedAngle = 0;
+        [AnalysisSerialization(IgnoreAttribute = true, AttributeName = "LForeArm Pro/Sup", Order = 20)]
+        public float LeftForeArmPronationSignedAngle = 0;
 
         //Upper Arm Angles
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngleShoulderFlexion = 0;
+        public float LeftShoulderFlexionAngle = 0;
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LShould F/E", Order = 4)]
+        public float LeftShoulderFlexionSignedAngle = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngleShoulderVertAbduction = 0;
-        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LShould Add/Abd", Order = 6)]
+        public float LeftShoulderVertAbductionAngle = 0;
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LShould V Add/Abd", Order = 6)]
         public float LeftShoulderVerticalAbductionSignedAngle = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngleShoulderHorAbduction = 0;
-        [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngleShoulderRotation = 0;
+        public float LeftShoulderHorAbductionAngle = 0;
+        [AnalysisSerialization(IgnoreAttribute = false, AttributeName = "LShould H Add/Abd", Order = 8)]
+        public float LeftShoulderHorizontalAbductionSignedAngle = 0;
+        [AnalysisSerialization(IgnoreAttribute = true, AttributeName = "LShould Rot", Order = 10)]
+        public float LeftShoulderRotationSignedAngle = 0;
 
         //Velocities and Accelerations
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularVelocityElbowFlexion = 0;
+        public float LeftElbowFlexionAngularVelocity = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float PeakAngularVelocityElbowFlexion = 0;
+        public float LeftElbowFlexionPeakAngularVelocity = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularAccelerationElbowFlexion = 0;
+        public float LeftElbowFlexionAngularAcceleration = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularVelocityPronation = 0;
+        public float LeftForeArmPronationAngularVelocity = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularAccelerationElbowPronation = 0;
+        public float LeftElbowPronationAngularAcceleration = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularVelocityShoulderFlexion = 0;
+        public float LeftShoulderFlexionAngularVelocity = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularAccelerationShoulderFlexion = 0;
+        public float LeftShoulderFlexionAngularAcceleration = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularVelocityShoulderVertAbduction = 0;
+        public float LeftShoulderVertAbductionAngularVelocity = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularAccelerationShoulderVertAbduction = 0;
+        public float LeftShoulderVertAbductionAngularAcceleration = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularVelocityShoulderHorAbduction = 0;
+        public float LeftShoulderHorAbductionAngularVelocity = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularAccelerationShoulderHorAbduction = 0;
+        public float LeftShoulderHorAbductionAngularAcceleration = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularVelocityShoulderRotation = 0;
+        public float LeftShoulderRotationAngularVelocity = 0;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public float AngularAccelerationShoulderRotation = 0;
+        public float LeftShoulderRotationAngularAcceleration = 0;
+
 
         /// <summary>
         /// Reset the metrics calculations
         /// </summary>
         public override void ResetMetrics()
         {
-            PeakAngularVelocityElbowFlexion = 0;
+            LeftElbowFlexionPeakAngularVelocity = 0;
         }
- 
+
         /// <summary>
         /// Extract angles from orientations
         /// </summary>
         public override void AngleExtraction()
         {
-            //float vDeltaTime = Time.deltaTime;
-            // Time.time - mLastTimeCalled;
-            if (DeltaTime == 0)
-            {
-                return;
-            }
-            //mLastTimeCalled = Time.time;
-
             //Get necessary Axis info
-            Vector3 vTorsoAxisUp, vTorsoAxisRight, vTorsoAxisForward;
+            Vector3 vTrunkAxisUp, vTrunkAxisRight, vTrunkAxisForward;
             Vector3 vShoulderAxisUp, vShoulderAxisRight, vShoulderAxisForward;
             Vector3 vElbowAxisUp, vElbowAxisRight, vElbowAxisForward;
 
             //Get the 3D axis and angles
-            vTorsoAxisUp = TorsoTransform.up;
-            vTorsoAxisRight = TorsoTransform.right;
-            vTorsoAxisForward = TorsoTransform.forward;
+            vTrunkAxisUp = TorsoTransform.up;
+            vTrunkAxisRight = TorsoTransform.right;
+            vTrunkAxisForward = TorsoTransform.forward;
 
             vShoulderAxisUp = UpArTransform.up;
             vShoulderAxisRight = UpArTransform.right;
@@ -107,61 +103,241 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Arms
             vElbowAxisForward = LoArTransform.forward;
 
             //calculate the Elbow Flexion angle
-            Vector3 vProjectedShoulderAxisRight = Vector3.ProjectOnPlane(vShoulderAxisRight, vShoulderAxisForward);
-            Vector3 vProjectedElbowAxisRight = Vector3.ProjectOnPlane(vElbowAxisRight, vShoulderAxisForward);
-            float vAngleElbowFlexionNew = Vector3.Angle(vProjectedShoulderAxisRight, vProjectedElbowAxisRight);
-            float vAngularVelocityElbowFlexionNew = (vAngleElbowFlexionNew - LeftElbowFlexionAngle) / DeltaTime;
-            AngularAccelerationElbowFlexion = (vAngularVelocityElbowFlexionNew - AngularVelocityElbowFlexion) / DeltaTime;
-            AngularVelocityElbowFlexion = vAngularVelocityElbowFlexionNew;
-            PeakAngularVelocityElbowFlexion = Mathf.Max(Mathf.Abs(AngularVelocityElbowFlexion), PeakAngularVelocityElbowFlexion);
-            LeftElbowFlexionAngle = vAngleElbowFlexionNew * GetSign("System.Single LeftElbowFlexionAngle");
-            SignedAngleElbowFlexion = GetSignedAngle(vElbowAxisRight, vShoulderAxisRight, vElbowAxisUp.normalized);
+            float vAngleElbowFlexionNew = Vector3.Angle(-vShoulderAxisRight, -vElbowAxisRight);
+            LeftElbowFlexionAngle = vAngleElbowFlexionNew;
+            Vector3 vCross = Vector3.Cross( -vShoulderAxisRight ,- vElbowAxisRight);
+            float vSign = Mathf.Sign(Vector3.Dot(vShoulderAxisUp, vCross));
+            LeftElbowFlexionSignedAngle = vSign * LeftElbowFlexionAngle * GetSign("System.Single LeftElbowFlexionAngle");
 
             //calculate the Elbow Pronation angle
-            float vAngleElbowPronationNew = 180 - Mathf.Abs(180 - LoArTransform.rotation.eulerAngles.x);
-            float vAngularVelocityElbowPronationNew = (vAngleElbowPronationNew - Mathf.Abs(AngleElbowPronation)) / DeltaTime;
-            AngularAccelerationElbowPronation = (vAngularVelocityElbowPronationNew - AngularVelocityPronation) / DeltaTime;
-            AngularVelocityPronation = vAngularVelocityElbowPronationNew;
-            AngleElbowPronation = vAngleElbowPronationNew;
+            float vAngleForeArmPronationNew = LoArTransform.rotation.eulerAngles.x;//  -UpArTransform.rotation.eulerAngles.x -360f);
+
+            if (vAngleForeArmPronationNew > 180)
+            {
+                vAngleForeArmPronationNew = vAngleForeArmPronationNew - 360f;
+            }
+            LeftForeArmPronationSignedAngle = vAngleForeArmPronationNew * GetSign("System.Single LeftForeArmPronationAngle");
 
             //calculate the Shoulder Flexion angle
-            Vector3 vShoulderProjectionOntoTorsoRight = Vector3.ProjectOnPlane(-vShoulderAxisRight, vTorsoAxisRight);
-
-            float vAngleShoulderFlexionNew = Vector3.Angle(-vTorsoAxisUp, vShoulderProjectionOntoTorsoRight);
-            float vAngularVelocityShoulderFlexionNew = (vAngleShoulderFlexionNew - Mathf.Abs(AngleShoulderFlexion)) / DeltaTime;
-            AngularAccelerationShoulderFlexion = (vAngularVelocityShoulderFlexionNew - AngularVelocityShoulderFlexion) / DeltaTime;
-            AngularVelocityShoulderFlexion = vAngularVelocityShoulderFlexionNew;
-            AngleShoulderFlexion = vAngleShoulderFlexionNew;
-            //set the the signed component
-            Vector3 vFlexCrossPrdct = Vector3.Cross(vTorsoAxisRight, vShoulderProjectionOntoTorsoRight);
-            float vFlexSign = Mathf.Sign(Vector3.Dot(-vTorsoAxisUp, vFlexCrossPrdct));
-            LeftShoulderFlexionSignedAngle = vFlexSign * AngleShoulderFlexion * GetSign("System.Single LeftShoulderFlexionSignedAngle");
+            Vector3 vShoulderRightAxisProjectedOnTrunkRight = Vector3.ProjectOnPlane(-vShoulderAxisRight, vTrunkAxisRight);
+            float vAngleShoulderFlexionNew;
+            var vShoulderProjSqrMag = vShoulderRightAxisProjectedOnTrunkRight.sqrMagnitude;
+            //check if the projection's square magnitude is under a certain tolerance. 
+            if (Math.Abs(vShoulderProjSqrMag) < 0.001f)
+            {
+                vAngleShoulderFlexionNew = 0.0f;
+            }
+            else
+            {
+                vAngleShoulderFlexionNew = Vector3.Angle(-vTrunkAxisUp, vShoulderRightAxisProjectedOnTrunkRight);
+            }
+            LeftShoulderFlexionAngle = vAngleShoulderFlexionNew;
+            vCross = Vector3.Cross(-vTrunkAxisUp, vShoulderRightAxisProjectedOnTrunkRight);
+            vSign = Mathf.Sign(Vector3.Dot(-vTrunkAxisRight, vCross));
+            LeftShoulderFlexionSignedAngle = vSign * LeftShoulderFlexionAngle * GetSign("System.Single LeftShoulderFlexionAngle");
 
             //calculate the Shoulder Abduction Vertical angle
-            Vector3 vVerticalShoulderAbdProjection = Vector3.ProjectOnPlane(-vShoulderAxisRight, vTorsoAxisForward);
-            float vAngleShoulderVertAbductionNew = Vector3.Angle(-vTorsoAxisUp, vVerticalShoulderAbdProjection);
-            float vAngularVelocityShoulderVertAbductionNew = (vAngleShoulderVertAbductionNew - Mathf.Abs(AngleShoulderVertAbduction)) / DeltaTime;
-            AngularAccelerationShoulderVertAbduction = (vAngularVelocityShoulderVertAbductionNew - AngularVelocityShoulderVertAbduction) / DeltaTime;
-            AngularVelocityShoulderVertAbduction = vAngularVelocityShoulderVertAbductionNew;
-            AngleShoulderVertAbduction = vAngleShoulderVertAbductionNew;
-            Vector3 vVertAbductionCrossPrdct = Vector3.Cross(vTorsoAxisForward, vVerticalShoulderAbdProjection);
-            float vVertAbductionSign = Mathf.Sign(Vector3.Dot(-vTorsoAxisUp, vVertAbductionCrossPrdct));
-            LeftShoulderVerticalAbductionSignedAngle = vVertAbductionSign * AngleShoulderVertAbduction * GetSign("System.Single LeftShoulderVerticalAbductionSignedAngle");
+            Vector3 vVerticalShoulderAbdProjection = Vector3.ProjectOnPlane(-vShoulderAxisRight, vTrunkAxisForward);
+            float vAngleShoulderVertAbductionNew;
+            var vShoulderVertAbductionProjSqrMag = vVerticalShoulderAbdProjection.sqrMagnitude;
+            if (vShoulderVertAbductionProjSqrMag < 0.001f)
+            {
+                vAngleShoulderVertAbductionNew = 0.0f;
+            }
+            else
+            {
+                vAngleShoulderVertAbductionNew = Vector3.Angle(-vTrunkAxisUp, vVerticalShoulderAbdProjection);
+            }
+            LeftShoulderVertAbductionAngle = vAngleShoulderVertAbductionNew;
+            vCross = Vector3.Cross(-vTrunkAxisUp, vVerticalShoulderAbdProjection);
+            vSign = Mathf.Sign(Vector3.Dot(vTrunkAxisForward, vCross));
+            LeftShoulderVerticalAbductionSignedAngle = vSign * LeftShoulderVertAbductionAngle * GetSign("System.Single LeftShoulderVertAbductionAngle");
+            Vector3 vHorizontalShoulderAbdProjection = Vector3.ProjectOnPlane(-vShoulderAxisRight, vTrunkAxisUp);
 
+            //check if the arm is above the head 
+            if (vAngleShoulderVertAbductionNew >= 165 || LeftShoulderVerticalAbductionSignedAngle <= -160)
+            {
+                vHorizontalShoulderAbdProjection = Vector3.ProjectOnPlane(-vShoulderAxisRight, -vTrunkAxisRight);
+            }
             //calculate the Shoulder Abduction Horizontal angle
-            float vAngleShoulderHorAbductionNew = Vector3.Angle(vTorsoAxisForward, Vector3.ProjectOnPlane(vShoulderAxisRight, vTorsoAxisUp));
-            float vAngularVelocityShoulderHorAbductionNew = (vAngleShoulderHorAbductionNew - Mathf.Abs(AngleShoulderHorAbduction)) / DeltaTime;
-            AngularAccelerationShoulderHorAbduction = (vAngularVelocityShoulderHorAbductionNew - AngularVelocityShoulderHorAbduction) / DeltaTime;
-            AngularVelocityShoulderHorAbduction = vAngularVelocityShoulderHorAbductionNew;
-            AngleShoulderHorAbduction = vAngleShoulderHorAbductionNew;
+            float vAngleShoulderHorAbductionNew;
+            if (vHorizontalShoulderAbdProjection == Vector3.zero)
+            {
+                vAngleShoulderHorAbductionNew = 0.0f;
+            }
+            else
+            {
 
-            //calculate the Shoulder Rotation angle
-            float vAngleShoulderRotationNew = 180 - Mathf.Abs(180 - UpArTransform.rotation.eulerAngles.x);
-            float vAngularVelocityShoulderRotationNew = (vAngleShoulderRotationNew - Mathf.Abs(AngleShoulderRotation)) / DeltaTime;
-            AngularAccelerationShoulderRotation = (vAngularVelocityShoulderRotationNew - AngularVelocityShoulderRotation) / DeltaTime;
-            AngularVelocityShoulderRotation = vAngularVelocityShoulderRotationNew;
-            AngleShoulderRotation = vAngleShoulderRotationNew;
+                if (vAngleShoulderVertAbductionNew >= 165)
+                {
+                    vAngleShoulderHorAbductionNew = Vector3.Angle(vTrunkAxisUp, vHorizontalShoulderAbdProjection);
+                }
+                else if (LeftShoulderVerticalAbductionSignedAngle <= -160)
+                {
+                    vAngleShoulderHorAbductionNew = Vector3.Angle(-vTrunkAxisUp, vHorizontalShoulderAbdProjection);
+                }
+
+                else
+                {
+                    vAngleShoulderHorAbductionNew = Vector3.Angle(-vTrunkAxisRight, vHorizontalShoulderAbdProjection);
+                }
+            }
+
+            LeftShoulderHorAbductionAngle = vAngleShoulderHorAbductionNew;
+            vCross = Vector3.Cross(-vTrunkAxisRight, vHorizontalShoulderAbdProjection);
+            vSign = Mathf.Sign(Vector3.Dot(vTrunkAxisUp, vCross));
+            LeftShoulderHorizontalAbductionSignedAngle = vSign * LeftShoulderHorAbductionAngle * GetSign("System.Single LeftShoulderHorAbductionAngle");
+
+            //get the cross product in order to determine the sign of the angle
+
+            float vAngleShoulderRotationNew = -UpArTransform.rotation.eulerAngles.x;//  -UpArTransform.rotation.eulerAngles.x -360f);
+
+            if (vAngleShoulderRotationNew < -180)
+            {
+                vAngleShoulderRotationNew = 360f + vAngleShoulderRotationNew;
+            }
+            LeftShoulderRotationSignedAngle = vAngleShoulderRotationNew;// * vSign * GetSign("System.Single LeftShoulderRotationAngle");
+
+            //Calculate the velocity and accelerations
+            if (DeltaTime != 0)
+            {
+                VelocityAndAccelerationExtraction(vAngleElbowFlexionNew, vAngleShoulderRotationNew,
+                    vAngleShoulderHorAbductionNew,
+                    vAngleShoulderVertAbductionNew, vAngleShoulderFlexionNew, vAngleForeArmPronationNew, DeltaTime);
+            }
+
+            //notify listeners that analysis on this component has been completed. 
             NotifyAnalysisCompletionListeners();
+        }
+
+        //TODO: Review all velocity and acceleration angles
+        public void VelocityAndAccelerationExtraction(float vAngleElbowFlexionNew, float vAngleShoulderRotationNew, float vAngleShoulderHorAbductionNew,
+            float vAngleShoulderVertAbductionNew, float vAngleShoulderFlexionNew, float vAngleElbowPronationNew, float vDeltaTime)
+        {
+            float vAngularVelocityElbowFlexionNew = (vAngleElbowFlexionNew - LeftElbowFlexionAngle) / DeltaTime;
+            LeftElbowFlexionAngularAcceleration = (vAngularVelocityElbowFlexionNew - LeftElbowFlexionAngularVelocity) / DeltaTime;
+            LeftElbowFlexionAngularVelocity = vAngularVelocityElbowFlexionNew;
+            float vAngularVelocityShoulderRotationNew = (vAngleShoulderRotationNew - Mathf.Abs(LeftShoulderRotationSignedAngle)) / DeltaTime;
+            LeftShoulderRotationAngularAcceleration = (vAngularVelocityShoulderRotationNew - LeftShoulderRotationAngularVelocity) / DeltaTime;
+            LeftShoulderRotationAngularVelocity = vAngularVelocityShoulderRotationNew;
+            float vAngularVelocityShoulderHorAbductionNew = (vAngleShoulderHorAbductionNew - Mathf.Abs(LeftShoulderHorAbductionAngle)) / DeltaTime;
+            LeftShoulderHorAbductionAngularAcceleration = (vAngularVelocityShoulderHorAbductionNew - LeftShoulderHorAbductionAngularVelocity) / DeltaTime;
+            LeftShoulderHorAbductionAngularVelocity = vAngularVelocityShoulderHorAbductionNew;
+            float vAngularVelocityShoulderVertAbductionNew = (vAngleShoulderVertAbductionNew - Mathf.Abs(LeftShoulderVertAbductionAngle)) / DeltaTime;
+            LeftShoulderVertAbductionAngularAcceleration = (vAngularVelocityShoulderVertAbductionNew - LeftShoulderVertAbductionAngularVelocity) / DeltaTime;
+            LeftShoulderVertAbductionAngularVelocity = vAngularVelocityShoulderVertAbductionNew;
+            float vAngularVelocityShoulderFlexionNew = (vAngleShoulderFlexionNew - Mathf.Abs(LeftShoulderFlexionAngle)) / DeltaTime;
+            LeftShoulderFlexionAngularAcceleration = (vAngularVelocityShoulderFlexionNew - LeftShoulderFlexionAngularVelocity) / DeltaTime;
+            LeftShoulderFlexionAngularVelocity = vAngularVelocityShoulderFlexionNew;
+            float vAngularVelocityElbowPronationNew = (vAngleElbowPronationNew - Mathf.Abs(LeftForeArmPronationSignedAngle)) / DeltaTime;
+            LeftElbowPronationAngularAcceleration = (vAngularVelocityElbowPronationNew - LeftForeArmPronationAngularVelocity) / DeltaTime;
+            LeftForeArmPronationAngularVelocity = vAngularVelocityElbowPronationNew;
+            LeftElbowFlexionPeakAngularVelocity = Mathf.Max(Mathf.Abs(LeftElbowFlexionAngularVelocity), LeftElbowFlexionPeakAngularVelocity);
+
+        }
+
+        Vector3 GetProjection(Vector3 vDirection)
+        {
+            Vector3 vProjection = Vector3.zero;
+            return vProjection;
+
+        }
+
+        Vector3 GetPlaneNormal(Vector3 vDirection, Transform vTransform, Transform vParent)
+        {
+            Vector3 vProjection = Vector3.zero;
+
+
+
+            float vOutputRightPlane = float.MaxValue;
+            float vOutputLeftPlane = float.MaxValue;
+            float vOutputUpPlane = float.MaxValue;
+            float vOutputDownPlane = float.MaxValue;
+            float vOutputForwardPlane = float.MaxValue;
+            float vOutputBackPlane = float.MaxValue;
+
+            bool vIsIntersectRightPlane = false;
+            bool vIsIntersectLeftPlane = false;
+            bool vIsIntersectUpPlane = false;
+            bool vIsIntersectDownPlane = false;
+            bool vIsIntersectForwardPlane = false;
+            bool vIsIntersectBackPlane = false;
+
+            //right plane check
+            Vector3 vNormalCheck = vParent.right;
+            var vPlane = new Plane(vNormalCheck, (vTransform.position + vNormalCheck).normalized * 3f);
+            vIsIntersectRightPlane = vPlane.Raycast(new Ray(vTransform.position, vDirection), out vOutputRightPlane);
+            //left plane check 
+            vNormalCheck = -vParent.right;
+            vPlane = new Plane(vNormalCheck, (vTransform.position + vNormalCheck).normalized * 3f);
+            vIsIntersectLeftPlane = vPlane.Raycast(new Ray(vTransform.position, vDirection), out vOutputLeftPlane);
+
+            //up plane check 
+            vNormalCheck = vParent.up;
+            vPlane = new Plane(vNormalCheck, (vTransform.position + vNormalCheck).normalized * 3f);
+            vIsIntersectUpPlane = vPlane.Raycast(new Ray(vTransform.position, vDirection), out vOutputUpPlane);
+            //down plane check
+            vNormalCheck = -vParent.up;
+            vPlane = new Plane(vNormalCheck, (vTransform.position + vNormalCheck).normalized * 3f);
+            vIsIntersectDownPlane = vPlane.Raycast(new Ray(vTransform.position, vDirection), out vOutputDownPlane);
+
+            //forward plane check 
+            vNormalCheck = vParent.forward;
+            vPlane = new Plane(vNormalCheck, (vTransform.position + vNormalCheck).normalized * 3f);
+            vIsIntersectForwardPlane = vPlane.Raycast(new Ray(vTransform.position, vDirection), out vOutputForwardPlane);
+            //down plane check
+            vNormalCheck = -vParent.forward;
+            vPlane = new Plane(vNormalCheck, (vTransform.position + vNormalCheck).normalized * 3f);
+            vIsIntersectBackPlane = vPlane.Raycast(new Ray(vTransform.position, vDirection), out vOutputBackPlane);
+
+            vOutputRightPlane = Mathf.Abs(vOutputRightPlane);
+            vOutputLeftPlane = Mathf.Abs(vOutputLeftPlane);
+            vOutputUpPlane = Mathf.Abs(vOutputUpPlane);
+            vOutputDownPlane = Mathf.Abs(vOutputDownPlane);
+            vOutputForwardPlane = Mathf.Abs(vOutputForwardPlane);
+            vOutputBackPlane = Mathf.Abs(vOutputBackPlane);
+            //check the smallest distance of all intersections 
+            if (vOutputRightPlane < vOutputLeftPlane && vOutputRightPlane < vOutputUpPlane
+                && vOutputRightPlane < vOutputDownPlane && vOutputRightPlane < vOutputForwardPlane
+                && vOutputRightPlane < vOutputBackPlane)
+            {
+                return vParent.right;
+            }
+            else if (vOutputLeftPlane < vOutputRightPlane && vOutputLeftPlane < vOutputUpPlane
+                && vOutputLeftPlane < vOutputDownPlane && vOutputLeftPlane < vOutputForwardPlane
+                && vOutputLeftPlane < vOutputBackPlane)
+            {
+
+                return vParent.right;
+            }
+            else if (vOutputUpPlane < vOutputRightPlane && vOutputUpPlane < vOutputLeftPlane
+              && vOutputUpPlane < vOutputDownPlane && vOutputUpPlane < vOutputForwardPlane
+              && vOutputUpPlane < vOutputBackPlane)
+            {
+                return vParent.up;
+            }
+            else if (vOutputDownPlane < vOutputRightPlane && vOutputDownPlane < vOutputLeftPlane
+            && vOutputDownPlane < vOutputUpPlane && vOutputDownPlane < vOutputForwardPlane
+            && vOutputDownPlane < vOutputBackPlane)
+            {
+                return vParent.up;
+            }
+            else if (vOutputForwardPlane < vOutputRightPlane && vOutputForwardPlane < vOutputLeftPlane
+            && vOutputForwardPlane < vOutputUpPlane && vOutputForwardPlane < vOutputDownPlane
+            && vOutputForwardPlane < vOutputBackPlane)
+            {
+                return vParent.forward;
+            }
+            else if (vOutputBackPlane < vOutputRightPlane && vOutputBackPlane < vOutputLeftPlane
+           && vOutputBackPlane < vOutputUpPlane && vOutputBackPlane < vOutputDownPlane
+           && vOutputBackPlane < vOutputForwardPlane)
+            {
+
+                return vParent.forward;
+            }
+
+
+            return vProjection;
         }
 
 

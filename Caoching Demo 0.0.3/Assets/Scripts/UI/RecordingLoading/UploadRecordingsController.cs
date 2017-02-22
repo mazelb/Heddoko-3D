@@ -12,7 +12,7 @@ namespace Assets.Scripts.UI.RecordingLoading
     /// </summary>
     public class UploadRecordingsController
     {
-        private RecordingUploader mUploader;
+        private AssetUploader mUploader;
 
         public void Init()
         {

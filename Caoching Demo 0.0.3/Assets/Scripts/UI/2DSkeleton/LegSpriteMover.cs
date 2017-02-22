@@ -6,6 +6,7 @@
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
 
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using Assets.Scripts.UI.ActivitiesContext.Controller;
@@ -74,8 +75,8 @@ namespace Assets.Scripts.UI._2DSkeleton
                 RightLegAnalysis vRightLegAnalysis =
                       vCurrentBody.AnalysisSegments[BodyStructureMap.SegmentTypes.SegmentType_RightLeg] as
                           RightLegAnalysis;
-                vHipAngle = RightHipMulti * vRightLegAnalysis.AngleHipFlexion;
-                vKneeAngle = RightKneeMultiplier * vRightLegAnalysis.RightKneeFlexion;
+                vHipAngle = RightHipMulti * vRightLegAnalysis.RightHipFlexionAngle;
+                vKneeAngle = RightKneeMultiplier * vRightLegAnalysis.RightKneeFlexionSignedAngle;
                 vKneeAngle = Mathf.Abs(vKneeAngle);
                 vHipAngle = Mathf.Abs(vHipAngle);
                 vHipMotorRot.z = vHipAngle;
@@ -87,9 +88,9 @@ namespace Assets.Scripts.UI._2DSkeleton
                 LeftLegAnalysis vLeftLegAnalysis =
                      vCurrentBody.AnalysisSegments[BodyStructureMap.SegmentTypes.SegmentType_LeftLeg] as
                          LeftLegAnalysis;
-                vHipAngle = LeftLegHipMulti * vLeftLegAnalysis.AngleHipFlexion;
+                vHipAngle = LeftLegHipMulti * vLeftLegAnalysis.LeftHipFlexionAngle;
                 vHipAngle = Mathf.Abs(vHipAngle);
-                vKneeAngle = LeftLegKneeMultiplier * vLeftLegAnalysis.LeftKneeFlexion;
+                vKneeAngle = LeftLegKneeMultiplier * vLeftLegAnalysis.LeftKneeFlexionSignedAngle;
                 vKneeAngle = Mathf.Abs(vKneeAngle);
                 vHipMotorRot.z = vHipAngle;
                 vKneeJointRot.z = vKneeAngle;

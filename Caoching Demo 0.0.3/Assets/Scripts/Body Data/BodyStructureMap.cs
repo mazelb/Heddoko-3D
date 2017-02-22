@@ -79,11 +79,12 @@ public class BodyStructureMap
     //Segment Types
     public enum SegmentTypes
     {
-        SegmentType_Torso = 0,
-        SegmentType_RightArm = 1,
-        SegmentType_LeftArm = 2,
-        SegmentType_RightLeg = 3,
-        SegmentType_LeftLeg = 4,
+        SegmentType_Hips = 0,
+        SegmentType_Trunk =1,
+        SegmentType_RightArm = 2,
+        SegmentType_LeftArm = 3,
+        SegmentType_RightLeg = 4,
+        SegmentType_LeftLeg = 5,
         SegmentType_Count
     };
 
@@ -211,7 +212,7 @@ public class BodyStructureMap
                 case BodyTypes.BodyType_UpperBody:
                     {
                         List<SegmentTypes> vUpperBodySegments = new List<SegmentTypes>();
-                        vUpperBodySegments.Add(SegmentTypes.SegmentType_Torso);
+                        vUpperBodySegments.Add(SegmentTypes.SegmentType_Trunk);
                         vUpperBodySegments.Add(SegmentTypes.SegmentType_RightArm);
                         vUpperBodySegments.Add(SegmentTypes.SegmentType_LeftArm);
                         BodyToSegmentMap.Add(BodyTypes.BodyType_UpperBody, vUpperBodySegments);
@@ -248,12 +249,20 @@ public class BodyStructureMap
         {
             switch (vSegmentType)
             {
-                case SegmentTypes.SegmentType_Torso:
+                case SegmentTypes.SegmentType_Trunk:
                     {
                         List<SubSegmentTypes> vTorsoSubSegments = new List<SubSegmentTypes>();
                         vTorsoSubSegments.Add(SubSegmentTypes.SubsegmentType_LowerSpine);
                         vTorsoSubSegments.Add(SubSegmentTypes.SubsegmentType_UpperSpine);
-                        SegmentToSubSegmentMap.Add(SegmentTypes.SegmentType_Torso, vTorsoSubSegments);
+                        SegmentToSubSegmentMap.Add(SegmentTypes.SegmentType_Trunk, vTorsoSubSegments);
+                    }
+                    break;
+                case SegmentTypes.SegmentType_Hips:
+                    {
+                        List<SubSegmentTypes> vHipSubSegments = new List<SubSegmentTypes>();
+                        vHipSubSegments.Add(SubSegmentTypes.SubsegmentType_LowerSpine);
+                        vHipSubSegments.Add(SubSegmentTypes.SubsegmentType_UpperSpine);
+                        SegmentToSubSegmentMap.Add(SegmentTypes.SegmentType_Hips, vHipSubSegments);
                     }
                     break;
                 case SegmentTypes.SegmentType_RightArm:
@@ -305,12 +314,20 @@ public class BodyStructureMap
         {
             switch (vSegmentType)
             {
-                case SegmentTypes.SegmentType_Torso:
+                case SegmentTypes.SegmentType_Trunk:
                     {
                         List<SensorPositions> vTorsoSensorPos = new List<SensorPositions>();
                         vTorsoSensorPos.Add(SensorPositions.SP_UpperSpine);
                         vTorsoSensorPos.Add(SensorPositions.SP_LowerSpine);
-                        SegmentToSensorPosMap.Add(SegmentTypes.SegmentType_Torso, vTorsoSensorPos);
+                        SegmentToSensorPosMap.Add(SegmentTypes.SegmentType_Trunk, vTorsoSensorPos);
+                    }
+                    break;
+                case SegmentTypes.SegmentType_Hips:
+                    {
+                        List<SensorPositions> vHipSensorPos = new List<SensorPositions>();
+                        vHipSensorPos.Add(SensorPositions.SP_UpperSpine);
+                        vHipSensorPos.Add(SensorPositions.SP_LowerSpine);
+                        SegmentToSensorPosMap.Add(SegmentTypes.SegmentType_Hips, vHipSensorPos);
                     }
                     break;
                 case SegmentTypes.SegmentType_RightArm:

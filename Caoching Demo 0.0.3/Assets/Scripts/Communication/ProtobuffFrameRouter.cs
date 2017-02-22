@@ -7,16 +7,15 @@
 */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using HeddokoLib.adt;
-using HeddokoLib.heddokoProtobuff;
+using heddoko;
+using HeddokoLib.adt; 
 using HeddokoLib.heddokoProtobuff.Decoder;
 using ProtoBuf;
 using UnityEngine;
 using Random = UnityEngine.Random;
- 
+
 namespace Assets.Scripts.Communication
 {
     /// <summary>
@@ -24,13 +23,11 @@ namespace Assets.Scripts.Communication
     /// </summary>
     public class ProtobuffFrameRouter
     {
-
         private volatile bool mIsWorking;
         private Thread mThread;
         private CircularQueue<RawPacket> mInboundPacketBuffer;
         private BodyFrameBuffer mOutBoundBuffer;
-        private ProtobuffDispatchRouter mProtDispatchRouter;
-        //private static Dictionary<int, BodyStructureMap.SensorPositions> sSensorPositionList;
+        private ProtobuffDispatchRouter mProtDispatchRouter; 
         private MemoryStream mMemoryStream = new MemoryStream();
         /// <summary>
         /// Constructor needing an inbound and outbound buffer. Call Start to start the process. 
@@ -40,26 +37,11 @@ namespace Assets.Scripts.Communication
         public ProtobuffFrameRouter(CircularQueue<RawPacket> vInboundBuffer, BodyFrameBuffer vOutterBuffer)
         {
             Serializer.PrepareSerializer<Packet>();
-
             mInboundPacketBuffer = vInboundBuffer;
             mOutBoundBuffer = vOutterBuffer;
             mProtDispatchRouter = new ProtobuffDispatchRouter();
             mProtDispatchRouter.Init();
-            mProtDispatchRouter.Add(PacketType.DataFrame, EnqueueDataFrame);
-            //initialize the static list of sensor positions if it is null. 
-            //if (sSensorPositionList == null)
-            //{
-            //    sSensorPositionList = new Dictionary<int, BodyStructureMap.SensorPositions>();
-            //    sSensorPositionList.Add(0, BodyStructureMap.SensorPositions.SP_UpperSpine);
-            //    sSensorPositionList.Add(1, BodyStructureMap.SensorPositions.SP_RightUpperArm);
-            //    sSensorPositionList.Add(2, BodyStructureMap.SensorPositions.SP_RightForeArm);
-            //    sSensorPositionList.Add(3, BodyStructureMap.SensorPositions.SP_LeftUpperArm);
-            //    sSensorPositionList.Add(4, BodyStructureMap.SensorPositions.SP_LeftForeArm);
-            //    sSensorPositionList.Add(5, BodyStructureMap.SensorPositions.SP_RightThigh);
-            //    sSensorPositionList.Add(6, BodyStructureMap.SensorPositions.SP_RightCalf);
-            //    sSensorPositionList.Add(7, BodyStructureMap.SensorPositions.SP_LeftThigh);
-            //    sSensorPositionList.Add(8, BodyStructureMap.SensorPositions.SP_LeftCalf);
-            //}
+            mProtDispatchRouter.Add(PacketType.DataFrame, EnqueueDataFrame); 
         }
 
         /// <summary>
@@ -73,47 +55,10 @@ namespace Assets.Scripts.Communication
 
             if (OutBoundBuffer.AllowOverflow || (!OutBoundBuffer.AllowOverflow && !OutBoundBuffer.IsFull()))
             {
-                var vBodyFrame = new BodyFrame(vPacket);// ConvertPacketToBodyFrame(vPacket);
+                var vBodyFrame = new BodyFrame(vPacket);
                 OutBoundBuffer.Enqueue(vBodyFrame);
             }
         }
-
-        ///// <summary>
-        ///// Converts a packet to a bodyframe
-        ///// </summary>
-        ///// <param name="vPacket"></param>
-        ///// <returns></returns>
-        //private BodyFrame ConvertPacketToBodyFrame(Packet vPacket)
-        //{
-        //    var vImuDataFrame = (ImuDataFrame)vPacket.fullDataFrame.imuDataFrame[0];
-        //    var vBodyFrame = new BodyFrame(vPacket);
-        //    vBodyFrame.Timestamp = vPacket.fullDataFrame.timeStamp;
-        //    //The packet passed in is a data frame. need to check if the data passed in is in quaternion form or euler
-        //    if (vImuDataFrame.Rot_xSpecified)
-        //    {
-        //        foreach (var vKeyPair in sSensorPositionList)
-        //        {
-        //            var vFrameData = vBodyFrame.FrameData[vKeyPair.Value];
-        //            vFrameData.x = vPacket.fullDataFrame.imuDataFrame[vKeyPair.Key].Rot_x;
-        //            vFrameData.y = vPacket.fullDataFrame.imuDataFrame[vKeyPair.Key].Rot_y;
-        //            vFrameData.z = vPacket.fullDataFrame.imuDataFrame[vKeyPair.Key].Rot_z;
-        //            vBodyFrame.FrameData[vKeyPair.Value] = vFrameData;
-        //        }
-        //    }
-        //    else if (vImuDataFrame.quat_wSpecified)
-        //    {
-        //        foreach (var vKeyPair in sSensorPositionList)
-        //        {
-        //            var vFrameData = vBodyFrame.FrameData[vKeyPair.Value];
-        //            vFrameData.x = vPacket.fullDataFrame.imuDataFrame[vKeyPair.Key].quat_x_yaw;
-        //            vFrameData.y = vPacket.fullDataFrame.imuDataFrame[vKeyPair.Key].quat_y_pitch;
-        //            vFrameData.z = vPacket.fullDataFrame.imuDataFrame[vKeyPair.Key].quat_z_roll;
-        //            vFrameData.w = vPacket.fullDataFrame.imuDataFrame[vKeyPair.Key].quat_w;
-        //            vBodyFrame.FrameData[vKeyPair.Value] = vFrameData;
-        //        }
-        //    }
-        //    return vBodyFrame;
-        //}
 
 
         /// <summary>
@@ -124,6 +69,7 @@ namespace Assets.Scripts.Communication
             StopIfWorking();
             mIsWorking = true;
             mThread = new Thread(WorkerFunc);
+            mThread.IsBackground = true;
             mThread.Start();
         }
 
@@ -146,7 +92,7 @@ namespace Assets.Scripts.Communication
                     {
                         //reset the stream pointer, write and reset.
                         mMemoryStream.Seek(0, SeekOrigin.Begin);
-                        mMemoryStream.Write(vRawPacket.Payload, 1, vRawPacket.PayloadSize - 1);
+                        mMemoryStream.Write(vRawPacket.Payload, 1,(int) vRawPacket.PayloadSize - 1);
                         mMemoryStream.Seek(0, SeekOrigin.Begin);
                         Packet vProtoPacket = Serializer.Deserialize<Packet>(mMemoryStream); 
                         mProtDispatchRouter.Process(vProtoPacket.type, this, vProtoPacket);

@@ -8,6 +8,7 @@
 */
 
 
+using Assets.Scripts.Body_Data.CalibrationData.TposeSelection;
 using Assets.Scripts.UI.MainMenu;
 using Assets.Scripts.Utils.DebugContext;
 using Assets.Scripts.Utils.DebugContext.logging;
@@ -31,6 +32,7 @@ namespace Assets.Demos
         [SerializeField]
         private GameObject[] mDebuggingItems;
 
+        public SliderMaskContainerController SliderMaskContainerController;
         private bool mEscapableFlags = false;
         public GameObject[] Escapables;
         [SerializeField]
@@ -99,7 +101,9 @@ namespace Assets.Demos
             foreach (var vDebuggingItems in mDebuggingItems)
             {
                 vDebuggingItems.SetActive(mDebuggingActive);
-            }
+            } 
+                SliderMaskContainerController.enabled = !SliderMaskContainerController.enabled;
+           
             DebugLogger.Settings.LogAll = mDebuggingActive;
         }
 

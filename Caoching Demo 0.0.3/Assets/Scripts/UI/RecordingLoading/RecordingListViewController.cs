@@ -17,7 +17,9 @@ using Assets.Scripts.UI.RecordingLoading.Model;
 using Assets.Scripts.UI.RecordingLoading.View;
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.Utils;
+using HeddokoSDK;
 using HeddokoSDK.Models;
+using HeddokoSDK.Models.Requests;
 using UIWidgets;
 using UnityEngine;
 
@@ -42,7 +44,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         private HeddokoDownloadFetcher mRecordingFetcher;
         private List<RecordingListItem> mRecordingItems = new List<RecordingListItem>();
         public ScrollRectEvents ScrollRectEvents;
-
+        public UploadController UploadController;
         private float mFetchCounter = 12f;
         private float mFetchTime = 12f;
         void Start()
@@ -52,12 +54,12 @@ namespace Assets.Scripts.UI.RecordingLoading
 
         public void Init()
         {
-            View.OnClickAction +=  DoubleClickCheck;
+            View.OnClickAction += DoubleClickCheck;
             if (mListFetcher == null)
             {
                 mListFetcher = new RecordingListFetcher(UserSessionManager.Instance);
                 mListFetcher.RecordingListUpdatedHandler += LoadDataThroughUnityThread;
-               
+
             }
             mListFetcher.Start();
             if (mRecordingFetcher == null)
@@ -67,6 +69,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
         }
 
+       
         private void ExceptionHandler(Exception vE)
         {
             Debug.Log(vE.Message);
@@ -85,6 +88,9 @@ namespace Assets.Scripts.UI.RecordingLoading
             });
         }
 
+      
+        
+
         /// <summary>
         /// Double click checker
         /// </summary>
@@ -94,7 +100,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 return;
             }
-                mClickCount++;
+            mClickCount++;
             int vNewSelectedItem = View.SelectedIndex;
             if (vNewSelectedItem != -1)
             {
@@ -122,8 +128,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                         mClickCount = 0;
                     }
                 }
-            }
-
+            } 
         }
 
 
@@ -134,7 +139,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         private void DoubleClickAction(int vItemIndex)
         {
             var vItem = View.GetRecordingItem(vItemIndex);
-            ProcessRecording(ref vItem); 
+            ProcessRecording(ref vItem);
         }
 
         /// <summary>
@@ -142,7 +147,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         /// <param name="vItem"></param>
         public void ProcessRecording(ref RecordingListItem vItem)
-        { 
+        {
             //Check if the item exists in the cache already. else proceed to download it. 
             if (vItem.Location.LocationType == RecordingListItem.LocationType.CachedLocal)
             {
@@ -156,7 +161,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                 //start downloading file. since this responsiblity will be delegated to a seperate thread, 
                 //wait until completed.
 
-                string vCachePath = ApplicationSettings.CacheFolderPath;
+                string vCachePath = ApplicationSettings.DownloadCacheFolderPath;
                 DirectoryInfo vInfo = new DirectoryInfo(vCachePath);
                 var vFilesInfo = vInfo.GetFiles();
                 RecordingListItem vRecItem = vItem;
@@ -177,12 +182,12 @@ namespace Assets.Scripts.UI.RecordingLoading
                     vStructure.DownloadLocation = vCachePath + Path.DirectorySeparatorChar + vItem.Name;
                     vStructure.Item = vItem;
                     vItem.Location.LocationType = RecordingListItem.LocationType.DownloadingAndUnavailable;
-                    View.LoadData(mRecordingItems); 
+                    View.LoadData(mRecordingItems);
                     mRecordingFetcher.DownloadCompletedHandler += DownloadCompletedCallback;
                     ThreadPool.QueueUserWorkItem(mRecordingFetcher.FetchData, vStructure);
                 }
             }
-        } 
+        }
         /// <summary>
         /// Callback on when a download has been completed
         /// </summary>
@@ -191,7 +196,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         private void DownloadCompletedCallback(BaseModel vHedAsset, ref RecordingListItem vItem)
         {
             //remove the callback
-            mRecordingFetcher.DownloadCompletedHandler -= DownloadCompletedCallback; 
+            mRecordingFetcher.DownloadCompletedHandler -= DownloadCompletedCallback;
             RecordingListItem vNonRefItem = vItem;
             Action vAction = () => UpdateList(vHedAsset, ref vNonRefItem);
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(vAction);
@@ -205,7 +210,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         private void UpdateList(BaseModel vHedAsset, ref RecordingListItem vItem)
         {
             DisablingPanel.SetActive(false);
-            vItem.Location.RelativePath = ApplicationSettings.CacheFolderPath + Path.DirectorySeparatorChar + vItem.Name;
+            vItem.Location.RelativePath = ApplicationSettings.DownloadCacheFolderPath + Path.DirectorySeparatorChar + vItem.Name;
             vItem.Location.LocationType = RecordingListItem.LocationType.CachedLocal;
             //reload the data
             View.LoadData(mRecordingItems);
@@ -225,24 +230,40 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         public void Clear()
         {
-            mListFetcher.Stop();
-            View.Clear();
-            mListFetcher.Clear();
-            View.OnClickAction -= DoubleClickCheck;
+            if (mListFetcher != null)
+            {
+                mListFetcher.Stop();
+                mListFetcher.Clear();
+            }
+            if (View != null)
+            {
+                View.Clear();
+                View.OnClickAction -= DoubleClickCheck;
+            }
         }
 
+        /// <summary>
+        /// Reset the list
+        /// </summary>
         public void ResetDownloadList()
-        {
-            StartCoroutine(WaitOneSecondThenDownload());
-            Debug.Log("reset download list");
+        { 
+           Invoke("WaitThenReDownload",1.5f);
         }
 
-        private IEnumerator WaitOneSecondThenDownload()
+
+
+        /// <summary>
+        /// Wait then redownload the recording list again
+        /// </summary>
+        /// <param name="vSeconds"></param>
+        /// <returns></returns>
+        private void WaitThenReDownload( )
         {
-            yield return new WaitForSeconds(1f);
             Clear();
             mListFetcher.Start();
             View.OnClickAction += DoubleClickCheck;
         }
+
+  
     }
 }

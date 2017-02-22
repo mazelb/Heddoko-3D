@@ -41,7 +41,6 @@ namespace Assets.Scripts.Licensing.Authentication
         NoNetworkConnectionFound,
         Timeout,
         NullLicense,
-        Other,
-       
+        Other, 
     }
 }

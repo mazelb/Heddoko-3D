@@ -199,13 +199,11 @@ namespace UIWidgets {
 		/// <param name="eventData">Current event data.</param>
 		public virtual void OnPointerClick(PointerEventData eventData)
 		{
-			onPointerClick.Invoke(eventData);
-            Debug.Log("Clicking "+gameObject.name);
+			onPointerClick.Invoke(eventData); 
 			if (eventData.button!=PointerEventData.InputButton.Left)
 			{
 				return;
 			}
-
 			onClick.Invoke();
 			Select();
 		}

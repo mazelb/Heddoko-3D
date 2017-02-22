@@ -8,11 +8,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+
 using System.Threading;
 using Assets.Scripts.Frames_Pipeline.BodyFrameConversion;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
+using Assets.Scripts.Localization;
+
 using Assets.Scripts.UI.Loading;
+using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.Utils;
 using HeddokoLib.body_pipeline;
 
@@ -22,8 +25,9 @@ namespace Assets.Scripts.Frames_Pipeline
     public delegate void FinalFramePositionReached();
 
     /// <summary>
-    /// A recording playback task used by body frame thread
+    /// A vRecording playback task used by body frame thread
     /// </summary>
+
     public class RecordingPlaybackTask
     {
         public bool IsWorking;
@@ -36,12 +40,18 @@ namespace Assets.Scripts.Frames_Pipeline
         private int mCurrentIdx;
         private int mFirstPos = 0;
         internal event FinalFramePositionReached FinalFramePositionReachedEvent;
-
+        /// <summary>
+        /// Depending if the current state is rewinding or going forward, then the 
+        /// the index iterator changes the local position of the converted frame data
+        /// </summary>
+        private int mIteratorAdder = 1;
+        private List<BodyFrame> vFrames;
+        private BodyFrameBuffer bodyFrameBuffer;
         private int mFinalFramePos { get; set; }
 
         private float mTotalRecordingTime;
-        private List<BodyFrame> mConvertedBodyFrames; 
-    //    private BodyFrame[] mConvertedFrames;
+        private List<BodyFrame> mConvertedBodyFrames;
+        //    private BodyFrame[] mConvertedFrames;
 
         private float mPlaybackSpeed = 1f;
 
@@ -51,14 +61,6 @@ namespace Assets.Scripts.Frames_Pipeline
         /// Body frame conversion completed?
         /// </summary>
         public bool ConversionCompleted { get; private set; }
-
-        /// <summary>
-        /// Depending if the current state is rewinding or going forward, then the 
-        /// the index iterator changes the local position of the converted frame data
-        /// </summary>
-        private int mIteratorAdder = 1;
-        private List<BodyFrame> vFrames;
-        private BodyFrameBuffer bodyFrameBuffer;
 
         public float PlaybackSpeed
         {
@@ -99,13 +101,11 @@ namespace Assets.Scripts.Frames_Pipeline
                     mFinalFramePos = ConvertedFrames.Count - 1;
                     IteratorAdder = 1;
                 }
-
-
             }
         }
 
         /// <summary>
-        /// Returns the frame count from the recording
+        /// Returns the frame count from the vRecording
         /// </summary>
         public int RecordingCount
         {
@@ -128,7 +128,7 @@ namespace Assets.Scripts.Frames_Pipeline
         }
 
         /// <summary>
-        /// Returns the total recording time
+        /// Returns the total vRecording time
         /// </summary>
         public float TotalRecordingTime
         {
@@ -181,15 +181,23 @@ namespace Assets.Scripts.Frames_Pipeline
             get { return mCurrentRecording; }
         }
 
-     //   public BodyFrame[] ConvertedFrames
-   //     {
-    //        get { return mConvertedFrames; }
-    //    }
+        //   public BodyFrame[] ConvertedFrames
+        //     {
+        //        get { return mConvertedFrames; }
+        //    }
 
         public List<BodyFrame> ConvertedFrames
         {
-            get {return mConvertedBodyFrames; }
-        } 
+            get { return mConvertedBodyFrames; }
+        }
+
+        public int RawFramesCount
+        {
+            get
+            {
+                return mCurrentRecording.RecordingRawFramesCount;
+            }
+        }
 
         public RecordingPlaybackTask(BodyFramesRecordingBase vRecording, BodyFrameBuffer vBuffer)
         {
@@ -204,7 +212,7 @@ namespace Assets.Scripts.Frames_Pipeline
         }
 
         /// <summary>
-        /// The recording play back task allows for recording playback by converting 
+        /// The vRecording play back task allows for vRecording playback by converting 
         /// Rawbody frames in to body frames. 
         /// </summary>
         public void Play()
@@ -240,36 +248,16 @@ namespace Assets.Scripts.Frames_Pipeline
                 }
                 try
                 {
-                    //check if we've reached the last position
-                    if (mCurrentIdx == mFinalFramePos)
-                    {
-                        //Send out an event that the last frame has been reached. 
-                        if (FinalFramePositionReachedEvent != null)
-                        {
-                            FinalFramePositionReachedEvent();
-                        }
-                       
-                        //check if looping is enabled, set vCurrPos to first postion
-                        if (LoopPlaybackEnabled)
-                        {
-                            mCurrentIdx = mFirstPos;
-                            vPrevTimeStamp = IsRewinding ? vLastFrame.Timestamp : vFirstFrame.Timestamp;
-                        }
-                        else
-                        {
-                            continue;
-                        }
-
-                    }
                     BodyFrame vCurrBodyFrame = null;
                     BodyFrame vEnquedBodyFrame = null;
                     //if the current position is last -1
                     if (mCurrentIdx == mFinalFramePos)
                     {
-                        vEnquedBodyFrame = ConvertedFrames[mCurrentIdx];
-                        mFrameBuffer.Enqueue(vEnquedBodyFrame);
+                        if (!LoopPlaybackEnabled)
+                        {
+                            continue;
+                        }
                     }
-
                     vCurrBodyFrame = ConvertedFrames[mCurrentIdx];
                     int vPreviousIndex = IsRewinding ? mCurrentIdx + 1 : mCurrentIdx - 1;
                     if (IsRewinding && vPreviousIndex >= ConvertedFrames.Count)
@@ -280,7 +268,7 @@ namespace Assets.Scripts.Frames_Pipeline
                     {
                         vPreviousIndex = 0;
                     }
-                    vPrevTimeStamp = ConvertedFrames[vPreviousIndex].Timestamp;//vCurrBodyFrame.Timestamp;
+                    vPrevTimeStamp = ConvertedFrames[vPreviousIndex].Timestamp;
                     vRecDeltatime = Math.Abs(vCurrBodyFrame.Timestamp - vPrevTimeStamp);
                     int vSleepTime = (int)((vRecDeltatime / Math.Abs(PlaybackSpeed)) * 1000);
                     Thread.Sleep(vSleepTime);
@@ -288,6 +276,27 @@ namespace Assets.Scripts.Frames_Pipeline
                     mFrameBuffer.Enqueue(vEnquedBodyFrame);
 
                     mCurrentIdx += IteratorAdder;
+                    if (mCurrentIdx == mFinalFramePos)
+                    {
+
+                        if (LoopPlaybackEnabled)
+                        {
+                            vPrevTimeStamp = ConvertedFrames[vPreviousIndex].Timestamp;
+                            vRecDeltatime = Math.Abs(vCurrBodyFrame.Timestamp - vPrevTimeStamp);
+                            vSleepTime = (int)((vRecDeltatime / Math.Abs(PlaybackSpeed)) * 1000);
+                            Thread.Sleep(vSleepTime);
+                            vEnquedBodyFrame = ConvertedFrames[mCurrentIdx];
+                            mFrameBuffer.Enqueue(vEnquedBodyFrame);
+                            mCurrentIdx = mFirstPos;
+                            vPrevTimeStamp = IsRewinding ? vLastFrame.Timestamp : vFirstFrame.Timestamp;
+                            //Send out an event that the last frame has been reached. 
+                            if (FinalFramePositionReachedEvent != null)
+                            {
+                                FinalFramePositionReachedEvent();
+                            }
+                            //check if looping is enabled, set vCurrPos to first postion
+                        }
+                    }
                 }
                 catch (Exception vException)
                 {
@@ -300,8 +309,27 @@ namespace Assets.Scripts.Frames_Pipeline
             }
         }
 
+        /// <summary>
+        /// Convert frames to BodyFrames
+        /// </summary>
         private void ConvertFrames()
         {
+            //There are less frames than currently supported, throw an error
+            if (mCurrentRecording.RecordingRawFramesCount <= StartConversionIndex)
+            {
+                OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
+                {
+
+                    var vProgressBar = DisablingProgressBar.Instance;
+                    if (vProgressBar != null)
+                    {
+                        vProgressBar.StopAnimation();
+                    }
+                    ModalPanel.SingleChoice("ERROR", LocalizationBinderContainer.GetString(KeyMessage.RecordingFileLessThanSkippableFrames),
+                        () => { });
+                });
+                return;
+            }
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
                 var vProgressBar = DisablingProgressBar.Instance;
@@ -318,7 +346,7 @@ namespace Assets.Scripts.Frames_Pipeline
             {
                 try
                 {
-                    mConvertedBodyFrames.Add(RawFrameConverter.ConvertRawFrame(mCurrentRecording.GetBodyRawFrameAt(i))); 
+                    mConvertedBodyFrames.Add(RawFrameConverter.ConvertRawFrame(mCurrentRecording.GetBodyRawFrameAt(i)));
                 }
                 catch (Exception vE)
                 {

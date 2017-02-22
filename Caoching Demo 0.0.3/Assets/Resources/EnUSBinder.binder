@@ -1,0 +1,159 @@
+{
+	"mContainer": {
+		"En-Us": {
+			"StringContainer": {
+				"DownloadCompleteMsg": {
+					"SingularForm": "Download has been completed",
+					"PluralForm": "All downloads have been completed"
+				},
+				"Greet": {
+					"SingularForm": null,
+					"PluralForm": "Hello"
+				},
+				"NewRecordingFoundMsg": {
+					"SingularForm": "A new recording has been found on the Heddoko SD card",
+					"PluralForm": "New recordings have been found on the SD card"
+				},
+				"UploadCompleteMsg": {
+					"SingularForm": "Your upload has been finished",
+					"PluralForm": "All uploads have finished"
+				},
+				"BrainpackServiceMsgTimedOut": {
+					"SingularForm": "Connection to the brainpack service timed out. You can try to connect again or restart the brainpack service",
+					"PluralForm": null
+				},
+				"BannedAccountMsg": {
+					"SingularForm": "This account has been banned.",
+					"PluralForm": null
+				},
+				"InactiveAccountMsg": {
+					"SingularForm": "This account is not active. Please contact your license administrator for further support.",
+					"PluralForm": null
+				},
+				"InactiveLicenseMsg": {
+					"SingularForm": "The provided license is inactive. Please contact your license administator for further support.",
+					"PluralForm": null
+				},
+				"ExpiredLicenseMsg": {
+					"SingularForm": "The provided license has expired. Please contact your license administator for further support.",
+					"PluralForm": null
+				},
+				"DeletedLicenseMsg": {
+					"SingularForm": "We could not find a license associated with your account. Please contact your license administator for further support.",
+					"PluralForm": null
+				},
+				"AnalysisCollectionMsg": {
+					"SingularForm": "Analysis collection has started.",
+					"PluralForm": null
+				},
+				"AnalysisSaveMsg": {
+					"SingularForm": "File has been saved to ",
+					"PluralForm": null
+				},
+				"NumberOfExportedItemsMsg": {
+					"SingularForm": " movement have been exported.",
+					"PluralForm": " movements have been exported."
+				},
+				"NoItemsWereExportedMsg": {
+					"SingularForm": "No recordings have been exported.",
+					"PluralForm": null
+				},
+				"NumberOfBatteryPacksFoundMsg": {
+					"SingularForm": "Total number of battery packs found: ",
+					"PluralForm": "Total number of battery packs found: "
+				},
+				"NoBatteryPacksFoundMsg": {
+					"SingularForm": "Could not locate any Battery packs. Please try again. ",
+					"PluralForm": "Could not locate any Battery packs. Please try again. "
+				},
+				"BeginUploadProcessMsg": {
+					"SingularForm": "Starting upload process, please do not disconnect the SD card ",
+					"PluralForm": "Starting upload process, please do not disconnect the SD card "
+				},
+				"DisconnectedSDCardWithLogMsg": {
+					"SingularForm": "Heddoko SD card has been disconnected",
+					"PluralForm": "Heddoko SD card has been disconnected"
+				},
+				"IssueUploadingRecordingsMsg": {
+					"SingularForm": " There was an issue uploading one or more recording files. For more details please see log file:  ",
+					"PluralForm": "There was an issue uploading one or more recording files. For more details please see log file:  "
+				},
+				"NewRecFoundSyncBeginMsg": {
+					"SingularForm": "A new recording was found on the SD card. Click the Upload button to begin uploading",
+					"PluralForm": "New recordings were found on the SD card. Click the Upload button to begin uploading"
+				},
+				"LoginFailureMsg": {
+					"SingularForm": "LOGIN FAILED",
+					"PluralForm": null
+				},
+				"TopLabelLogindexOpeningErrMsg": {
+					"SingularForm": "CANNOTOPENALOGINDEXFILE",
+					"PluralForm": null
+				},
+				"LogindexOpeningErrMsg": {
+					"SingularForm": "Unfortunately, this file is not a recording file. Typical recordings are longer and start with SXXXX, where the X represents a number. Would you like to try again?",
+					"PluralForm": null
+				},
+				"GenericError" : {
+				"SingularForm": "ERROR",
+					"PluralForm": null
+				},
+				"ReportErrorCodeMsg" : {
+				"SingularForm": "Please contact support and inform them of error: ",
+					"PluralForm": null
+				},
+				"InvalidUnPwMsg" : {
+				"SingularForm": "Invalid user name and/or password.",
+					"PluralForm": null
+				},
+				"IssueAccessingAcountGenericMsg" : {
+				"SingularForm": "There was an issue accessing your account. The following reason was given ",
+					"PluralForm": "There was an issue accessing your account. The following reasons were provided :"
+				},
+				"AckErrorMsg" : {
+				"SingularForm": "Click \"Yes\" to launch your browser and log into Heddoko for further details.  ",
+					"PluralForm":  null
+				},
+				"NoInternetConnectionMsg" : {
+				"SingularForm": " connection to the internet could not be established. Try again by clicking on the submit button.  ",
+					"PluralForm":  null
+				},
+				"BadKitUpload1" : {
+				"SingularForm": "You were unable to upload the following recording: ",
+				"PluralForm":  "You were unable to upload the following recordings:"
+				},
+				
+				"BadKitUpload2" : {
+				"SingularForm": "This is likely caused by a uploading a recording that belongs to a user who is in another team. If you are certain this is not the case, please log into app.heddoko.com and verify that the current user has the correct kit assigned to them.",
+				"PluralForm":  null
+				},
+				"RecordingFileLessThanSkippableFrames":{
+				"SingularForm": "Cannot load recording file because there are not enough frames to analyze.Please try a longer recording.",
+				"PluralForm":  null
+				},
+				"CannotLoadRecording" : {
+				"SingularForm": "There was an issue loading this recording file. Please try another file or report this problem to support",
+				"PluralForm":  null
+				},
+				"NoAnalysisFrameSet" : {
+				"SingularForm": "The current frame has not been analyzed.",
+				"PluralForm":  null
+				},
+				"PlayingRecording" : {
+				"SingularForm": "Playing recording: ",
+				"PluralForm":  null
+				},				
+				"MessageFromServerReceived" : {
+				"SingularForm": "Message from server received: ",
+				"PluralForm":  null
+				},
+				"ReturnToLoginScreen" : {
+				"SingularForm": "You will now be returned to the login screen.",
+				"PluralForm":  null
+				}
+				
+				
+			}
+		}
+	}
+}

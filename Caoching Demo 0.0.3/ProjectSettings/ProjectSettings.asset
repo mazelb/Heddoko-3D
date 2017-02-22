@@ -37,7 +37,7 @@ PlayerSettings:
   useOSAutorotation: 1
   use32BitDisplayBuffer: 1
   disableDepthAndStencilBuffers: 0
-  defaultIsFullScreen: 1
+  defaultIsFullScreen: 0
   defaultIsNativeResolution: 0
   runInBackground: 1
   captureSingleScreen: 0
@@ -47,7 +47,7 @@ PlayerSettings:
   usePlayerLog: 0
   bakeCollisionMeshes: 0
   forceSingleInstance: 1
-  resizableWindow: 0
+  resizableWindow: 1
   useMacAppStoreValidation: 0
   gpuSkinning: 0
   xboxPIXTextureCapture: 0

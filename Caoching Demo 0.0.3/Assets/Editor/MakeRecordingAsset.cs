@@ -6,7 +6,7 @@ using UnityEditor;
 
 public class MakeRecordingAsset : EditorWindow  {
 
-    [MenuItem("Window/Create Recording  Asset")]
+    [MenuItem("Window/Asset Creation/Create Recording  Asset")]
     static void Init()
     {
         Startnt();

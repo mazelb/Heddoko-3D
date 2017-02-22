@@ -41,8 +41,7 @@ namespace Assets.Scripts.UI.AbstractViews.ContextSpecificContainers.Importation
         public override void CreateDefaultLayout()
         {
             GridList.Initialize();
-            OpenFolderButton.onClick.AddListener(OpenSelectFolderDialog);
-          //  Notify.Template.
+            OpenFolderButton.onClick.AddListener(OpenSelectFolderDialog); 
 
         }
 

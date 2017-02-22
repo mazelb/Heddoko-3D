@@ -75,6 +75,16 @@ namespace Assets.Scripts.Utils
             return vDeserializedObj;
         }
 
+        /// <summary>
+        /// Deserializes a json formatted string into a object of type T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="vParsedContent"></param>
+        public static T StringToObj<T>(string vParsedContent)
+        {
+           T vObj =  JsonConvert.DeserializeObject<T>(vParsedContent); 
+            return vObj;
+        }
     }
     /**
     * NullValuePassedException class 

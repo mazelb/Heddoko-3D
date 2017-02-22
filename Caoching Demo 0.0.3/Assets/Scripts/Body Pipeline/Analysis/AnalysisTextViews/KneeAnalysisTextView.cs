@@ -1,6 +1,5 @@
 ﻿using Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews;
-using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
-using Assets.Scripts.Body_Pipeline.Analysis.Legs;
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels;
 using UnityEngine.UI;
 
 namespace Assets.Scripts.Body_Data.View.Anaylsis
@@ -8,8 +7,7 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
     public class KneeAnalysisTextView : AnaylsisTextView
     {
         private string mLabelName = "Knee Analysis";
-        private RightLegAnalysis mRightLegAnalysis;
-        private LeftLegAnalysis mLeftLegAnalysis;
+
         public Text RightKneeFlexionText;
         public Text LeftKneeFlexionText;
         public override string LabelName
@@ -17,40 +15,41 @@ namespace Assets.Scripts.Body_Data.View.Anaylsis
             get { return mLabelName; }
         }
 
-      
-
         protected override void BodyUpdated()
         {
             if (BodyToAnalyze == null)
             {
-                mRightLegAnalysis = null;
-                mLeftLegAnalysis = null;
                 ClearText();
             }
+
+            //register listeners
             else
             {
-                mRightLegAnalysis = BodyToAnalyze.RightLegAnalysis;
-                mLeftLegAnalysis = BodyToAnalyze.LeftLegAnalysis;
+
             }
         }
 
-        protected override void BodyFrameUpdated(BodyFrame vFrame)
+
+        public void UpdateLeftKneeTextView(float vLeftKneeFlexionSignedAngle)
         {
-            if (mRightLegAnalysis != null && mLeftLegAnalysis != null)
-            {
-                RightKneeFlexionText.text = FeedbackAngleToString(mRightLegAnalysis.RightKneeFlexion);
-                LeftKneeFlexionText.text = FeedbackAngleToString(mLeftLegAnalysis.LeftKneeFlexion);
-            }
-            else
-            {
-                ClearText();
-            }
+            LeftKneeFlexionText.text = FeedbackAngleToString(vLeftKneeFlexionSignedAngle);
         }
 
-        protected override void ClearText()
+        public void UpdateRightKneeTextView(float vRightKneeFlexionSignedAngle)
+        {
+            RightKneeFlexionText.text = FeedbackAngleToString(vRightKneeFlexionSignedAngle);
+        }
+
+        public override void ClearText()
         {
             RightKneeFlexionText.text = "";
             LeftKneeFlexionText.text = "";
+        }
+
+        public void UpdateView(TPosedAnalysisFrame vFrame)
+        {
+            UpdateLeftKneeTextView(vFrame.LeftKneeFlexionSignedAngle);
+            UpdateRightKneeTextView(vFrame.RightElbowFlexionSignedAngle);
         }
     }
 }

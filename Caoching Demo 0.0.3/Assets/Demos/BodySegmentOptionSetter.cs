@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Assets.Scripts.Body_Data.View; 
+using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Utils.DebugContext;
 using UnityEngine;
 using UnityEngine.Events;
@@ -31,8 +31,8 @@ namespace Assets.Demos
         public GameObject BodySegmentOptionButtonPrefab;
         private Dictionary<string, FieldInfo> mButtonMappings = new Dictionary<string, FieldInfo>();
         public RectTransform ParentPanel;
-      
-       public void Awake()
+
+        public void Awake()
         {
             //Get all the fields marked as public and static 
             mButtonMappings =
@@ -71,10 +71,10 @@ namespace Assets.Demos
                     KeyCode vKeyCode = (KeyCode)(vMappedDictionary[vKvPair.Key].GetValue(null));
                     InputHandler.RegisterKeyboardAction(vKeyCode, vAction);
                     vButtonBSegment.AssociatedButton.onClick.AddListener(vAction);
-                }   
-                catch(KeyNotFoundException)
+                }
+                catch (KeyNotFoundException)
                 {
-                    Debug.Log("option "+  vKvPair.Key + " in BodySegment.cs not found in HeddokoDebugKeyMappings. Make sure that you have this  mapped in HeddokoDebugKeyMappings");
+                    //ignored
                 }
             }
 
@@ -100,11 +100,11 @@ namespace Assets.Demos
                 {
                     vRenderedBody.AssociatedBodyView.AssociatedBody.ResetBodyMetrics();
                 }
-                catch (NullReferenceException  )
+                catch (NullReferenceException)
                 {
-                   Debug.Log("Following Rendered body hasn't had a body/view assigned:  "+vRenderedBody.name);
+                    Debug.Log("Following Rendered body hasn't had a body/view assigned:  " + vRenderedBody.name);
                 }
-               
+
             }
         }
         /// <summary>
