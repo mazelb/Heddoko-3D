@@ -134,7 +134,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// </summary>
         public void ReleaseResources()
         {
-            Debug.Log("ReleaseResources.");
+ 
          }
     }
 }
