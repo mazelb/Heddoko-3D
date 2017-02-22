@@ -17,22 +17,25 @@ namespace Assets.Scripts.Body_Data.View
 {
     public class SensorRotation : MonoBehaviour
     {
-        private bool mCalState = false;
-        private bool mMagState = false;
-        public bool UseCorrection = false;
-        public bool IsReset = false;
+        private bool mCalState               = false;
+        private bool mMagState               = false;
+        public bool UseCorrection            = false;
+        public bool IsReset                  = false;
 
-        public Vector3 AxisOfRotation = new Vector3(0, 180, 0);
+        public Vector3 AxisOfRotation        = new Vector3(0, 180, 0);
         public Quaternion UpAxisRotation;
-        public Quaternion AbsoluteRotation = Quaternion.identity; // quaternion des capteurs
-        public Quaternion AbsoluteRotationInU = Quaternion.identity; // quaternion traduit dans le systeme de Unity
-        public Quaternion InitialRotation = Quaternion.identity; // quaternion associe aux valeurs initiales renvoyees par les capteurs 
-                                                                 // et corrigees pour tenir compte du decalage verticale (gravity offset) 
+        public Quaternion AbsoluteRotation   = Quaternion.identity; // quaternion des capteurs
+        public Quaternion AbsoluteRotationInU= Quaternion.identity; // quaternion traduit dans le systeme de Unity
+        public Quaternion InitialRotation    = Quaternion.identity; // quaternion associe aux valeurs initiales renvoyees par les capteurs 
+                                                                    // et corrigees pour tenir compte du decalage verticale (gravity offset) 
         public Quaternion InitialRotationInU = Quaternion.identity; // traduction de InitialRotation dans le systeme de Unity       
-        public Quaternion GravityOffsetInU = Quaternion.identity; // quaternion de correction par rapport a la verticale          
-        public Vector3 CurAccelVector = Vector3.zero;        // valeur actuelle de l'acceleration lineaire provenant des accelerometres
-        public Vector3 CurGyroVector = Vector3.zero;        // valeur actuelle de la vitesse angulaire porvenant des gyroscopes
-        public int CurId = -1;
+        public Quaternion GravityOffsetInU   = Quaternion.identity; // quaternion de correction par rapport a la verticale          
+        public Vector3 CurAccelVector        = Vector3.zero;        // valeur actuelle de l'acceleration lineaire provenant des accelerometres
+        public Vector3 CurGyroVector         = Vector3.zero;        // valeur actuelle de la vitesse angulaire porvenant des gyroscopes
+        //******
+        public Vector3 CurMagVector          = Vector3.zero;        // valeur actuelle champ magnetique
+        //******
+        public int     CurId                 = -1;
 
         [SerializeField]
         void Update()
@@ -43,15 +46,15 @@ namespace Assets.Scripts.Body_Data.View
             }
             if (IsReset)
             {
-                Quaternion vCurRotationInU = Quaternion.identity;
+                Quaternion vCurRotationInU   = Quaternion.identity;
                 Quaternion vExpectedRotation = Quaternion.identity;
-                Quaternion vGravityOffset = Quaternion.identity;
+                Quaternion vGravityOffset    = Quaternion.identity;
                 //Correction des orientations actuelles en tenant compte des valeurs initiales des quaternions et de la correction verticale 
                 vCurRotationInU = Quaternion.Inverse(InitialRotationInU) * (AbsoluteRotationInU * GravityOffsetInU);
                 //Filtrage passe-bas
-                Quaternion vNewRotationInU = Quaternion.Slerp(transform.rotation, vCurRotationInU, 0.3f);
+                Quaternion vNewRotationInU   = Quaternion.Slerp(transform.rotation, vCurRotationInU, 0.3f);
                 //transformation dans le systeme de Unity
-                transform.rotation = vNewRotationInU;
+                transform.rotation = vNewRotationInU;                
             }
         }
 
@@ -166,6 +169,16 @@ namespace Assets.Scripts.Body_Data.View
         {
             CurGyroVector = vNewGyro;
         }
+        //******
+       /// <summary>
+       /// methode de mise a jour du champ magnetique
+       /// </summary>
+       /// <param name="vNewMag"></param>
+        public void UpdateMag(Vector3 vNewMag)
+        {
+            CurMagVector = vNewMag;            
+        }
+        //************
 
         void Awake()
         {

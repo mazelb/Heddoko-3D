@@ -11,6 +11,7 @@ using heddoko;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using System.Text;
 
 namespace Assets.Scripts.Body_Data.View
 {
@@ -113,16 +114,112 @@ namespace Assets.Scripts.Body_Data.View
                 vFrameRot.w = vFrame.quat_w;
 
                 Vector3 vAccelVec = new Vector3(vFrame.Accel_x, vFrame.Accel_y, vFrame.Accel_z);
-                vAccelVec = Vector3.Normalize(vAccelVec);
+                Vector3 vGyroVec  = new Vector3(vFrame.Rot_x, vFrame.Rot_y, vFrame.Rot_z);     
+                
+                //champs magnetique provenant du capteur           
+                //****
+                Vector3 vMagVec   = new Vector3(vFrame.Mag_x, vFrame.Mag_y, vFrame.Mag_z);
+                //**************
 
-                Vector3 vGyroVec = new Vector3(vFrame.Rot_x, vFrame.Rot_y, vFrame.Rot_z);
 
                 Rotation.CurId = SensorPos;
                 Rotation.UpdateAccel(vAccelVec);
-                Rotation.UpdateGyro(vGyroVec);
+                Rotation.UpdateGyro(vGyroVec);  
+                
+                //Mise a jour du vecteur champs magnetique avec les valeurs courantes                          
+                //****
+                Rotation.UpdateMag(vMagVec);                
+                //**************
+
                 Rotation.UpdateRotatation(vFrameRot);
+
+                //Normalisation du champs magnetique 
+                //****
+                vMagVec               = Vector3.Normalize(vMagVec); 
+                //traduction du champ magnetique local mesure par le capteur vers le systeme de reference exterieur global  
+                Vector3 GMagVector    = Rotation.AbsoluteRotation * vMagVec;
+                //traduction de lacceleration gravitationnelle locale mesure par le capteur vers le systeme de reference exterieur global  
+                Vector3 GAccelVec     = Rotation.AbsoluteRotation * vAccelVec;
+                //declaration du vecteur portant la composante du champ magnetique perpendiculaire au champs gravitationnelle (tous deux mesurer dans le systeme exterieur global)
+                Vector3 CompMagPerp2G = new Vector3(0.0f,0.0f,0.0f);                
+                if (Rotation.CurId == 0)
+                {
+                    SensorContainer.MeanMagField = GMagVector;              // champ magnetique correspondant a la moyenne des mesures effectuees par les 9 capteurs pour un frame donne
+                    ConditionnalAccelerationAverage(GAccelVec, vGyroVec);   // appel de methode de moyennage conditionnel 
+                                                                            // utilise pour obtenir le champ gravitationnel lorsque aucune autre source d'acceleration 
+                                                                            // est presente ce qui implique pas de mouvement de rotation ni d'acceleration lineaire 
+                }
+                else if (Rotation.CurId == 8)                               // apres avoir parcourue les 9 capteurs on obtient la valeur moyenne du champ magnetique pour le frame
+                {                                                           // actuel. Aussi on obtient la composante perpendiculaire du champ magnetique en le projettant
+                    SensorContainer.MeanMagField *= Rotation.CurId;         // dans le plan defini par une normale de meme orientation que le champ gravitationnel moyen
+                    SensorContainer.MeanMagField += GMagVector;
+                    SensorContainer.MeanMagField /= (Rotation.CurId + 1.0f);
+                    ConditionnalAccelerationAverage(GAccelVec, vGyroVec);
+                    SensorContainer.NbSensAcc     = 1;
+                    CompMagPerp2G = VProjectionPerp2W(SensorContainer.MeanMagField, SensorContainer.MeanGravField);   //appel de la methode de projection du champ magnetique
+                }
+                else 
+                {
+                    SensorContainer.MeanMagField *= Rotation.CurId;          // accumulation des valeurs de champs magnetiques et acceleration pour les capteurs 1 a 7
+                    SensorContainer.MeanMagField += GMagVector;
+                    SensorContainer.MeanMagField /= (Rotation.CurId + 1.0f);
+                    ConditionnalAccelerationAverage(GAccelVec, vGyroVec);
+                }
+                //StringBuilder vBuilder = new StringBuilder();
+                //float dp = Vector3.Dot(CompMagPerp2G, SensorContainer.MeanGravField);
+                //vBuilder.Append("ns/" + Rotation.CurId);
+                //vBuilder.AppendFormat("                  /ms/ {0:0.00} / {1:0.00} / {2:0.00}", vMagVec.x,    vMagVec.y,    vMagVec.z);
+                //vBuilder.AppendFormat("                  /mg/ {0:0.00} / {1:0.00} / {2:0.00}", GMagVector.x, GMagVector.y, GMagVector.z);
+                //vBuilder.AppendFormat("                 /mgp/ {0:0.00} / {1:0.00} / {2:0.00}", CompMagPerp2G.x,
+                //                                                                               CompMagPerp2G.y,
+                //                                                                               CompMagPerp2G.z);
+                //vBuilder.AppendLine();
+                //vBuilder.AppendFormat("                 /sg/ {0:0.00} / {1:0.00} / {2:0.00}", vAccelVec.x, vAccelVec.y, vAccelVec.z);
+                //vBuilder.AppendFormat("                 /gg/ {0:0.00} / {1:0.00} / {2:0.00}", GAccelVec.x, GAccelVec.y, GAccelVec.z);
+                //vBuilder.AppendFormat("                 /mg/ {0:0.00} / {1:0.00} / {2:0.00} /dotpro/ {3:0.00} ", SensorContainer.MeanGravField.x,
+                //                                                                                                 SensorContainer.MeanGravField.y,
+                //                                                                                                 SensorContainer.MeanGravField.z,dp);
+                //vBuilder.AppendLine();
+                //ConsoleTextView.UpdateStaticConsole(vBuilder.ToString());               
+                //Debug.Log(vBuilder.ToString());                
+                //******************
             }
         }
+        /// <summary>
+        /// methode de moyennage conditionnelle pour l'acceleration
+        /// </summary>
+        /// <param name="CurAcc"></param>
+        /// <param name="CurGyro"></param>
+        public void ConditionnalAccelerationAverage(Vector3 CurAcc, Vector3 CurGyro)
+        {            
+            float GyroNorm        = CurGyro.magnitude/32767.0f;
+            float AcceNorm        = CurAcc.magnitude;
+            float DiffAccG        = Mathf.Abs(Mathf.Abs(AcceNorm)/2047.0f - 1.0f);
+            Vector3 vUnitAccelVec = Vector3.Normalize(CurAcc);
+            if (GyroNorm < 20.0f && DiffAccG < 0.02f)
+            {
+                SensorContainer.MeanGravField *= SensorContainer.NbSensAcc;
+                SensorContainer.MeanGravField += vUnitAccelVec            ;
+                SensorContainer.NbSensAcc++                               ;
+                SensorContainer.MeanGravField /= (float) SensorContainer.NbSensAcc;
+            }     
+        }
+        /// <summary>
+        /// methode de projection permettant d'extraire les composantes d'un vecteur (V) contenues dans le plan definit par un autre vecteur (W) la normale de ce plan.  
+        /// </summary>
+        /// <param name="V"></param>
+        /// <param name="W"></param>
+        /// <returns></returns>
+        public Vector3 VProjectionPerp2W(Vector3 V, Vector3 W)
+        {
+            Vector3 nv = V.normalized;
+            Vector3 nw = W.normalized;
+            float   nvdotnw = Vector3.Dot(nv, nw);
+            Vector3 PjpVonW = nv - nvdotnw * nw  ;
+            return  PjpVonW;          
+        }
+
+
 
         /// <summary>
         /// Changes the spatial position of the sensor
@@ -161,7 +258,6 @@ namespace Assets.Scripts.Body_Data.View
                 }
             }
         }
-
 
         public void OnPointerClick(PointerEventData vEventData)
         {

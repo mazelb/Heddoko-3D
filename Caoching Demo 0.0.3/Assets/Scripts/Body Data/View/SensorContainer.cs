@@ -27,6 +27,16 @@ namespace Assets.Scripts.Body_Data.View
         public Action<int> SensorSelected;
         public Action<int> SensorDeselected;
 
+        /// <summary>
+        /// declaration des vecteurs de champs magnetique et d'acceleration moyen visible de tous de l'interieur de SensorTransform 
+        /// </summary>
+        //******
+        public static Vector3 MeanMagField  = new Vector3(0, 0, 0);
+        public static Vector3 MeanGravField = new Vector3(0, 0, 0);
+        public static int NbSensAcc         = 1;                    // pour un frame donne nombre de capteurs ayant contribue a la moyenne 
+        //******                                                    // notons que la valeur moyenne du frame precedant est conserve et integre au moyennage 
+
+
         void Awake()
         {
             mRedPool = new ParticlePoolManager(18, RedPref);
