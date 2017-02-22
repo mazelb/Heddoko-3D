@@ -48,6 +48,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             {
                 return mNotifyingBody;
             }
+            private set
+            {
+                mNotifyingBody = value;
+            }
         }
 
         /// <summary>
@@ -69,10 +73,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             {
                 throw new NullReferenceException("Passed body to the AnalysisFramesCollectionController is null.");
             }
-            mNotifyingBody = vBody;
-            var vAnalysisSegments = vBody.AnalysisSegments;
+            Body = vBody;
+            var vAnalysisSegments = Body.AnalysisSegments;
             mTotalSingleSegmentsToCount = vAnalysisSegments.Count;
-            FramesSerializer.SetAnalysisSegments(vBody.AnalysisSegments.Values.ToList());
+            FramesSerializer.SetAnalysisSegments(Body.AnalysisSegments.Values.ToList());
             RegisterListener();
         }
 
@@ -81,12 +85,12 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// </summary>
         private void RegisterListener()
         {
-            if (mNotifyingBody != null)
+            if (Body != null)
             {
-                var vView = mNotifyingBody.View;
-                vView.BodyFrameUpdatedEvent += BodyFrameUpdatedEvent;
+                var vView = Body.View;
+                vView.BodyFrameUpdatedEvent += BodyFrameUpdatedHandler;
                 vView.BodyFrameResetInitializedEvent += BodyFrameResetInitializedEvent;
-                var vAnalysisSegments = mNotifyingBody.AnalysisSegments;
+                var vAnalysisSegments = Body.AnalysisSegments;
                 //set up analysis listeners
                 foreach (var vKeyValue in vAnalysisSegments)
                 {
@@ -101,7 +105,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// <param name="vPath">the path to serialize to</param>
         public void SerializeSet(string vPath)
         {
-            FramesSerializer.Serialize(mNotifyingBody.AnalysisFramesSet, vPath);
+            FramesSerializer.Serialize(Body.AnalysisFramesSet, vPath);
         }
 
         /// <summary>
@@ -110,6 +114,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// <param name="vBodyFrame">the frame that has been reset to</param>
         private void BodyFrameResetInitializedEvent(BodyFrame vBodyFrame)
         {
+
             if (!MovementSet || !mCollectingData)
             {
                 return;
@@ -140,8 +145,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// Event listener when the body updates its frame. 
         /// </summary>
         /// <param name="vNewFrame"></param>
-        private void BodyFrameUpdatedEvent(BodyFrame vNewFrame)
-        {
+        private void BodyFrameUpdatedHandler(BodyFrame vNewFrame)
+        { 
             //mCurrentFrameIndex = vNewFrame.Index;
             //if (mCurrentAnalysisFrame != null)
             //{
@@ -323,7 +328,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             if (Body != null)
             {
                 var vView = Body.View;
-                vView.BodyFrameUpdatedEvent -= BodyFrameUpdatedEvent;
+                vView.BodyFrameUpdatedEvent -= BodyFrameUpdatedHandler;
                 vView.BodyFrameResetInitializedEvent -= BodyFrameResetInitializedEvent;
                 var vAnalysisSegments = Body.AnalysisSegments;
                 //set up analysis listeners
