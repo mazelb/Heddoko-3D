@@ -170,10 +170,8 @@ namespace Assets.Scripts.Licensing.Controller
             bool vIsHandled = false;
             try
             {
-                UserRequest vRequest = vModel.UserRequest; 
-                Debug.Log("pre sign in");
+                UserRequest vRequest = vModel.UserRequest;  
                 User vUser = mClient.SignIn(vRequest); 
-                Debug.Log("post sign in");
                 if (!vUser.IsOk)
                 { 
                     OutterThreadToUnityThreadIntermediary.QueueActionInUnity(EnableControls);
