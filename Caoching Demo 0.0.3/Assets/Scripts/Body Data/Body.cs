@@ -69,6 +69,7 @@ public class Body
     private BodyView mView;
     [SerializeField]
     private RenderedBody mRenderedBody;
+    public IAnalysisFramesSet AnalysisFramesSet { get; set; }
 
     internal BodyFrameCalibrationContainer mBodyFrameCalibrationContainer = new BodyFrameCalibrationContainer();
     /**

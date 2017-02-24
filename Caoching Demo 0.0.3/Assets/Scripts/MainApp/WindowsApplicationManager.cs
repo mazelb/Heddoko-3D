@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.Communication;
 using Assets.Scripts.Licensing.Controller;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.Localization;
@@ -99,7 +100,9 @@ namespace Assets.Scripts.MainApp
                 OrganizationViewController.gameObject.SetActive(false);
             }
         }
- 
+
+        public AuthorizationManager AuthorizationManager { get; private set; }
+
         /// <summary>
         /// Register notification events 
         /// </summary>
