@@ -1,7 +1,7 @@
 ﻿// /**
 // * @file ProtoLanLiveView.cs
 // * @brief Contains the 
-// * @author Mohammed Haider( 
+// * @author Mohammed Haider( mohammed@heddoko.com)
 // * @date 09 2016
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
@@ -11,33 +11,29 @@ using Assets.Scripts.UI.AbstractViews.Layouts;
 using Assets.Scripts.UI.RecordingLoading;
 using UnityEngine;
 using System.Collections.Generic;
-using Assets.Scripts.Communication;
-using Assets.Scripts.Communication.Controller;
+using Assets.Scripts.Communication.Communicators;
 
 namespace Assets.Demos
 {
     public class ProtoLanLiveView : LiveSuitFeedView
     {
-        public UdpSocketListener mSocketListener; 
+        //   public UdpSocketListener mSocketListener;
+        public ProbuffMessageViewController ProbuffMessageViewController;
+        [SerializeField]
+        private SuitController mSuitController;
+
+
         void Awake()
         {
-            mSocketListener = new UdpSocketListener();
-               BodySegment.GBodyFrameUsingQuaternion = true;
+            //  mSocketListener = new UdpSocketListener();
+            BodySegment.GBodyFrameUsingQuaternion = true;
             List<ControlPanelType> vLeftSide = new List<ControlPanelType>();
             vLeftSide.Add(ControlPanelType.LiveBPFeedView);
             ControlPanelTypeList.Add(vLeftSide);
             Hide();
         }
 
-        void Start()
-        {
-         
-        }
 
-        void OnApplicationQuit()
-        {
-            mSocketListener.Stop();
-        }
         /// <summary>
         /// Create a default layout for the live feed view
         /// </summary>
@@ -57,9 +53,9 @@ namespace Assets.Demos
             mLiveFeedViewControlPanel.gameObject.SetActive(true);
             mLiveFeedViewControlPanel.Show();
             mIsInitialized = true;
-           
+            ProbuffMessageViewController.UpdateBody(BrainpackBody);
         }
- 
+
 
         /// <summary>
         /// Display the suit feed view and set contextual info
@@ -77,12 +73,13 @@ namespace Assets.Demos
                 mPanelNodes[0].PanelSettings.RequestResources();
             }
             BodySegment.GBodyFrameUsingQuaternion = true;
-            BrainpackBody.PlayFromDataStream(mSocketListener.FrameRouter);
-            mSocketListener.Start();
+
+            BrainpackBody.StartPullFromBuffer(mSuitController.FrameConverter);
+            ProbuffMessageViewController.BrainpackMessagePerSecond.Initialized = false;
             try
             {
-                BodySegment.IsUsingInterpolation = false;
-                BrainpackBody.View.ResetInitialFrame();
+                BodySegment.IsUsingInterpolation = false; BrainpackBody.View.ResetInitialFrame();
+                BodySegment.IsUsingInterpolation = true;
             }
             catch
             {
@@ -90,17 +87,14 @@ namespace Assets.Demos
             }
             BodySegment.IsUsingInterpolation = vIsLerp;
             SetContextualInfo();
-             
-            
         }
-
+        
         /// <summary>
         /// Set information relative to the context of this view
         /// </summary>
         private void SetContextualInfo()
         {
-            BodyFrameDataControl.SetBody(BrainpackBody);
-            FrameGraphControl.SetBody(BrainpackBody);
+            BodyFrameDataControl.SetBody(BrainpackBody); 
             AnaylsisTextContainer.BodyToAnalyze = BrainpackBody;
         }
 
@@ -136,8 +130,7 @@ namespace Assets.Demos
 
             try
             {
-                BrainpackBody.StopThread(); 
-                mSocketListener.Stop();
+                BrainpackBody.StopThread();
             }
             catch
             {
@@ -168,6 +161,13 @@ namespace Assets.Demos
             RenameRecordingText.color = vColorText;
         }
 
-         
+        void OnApplicationQuit()
+        {
+            if (BrainpackBody != null)
+            {
+                BrainpackBody.StopThread();
+            }
+            mSuitController.OnApplicationQuit();
+        }
     }
 }

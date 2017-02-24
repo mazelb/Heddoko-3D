@@ -99,7 +99,7 @@ namespace Assets.Scripts.MainApp
                 OrganizationViewController.gameObject.SetActive(false);
             }
         }
-
+ 
         /// <summary>
         /// Register notification events 
         /// </summary>

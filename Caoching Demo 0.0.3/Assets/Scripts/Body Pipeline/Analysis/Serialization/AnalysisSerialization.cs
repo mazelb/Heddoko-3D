@@ -26,7 +26,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <summary>
         /// sets the sign of the analysis attribute
         /// </summary>
-        [JsonProperty] public bool IsSignNegative;//{ get; set; }
+        [JsonProperty] public bool IsSignNegative;
 
         public int CompareTo(object obj)
         {

@@ -9,7 +9,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Net;
 using Assets.Scripts.Communication.Communicators;
 using Assets.Scripts.UI;
@@ -25,7 +24,7 @@ namespace Assets.Scripts.Communication
     public class TestConnection : MonoBehaviour
     {
         public SuitConnectionManager SuitConnectionManager;
-        private Brainpack mBrainpack;
+        private BrainpackNetworkingModel mBrainpack;
         public BrainpackStatusPanel BrainpackStatusPanel;
         public BrainpackContainerPanel BrainpackContainerPanel;
         private Version mServerVersion;
@@ -46,12 +45,13 @@ namespace Assets.Scripts.Communication
         }
         void Start()
         {
-            mBrainpack = new Brainpack();
+            mBrainpack = new BrainpackNetworkingModel();
             SuitConnectionManager = new SuitConnectionManager(mBrainpack);
             mAdvertisingListener = new BrainpackAdvertisingListener(10);
-            mAdvertisingListener.BrainpackFoundEvent += NewBrainpackFound;
-            mAdvertisingListener.BrainpackLostEvent += BrainpackLostHandler;
-            mAdvertisingListener.StartListener(6668);
+            mAdvertisingListener.RegisterBrainpackLostEventHandler(NewBrainpackFound);
+            mAdvertisingListener.RegisterBrainpackLostEventHandler(BrainpackLostHandler);
+     
+          //  mAdvertisingListener.StartListener(6668);
             mServerVersion = new Version(1, 5, 8, 0);
             BrainpackContainerPanel.BrainpackSelectedEvent += BrainpackSelected;
             BrainpackStatusPanel.UpdateLatestVersionText(mServerVersion.ToString());
@@ -138,12 +138,9 @@ namespace Assets.Scripts.Communication
                 }
                 yield return  new WaitForSeconds(mTimeToComplete * 0.15f);
             }
-
-
-
         }
 
-        private void BrainpackSelected(Brainpack vSelected)
+        private void BrainpackSelected(BrainpackNetworkingModel vSelected)
         {
             Version vBpVersion = new Version(vSelected.Version);
             if (vBpVersion.CompareTo(mServerVersion) < 0)
@@ -155,8 +152,7 @@ namespace Assets.Scripts.Communication
 
             IPEndPoint vEndPoint = (IPEndPoint)vSelected.Point;
             string vIpAddress = vEndPoint.Address.ToString();
-            SuitConnectionManager.ConnectToSuitControlSocket(vIpAddress, vSelected.TcpControlPort);
-
+            SuitConnectionManager.ConnectToSuitControlSocket(vSelected);
         }
 
 
@@ -164,8 +160,7 @@ namespace Assets.Scripts.Communication
         public void RequestDataStream()
         {
             SuitConnectionManager.RequestDataStreamFromBrainpack(1258);
-            BrainpackStatusPanel.ConnectToBrainpackButton.gameObject.SetActive(false);
-        }
+         }
 
         public void SendReq()
         {
@@ -173,11 +168,11 @@ namespace Assets.Scripts.Communication
             vPacket.type = PacketType.StatusRequest;
             SuitConnectionManager.SendPacket(vPacket);
         }
-        private void BrainpackLostHandler(Brainpack vBrainpack)
+        private void BrainpackLostHandler(BrainpackNetworkingModel vBrainpack)
         {
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() =>
             {
-                Brainpack vBrainpackCopy = new Brainpack();
+                BrainpackNetworkingModel vBrainpackCopy = new BrainpackNetworkingModel();
                 vBrainpackCopy.Id = vBrainpack.Id;
                 vBrainpackCopy.Version = vBrainpack.Version;
                 vBrainpackCopy.Point = vBrainpack.Point;
@@ -187,11 +182,10 @@ namespace Assets.Scripts.Communication
 
         }
 
-        private void NewBrainpackFound(Brainpack vBrainpack)
+        private void NewBrainpackFound(BrainpackNetworkingModel vBrainpack)
         {
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(
                 () => BrainpackContainerPanel.AddBrainpackModel(vBrainpack));
-
         }
 
         private void UpdateStatusPanelView()
@@ -211,7 +205,7 @@ namespace Assets.Scripts.Communication
             else
             {
                 IPEndPoint vIp = mBrainpack.Point as IPEndPoint;
-                SuitConnectionManager.ConnectToSuitControlSocket(vIp.Address.ToString(), mBrainpack.TcpControlPort);
+                SuitConnectionManager.ConnectToSuitControlSocket(mBrainpack);
                 SuitConnectionManager.UpdateFirmware("firmware.bin");
             }
 
@@ -270,8 +264,8 @@ namespace Assets.Scripts.Communication
             }
             mAdvertisingListener.StopListening();
 
-            mAdvertisingListener.BrainpackFoundEvent -= NewBrainpackFound;
-            mAdvertisingListener.BrainpackLostEvent -= BrainpackLostHandler;
+            mAdvertisingListener.RemoveBrainpackFoundEventHandler(NewBrainpackFound);
+            mAdvertisingListener.RemoveBrainpackLostEventHandler(BrainpackLostHandler); 
             BrainpackContainerPanel.BrainpackSelectedEvent -= BrainpackSelected;
 
         }

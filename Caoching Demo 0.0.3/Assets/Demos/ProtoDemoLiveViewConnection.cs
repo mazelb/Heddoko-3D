@@ -115,7 +115,7 @@ namespace Assets.Demos
         private void SetContextualInfo()
         {
             BodyFrameDataControl.SetBody(BrainpackBody);
-            FrameGraphControl.SetBody(BrainpackBody);
+      //      FrameGraphControl.SetBody(BrainpackBody);
             AnaylsisTextContainer.BodyToAnalyze = BrainpackBody;
         }
 

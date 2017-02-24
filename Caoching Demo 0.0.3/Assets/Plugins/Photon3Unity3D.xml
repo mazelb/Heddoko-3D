@@ -386,7 +386,7 @@
             Events are buffered on the client side and must be Dispatched. This way, OnEvent is always taking
             place in the same thread as a <see cref="M:ExitGames.Client.Photon.PhotonPeer.DispatchIncomingCommands"/> call.
             </remarks>
-            <param name="eventData">The event currently being dispatched.</param>
+            <param name="vEventData">The event currently being dispatched.</param>
         </member>
         <member name="M:ExitGames.Client.Photon.IPhotonSocket.TryParseAddress(System.String,System.String@,System.UInt16@)">
             <summary>

@@ -2434,6 +2434,5 @@ public partial class BodySegment
     }
 
 #endif
-
 }
 

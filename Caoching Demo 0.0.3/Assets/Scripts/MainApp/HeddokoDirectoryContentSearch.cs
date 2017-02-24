@@ -97,20 +97,6 @@ namespace Assets.Scripts.MainApp
             }
              vFileInfos.AddRange(SimpleScan(vRootDir));
             return vFileInfos;
-            //if (vDirectories.Count == 0)
-            //{
-            //    vFileInfos.AddRange(SimpleScan(vRootDir));
-            //    return vFileInfos;
-            //}
-            //else
-            //{
-
-            //    foreach (var vDirectoryInfo in vDirectories)
-            //    {
-            //       vFileInfos.AddRange(GetFileInfoList(vDirectoryInfo));
-            //    }
-            //}
-
 
         }
 

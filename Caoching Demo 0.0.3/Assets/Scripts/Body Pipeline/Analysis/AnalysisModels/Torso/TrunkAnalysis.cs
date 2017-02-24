@@ -36,7 +36,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Trunk
         [AnalysisSerialization(IgnoreAttribute = true)]
         public Transform HipTransform;
         [AnalysisSerialization(IgnoreAttribute = true)]
-        public Transform KneeTransform;
+        public Transform KneeTransform { get; set; }
 
         //Accelerations and velocities
         [AnalysisSerialization(IgnoreAttribute = true)]

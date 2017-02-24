@@ -7,6 +7,8 @@
 // */
 
 using System;
+using Assets.Scripts.Communication.Communicators;
+using Assets.Scripts.Localization;
 using heddoko;
 using HeddokoLib.HeddokoDataStructs.Brainpack;
 using UnityEngine;
@@ -22,9 +24,16 @@ namespace Assets.Scripts.UI
         public Text FirmwareVersionText;
         public Text ChargingStatusText;
         public Text BatteryLevelText;
-        private Brainpack mCurrentBrainpack;
+        private BrainpackNetworkingModel mCurrentBrainpack;
         public Text LatestVersionText;
-        public Button ConnectToBrainpackButton;
+        private Button mConnectToBrainpackButton;
+        public Button StartStreamingButton;
+        public Text StartStreamText;
+        private bool StreamEnabled;
+        /// <summary>
+        /// Event to request a stream to start.
+        /// </summary>
+        public event Action<bool> RequestStreamStartEvent;
 
         /// <summary>
         /// Registers the fimrware sub panel's button to begin the Firmware Update process
@@ -33,13 +42,24 @@ namespace Assets.Scripts.UI
         public void RegisterFirmwareSubPanelUpdateCallback(Action vCallbackAction)
         {
             FirmwareSubPanel.RegisterUpdateAction(vCallbackAction);
+            StartStreamText.text = "";
+            StartStreamingButton.enabled = false;
         }
-
-
 
         void Start()
         {
             Clear();
+            StartStreamingButton.onClick.AddListener(SetBrainpackStream);
+        }
+
+        private void SetBrainpackStream()
+        {
+            Debug.Log("Set stream " +Time.time);
+            StreamEnabled = !StreamEnabled;
+            if (RequestStreamStartEvent != null)
+            {
+                RequestStreamStartEvent(StreamEnabled);
+            } 
         }
 
         public void UpdateLatestVersionText(string vText)
@@ -61,7 +81,7 @@ namespace Assets.Scripts.UI
             }
         }
 
-        public void UpdateView(Brainpack vBrainpack)
+        public void UpdateView(BrainpackNetworkingModel vBrainpack)
         {
             FirmwareVersionText.text = vBrainpack.Version;
             BrainpackSerialNumberText.text = vBrainpack.Id;
@@ -72,7 +92,7 @@ namespace Assets.Scripts.UI
         /// Clears the view if the passed in brainpack is the same as the current brainpack
         /// </summary>
         /// <param name="vBrainpack"></param>
-        public void ClearIfBrainpack(Brainpack vBrainpack)
+        public void ClearIfBrainpack(BrainpackNetworkingModel vBrainpack)
         {
             if (mCurrentBrainpack != null)
             {
@@ -92,6 +112,60 @@ namespace Assets.Scripts.UI
             FirmwareVersionText.text = "";
             BrainpackSerialNumberText.text = "";
             BatteryLevelText.text = "NO BP";
+        }
+
+        /// <summary>
+        /// Sets the control state 
+        /// </summary>
+        /// <param name="vArg1"></param>
+        public void SetBrainpackTcpControlState(BrainpackConnectionStateChange vArg1)
+        {
+           
+            //if (vArg1.NewState == BrainpackConnectionState.Connected)
+            //{
+            //    StartStreamingButton.enabled = true;
+            //    StartStreamText.text = LocalizationBinderContainer.GetString(KeyMessage.StartStreamingControl);
+            //}
+            //else if (vArg1.NewState == BrainpackConnectionState.Disconnected)
+            //{
+            //    StartStreamingButton.enabled = false;
+            //    StartStreamText.text = LocalizationBinderContainer.GetString(KeyMessage.BrainpackDisconnected);
+            //}
+            //else if (vArg1.NewState == BrainpackConnectionState.Connecting)
+            //{
+            //    StartStreamingButton.enabled = false;
+            //    StartStreamText.text = LocalizationBinderContainer.GetString(KeyMessage.BrainpackConnecting);
+            //}
+        }
+        /// <summary>
+        /// update the status of the brainpack panel
+        /// </summary>
+        /// <param name="vBatteryLevel"></param>
+        /// <param name="vBatteryChargeState"></param>
+        /// <param name="vBrainpackState"></param>
+        public void UpdateStatus(int vBatteryLevel, ChargeState vBatteryChargeState, BrainpackState vBrainpackState)
+        {
+            Debug.Log("response " + Time.time);
+
+            if (vBatteryChargeState == ChargeState.Charging)
+            {
+                BatteryLevelText.text = "CHRG";
+            }
+            else
+            {
+                BatteryLevelText.text = vBatteryLevel.ToString();
+            }
+            if (vBrainpackState == BrainpackState.Streaming)
+            {
+                StartStreamText.text = LocalizationBinderContainer.GetString(KeyMessage.StopStreamingControl);
+                StartStreamingButton.enabled = true;
+            }
+            if (vBrainpackState == BrainpackState.Idle)
+            {
+                StartStreamText.text = LocalizationBinderContainer.GetString(KeyMessage.StartStreamingControl);
+                StartStreamingButton.enabled = true;
+            }
+             
         }
     }
 }

@@ -25,9 +25,11 @@ namespace Assets.Scripts.Body_Data.view
 
         //Initial subsegment position 
         private Vector3 mInitialPosition = Vector3.zero;
-        public Quaternion mInitialRotation;
+        [SerializeField]
+        public Quaternion mInitialRotation = Quaternion.identity;
 
-        //Sprite Transform2D
+         
+         //Sprite Transform2D
         private ISpriteMover mSpriteMover;
 
         //This flag turned on, mean that the assigned Transform is a 3D model, else use a 2D sprite
@@ -96,6 +98,11 @@ namespace Assets.Scripts.Body_Data.view
             //Find the 2D representation of the object in the scene 
         }
 
+        public void SetInitialQuaternion(Quaternion vInit)
+        {
+            mInitialRotation = vInit;
+        }
+
         public void ApplyTransformations(Quaternion vNewOrientation, int vApplyLocal = 0, bool vResetRotation = false)
         {
             foreach (Transform vObjTransform in SubSegmentTransforms)
@@ -121,7 +128,7 @@ namespace Assets.Scripts.Body_Data.view
                         vObjTransform.Rotate(vNewOrientation.eulerAngles, Space.World);
                         break;
                 }
-            }
+             }
             if (mSpriteMover != null)
             {
                 mSpriteMover.ApplyTransformations();
@@ -133,13 +140,7 @@ namespace Assets.Scripts.Body_Data.view
         {
             foreach (Transform vObjTransform in SubSegmentTransforms)
             {
-                //Debug.Log(vNewDisplacement - vObjTransform.position);
                 vObjTransform.position = vNewDisplacement;
-            }
-
-            if (mSpriteMover != null)
-            {
-                //mSpriteMover.ApplyTranslations(vNewDisplacement);
             }
         }
 
@@ -155,10 +156,6 @@ namespace Assets.Scripts.Body_Data.view
             {
                 mSpriteMover.ResetOrientations();
             }
-            //if (Camera.main != null && Camera.main.gameObject.activeInHierarchy)
-            //{
-            //    Camera.main.Render();
-            //}
         }
 
         public void ResetPositions()
@@ -166,13 +163,7 @@ namespace Assets.Scripts.Body_Data.view
             foreach (Transform vObjTransform in SubSegmentTransforms)
             {
                 vObjTransform.localPosition = mInitialPosition;
-                //vObjTransform.position = mInitialPosition;
             }
-
-            //if (Camera.main != null)
-            //{
-            //    Camera.main.Render();
-            //}
         }
 
         /**
@@ -232,7 +223,6 @@ namespace Assets.Scripts.Body_Data.view
         {
             foreach (Transform vObjTransform in SubSegmentTransforms)
             {
-                //mInitialRotation = new Quaternion(vObjTransform.localRotation.x, vObjTransform.localRotation.y, vObjTransform.localRotation.z, vObjTransform.localRotation.w);
                 vObjTransform.rotation = Quaternion.identity;
                 vObjTransform.localRotation = Quaternion.identity;
             }

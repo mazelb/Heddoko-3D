@@ -13,8 +13,7 @@ using heddoko;
 using HeddokoLib.adt; 
 using HeddokoLib.heddokoProtobuff.Decoder;
 using ProtoBuf;
-using UnityEngine;
-using Random = UnityEngine.Random;
+using UnityEngine; 
 
 namespace Assets.Scripts.Communication
 {
@@ -29,6 +28,7 @@ namespace Assets.Scripts.Communication
         private BodyFrameBuffer mOutBoundBuffer;
         private ProtobuffDispatchRouter mProtDispatchRouter; 
         private MemoryStream mMemoryStream = new MemoryStream();
+        public ProtoFrameDelegate DataFrameMessageReceivedEvent;
         /// <summary>
         /// Constructor needing an inbound and outbound buffer. Call Start to start the process. 
         /// </summary>
@@ -55,8 +55,12 @@ namespace Assets.Scripts.Communication
 
             if (OutBoundBuffer.AllowOverflow || (!OutBoundBuffer.AllowOverflow && !OutBoundBuffer.IsFull()))
             {
-                var vBodyFrame = new BodyFrame(vPacket);
+                var vBodyFrame = new BodyFrame(vPacket );
                 OutBoundBuffer.Enqueue(vBodyFrame);
+                if (DataFrameMessageReceivedEvent != null)
+                {
+                    DataFrameMessageReceivedEvent(vSender, vPacket);
+                }
             }
         }
 

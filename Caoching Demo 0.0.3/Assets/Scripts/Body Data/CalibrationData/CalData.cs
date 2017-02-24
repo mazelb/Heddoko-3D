@@ -92,7 +92,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
             float tT2half = (endT2 + startT2) / 2.0F;
 
             float startZ = TimePose["Z"][0];
-            float endZ   = TimePose["Z"][TimePose["Z"].Count - 1];
+            float endZ   = TimePose["Z"][TimePose["z"].Count - 1];
             float tZhalf = (endZ + startZ) / 2.0F;
 
             float startS = TimePose["S"][0];
@@ -275,7 +275,7 @@ namespace Assets.Scripts.Body_Data.CalibrationData
             }
             M = p.Parkfunc(Zero, Zero, "Eig");
             /*Debug.Log("Transformations X and M");
-            Print(X, "X", 2);
+            Print(X, "x", 2);
             Print(M, "M", 2);
             Print(p.vec , "v", 2);
             Print(p.Eigvec, "Eigvec", 2);

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using Newtonsoft.Json;
 using Assets.Scripts.Utils;
 using System.IO;
+using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 
 [JsonObject(MemberSerialization.OptIn)]
@@ -42,20 +43,64 @@ public class BodyStructureMap
                 instance.CreateSegmentToSubSegmentMap();
                 instance.CreateSensorPosToSensorIDMap();
                 instance.CreateSensorPosToSensorTypeMap();
+                instance.CreateSensorPosToSegmentType();
                 instance.isInitialized = true;
+
             }
             return instance;
         }
     }
+
     #endregion
 
 
     public struct TrackingStructure
     {
-        public BodyFrame.Vect4 InitRawEuler;
-        public BodyFrame.Vect4 CurrRawEuler;
-        public CalibrationStructure CalibrationData;
-    };
+        public BodyFrame.Vect4 InitRawData;
+        public BodyFrame.Vect4 CurrRawData;
+        /// <summary>
+        /// the initial frame's acceleration data
+        /// </summary>
+        public Vector3 InitAccelData;
+        /// <summary>
+        /// the current(newest) frame's acceleration data
+        /// </summary>
+        public Vector3 CurrAccelData;
+        /// <summary>
+        /// the initial frame's mag data
+        /// </summary>
+        public Vector3 InitMagData;
+        /// <summary>
+        /// the current(newest) frame's mag data
+        /// </summary>
+        public Vector3 CurrMagData;
+        /// <summary>
+        /// the initial frame's gyro data
+        /// </summary>
+        public Vector3 InitGyroData;
+        /// <summary>
+        /// the current(newest) frame's gyro data
+        /// </summary>
+        public Vector3 CurrGyroData;
+
+        ///  <summary>
+        /// intialize an instance of the tracking structure from a given body frame
+        ///  </summary> 
+        /// <param name="vInitialFrame">The initial frame </param>
+        /// <param name="vNewBodyFrame">the current body frame</param>
+        /// <param name="vPosition">the position to track</param>
+        public TrackingStructure(BodyFrame vInitialFrame, BodyFrame vNewBodyFrame, SensorPositions vPosition)
+        {
+            InitRawData = vInitialFrame.FrameData[vPosition];
+            CurrRawData = vNewBodyFrame.FrameData[vPosition];
+            InitAccelData = vInitialFrame.AccelFrameData[vPosition];
+            CurrAccelData = vNewBodyFrame.AccelFrameData[vPosition];
+            InitMagData = vInitialFrame.MagFrameData[vPosition];
+            CurrMagData = vNewBodyFrame.MagFrameData[vPosition];
+            InitGyroData = vInitialFrame.GyroFrameData[vPosition];
+            CurrGyroData = vNewBodyFrame.GyroFrameData[vPosition];
+        }
+     };
 
     public struct CalibrationStructure
     {
@@ -79,12 +124,11 @@ public class BodyStructureMap
     //Segment Types
     public enum SegmentTypes
     {
-        SegmentType_Hips = 0,
-        SegmentType_Trunk =1,
-        SegmentType_RightArm = 2,
-        SegmentType_LeftArm = 3,
-        SegmentType_RightLeg = 4,
-        SegmentType_LeftLeg = 5,
+        SegmentType_Trunk = 0,
+        SegmentType_RightArm = 1,
+        SegmentType_LeftArm = 2,
+        SegmentType_RightLeg = 3,
+        SegmentType_LeftLeg = 4,
         SegmentType_Count
     };
 
@@ -141,11 +185,13 @@ public class BodyStructureMap
     public Dictionary<SegmentTypes, List<SubSegmentTypes>> SegmentToSubSegmentMap = new Dictionary<SegmentTypes, List<SubSegmentTypes>>();
     [JsonProperty]
     public Dictionary<SegmentTypes, List<SensorPositions>> SegmentToSensorPosMap = new Dictionary<SegmentTypes, List<SensorPositions>>();
+    public Dictionary<SensorPositions, SegmentTypes> SensorPosToSegmentType = new Dictionary<SensorPositions, SegmentTypes>();
     [JsonProperty]
     public Dictionary<SensorPositions, SensorTypes> SensorPosToSensorTypeMap = new Dictionary<SensorPositions, SensorTypes>();
     [JsonProperty]
     public Dictionary<SensorPositions, int> SensorPosToSensorIDMap = new Dictionary<SensorPositions, int>();
-
+    public Dictionary<SensorPositions, UnityEngine.Quaternion> PniSensorRotationToSegmentMap = new Dictionary<SensorPositions, Quaternion>();
+    
     //Build body structure maps
     public void ReadBodyStructureFile()
     {
@@ -182,6 +228,24 @@ public class BodyStructureMap
     {
         string path = FilePathReferences.LocalSavedDataPath("body_structure_map.json");
         JsonUtilities.ConvertObjectToJson(path, this);
+    }
+
+    public void CreateSensorPosToSegmentType()
+    {
+        SensorPosToSegmentType.Add(SensorPositions.SP_UpperSpine, SegmentTypes.SegmentType_Trunk);
+        SensorPosToSegmentType.Add(SensorPositions.SP_LowerSpine, SegmentTypes.SegmentType_Trunk);
+        SensorPosToSegmentType.Add(SensorPositions.SP_RightUpperArm, SegmentTypes.SegmentType_RightArm);
+        SensorPosToSegmentType.Add(SensorPositions.SP_RightForeArm, SegmentTypes.SegmentType_RightArm);
+        SensorPosToSegmentType.Add(SensorPositions.SP_LeftUpperArm, SegmentTypes.SegmentType_LeftArm);
+        SensorPosToSegmentType.Add(SensorPositions.SP_LeftForeArm, SegmentTypes.SegmentType_LeftArm);
+        SensorPosToSegmentType.Add(SensorPositions.SP_RightThigh, SegmentTypes.SegmentType_RightLeg);
+        SensorPosToSegmentType.Add(SensorPositions.SP_RightCalf, SegmentTypes.SegmentType_RightLeg);
+        SensorPosToSegmentType.Add(SensorPositions.SP_LeftThigh, SegmentTypes.SegmentType_LeftLeg);
+        SensorPosToSegmentType.Add(SensorPositions.SP_LeftCalf, SegmentTypes.SegmentType_LeftLeg);
+        SensorPosToSegmentType.Add(SensorPositions.SP_LeftKnee, SegmentTypes.SegmentType_LeftLeg);
+        SensorPosToSegmentType.Add(SensorPositions.SP_RightElbow, SegmentTypes.SegmentType_RightArm);
+        SensorPosToSegmentType.Add(SensorPositions.SP_LeftElbow, SegmentTypes.SegmentType_LeftArm);
+        SensorPosToSegmentType.Add(SensorPositions.SP_RightKnee, SegmentTypes.SegmentType_RightLeg);
     }
 
     public void CreateBodyToSegmentMap()
@@ -257,14 +321,6 @@ public class BodyStructureMap
                         SegmentToSubSegmentMap.Add(SegmentTypes.SegmentType_Trunk, vTorsoSubSegments);
                     }
                     break;
-                case SegmentTypes.SegmentType_Hips:
-                    {
-                        List<SubSegmentTypes> vHipSubSegments = new List<SubSegmentTypes>();
-                        vHipSubSegments.Add(SubSegmentTypes.SubsegmentType_LowerSpine);
-                        vHipSubSegments.Add(SubSegmentTypes.SubsegmentType_UpperSpine);
-                        SegmentToSubSegmentMap.Add(SegmentTypes.SegmentType_Hips, vHipSubSegments);
-                    }
-                    break;
                 case SegmentTypes.SegmentType_RightArm:
                     {
                         List<SubSegmentTypes> vRightArmSubSegments = new List<SubSegmentTypes>();
@@ -320,14 +376,6 @@ public class BodyStructureMap
                         vTorsoSensorPos.Add(SensorPositions.SP_UpperSpine);
                         vTorsoSensorPos.Add(SensorPositions.SP_LowerSpine);
                         SegmentToSensorPosMap.Add(SegmentTypes.SegmentType_Trunk, vTorsoSensorPos);
-                    }
-                    break;
-                case SegmentTypes.SegmentType_Hips:
-                    {
-                        List<SensorPositions> vHipSensorPos = new List<SensorPositions>();
-                        vHipSensorPos.Add(SensorPositions.SP_UpperSpine);
-                        vHipSensorPos.Add(SensorPositions.SP_LowerSpine);
-                        SegmentToSensorPosMap.Add(SegmentTypes.SegmentType_Hips, vHipSensorPos);
                     }
                     break;
                 case SegmentTypes.SegmentType_RightArm:

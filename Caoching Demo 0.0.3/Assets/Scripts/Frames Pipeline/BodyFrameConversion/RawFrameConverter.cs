@@ -73,8 +73,9 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
         /// <returns>A converted BodyFrame</returns>
         public static BodyFrame ConvertRawFrame(BodyProtoPacketFrame vProtopacketFrame)
         {
-            return new BodyFrame(vProtopacketFrame.Packet);
-
+           var vBodyFrame = new  BodyFrame(vProtopacketFrame.Packet);
+            vBodyFrame.Index = vProtopacketFrame.Index;
+            return vBodyFrame;
         }
         /// <summary>
         /// Converts encoded raw frame data to a bodyframe

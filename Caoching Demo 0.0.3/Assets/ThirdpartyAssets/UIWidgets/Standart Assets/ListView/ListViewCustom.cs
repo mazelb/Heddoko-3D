@@ -1255,7 +1255,7 @@ namespace UIWidgets
 					
 					if (GetScrollValue() > item_ends)
 					{
-						SetScrollValue(item_ends);
+					//	SetScrollValue(item_ends);
 					}
 				}
 			}

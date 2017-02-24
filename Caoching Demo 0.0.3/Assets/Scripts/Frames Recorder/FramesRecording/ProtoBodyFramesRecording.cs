@@ -73,10 +73,7 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
         /// </summary> 
         /// <param name="vRecordingReaderbase"></param>
         public override void ExtractRawFramesData(BodyRecordingReaderBase vRecordingReaderbase)
-        {
-            Stopwatch vStopwatch =  new Stopwatch();
-            vStopwatch.Start();
-            //Serializer.PrepareSerializer<Packet>();
+        {  
             ProtoBodyRecordingReader vReader = (ProtoBodyRecordingReader) vRecordingReaderbase; 
             MemoryStream vStream = new MemoryStream();
             for (int vI = 0; vI < vReader.RawProtopackets.Count; vI++)
@@ -98,8 +95,7 @@ namespace Assets.Scripts.Frames_Recorder.FramesRecording
                     Debug.Log(vE.Message);
                 }
             } 
-            vStopwatch.Stop();
-            Debug.Log("completed after "+(vStopwatch.ElapsedMilliseconds/1000 )+ " seconds");
+            
         }
 
         public override void RemoveAt(int vI)

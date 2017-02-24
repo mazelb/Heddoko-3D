@@ -12,6 +12,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Timers;
+using Assets.Scripts.Utils.DebugContext.logging;
 using heddoko;
 using HeddokoLib.heddokoProtobuff.Decoder;
 using HeddokoLib.HeddokoDataStructs.Brainpack;
@@ -20,15 +21,15 @@ using Timer = System.Timers.Timer;
 
 namespace Assets.Scripts.Communication.Communicators
 {
-    public delegate void BrainpackFound(Brainpack vBrainpack);
+    public delegate void BrainpackFound(BrainpackNetworkingModel vBrainpack);
 
-    public delegate void BrainpackLost(Brainpack vBrainpack);
+    public delegate void BrainpackLost(BrainpackNetworkingModel vBrainpack);
     public class BrainpackAdvertisingListener
     {
         private UdpClient mClient;
         private int mPort;
-        public event BrainpackFound BrainpackFoundEvent;
-        public event BrainpackLost BrainpackLostEvent;
+        private event BrainpackFound BrainpackFoundEvent;
+        private event BrainpackLost BrainpackLostEvent;
         private double mTimer;
         private Timer mBrainpackTimer;
         Dictionary<string, BrainpackItemStructure> mFoundBrainpacks = new Dictionary<string, BrainpackItemStructure>();
@@ -46,8 +47,30 @@ namespace Assets.Scripts.Communication.Communicators
             mBrainpackTimer.Start();
         }
 
+        public void RegisterBrainpackFoundEventHandler(BrainpackFound vHandler)
+        {
+            BrainpackFoundEvent += vHandler;
+        }
+
+        public void RemoveBrainpackFoundEventHandler(BrainpackFound vHandler)
+        {
+            BrainpackFoundEvent -= vHandler;
+        }
+        public void RegisterBrainpackLostEventHandler(BrainpackLost vHandler)
+        {
+            BrainpackLostEvent += vHandler;
+        }
+
+
+        public void RemoveBrainpackLostEventHandler(BrainpackLost vHandler)
+        {
+            BrainpackLostEvent -= vHandler;
+        }
+
+
         private void VerifyBrainpackCallTime(object vSender, ElapsedEventArgs vE)
         {
+            DebugLogger.Instance.LogMessage(LogType.ApplicationCommand,"verifying brainpack calltime");
             var vTimeNow = DateTime.Now;
             //indices of brainpacks that need to be removed
             List<string> vKeysToRemoves = new List<string>();
@@ -65,6 +88,8 @@ namespace Assets.Scripts.Communication.Communicators
                 mFoundBrainpacks.Remove(vKeysToRemoves[vI]);
                 if (BrainpackLostEvent != null)
                 {
+                    DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "lost a brainpack Id: "+ vRemoved.BrainpackModel.Id);
+
                     BrainpackLostEvent(vRemoved.BrainpackModel);
                 }
             }
@@ -80,14 +105,13 @@ namespace Assets.Scripts.Communication.Communicators
 
             vState.Client = mClient;
             vState.EndPoint = vEp;
-
             mClient.BeginReceive(new AsyncCallback(OnReceive), vState);
         }
 
         private void OnReceive(IAsyncResult vAr)
         {
             UdpState vIncomingConnection = (UdpState)vAr.AsyncState;
-            IPEndPoint vEndpoint = new IPEndPoint(IPAddress.Any,  mPort); 
+            IPEndPoint vEndpoint = new IPEndPoint(IPAddress.Any,  mPort);
             try
             {
                 byte[] vBuffer = vIncomingConnection.Client.EndReceive(vAr, ref vEndpoint);
@@ -113,7 +137,7 @@ namespace Assets.Scripts.Communication.Communicators
                                 {
                                     //reset the stream pointer, write and reset.
                                     vMemorySteam.Seek(0, SeekOrigin.Begin);
-                                    vMemorySteam.Write(vDeepCopy.Payload, 1, (int)vDeepCopy.PayloadSize - 1);
+                                    vMemorySteam.Write(vDeepCopy.Payload, 1, (int) vDeepCopy.PayloadSize - 1);
                                     vMemorySteam.Seek(0, SeekOrigin.Begin);
                                     Packet vProtoPacket = Serializer.Deserialize<Packet>(vMemorySteam);
                                     var vMsgType = vProtoPacket.type;
@@ -122,12 +146,12 @@ namespace Assets.Scripts.Communication.Communicators
                                         //get the serial number of the advertising brainpack
                                         if (!mFoundBrainpacks.ContainsKey(vProtoPacket.serialNumber))
                                         {
-                                            Brainpack vBp = new Brainpack();
+                                            BrainpackNetworkingModel vBp = new BrainpackNetworkingModel();
                                             vBp.Version = vProtoPacket.firmwareVersion;
                                             vBp.Id = vProtoPacket.serialNumber;
                                             vBp.Point = vEndpoint;
-                                            vBp.TcpControlPort = (int)vProtoPacket.configurationPort;
-                                       
+                                            vBp.TcpControlPort = (int) vProtoPacket.configurationPort;
+                                            vBp.TcpIpEndPoint = vEndpoint.Address.ToString();
                                             if (BrainpackFoundEvent != null)
                                             {
                                                 BrainpackFoundEvent(vBp);
@@ -151,14 +175,31 @@ namespace Assets.Scripts.Communication.Communicators
                             }
                         }
                     }
-                    vIncomingConnection.Client.BeginReceive(new AsyncCallback(OnReceive), vIncomingConnection);
+                    mClient.BeginReceive(new AsyncCallback(OnReceive), vIncomingConnection);
                 }
             }
 
             catch
                 (SocketException vE)
             {
+                string vMsg = "Exception caughtin advertising listener :" + vE;
+                vMsg += ";";
+                if (vE.InnerException != null)
+                {
+                    vMsg += vE.InnerException;
+                }
+                DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, vMsg);
                 UnityEngine.Debug.Log("error in bp advertising listener" + vE.Message);
+            }
+            catch (Exception vE)
+            {
+                string vMsg = "Socket Exception caughtin advertising listener :" + vE;
+                vMsg += ";";
+                if (vE.InnerException != null)
+                {
+                    vMsg += vE.InnerException;
+                }
+                DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, vMsg);
             }
 
         }
@@ -167,14 +208,21 @@ namespace Assets.Scripts.Communication.Communicators
 
         public void StopListening()
         {
-            mClient.Close();
-        }
+            try
+            {
+                mClient.Close();
+            }
+            catch (Exception vE)
+            {
+                string vMsg = "Socket Exception caughtin advertising listener :" + vE;
+                vMsg += ";";
+                if (vE.InnerException != null)
+                {
+                    vMsg += vE.InnerException;
+                }
+                DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, vMsg);
+            }
 
-        public class UdpState
-        {
-            public UdpClient Client;
-            public IPEndPoint EndPoint;
-            public RawPacket IncomingRawPacket = new RawPacket();
 
         }
 
@@ -184,7 +232,15 @@ namespace Assets.Scripts.Communication.Communicators
         private class BrainpackItemStructure
         {
             public DateTime LastTimeFound;
-            public Brainpack BrainpackModel;
+            public BrainpackNetworkingModel BrainpackModel;
         }
+    }
+
+    public class UdpState
+    {
+        public UdpClient Client;
+        public IPEndPoint EndPoint;
+        public RawPacket IncomingRawPacket = new RawPacket();
+
     }
 }

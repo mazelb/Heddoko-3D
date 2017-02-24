@@ -56,11 +56,6 @@ namespace Assets.Scripts.UI.NFLDemo
         /// </summary>
         void InputHandler()
         {
-            /*
-            public bool IsResetting = false;
-            static public bool IsHipsEstimateUp = true;
-            public bool IsUsingInterpolation = true;
-            */
             if (Input.GetKeyDown(HeddokoDebugKeyMappings.ResetMetrics))
             {
                 mBody.ResetBodyMetrics();
@@ -85,26 +80,13 @@ namespace Assets.Scripts.UI.NFLDemo
             {
                 BodySegment.IsTrackingHeight = !BodySegment.IsTrackingHeight;
             }
-            if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsTrackingHips))
-            {
-                BodySegment.IsTrackingHips = !BodySegment.IsTrackingHips;
-            }
- 
-            if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsUsingInterpolation))
- 
-            if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsUsingInterpolationForBody))
- 
+            if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsUsingInterpolation) ||
+                Input.GetKeyDown(HeddokoDebugKeyMappings.IsUsingInterpolationForBody))
             {
                 BodySegment.IsUsingInterpolation = !BodySegment.IsUsingInterpolation;
             }
-            if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsAdjustingSegmentAxis))
-            {
-                BodySegment.IsAdjustingSegmentAxis = !BodySegment.IsAdjustingSegmentAxis;
-            }
- 
-            if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsFusingSubSegments))
- 
-            if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsUsingFusionForBody))
+            if (Input.GetKeyDown(HeddokoDebugKeyMappings.IsFusingSubSegments) ||
+                Input.GetKeyDown(HeddokoDebugKeyMappings.IsUsingFusionForBody))
  
             {
                 BodySegment.IsFusingSubSegments = !BodySegment.IsFusingSubSegments;
