@@ -24,6 +24,7 @@ namespace Assets.Scripts.UI
         public Text FirmwareVersionText;
         public Text ChargingStatusText;
         public Text BatteryLevelText;
+        public Text BrainpackNetworkingInfo;
         private BrainpackNetworkingModel mCurrentBrainpack;
         public Text LatestVersionText;
         private Button mConnectToBrainpackButton;
@@ -86,6 +87,7 @@ namespace Assets.Scripts.UI
             FirmwareVersionText.text = vBrainpack.Version;
             BrainpackSerialNumberText.text = vBrainpack.Id;
             mCurrentBrainpack = vBrainpack;
+            BrainpackNetworkingInfo.text = string.Format("{0} ", vBrainpack.TcpIpEndPoint );
         }
 
         /// <summary>
