@@ -115,7 +115,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         private void BodyFrameResetInitializedEvent(BodyFrame vBodyFrame)
         {
 
-            if (!MovementSet || !mCollectingData || mCurrentBodyFrame != null)
+            if (!MovementSet || !mCollectingData || mCurrentBodyFrame == null)
             {
                 return;
             }
