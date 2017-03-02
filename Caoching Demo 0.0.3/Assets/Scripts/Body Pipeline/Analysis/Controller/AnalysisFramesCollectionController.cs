@@ -162,7 +162,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// <param name="vSegmentAnalysis"></param>
         private void AnalysisCompletedEvent(SegmentAnalysis vSegmentAnalysis)
         {
-            if (!mCollectingData || !MovementSet)
+            if (!mCollectingData || !MovementSet || mCurrentBodyFrame == null)
             {
                 return;
             }
