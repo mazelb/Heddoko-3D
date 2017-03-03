@@ -33,7 +33,6 @@ namespace Assets.Scripts.Communication.Communicators
 
         private const int PacketBufferSize = 8;
         private CircularQueue<Packet> mPacketBuffer;
-
         private ProtobuffFrameBodyFrameConverter mFrameConverter;
 
 
