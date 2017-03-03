@@ -8,9 +8,11 @@
 
 
 using System;
+using System.Collections.Generic;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.UI.RecordingLoading.Model;
 using HeddokoSDK.Models;
+using HeddokoSDK.Models.Requests;
 
 namespace Assets.Scripts.UI.RecordingLoading
 {
@@ -37,15 +39,31 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <param name="vItem"></param>
         public void UploadSingleItem(object vItem)
         {
+            string vItemName = "";
+
             try
             {
                 UploadableListItem vUploadableItem = (UploadableListItem)vItem;
-                Asset vAsset = mProfile.Client.Upload(new AssetRequest()
-                { 
-                    Serial = vUploadableItem.BrainpackSerialNumber,
-                    Type = vUploadableItem.AssetType
-                }, vUploadableItem.RelativePath);
-                if (vAsset.IsOk)
+                int vKitId =   mProfile.GetKitIdFromBrainpackLabel(vUploadableItem.BrainpackSerialNumber);
+                //invalid kit id number
+                if (vKitId == -1)
+                {
+                    throw new InvalidOperationException("The brainpack could not be associated to a valid kit. Are you sure that you are authorized to upload these contents?");
+                }
+                var vRequest = new RecordRequest
+                {
+                    //Label = "SN0001", //optional should be set Kit Label or Kit ID or Brainpack Label - that settings should be useful when you parse files from sd cards mostly only for Data analyst uploading
+                    Label = vUploadableItem.BrainpackSerialNumber,
+                    KitID =  vKitId,
+                    Files = new List<AssetFile>
+                    { 
+                        new AssetFile { FileName =vUploadableItem.RelativePath ,Type =AssetType.RawFrameData }
+                    }
+                };
+
+                Record vRecord= mProfile.Client.UploadRecord(vRequest);
+                vItemName = vUploadableItem.RelativePath;
+                if (vRecord.IsOk)
                 {
                     if (UploadCompleteEvent != null)
                     {
@@ -54,12 +72,12 @@ namespace Assets.Scripts.UI.RecordingLoading
                 }
                 else
                 {
-                    ErrorCollection vCollection =vAsset.Errors;
+                    ErrorCollection vCollection = vRecord.Errors;
                     ErrorUploadEventArgs vObj = new ErrorUploadEventArgs()
                     {
                         Object = (UploadableListItem)vItem,
                         ExceptionArgs = null,
-                        ErrorCollection =  vCollection
+                        ErrorCollection = vCollection
                     };
                     InvokeErrorEvent(vObj);
                 }
@@ -68,7 +86,7 @@ namespace Assets.Scripts.UI.RecordingLoading
             {
                 if (UploadErrorEvent != null)
                 {
-                    string vMessage = vE.Message;
+                    string vMessage = "This item failed to upload" + vItemName + " \t Reason:" + vE.Message;
                     ErrorUploadEventArgs vObj = new ErrorUploadEventArgs()
                     {
                         Object = (UploadableListItem)vItem,
@@ -83,7 +101,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// Invokes error events
         /// </summary>
         /// <param name="vArgs"></param>
-        void InvokeErrorEvent(ErrorUploadEventArgs vArgs )
+        void InvokeErrorEvent(ErrorUploadEventArgs vArgs)
         {
             if (UploadErrorEvent != null)
             {

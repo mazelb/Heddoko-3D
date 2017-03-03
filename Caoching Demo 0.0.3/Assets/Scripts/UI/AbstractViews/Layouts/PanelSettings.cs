@@ -7,7 +7,8 @@
 */
 
 using System.Collections.Generic;
-using System.Linq; 
+using System.Linq;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Move3D_Visualization.Cameras;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels;

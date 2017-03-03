@@ -21,11 +21,10 @@ using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.Utils;
 using HeddokoSDK;
 using HeddokoSDK.Models;
-using UIWidgets;
+ using UIWidgets;
 using UnityEngine;
 
-// ReSharper disable DelegateSubtraction
-
+ 
 namespace Assets.Scripts.Licensing.Controller
 {
     public delegate void OnLoginSuccess(UserProfileModel vModel);
@@ -44,6 +43,8 @@ namespace Assets.Scripts.Licensing.Controller
         private Thread mConnectionThread;
         private string mUrl;
         private string mSecret;
+        private const int RECONNECTION_ATTEMPTS = 10;
+        private const int RECONNECTION_DELAY = 2000;
         public LoginController LoginController
         {
             get { return mLoginController; }
@@ -53,12 +54,11 @@ namespace Assets.Scripts.Licensing.Controller
         {
             mUrl = GlobalConfig.MainServer;
             mSecret = GlobalConfig.MainServerKey;
-
-#if DEBUG 
+#if DEBUG
             mUrl = GlobalConfig.DevServer;
             mSecret = GlobalConfig.DevServerKey;
 #endif
-            HeddokoConfig vConfig = new HeddokoConfig(mUrl, mSecret);
+            HeddokoConfig vConfig = new HeddokoConfig(mUrl, mSecret, RECONNECTION_ATTEMPTS, RECONNECTION_DELAY);
             mClient = new HeddokoClient(vConfig);
             ServicePointManager.ServerCertificateValidationCallback += RemoteCertificateValidationCallback;
             mLoginController = new LoginController();
@@ -76,7 +76,6 @@ namespace Assets.Scripts.Licensing.Controller
             OutterThreadToUnityThreadIntermediary.Instance.Init();
 
         }
-
         /// <summary>
         /// No internet connection error handler. 
         /// </summary>
@@ -104,6 +103,7 @@ namespace Assets.Scripts.Licensing.Controller
         {
             LoginSuccessEvent += vHandler;
         }
+
         /// <summary>
         /// Removes handler to user's on login success.
         /// </summary>
@@ -112,10 +112,13 @@ namespace Assets.Scripts.Licensing.Controller
         {
             if (LoginSuccessEvent != null)
             {
-                LoginSuccessEvent -= vHandler;
+                // ReSharper disable once DelegateSubtraction
+                if (vHandler != null)
+                {
+                    LoginSuccessEvent -= vHandler;
+                }
             }
         }
-
 
         /// <summary>
         /// Displays an error notification
@@ -125,7 +128,6 @@ namespace Assets.Scripts.Licensing.Controller
         {
             Notify.Template("fade").Show(vMsg);
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(false));
-
         }
 
         void SubmitLogin(LoginModel vModel)
@@ -134,8 +136,6 @@ namespace Assets.Scripts.Licensing.Controller
             LoginView.DisableSubmissionControls();
             StartCoroutine(VerifyInternetConnection(vModel));
             OutterThreadToUnityThreadIntermediary.QueueActionInUnity(() => LoginView.SetLoadingIconAsActive(true));
-
-
         }
 
         /// <summary>
@@ -170,16 +170,10 @@ namespace Assets.Scripts.Licensing.Controller
             bool vIsHandled = false;
             try
             {
-                UserRequest vRequest = vModel.UserRequest;
-
-                User vUser = mClient.SignIn(vRequest);
+                UserRequest vRequest = vModel.UserRequest;  
+                User vUser = mClient.SignIn(vRequest); 
                 if (!vUser.IsOk)
-                {
-                    string token = mClient.GenerateDeviceToken();
-                    string message = mClient.AddDevice(token)
-             ? "Device was added successfully"
-             : "Something went wrong on adding device";
-                  //  mClient.SetToken(vUser.Token);
+                { 
                     OutterThreadToUnityThreadIntermediary.QueueActionInUnity(EnableControls);
                     var vErrorMsg = FormatLoginNoOkError(vUser.Errors);
                     string vMsg = LocalizationBinderContainer.GetString(KeyMessage.LoginFailureMsg);
@@ -196,11 +190,13 @@ namespace Assets.Scripts.Licensing.Controller
 
                 if (vUser.IsOk)
                 {
-                    UserProfileModel vProfileModel = new UserProfileModel()
+                    var vToken = mClient.GenerateDeviceToken();
+                     UserProfileModel vProfileModel = new UserProfileModel()
                     {
                         User = vUser,
                         LicenseInfo = vLicense,
-                        Client = mClient
+                        Client = mClient,
+                        DeviceToken = vToken
                     };
                     //if user is an analyst
                     if (vUser.RoleType == UserRoleType.Analyst)
@@ -278,10 +274,12 @@ namespace Assets.Scripts.Licensing.Controller
                 {
                     LoginView.EnableButtonControls();
                     LoginView.SetLoadingIconAsActive(false);
+                    mLoginController.RaiseErrorEvent(LoginErrorType.Other,
+                        LocalizationBinderContainer.GetString(KeyMessage.ReportErrorCodeMsg) +
+                        " " + vE.Message);
                 });
-                UnityEngine.Debug.Log("error " + vE);
+           
             }
-
         }
 
 
@@ -345,6 +343,13 @@ namespace Assets.Scripts.Licensing.Controller
             return vBuilder.ToString();
         }
 
+        /// <summary>
+        /// clears the input fields
+        /// </summary>
+        public void Clear()
+        {
+            LoginView.Clear();
+        }
     }
 
 

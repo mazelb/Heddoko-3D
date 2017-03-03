@@ -7,6 +7,7 @@
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
 
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Pipeline.Analysis.Arms;
 using Assets.Scripts.UI.MainMenu;
 using Assets.Scripts.UI.NFLDemo;

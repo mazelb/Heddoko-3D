@@ -13,6 +13,7 @@ using Assets.Scripts.UI.AbstractViews;
 using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Layouts;
 using System.Collections.Generic;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Data.View.Anaylsis;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls.cameraSubControls;
 using Assets.Scripts.UI.AbstractViews.camera;

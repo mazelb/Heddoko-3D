@@ -21,21 +21,23 @@ namespace Assets.Scripts.UI.RecordingLoading.View
     {
 
         public UnityAction OnClickAction;
-        void Awake()
+        public bool CanDoubleClick = true;
+      internal void Awake()
         {
             base.Start();
         }
+
         /// <summary>
         /// Load data into the list
         /// </summary>
-        /// <param name="vSingleRecItem"></param>
+        /// <param name="vSingleRecItemList"></param>
         public void LoadData(List<RecordingListItem> vSingleRecItemList)
         {
             DataSource.BeginUpdate();
-           // DataSource.Clear();
-            for (int i = 0; i < vSingleRecItemList.Count; i++)
+            // DataSource.Clear();
+            for (int vI = 0; vI < vSingleRecItemList.Count; vI++)
             {
-                Add(vSingleRecItemList[i]);
+                Add(vSingleRecItemList[vI]);
             }
             DataSource.EndUpdate();
         }
@@ -56,15 +58,18 @@ namespace Assets.Scripts.UI.RecordingLoading.View
         /// <param name="vItem"></param>
         protected override void SetData(SingleRecordingListItemComponent vComponent, RecordingListItem vItem)
         {
-            vComponent.onClick.RemoveListener(OnClickAction);
-            vComponent.onClick.AddListener(OnClickAction);
+            if (CanDoubleClick)
+            {
+                vComponent.onClick.RemoveListener(OnClickAction);
+                vComponent.onClick.AddListener(OnClickAction);
+            }
             vComponent.SetData(vItem);
         }
 
 
-        protected override void HighlightColoring(SingleRecordingListItemComponent component)
+        protected override void HighlightColoring(SingleRecordingListItemComponent vComponent)
         {
-            base.HighlightColoring(component);
+            base.HighlightColoring(vComponent);
 
         }
 

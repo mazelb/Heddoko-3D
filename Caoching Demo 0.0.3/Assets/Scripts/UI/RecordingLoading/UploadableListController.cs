@@ -66,10 +66,10 @@ namespace Assets.Scripts.UI.RecordingLoading
         }
         public void ScanDirectory(DirectoryInfo vInfo)
         {
-            List<FileInfo> vInforinos = new List<FileInfo>();
-            GetFileInfoList(vInfo, ref vInforinos);
-            FilterFileInfo(ref vInforinos);
-            PopulateList(vInforinos);
+            List<FileInfo> vFileInfos = new List<FileInfo>();
+            GetFileInfoList(vInfo, ref vFileInfos);
+            FilterFileInfo(ref vFileInfos);
+            PopulateList(vFileInfos);
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                     FileName = vFileInfo.Name,
                     RelativePath = vFileInfo.FullName,
                     IsNew = true,
-                    AssetType = AssetType.Record
+                    AssetType = AssetType.RawFrameData
                 }
                     );
             }

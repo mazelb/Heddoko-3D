@@ -8,11 +8,14 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using Assets.Scripts.Body_Pipeline.Analysis.Serialization;
 using Assets.Scripts.Utils.DebugContext;
 
 namespace Assets.Scripts.Body_Data.view
 {
     public delegate void BodyFrameUpdated(BodyFrame vNewFrame);
+
+    public delegate void OnTrackingUpdate(BodyFrame vNewFrame);
 
     public delegate void BodyFrameResetInitialized(BodyFrame vBodyFrame);
     /// <summary>
@@ -22,6 +25,7 @@ namespace Assets.Scripts.Body_Data.view
     {
         public event BodyFrameUpdated BodyFrameUpdatedEvent;
         public event BodyFrameResetInitialized BodyFrameResetInitializedEvent;
+        public event OnTrackingUpdate TrackingUpdateEvent;
         //private BodyFrameBuffer mBuffer;
         private BodyFrameBuffer mBuffer;
         public int CurrentIndex = 0;
@@ -109,7 +113,7 @@ namespace Assets.Scripts.Body_Data.view
                 }
                 if (BodyFrameResetInitializedEvent != null)
                 {
-                    BodyFrameResetInitializedEvent(vTempBodyFrame); 
+                    BodyFrameResetInitializedEvent(vTempBodyFrame);
                 }
                 AssociatedBody.SetInitialFrame(vTempBodyFrame);
                 UpdateViewTracking(vTempBodyFrame);
@@ -133,8 +137,12 @@ namespace Assets.Scripts.Body_Data.view
 
             if (vDic != null)
             {
-                AssociatedBody.mBodyFrameCalibrationContainer.UpdateCalibrationContainer(vDic, vBodyFrame.Timestamp);
+                AssociatedBody.BodyFrameCalibrationContainer.UpdateCalibrationContainer(vDic, vBodyFrame.Timestamp);
                 Body.ApplyTracking(AssociatedBody, vDic);
+                if (TrackingUpdateEvent != null)
+                {
+                    TrackingUpdateEvent(vBodyFrame);
+                }
             }
         }
 
@@ -185,23 +193,13 @@ namespace Assets.Scripts.Body_Data.view
                         }
                         UpdateViewTracking(vBodyFrame);
                         CurrentIndex = vBodyFrame.Index;
-                       
                     }
-
                 }
             }
         }
 
-        /// <summary>
-        /// Handles inputs related to the body view
-        /// </summary>
-        private void InputHandler()
-        {
-            if (Input.GetKeyDown(HeddokoDebugKeyMappings.ResetFrame))
-            {
-                ResetInitialFrame();
-            }
-        }
+
+
 
         /// <summary>
         /// Automatically called by Unity when the game object awakes. In this case, look for the debug gameobject in the scene 

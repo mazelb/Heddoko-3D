@@ -7,6 +7,7 @@
 */
 
 using System.Collections.Generic;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.UI.AbstractViews; 
 using Assets.Scripts.UI.AbstractViews.camera;
 using Assets.Scripts.UI.AbstractViews.Enums;

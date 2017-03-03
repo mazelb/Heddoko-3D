@@ -85,9 +85,10 @@ MonoBehaviour:
     try a longer recording.\",\r\n\t\t\t\t\"PluralForm\":  null\r\n\t\t\t\t},\r\n\t\t\t\t\"CannotLoadRecording\"
     : {\r\n\t\t\t\t\"SingularForm\": \"There was an issue loading this recording file.
     Please try another file or report this problem to support\",\r\n\t\t\t\t\"PluralForm\":
-    \ null\r\n\t\t\t\t},\t\t\t\t\r\n\t\t\t\t\"StartStreamingControl\" : {\r\n\t\t\t\t\"SingularForm\":
-    \"Begin Stream\",\r\n\t\t\t\t\"PluralForm\":  null\r\n\t\t\t\t},\r\n\t\t\t\t\"StopStreamingControl\"
-    : {\r\n\t\t\t\t\"SingularForm\": \"Stop Stream\",\r\n\t\t\t\t\"PluralForm\":  null\r\n\t\t\t\t},\r\n\t\t\t\t\"BrainpackDisconnected\"
-    : {\r\n\t\t\t\t\"SingularForm\": \"Disconnected\",\r\n\t\t\t\t\"PluralForm\":
-    \ null\r\n\t\t\t\t},\r\n\t\t\t\t\"BrainpackConnecting\" : {\r\n\t\t\t\t\"SingularForm\":
-    \"Connecting\",\r\n\t\t\t\t\"PluralForm\":  null\r\n\t\t\t\t},\r\n\t\t\t\t\r\n\t\t\t\t\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}"
+    \ null\r\n\t\t\t\t},\r\n\t\t\t\t\"NoAnalysisFrameSet\" : {\r\n\t\t\t\t\"SingularForm\":
+    \"The current frame has not been analyzed.\",\r\n\t\t\t\t\"PluralForm\":  null\r\n\t\t\t\t},\r\n\t\t\t\t\"PlayingRecording\"
+    : {\r\n\t\t\t\t\"SingularForm\": \"Playing recording: \",\r\n\t\t\t\t\"PluralForm\":
+    \ null\r\n\t\t\t\t},\t\t\t\t\r\n\t\t\t\t\"MessageFromServerReceived\" : {\r\n\t\t\t\t\"SingularForm\":
+    \"Message from server received: \",\r\n\t\t\t\t\"PluralForm\":  null\r\n\t\t\t\t},\r\n\t\t\t\t\"ReturnToLoginScreen\"
+    : {\r\n\t\t\t\t\"SingularForm\": \"You will now be returned to the login screen.\",\r\n\t\t\t\t\"PluralForm\":
+    \ null\r\n\t\t\t\t}\r\n\t\t\t\t\r\n\t\t\t\t\r\n\t\t\t}\r\n\t\t}\r\n\t}\r\n}\r\n"

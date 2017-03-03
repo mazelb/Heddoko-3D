@@ -44,7 +44,6 @@ namespace Assets.Scripts.Utils.DebugContext.logging
 
                         sInstance = new DebugLogger();
                         sInstance.Register();
-                        sInstance.Start();
                     }
                 }
                 return sInstance;
@@ -55,14 +54,16 @@ namespace Assets.Scripts.Utils.DebugContext.logging
         {
             try
             {
-             
+                bool vCanLog = sSettingsRegistry[vType].Invoke();
+                if (vCanLog)
+                {
                     Log vLog = new Log();
                     vLog.LogType = vType;
                     string vLogmsg = DateTime.Now.ToString("HH:mm:ss.fff tt") + " , " + ((int)vLog.LogType) + " , " +
                                      vMsg;
                     vLog.Message = vLogmsg;
                     Instance.mMessageQueue.Enqueue(vLog);
-                
+                }
             }
             catch (Exception e)
             {
@@ -242,15 +243,12 @@ namespace Assets.Scripts.Utils.DebugContext.logging
         {
             mContinueWorking = true;
             Thread vThread = new Thread(Instance.WorkerTask);
-            vThread.Start();
-            vThread.IsBackground = true;
-            // mFileMonitor.Start();
+            vThread.Start(); 
         }
 
         public void Stop()
         {
-            mContinueWorking = false;
-            //    mFileMonitor.Stop();
+            mContinueWorking = false; 
         }
         private void WorkerTask()
         {

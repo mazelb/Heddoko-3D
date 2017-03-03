@@ -6,7 +6,8 @@
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
  
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.Utils;
 

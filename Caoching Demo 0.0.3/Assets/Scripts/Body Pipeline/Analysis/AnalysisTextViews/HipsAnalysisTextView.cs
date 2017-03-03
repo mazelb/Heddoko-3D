@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Body_Data.View.Anaylsis.AnalysisTextViews;
+using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels.Legs;
 using Assets.Scripts.Body_Pipeline.Analysis.Legs;
 using UnityEngine.UI;
@@ -15,8 +16,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         public Text RightHipRotation;
         public Text LeftHipRotationText;
 
-        private LeftLegAnalysis mLeftLegAnalysis;
-        private RightLegAnalysis mRightLegAnalysis;
 
         public override string LabelName
         {
@@ -28,64 +27,30 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
 
         protected override void BodyUpdated()
         {
-            //remove listeners
-            if (mLeftLegAnalysis != null)
-            {
-                mLeftLegAnalysis.AnalysisCompletedEvent -= UpdateLeftHipTextView;
-            }
-            if (mRightLegAnalysis != null)
-            {
-                mRightLegAnalysis.AnalysisCompletedEvent -= UpdateRightHipTextView;
-            }
-            if (BodyToAnalyze == null)
-            {
-
-                mLeftLegAnalysis = null;
-                mRightLegAnalysis = null;
-                ClearText();
-            }
-            else
-            {
-                mLeftLegAnalysis = BodyToAnalyze.LeftLegAnalysis;
-                mRightLegAnalysis = BodyToAnalyze.RightLegAnalysis;
-                //add event handlers
-                mLeftLegAnalysis.AnalysisCompletedEvent += UpdateLeftHipTextView;
-                mRightLegAnalysis.AnalysisCompletedEvent += UpdateRightHipTextView;
-            }
+            //todo: display a panel that the values for the current analysis frame have not been computed. 
+            //this is in the controller.   
         }
 
 
-        private void UpdateLeftHipTextView(SegmentAnalysis vAnalysis)
+        private void UpdateLeftHipTextView(float vLeftHipFlexionSignedAngle, float vLeftHipAbductionSignedAngle, float vLeftHipRotationSignedAngle)
         {
-            if (mLeftLegAnalysis != null)
-            {
-                LeftHipFlexionText.text = FeedbackAngleToString(mLeftLegAnalysis.LeftHipFlexionSignedAngle);
-                LeftHipAbductionText.text = FeedbackAngleToString(mLeftLegAnalysis.LeftHipAbductionSignedAngle);
-                LeftHipRotationText.text = FeedbackAngleToString(mLeftLegAnalysis.LeftHipRotationSignedAngle);
-            }
 
-            else
-            {
-                ClearText();
-            }
+            LeftHipFlexionText.text = FeedbackAngleToString(vLeftHipFlexionSignedAngle);
+            LeftHipAbductionText.text = FeedbackAngleToString(vLeftHipAbductionSignedAngle);
+            LeftHipRotationText.text = FeedbackAngleToString(vLeftHipRotationSignedAngle);
+
         }
 
-        private void UpdateRightHipTextView(SegmentAnalysis vAnalysis)
+        private void UpdateRightHipTextView(float vRightHipFlexionSignedAngle, float vRightHipAbductionSignedAngle, float vRightHipRotationSignedAngle)
         {
-            if (mRightLegAnalysis != null)
-            {
-                RightHipFlexionText.text = FeedbackAngleToString(mRightLegAnalysis.RightHipFlexionSignedAngle);
-                RightHipAbductionText.text = FeedbackAngleToString(mRightLegAnalysis.RightHipAbductionSignedAngle);
-                RightHipRotation.text = FeedbackAngleToString(mRightLegAnalysis.RightHipRotationSignedAngle);
-            }
-            else
-            {
-                ClearText();
-            }
+
+            RightHipFlexionText.text = FeedbackAngleToString(vRightHipFlexionSignedAngle);
+            RightHipAbductionText.text = FeedbackAngleToString(vRightHipAbductionSignedAngle);
+            RightHipRotation.text = FeedbackAngleToString(vRightHipRotationSignedAngle);
         }
 
- 
-        protected override void ClearText()
+
+        public override void ClearText()
         {
             RightHipFlexionText.text = "";
             LeftHipFlexionText.text = "";
@@ -96,6 +61,12 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews
         }
 
 
-
+        public void UpdateView(TPosedAnalysisFrame vFrame)
+        {
+            UpdateLeftHipTextView(vFrame.LeftHipFlexionSignedAngle, vFrame.LeftHipAbductionSignedAngle,
+                vFrame.LeftHipRotationSignedAngle);
+            UpdateRightHipTextView(vFrame.RightHipFlexionSignedAngle, vFrame.RightHipAbductionSignedAngle,
+                vFrame.RightHipRotationSignedAngle);
+        }
     }
 }

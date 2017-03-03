@@ -48,7 +48,7 @@ namespace Assets.Scripts.Utils.DatabaseAccess
                     SqliteConnection.CreateFile(vFilePath);
                     mDbConnection = new SqliteConnection("URI=file:" + vFilePath);
                     mDbConnection.Open();
-                   CreateTables();
+                    CreateTables();
                     return true;
                 }
             }
@@ -61,16 +61,16 @@ namespace Assets.Scripts.Utils.DatabaseAccess
         /// </summary>
         private void CreateTables()
         {
-            string vStringCommand =  "CREATE TABLE Settings (resWidth int,resHeight int,recordingsPath varchar(255),preferedConnName varchar(255),launchStrt int)";
-            SqliteCommand vCommand = new SqliteCommand(vStringCommand,mDbConnection);
+            string vStringCommand = "CREATE TABLE Settings (resWidth int,resHeight int,recordingsPath varchar(255),preferedConnName varchar(255),launchStrt int)";
+            SqliteCommand vCommand = new SqliteCommand(vStringCommand, mDbConnection);
             vCommand.ExecuteNonQuery();
             int vResWidth = Screen.width;
             int vResHeight = Screen.height;
             string vPreferedFolder = ApplicationSettings.PreferedRecordingsFolder;
             string vInsertIntoDbCommand =
                 "INSERT INTO Settings(resWidth,resHeight,recordingsPath,preferedConnName,launchStrt) " +
-                "VALUES ("+vResWidth+","+vResHeight+",'"+vPreferedFolder+"',NULL,NULL);";
-            SqliteCommand vInsertionCommand = new SqliteCommand(vInsertIntoDbCommand,mDbConnection);
+                "VALUES (" + vResWidth + "," + vResHeight + ",'" + vPreferedFolder + "',NULL,NULL);";
+            SqliteCommand vInsertionCommand = new SqliteCommand(vInsertIntoDbCommand, mDbConnection);
             vInsertionCommand.ExecuteNonQuery();
         }
 
@@ -128,18 +128,18 @@ namespace Assets.Scripts.Utils.DatabaseAccess
                     {
                         mDbConnection.Open();
                     }
-                   
+
                 }
                 catch
                 {
-                    
+
                 }
                 using (var vCmd = mDbConnection.CreateCommand())
                 {
                     using (var vTransaction = mDbConnection.BeginTransaction())
                     {
                         try
-                        { 
+                        {
                             vCmd.CommandText = "UPDATE Settings set recordingsPath = @param1 WHERE _rowid_=1";
                             vCmd.Parameters.Add(new SqliteParameter("@param1", ApplicationSettings.PreferedRecordingsFolder));
                             vCmd.ExecuteNonQuery();
@@ -176,7 +176,7 @@ namespace Assets.Scripts.Utils.DatabaseAccess
                     object vResWidthCheck = vDataReader.GetInt32(0);
                     object vResHeightCheck = vDataReader.GetInt32(1);
                     object vRecStrCheck = vDataReader.GetString(2);
-                  
+
 
                     if (vResWidthCheck is int)
                     {
@@ -193,11 +193,11 @@ namespace Assets.Scripts.Utils.DatabaseAccess
                         ApplicationSettings.PreferedRecordingsFolder = (string)vRecStrCheck;
                     }
 
-                 //break after first read
+                    //break after first read
                     break;
                 }
                 mDbConnection.Close();
-           
+
             }
             return true;
         }
@@ -207,9 +207,8 @@ namespace Assets.Scripts.Utils.DatabaseAccess
         /// </summary>
         public void Dispose()
         {
-            Debug.Log("disposing");
             mDbConnection.Close();
-           mDbConnection.Dispose();
+            mDbConnection.Dispose();
         }
     }
 }

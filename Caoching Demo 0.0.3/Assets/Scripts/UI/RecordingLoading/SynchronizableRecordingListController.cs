@@ -85,7 +85,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                 //start downloading file. since this responsiblity will be delegated to a seperate thread, 
                 //wait until completed.
 
-                string vCachePath = ApplicationSettings.CacheFolderPath;
+                string vCachePath = ApplicationSettings.DownloadCacheFolderPath;
                 DirectoryInfo vInfo = new DirectoryInfo(vCachePath);
                 var vFilesInfo = vInfo.GetFiles();
                 RecordingListItem vRecItem = vItem;
@@ -138,7 +138,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
 
             Debug.Log("Download completed");
-            vItem.Location.RelativePath = ApplicationSettings.CacheFolderPath + Path.DirectorySeparatorChar + vItem.Name;
+            vItem.Location.RelativePath = ApplicationSettings.DownloadCacheFolderPath + Path.DirectorySeparatorChar + vItem.Name;
             vItem.Location.LocationType = RecordingListItem.LocationType.CachedLocal;
             //reload the data
             RecordingListSyncView.LoadData(mRecordingItems);

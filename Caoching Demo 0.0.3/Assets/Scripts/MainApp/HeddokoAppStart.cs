@@ -6,10 +6,10 @@
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
 
+using System;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Communication.DatabaseConnectionPipe;
 using Assets.Scripts.UI.AbstractViews.camera;
-using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.UI.Settings;
 using Assets.Scripts.UI.Tagging;
 using Assets.Scripts.Utils;
@@ -18,7 +18,6 @@ using Assets.Scripts.Utils.DebugContext.logging;
 using Assets.Scripts.Utils.HMath.Service_Provider;
 using Assets.Scripts.Utils.HMath.Structure;
 using UnityEngine;
-using Application = UnityEngine.Application;
 
 namespace Assets.Scripts.MainApp
 {
@@ -28,8 +27,9 @@ namespace Assets.Scripts.MainApp
     /// </summary>
     public class HeddokoAppStart : MonoBehaviour
     {
-
+#pragma warning disable 649
         private LocalDBAccess mDbAccess;
+#pragma warning restore 649
         private Database mDatabase;
         private TaggingManager mTaggingManager;
         public GameObject[] GOtoReEnable;
@@ -43,24 +43,28 @@ namespace Assets.Scripts.MainApp
             OutterThreadToUnityThreadIntermediary.Instance.Init();
             BodySegment.IsTrackingHeight = false;
             mTaggingManager = new TaggingManager();
-            InitiliazePools();
-            InitializeDatabase();
-            InjectDatabaseDependents();
-            InjectTaggingManagerDependents();
+            InitializeFilePaths();
+            InitialiazePools();
             InitializeLoggers();
+
             QualitySettings.vSyncCount = 0;
-            bool vAppSafelyLaunched; 
             HVector3.Vector3MathServiceProvider = new UVector3MathServiceProvider();
             BodySegment.IsTrackingHeight = false;
- 
+
             if (!IsDemo)
             {
-
-                mDbAccess = new LocalDBAccess();
                 EnableObjects(true);
-                mDbAccess.SetApplicationSettings();
             }
         }
+
+        /// <summary>
+        /// Initializes file paths.
+        /// </summary>
+        private void InitializeFilePaths()
+        {
+            ApplicationSettings.InitializeFilePaths();
+        }
+
         // ReSharper disable once UnusedMember.Local
         void Awake()
         {
@@ -68,15 +72,14 @@ namespace Assets.Scripts.MainApp
 
         }
 
-        void Start()
+        internal void Start()
         {
             UniFileBrowser.use.SetPath(ApplicationSettings.PreferedRecordingsFolder);
-
         }
         /// <summary>
         /// Injects the single database component into interested consumers
         /// </summary>
-        private void InjectDatabaseDependents()
+        internal void InjectDatabaseDependents()
         {
             mTaggingManager.Database = mDatabase;
             BodyRecordingsMgr.Instance.Database = mDatabase;
@@ -93,7 +96,7 @@ namespace Assets.Scripts.MainApp
         /// <summary>
         ///Injects tagging manager dependents with a tagging manager object
         /// </summary>
-        private void InjectTaggingManagerDependents()
+        internal void InjectTaggingManagerDependents()
         {
             foreach (var vDependent in TaggingManagerConsumers)
             {
@@ -115,11 +118,10 @@ namespace Assets.Scripts.MainApp
         /// <summary>
         /// Sets up internal pools
         /// </summary>
-        private void InitiliazePools()
+        private void InitialiazePools()
         {
             GameObject vRenderedBodyGroup = GameObject.FindWithTag("RenderedBodyGroup");
             GameObject vPanelCameraGroup = GameObject.FindWithTag("PanelCameraGroup");
-
             RenderedBodyPool.ParentGroupTransform = vRenderedBodyGroup.transform;
             PanelCameraPool.CameraParent = vPanelCameraGroup.transform;
         }
@@ -139,9 +141,9 @@ namespace Assets.Scripts.MainApp
                 }
             }
         }
- 
 
-        void OnApplicationQuit()
+
+        internal void OnApplicationQuit()
         {
             CleanUpOnQuit();
         }
@@ -151,34 +153,25 @@ namespace Assets.Scripts.MainApp
             DebugLogger.Instance.Stop();
             try
             {
-                mDbAccess.SaveApplicationSettings();
-                mDbAccess.Dispose();
-
+                if (mDbAccess != null)
+                {
+                    mDbAccess.SaveApplicationSettings();
+                    mDbAccess.Dispose();
+                }
             }
-            catch
+            catch (Exception)
             {
-                
+                // ignored
             }
-            
-
         }
 
         /// <summary>
         /// Initialize the database 
         /// </summary>
-        private void InitializeDatabase()
+        internal void InitializeDatabase()
         {
             mDatabase = new Database(DatabaseConnectionType.Local);
             mDatabase.Init();
         }
-
-        private void SetResolution()
-        {
-
-
-
-        }
-
-
     }
 }

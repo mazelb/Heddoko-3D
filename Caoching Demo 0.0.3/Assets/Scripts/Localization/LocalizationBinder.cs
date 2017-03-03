@@ -70,9 +70,9 @@ namespace Assets.Scripts.Localization
         BadKitUpload1,
         BadKitUpload2,
         CannotLoadRecording,
-        StartStreamingControl,
-        BrainpackDisconnected,
-        BrainpackConnecting,
-        StopStreamingControl
+        MessageFromServerReceived,
+        ReturnToLoginScreen,
+        NoAnalysisFrameSet,
+        PlayingRecording
     }
 }

@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Frames_Recorder.FramesRecording;
+﻿using Assets.Scripts.Body_Data;
+using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels;
 using Assets.Scripts.UI.AbstractViews.Enums;
 

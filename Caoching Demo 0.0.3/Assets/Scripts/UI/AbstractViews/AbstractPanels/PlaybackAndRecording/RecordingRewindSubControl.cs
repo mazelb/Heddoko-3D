@@ -26,6 +26,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         private SubControlType mType = SubControlType.RecordingRewindSubControl;
         public PlaybackControlPanel ParentPanel;
         private bool mIsPaused;
+         public bool IsEnabled=true;
         public bool IsPaused
         {
             get { return mIsPaused; }
@@ -79,6 +80,10 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// </summary>
         private void StepbackAction()
         {
+            if (!IsEnabled)
+            {
+                return;
+            }
             ParentPanel.Pause();
             if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
             {

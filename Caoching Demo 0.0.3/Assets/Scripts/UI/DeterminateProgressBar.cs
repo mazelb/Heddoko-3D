@@ -6,9 +6,9 @@
 // * Copyright Heddoko(TM) 2016,  all rights reserved
 // */
 
+
 using System.Collections;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
-
 using UnityEngine;
 
 namespace Assets.Scripts.UI
@@ -93,5 +93,5 @@ namespace Assets.Scripts.UI
 
     }
 
-  
+
 }

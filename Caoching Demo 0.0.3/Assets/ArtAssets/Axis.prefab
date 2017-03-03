@@ -8,7 +8,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 475120}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Axis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,7 +25,7 @@ GameObject:
   - 4: {fileID: 471534}
   - 33: {fileID: 3341118}
   - 23: {fileID: 2377196}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Cone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - 33: {fileID: 3393996}
   - 23: {fileID: 2390172}
   - 95: {fileID: 9524986}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Y Axis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61,7 +61,7 @@ GameObject:
   - 33: {fileID: 3348384}
   - 23: {fileID: 2310240}
   - 95: {fileID: 9553788}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: X Axis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -79,7 +79,7 @@ GameObject:
   - 33: {fileID: 3336738}
   - 23: {fileID: 2387954}
   - 95: {fileID: 9569740}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Z Axis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -96,7 +96,7 @@ GameObject:
   - 4: {fileID: 412220}
   - 33: {fileID: 3397720}
   - 23: {fileID: 2386972}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Cone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -113,7 +113,7 @@ GameObject:
   - 4: {fileID: 469812}
   - 33: {fileID: 3338506}
   - 23: {fileID: 2399984}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Cone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,8 +189,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 124478}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.9100013, z: 0}
-  m_LocalScale: {x: 0.16666667, y: 0.16666667, z: 0.16666667}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.005, y: 0.005, z: 0.005}
   m_Children:
   - {fileID: 446322}
   - {fileID: 418598}

@@ -10,6 +10,7 @@ using Assets.Scripts.UI.Metrics;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Assets.Scripts.Body_Data;
 
 namespace Assets.Scripts.Communication.View.Table
 {

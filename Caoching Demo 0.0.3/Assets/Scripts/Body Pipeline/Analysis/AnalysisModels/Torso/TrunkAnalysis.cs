@@ -70,7 +70,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Trunk
             vHipAxisRight = HipGlobalTransform.right;
             vHipAxisForward = HipGlobalTransform.forward;
 
-            // calculate the Trunk Flexion angle
+             // calculate the Trunk Flexion angle
             Vector3 vTrunkAxisUpProjectedOnHipRight = Vector3.ProjectOnPlane(vTrunkAxisUp, vHipAxisRight);
             float vAngleTorsoFlexionNew;
             if (vTrunkAxisUpProjectedOnHipRight == Vector3.zero)
@@ -84,22 +84,44 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Trunk
             TrunkFlexionAngle = vAngleTorsoFlexionNew;
             Vector3 vCross = Vector3.Cross(vTrunkAxisUpProjectedOnHipRight, vHipAxisUp);
             float vSign = Mathf.Sign(Vector3.Dot(vHipAxisRight, vCross));
+
             TrunkFlexionSignedAngle = vSign * TrunkFlexionAngle * GetSign("System.Single TrunkFlexionAngle");
 
             // calculate the Trunk lateral angle 
-            Vector3 vTrunkAxisUpProjectedOnHipForward = Vector3.ProjectOnPlane(vTrunkAxisUp, vHipAxisForward);
+            Vector3 vTrunkAxisUpProjectedOnHipFprward = Vector3.ProjectOnPlane(vTrunkAxisUp, vHipAxisForward);
+            if (TrunkFlexionAngle >= 90)
+            {
+                vTrunkAxisUpProjectedOnHipFprward = Vector3.ProjectOnPlane(vTrunkAxisUp, vHipAxisUp);
+            }
+            
             float vAngleTrunkLateralNew;
-            if (vTrunkAxisUpProjectedOnHipForward == Vector3.zero)
+
+            if (vTrunkAxisUpProjectedOnHipFprward == Vector3.zero)
             {
                 vAngleTrunkLateralNew = 0.0f;
             }
             else
             {
-                vAngleTrunkLateralNew = Vector3.Angle(vHipAxisUp, vTrunkAxisUpProjectedOnHipForward);
+                vAngleTrunkLateralNew = Vector3.Angle(vHipAxisUp, vTrunkAxisUpProjectedOnHipFprward);
+                if (TrunkFlexionAngle >= 90)
+                {
+                    vAngleTrunkLateralNew = Vector3.Angle(vHipAxisForward, vTrunkAxisUpProjectedOnHipFprward);
+                }
             }
+
             TrunkLateralAngle = vAngleTrunkLateralNew;
+            vCross = Vector3.Cross(vTrunkAxisUpProjectedOnHipFprward, vHipAxisUp);
+            vSign = Mathf.Sign(Vector3.Dot(vHipAxisUp, vCross));
+            if (TrunkFlexionAngle >= 90)
+            {
+                vCross = Vector3.Cross(vTrunkAxisUpProjectedOnHipFprward, vHipAxisForward);
+                vSign = Mathf.Sign(Vector3.Dot(vHipAxisForward, vCross));
+            }
+            var vTrunkAxisUpProjectedOnHipForward = Vector3.ProjectOnPlane(vTrunkAxisUp, vHipAxisForward);
             vCross = Vector3.Cross(vTrunkAxisUpProjectedOnHipForward, vHipAxisUp);
             vSign = Mathf.Sign(Vector3.Dot(vHipAxisForward, vCross));
+            TrunkLateralSignedAngle = vSign * TrunkLateralAngle * GetSign("System.Single TrunkLateralAngle");
+            
             TrunkLateralSignedAngle = vSign * TrunkLateralAngle * GetSign("System.Single TrunkLateralAngle");
 
             // calculate the Trunk Rotational angle 
@@ -121,7 +143,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Trunk
             //Calculate the velocity and accelerations
             if (DeltaTime != 0f)
             {
-                VelocityAndAccelerationExtraction( vAngleTorsoFlexionNew,   vAngleTrunkLateralNew,   vAngleTorsoRotationNew, DeltaTime);
+                VelocityAndAccelerationExtraction(vAngleTorsoFlexionNew, vAngleTrunkLateralNew, vAngleTorsoRotationNew, DeltaTime);
             }
 
             //notify listeners that analysis on this component has been completed. 
@@ -134,7 +156,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Trunk
         /// </summary>
         /// <param name="vAngleTorsoFlexionNew"></param>
         /// <param name="vDeltaTime"></param>
-        public void VelocityAndAccelerationExtraction(float vAngleTorsoFlexionNew,float vAngleTorsoLateralNew, float vAngleTorsoRotationNew,  float vDeltaTime)
+        public void VelocityAndAccelerationExtraction(float vAngleTorsoFlexionNew, float vAngleTorsoLateralNew, float vAngleTorsoRotationNew, float vDeltaTime)
         {
             float vAngularVelocityTorsoFlexionNew = (vAngleTorsoFlexionNew - Math.Abs(TrunkFlexionAngle)) / vDeltaTime;
             TorsoFlexionAngularAcceleration = (vAngularVelocityTorsoFlexionNew - TorsoFlexionAngularVelocity) / vDeltaTime;

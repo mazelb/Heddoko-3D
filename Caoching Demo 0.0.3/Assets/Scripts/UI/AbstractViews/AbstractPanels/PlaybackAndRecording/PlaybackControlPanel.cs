@@ -13,12 +13,14 @@ using Assets.Scripts.Body_Data;
 using Assets.Scripts.Frames_Pipeline;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.Localization;
+using Assets.Scripts.Notification;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.AbstractSubControls;
 using Assets.Scripts.UI.AbstractViews.Enums;
 using Assets.Scripts.UI.AbstractViews.Layouts;
 using Assets.Scripts.UI.AbstractViews.Permissions;
 using Assets.Scripts.UI.ModalWindow;
 using Assets.Scripts.Utils;
+using Assets.Scripts.Utils.DebugContext;
 using HeddokoSDK.Models;
 using UnityEngine;
 using UnityEngine.UI;
@@ -36,7 +38,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
     [UserRolePermission()]
     public class PlaybackControlPanel : AbstractControlPanel, IPermissionLevelContractor
     {
-        private RecordingPlaybackTask mPlaybackTask;
+        internal RecordingPlaybackTask mPlaybackTask;
         public event FinalFramePositionReached FinalFramePositionEvent;
         private Body mBody;
         public RecordingProgressSubControl RecordingProgressSliderSubControl;
@@ -96,7 +98,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         }
 
 
-
         /// <summary>
         /// Updates recording for the current playback panel
         /// </summary>
@@ -134,6 +135,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 ChangeState(PlaybackState.Play);
             }
         }
+
+
 
         public override ControlPanelType PanelType
         {
@@ -375,15 +378,19 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// </summary>
         public void SetPlayState()
         {
-            bool vIsPaused = mPlaybackTask.IsPaused;
-            if (vIsPaused)
+            if (mPlaybackTask != null)
             {
-                ChangeState(PlaybackState.Play);
+                bool vIsPaused = mPlaybackTask.IsPaused;
+                if (vIsPaused)
+                {
+                    ChangeState(PlaybackState.Play);
+                }
+                else
+                {
+                    ChangeState(PlaybackState.Pause);
+                }
             }
-            else
-            {
-                ChangeState(PlaybackState.Pause);
-            }
+
         }
 
         /// <summary>
@@ -415,6 +422,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlayPauseSubControls.IsPaused = true;
             PlaybackSpeedModifierSubControl.IsPaused = true;
             PlaybackSpeedModifierSubControl.IsInteractable = false;
+            BodySegment.IsUsingInterpolation = false;
         }
 
 
@@ -430,6 +438,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlaybackSpeedModifierSubControl.IsPaused = false;
             PlaybackSpeedModifierSubControl.IsInteractable = true;
             PlaybackSpeedModifierSubControl.UpdateCurrentPlaybackSpeed(1f);
+            BodySegment.IsUsingInterpolation = true;
         }
 
         void BodyFrameUpdateHandler(BodyFrame vFrame)
@@ -454,16 +463,9 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                         mIsNewRecording = false;
                         UpdateRecording(mBody.MBodyFrameThread.PlaybackTask);
                     }
-
-                    
-
                 }
-
             }
-
         }
-
-
 
         /// <summary>
         /// Get a timestamp for the frame 
@@ -473,7 +475,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public float GetTimeStampFromFrameIdx(int vIndex)
         {
             return mPlaybackTask.GetBodyFrameAtIndex(vIndex).Timestamp;
-
         }
 
         /// <summary>
@@ -522,7 +523,8 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             {
                 BodyUpdatedEvent(vBody);
             }
-            
+
+
         }
 
         /// <summary>
@@ -530,7 +532,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// </summary>
         /// <param name="vNewCsvBodyFramesRecording"></param>
         public void NewRecordingSelected(BodyFramesRecordingBase vNewCsvBodyFramesRecording)
-        { 
+        {
             if (mBody != null && vNewCsvBodyFramesRecording != null)
             {
                 mBody.StopThread();
@@ -562,7 +564,9 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 {
                     BodyUpdatedEvent(mBody);
                 }
-                 Debug.Log("playing back "+ vNewCsvBodyFramesRecording.Title);
+                var vNotificationMsg = LocalizationBinderContainer.GetString(KeyMessage.PlayingRecording);
+                vNotificationMsg += vNewCsvBodyFramesRecording.Title;
+                NotificationManager.CreateNotification(vNotificationMsg, NotificationManager.NotificationUrgency.Low);
             }
             mIsNewRecording = true;
         }
@@ -619,8 +623,26 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlayPauseSubControls.RequestResources();
             RecordingForwardSubControl.RequestResources();
             RecordingRewindSubControl.RequestResources();
+            InputHandler.RegisterKeyboardAction(KeyCode.Home, ResetTpose);
+            InputHandler.RegisterKeyboardAction(KeyCode.Space, SetPlayState);
         }
 
+        void OnDisable()
+        {
+            InputHandler.RemoveKeybinding(KeyCode.Home, ResetTpose);
+            InputHandler.RemoveKeybinding(KeyCode.Space, SetPlayState);
+        }
+
+        void ResetTpose()
+        {
+            if (mBody != null)
+            {
+                var vFlag = BodySegment.IsUsingInterpolation;
+                BodySegment.IsUsingInterpolation = false;
+                mBody.View.ResetInitialFrame();
+                BodySegment.IsUsingInterpolation = vFlag;
+            }
+        }
         /// <summary>
         /// Stops the current player, resets the body
         /// </summary>
@@ -639,7 +661,11 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             PlaybackSpeedModifierSubControl.PlaybackSpeedSlider.value = 1;
             PlayPauseSubControls.ReleaseResources();
             RecordingForwardSubControl.ReleaseResources();
-            RecordingRewindSubControl.ReleaseResources(); 
+            RecordingRewindSubControl.ReleaseResources();
+            if (mPlaybackTask != null)
+            {
+                mPlaybackTask.IsPaused = true;
+            }
         }
 
         /// <summary>
@@ -668,6 +694,18 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                     FinalFramePositionEvent();
                 }
             });
+
+        }
+
+        /// <summary>
+        /// Sets the slider control functionality
+        /// </summary>
+        /// <param name="vB">the state to set it to.</param>
+        public void SetSliderControlFunctionality(bool vB)
+        {
+            PlaybackProgressSubControl.PlaySlider.interactable = vB;
+            RecordingForwardSubControl.IsEnabled = vB;
+            RecordingRewindSubControl.IsEnabled = vB;
 
         }
     }

@@ -8,7 +8,7 @@
 
 using System;
 using System.IO;
-using System.Threading; 
+using System.Threading;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -24,12 +24,12 @@ namespace Assets.Scripts.MainApp
     {
         public event HeddokoDriveFound DriveFoundEvent;
         public event HeddokoDriveDisconnected HeddokoDriveDisconnectedEvent;
-         
+
         private BrainpackSdCardStruct mHeddokoSdCardStruct = new BrainpackSdCardStruct();
         private Thread mWorkerThread;
-        private object mLockObject= new object();
+        private object mLockObject = new object();
         private bool mSdCardIsConnected;
-       
+
         /// <summary>
         /// is the sd card current connected?
         /// </summary>
@@ -42,11 +42,11 @@ namespace Assets.Scripts.MainApp
                     return mSdCardIsConnected;
                 }
             }
-           private set
+            private set
             {
                 lock (mLockObject)
                 {
-                      mSdCardIsConnected =value;
+                    mSdCardIsConnected = value;
                 }
             }
 
@@ -84,7 +84,7 @@ namespace Assets.Scripts.MainApp
                     var vDir = SearchForDriveLabel(vDriveInfo);
                     if (mHeddokoSdCardStruct.DirectoryInfo == null)
                     {
-                        if (vDir !=null)
+                        if (vDir != null)
                         {
                             AssignDrive(vDir);
                             GetSerialNumFromSdCard();
@@ -110,7 +110,7 @@ namespace Assets.Scripts.MainApp
             catch (Exception vE)
             {
                 string vMes = vE.Message;
-                 UnityEngine.Debug.Log("exception! "+ vMes);
+                UnityEngine.Debug.Log("exception! " + vMes);
             }
         }
 
@@ -133,7 +133,6 @@ namespace Assets.Scripts.MainApp
         /// </summary>
         private void UnassignDrive()
         {
-            UnityEngine.Debug.Log("unassignerino ");
             SdCardIsConnected = false;
             mHeddokoSdCardStruct.DirectoryInfo = null;
             if (HeddokoDriveDisconnectedEvent != null && mIsWorking)
@@ -148,7 +147,7 @@ namespace Assets.Scripts.MainApp
         /// <param name="vDrives">the array of drives</param>
         /// <returns></returns>
         private DirectoryInfo SearchForDriveLabel(string[] vDrives)
-        { 
+        {
             for (int vI = 0; vI < vDrives.Length; vI++)
             {
                 try
@@ -159,17 +158,25 @@ namespace Assets.Scripts.MainApp
                     if (vSysHdk.Length == 0 && vSettings.Length == 1)
                     {
                         //locate a backup folder
-                       var vBackupFolder = vDirectoryInfo.GetDirectories("Backup");
+                        var vBackupFolder = vDirectoryInfo.GetDirectories("Backup");
                         if (vBackupFolder.Length > 0)
                         {
-                            mHeddokoSdCardStruct.LogFileDirectoryPath = vBackupFolder[0].FullName;
+                            mHeddokoSdCardStruct.LogFileName = "sysHdk.bin";
+                            mHeddokoSdCardStruct.LogFileDirectoryPath = vBackupFolder[0].FullName; 
+                            mHeddokoSdCardStruct.LogFilePath = mHeddokoSdCardStruct.LogFileDirectoryPath +
+                                                                Path.DirectorySeparatorChar + mHeddokoSdCardStruct.LogFileName;
+
                             mHeddokoSdCardStruct.LogFileInRootDir = false;
                             return vDirectoryInfo;
                         }
                     }
-                    else  if (vSysHdk.Length == 1 && vSettings.Length == 1)
+                    else if (vSysHdk.Length == 1 && vSettings.Length == 1)
                     {
-                        mHeddokoSdCardStruct.LogFileDirectoryPath = vDirectoryInfo.FullName;
+                        mHeddokoSdCardStruct.LogFileName = "sysHdk.bin";
+                        mHeddokoSdCardStruct.LogFileDirectoryPath = vSysHdk[0].DirectoryName;
+                        mHeddokoSdCardStruct.LogFilePath = mHeddokoSdCardStruct.LogFileDirectoryPath +
+                                                            Path.DirectorySeparatorChar + mHeddokoSdCardStruct.LogFileName;
+                        
                         mHeddokoSdCardStruct.LogFileInRootDir = true;
                         return vDirectoryInfo;
                     }
@@ -180,12 +187,12 @@ namespace Assets.Scripts.MainApp
         
                     continue;
                 }
-            } 
-                return null;
+            }
+            return null;
         }
 
-      
-       
+
+
         /// <summary>
         /// starts to search for Heddoko sd drives
         /// </summary>
@@ -212,16 +219,16 @@ namespace Assets.Scripts.MainApp
                 var vFiles = vLogFileDirectory.GetFiles();
                 var vLogFile = vFiles.First(vX => vX.Name.Contains("sysHdk.bin"));
                 string vBrainpackSerial = null;
-           
+
                 if (vLogFile != null)
                 {
                     //get brainpack name
                     using (StreamReader vSr = new StreamReader(vLogFile.FullName))
                     {
                         string vLine;
-                        
+
                         while ((vLine = vSr.ReadLine()) != null)
-                        { 
+                        {
                             var vMatch = Regex.Match(vLine, @"S\d\d\d\d\d_");
                             if (vMatch.Index > 0)
                             {
@@ -231,20 +238,22 @@ namespace Assets.Scripts.MainApp
                         }
                     }
                 }
-                mHeddokoSdCardStruct.BrainpackSerialNumber =  vBrainpackSerial;
+                mHeddokoSdCardStruct.BrainpackSerialNumber = vBrainpackSerial;
             }
             return mHeddokoSdCardStruct.BrainpackSerialNumber;
         }
-         
+
         public struct BrainpackSdCardStruct
         {
             public DirectoryInfo DirectoryInfo;
             public string BrainpackSerialNumber;
             public string LogFileDirectoryPath;
+            public string LogFilePath;
+            public string LogFileName;
             public bool LogFileInRootDir;
 
         }
     }
 
-   
+
 }

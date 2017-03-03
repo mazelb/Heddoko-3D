@@ -134,23 +134,23 @@
 				"CannotLoadRecording" : {
 				"SingularForm": "There was an issue loading this recording file. Please try another file or report this problem to support",
 				"PluralForm":  null
+				},
+				"NoAnalysisFrameSet" : {
+				"SingularForm": "The current frame has not been analyzed.",
+				"PluralForm":  null
+				},
+				"PlayingRecording" : {
+				"SingularForm": "Playing recording: ",
+				"PluralForm":  null
 				},				
-				"StartStreamingControl" : {
-				"SingularForm": "Begin Stream",
+				"MessageFromServerReceived" : {
+				"SingularForm": "Message from server received: ",
 				"PluralForm":  null
 				},
-				"StopStreamingControl" : {
-				"SingularForm": "Stop Stream",
+				"ReturnToLoginScreen" : {
+				"SingularForm": "You will now be returned to the login screen.",
 				"PluralForm":  null
-				},
-				"BrainpackDisconnected" : {
-				"SingularForm": "Disconnected",
-				"PluralForm":  null
-				},
-				"BrainpackConnecting" : {
-				"SingularForm": "Connecting",
-				"PluralForm":  null
-				},
+				}
 				
 				
 			}

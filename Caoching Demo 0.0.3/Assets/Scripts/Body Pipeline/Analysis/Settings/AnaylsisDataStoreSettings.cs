@@ -36,7 +36,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
                     var vCustomAttrList = vField.GetCustomAttributes(typeof(AnalysisSerialization), true);
                     foreach (var vAttri in vCustomAttrList)
                     {
-                        var vAnalysisSerializedData = (AnalysisSerialization)vAttri; 
+                        var vAnalysisSerializedData = (AnalysisSerialization)vAttri;
                         mSerializedAnalyisFieldOrderMap.Add(vField, vAnalysisSerializedData);
                         //store the fields into a map
                         mFieldMapping.Add(vField.ToString(), vField);
@@ -46,7 +46,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
             SetAttributesFromFile();
         }
 
-        public void SaveAttributeToFile( )
+        public void SaveAttributeToFile()
         {
             var vPath = ApplicationSettings.AttributeFileOrderingPath;
             JsonUtilities.ConvertObjectToJson(vPath, mSerializedAnalyisFieldOrderMap);
@@ -78,27 +78,27 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
                         if (mFieldMapping.ContainsKey(vName))
                         {
                             var vAnalysisAttr = vAnalysisSerialization.Value;
-                            mSerializedAnalyisFieldOrderMap[mFieldMapping[vName]] = vAnalysisAttr; 
+                            mSerializedAnalyisFieldOrderMap[mFieldMapping[vName]] = vAnalysisAttr;
                         }
                     }
                 }
                 catch (Exception vE)
                 {
-                   UnityEngine.Debug.Log(vE.Message); 
+                    UnityEngine.Debug.Log(vE.Message);
                 }
             }
 
         }
 
-         public AnalysisSerialization GetAnalysisSerializationItem(string vKey)
+        public AnalysisSerialization GetAnalysisSerializationItem(string vKey)
         {
             if (!mFieldMapping.ContainsKey(vKey))
             {
                 return null;
             }
-             return mSerializedAnalyisFieldOrderMap[mFieldMapping[vKey]];
+            return mSerializedAnalyisFieldOrderMap[mFieldMapping[vKey]];
         }
-        
+
 
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
         {
             if (vDictionary.ContainsKey(vKey) && vDictionary[vKey].Count > 0)
             {
-                vDictionary[vKey].Clear();
+                return;
             }
             //get all the field information the analysis segments that are of type System.Single
             var vFields = vKey.GetType().GetFields().Where(vField => vField.FieldType == typeof(System.Single));
@@ -260,7 +260,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Settings
                 }
             }
             //store it
-            vDictionary.Add(vKey, vFieldTypes);
+            if (!vDictionary.ContainsKey(vKey))
+            {
+                vDictionary.Add(vKey, vFieldTypes);
+            }
         }
 
 

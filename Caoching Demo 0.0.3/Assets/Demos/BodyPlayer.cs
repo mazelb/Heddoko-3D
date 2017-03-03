@@ -6,7 +6,8 @@
 * @date November 2015
 * Copyright Heddoko(TM) 2015, all rights reserved
 */
- 
+
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.MainScene.Model;

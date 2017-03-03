@@ -9,6 +9,7 @@ using System;
 using System.Collections;
 using Assets.Scripts.UI.Layouts;
 using System.Collections.Generic;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.UI.AbstractViews.camera;
 using Assets.Scripts.UI.AbstractViews.Layouts;

@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
 using Assets.Scripts.UI.DemoKit.android;
 using System.Linq;
+using Assets.Scripts.Body_Data;
 using Assets.Scripts.Body_Data.View;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.UI.AbstractViews.camera;

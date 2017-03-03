@@ -9,11 +9,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using Assets.Scripts.Licensing.Model;
 using Assets.Scripts.MainApp;
 using Assets.Scripts.UI.RecordingLoading.Model;
-using HeddokoSDK.Models; 
+using Assets.Scripts.UI.Settings;
+using Assets.Scripts.Utils.DebugContext.logging;
+using HeddokoSDK.Models;
+using UnityEngine;
+using LogType = Assets.Scripts.Utils.DebugContext.logging.LogType;
 
 namespace Assets.Scripts.UI.RecordingLoading
 {
@@ -105,7 +110,10 @@ namespace Assets.Scripts.UI.RecordingLoading
             UploadableListItem vItem = vArgs.Object;
             if (vItem != null)
             {
-                mUploadRecordingStatus.ProblematicUploads.Add(vArgs);
+                if (!mUploadRecordingStatus.ProblematicUploads.ContainsKey(vItem.FileName))
+                {
+                    mUploadRecordingStatus.ProblematicUploads.Add( vItem.FileName, vArgs);
+                }
             }
         }
 
@@ -121,7 +129,10 @@ namespace Assets.Scripts.UI.RecordingLoading
                     BrainpackLogFileUploadHandler();
                     break;
                 case AssetType.Record:
-                    RecordingUploadHander(vItem);
+                    RecordingUploadHandler(vItem);
+                    break;
+                case AssetType.RawFrameData:
+                    RecordingUploadHandler(vItem);
                     break;
             }
 
@@ -131,7 +142,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// A handler on successful recording upload
         /// </summary>
         /// <param name="vItem"></param>
-        void RecordingUploadHander(UploadableListItem vItem)
+        void RecordingUploadHandler(UploadableListItem vItem)
         {
             mUploadRecordingStatus.SucessfullyUploadedRecordings.Add(vItem);
             if (SingleUploadEndEvent != null)
@@ -140,11 +151,27 @@ namespace Assets.Scripts.UI.RecordingLoading
             }
             try
             {
-                File.Delete(vItem.RelativePath);
+                //move a file to a backup  
+                var vFileName =vItem.FileName;
+                var vFullFilePath  = ApplicationSettings.BrainpackDownloadCacheFolderPath + Path.DirectorySeparatorChar + vFileName;
+                //rename file if exists
+                int vCounter = 0;
+                if (File.Exists(vFullFilePath))
+                {
+                    var vFileInfo = new FileInfo(vFullFilePath);
+                    while (File.Exists(vFullFilePath))
+                    {
+                        var vTempFilePath = Path.GetFileNameWithoutExtension(vFullFilePath);
+                        vTempFilePath += vCounter++;
+                        vTempFilePath += vFileInfo.Extension;
+                        vFullFilePath = vTempFilePath;
+                    }
+                }
+                File.Move(vItem.RelativePath,vFullFilePath); 
             }
             catch (Exception vE)
             {
-                UnityEngine.Debug.Log(vE);
+               DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "Issue moving file "+vE.Message + " ,"+ vE.StackTrace);
             }
 
         }
@@ -152,7 +179,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <summary>
         /// Handler for succesful file upload handler.      
         /// </summary>
-        void BrainpackLogFileUploadHandler( )
+        void BrainpackLogFileUploadHandler()
         {
             //delete file
             FileInfo vBpLogFileItem = new FileInfo(BrainpackLogFileItem.RelativePath);
@@ -241,7 +268,6 @@ namespace Assets.Scripts.UI.RecordingLoading
                         vIndices.Push(i);
                     }
                 }
-
             }
             while (vIndices.Count > 0)
             {
@@ -267,7 +293,7 @@ namespace Assets.Scripts.UI.RecordingLoading
                         break;
                     }
                     var vUploadItem = new UploadableListItem();
-                    vUploadItem.AssetType = AssetType.Record;
+                    vUploadItem.AssetType = AssetType.RawFrameData;
                     vUploadItem.RelativePath = vRecItem.FullName;
                     vUploadItem.FileName = vRecItem.Name;
                     vUploadItem.IsNew = true;
@@ -279,25 +305,26 @@ namespace Assets.Scripts.UI.RecordingLoading
                     }
                     mUploader.UploadSingleItem(vUploadItem);
                 }
-
                 UploadBrainpackLogData();
-
             }
 
             //On completion handle errors and succesful uploads
-            bool vHasProblematicResults = mUploadRecordingStatus.ProblematicUploads != null;
+            bool vHasProblematicResults = mUploadRecordingStatus.ProblematicUploads != null && mUploadRecordingStatus.ProblematicUploads.Count > 0;
             if (vHasProblematicResults)
             {
                 if (ProblemUploadingContentEvent != null)
                 {
-                    ProblemUploadingContentEvent(mUploadRecordingStatus.ProblematicUploads);
+                    ProblemUploadingContentEvent(mUploadRecordingStatus.ProblematicUploads.Values.ToList());
                 }
             }
 
-            
             if (ContentsCompletedUploadEvent != null)
             {
                 ContentsCompletedUploadEvent();
+            }
+            if (mUploadRecordingStatus.ProblematicUploads != null)
+            {
+                mUploadRecordingStatus.ProblematicUploads.Clear();
             }
         }
 
@@ -306,7 +333,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// </summary>
         void UploadBrainpackLogData()
         {
-            if (BrainpackLogFileItem != null && mSearcher.HeddokoSdCardStruct.LogFileInRootDir )
+            if (BrainpackLogFileItem != null && mSearcher.HeddokoSdCardStruct.LogFileInRootDir)
             {
                 mUploader.UploadSingleItem(BrainpackLogFileItem);
             }
@@ -353,41 +380,17 @@ namespace Assets.Scripts.UI.RecordingLoading
         {
             //get brainpack serial number
             string vBpSerial = mSearcher.GetSerialNumFromSdCard();
-            var vLogFileInfo = new FileInfo(mSearcher.HeddokoSdCardStruct.LogFileDirectoryPath);
-
-            if (vBpSerial != null  )
-            { 
+             var vLogFileInfo = mSearcher.HeddokoSdCardStruct;
+            if (vBpSerial != null)
+            {
                 BrainpackLogFileItem = new UploadableListItem()
                 {
-                    FileName = vLogFileInfo.Name,
-                    RelativePath = vLogFileInfo.FullName,
+                    FileName = vLogFileInfo.LogFileName,
+                    RelativePath = vLogFileInfo.LogFilePath,
                     BrainpackSerialNumber = vBpSerial,
                     AssetType = AssetType.Log
                 };
-            }
-            //var vFiles = vDrive.GetFiles();
-
-            ////var vLogFile = vFiles.First(vX => vX.Name.Contains("sysHdk.bin"));
-            
-            //if (vLogFile != null)
-            //{
-            //    //get brainpack name
-            //    string vBrainpackSerial = null;
-            //    using (StreamReader vSr = new StreamReader(vDrive.Name + Path.DirectorySeparatorChar + "sysHdk.bin"))
-            //    {
-            //        string vLine;
-            //        while ((vLine = vSr.ReadLine()) != null)
-            //        {
-            //            var vMatch = Regex.Match(vLine, @"S\\d\\d\\d\\d\\d_");
-            //            if (vMatch.Index >= 0)
-            //            {
-            //                vBrainpackSerial = vLine.Substring(vMatch.Index, 6);
-            //                break;
-            //            }
-            //        }
-            //    }
-                
-            //}
+            } 
         }
     }
 
@@ -397,7 +400,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         /// <summary>
         /// a list of recordings who have had problems uploading
         /// </summary>
-        public List<ErrorUploadEventArgs> ProblematicUploads = new List<ErrorUploadEventArgs>();
+        public Dictionary<string,ErrorUploadEventArgs> ProblematicUploads = new Dictionary<string,ErrorUploadEventArgs>();
         public List<UploadableListItem> SucessfullyUploadedRecordings = new List<UploadableListItem>();
     }
 }
