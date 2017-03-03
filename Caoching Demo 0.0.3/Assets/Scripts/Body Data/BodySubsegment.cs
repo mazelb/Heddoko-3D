@@ -76,7 +76,6 @@ namespace Assets.Scripts.Body_Data
             }
         }
 
-
         /// <summary>
         /// Initializes a new  subsegment structure's internal properties with the desired subsegment Type s
         /// <summary>

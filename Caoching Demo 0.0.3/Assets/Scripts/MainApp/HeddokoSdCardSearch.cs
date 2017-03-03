@@ -177,7 +177,7 @@ namespace Assets.Scripts.MainApp
                 }
                 catch (IOException vE)
                 {
-                    UnityEngine.Debug.Log(vE);
+        
                     continue;
                 }
             } 
