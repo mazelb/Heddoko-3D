@@ -1,6 +1,10 @@
 fileFormatVersion: 2
 guid: 3f54beb858262a44e957c6196074a414
+<<<<<<< HEAD
 timeCreated: 1487262967
+=======
+timeCreated: 1480020318
+>>>>>>> feature_develop_3D_visual_test_app_118050301
 licenseType: Pro
 NativeFormatImporter:
   userData: 

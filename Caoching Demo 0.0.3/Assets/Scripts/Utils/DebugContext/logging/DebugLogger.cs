@@ -44,6 +44,7 @@ namespace Assets.Scripts.Utils.DebugContext.logging
 
                         sInstance = new DebugLogger();
                         sInstance.Register();
+                        sInstance.Start();
                     }
                 }
                 return sInstance;
@@ -243,7 +244,9 @@ namespace Assets.Scripts.Utils.DebugContext.logging
         {
             mContinueWorking = true;
             Thread vThread = new Thread(Instance.WorkerTask);
-            vThread.Start(); 
+            vThread.Start();
+            vThread.IsBackground = true;
+            // mFileMonitor.Start();
         }
 
         public void Stop()

@@ -32,3 +32,7 @@ E:\HEDDOKO\Mazen Elbawab\02_SOFTWARE\01_DESKTOP APPS\HEDDOKO-3D\HeddokoLib\Heddo
 E:\HEDDOKO\Mazen Elbawab\02_SOFTWARE\01_DESKTOP APPS\HEDDOKO-3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.pdb
 E:\Code\Heddoko3D\Caoching Demo 0.0.3\Assets\Plugins\HeddokoLib\HeddokoLib.dll
 E:\Code\Heddoko3D\Caoching Demo 0.0.3\Assets\Plugins\HeddokoLib\HeddokoLib.pdb
+G:\code\Heddoko-3D\Heddoko-3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.dll
+G:\code\Heddoko-3D\Heddoko-3D\Caoching Demo 0.0.3\Assets\Plugins\HeddokoLib\HeddokoLib.dll
+G:\code\Heddoko-3D\Heddoko-3D\Caoching Demo 0.0.3\Assets\Plugins\HeddokoLib\HeddokoLib.pdb
+G:\code\Heddoko-3D\Heddoko-3D\HeddokoLib\HeddokoLib\obj\Debug\HeddokoLib.pdb
