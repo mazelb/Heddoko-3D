@@ -182,7 +182,7 @@ namespace Assets.Scripts.Body_Data.View
         public void ConditionnalAccelerationAverage(Vector3 CurAcc, Vector3 CurGyro)
         {
             float GyroNorm = CurGyro.magnitude / 32767.0f;
-            float AcceNorm = CurAcc.magnitude;
+            float AcceNorm =  CurAcc.magnitude;
             float DiffAccG = Mathf.Abs(Mathf.Abs(AcceNorm) / 2047.0f - 1.0f);
             Vector3 vUnitAccelVec = Vector3.Normalize(CurAcc);
             if (GyroNorm < 20.0f && DiffAccG < 0.02f)
@@ -228,17 +228,14 @@ namespace Assets.Scripts.Body_Data.View
                 Vector3 MagVecInG        = vFrameRot * vMagVec;
                 Vector3 AccelVecInG      = vFrameRot * vAccelVec;
                 Vector3 PersonFowardInS  ;
-                if (vI > 0 && vI <5)
-                {
-                    PersonFowardInS       = new Vector3(0.0f,0.0f,-1.0f);
-                    MeanFowardInG  += vFrameRot * PersonFowardInS;
-                }
-                else  
+                int nf = 0;
+                if ( (vI == 0 ) ||  (vI >= 5 && vI<= 8) )
                 {
                     PersonFowardInS       = new Vector3(0.0f,0.0f, 1.0f);
                     MeanFowardInG  += vFrameRot * PersonFowardInS;
-                }
-
+                    nf++;
+                    if (vI == 8) {  MeanFowardInG /= nf;  }
+                }   
                 if (vI == 0)
                 {
                     MeanMagInG = MagVecInG;
@@ -248,9 +245,8 @@ namespace Assets.Scripts.Body_Data.View
                 {
                     MeanMagInG    += MagVecInG  ;
                     MeanMagInG    /= (vI + 1.0f);
-                    MeanFowardInG /= (vI + 1.0f);
                     ConditionnalAccelerationAverage(AccelVecInG, vGyroVec);
-                    NbSensAcc            = 1;
+                    NbSensAcc      = 1;
                     MeanMagH       = VProjectionPerp2W(MeanMagInG, MeanGravFieldInG);
                 }
                 else
