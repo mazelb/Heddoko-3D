@@ -34,7 +34,7 @@ namespace Assets.Scripts.UI.RecordingLoading
         internal LiveFeedViewControlPanel mLiveFeedViewControlPanel;
         internal bool mIsInitialized = false;
         public BodyFrameDataControl BodyFrameDataControl;
-        public BodyFrameGraphControl FrameGraphControl;
+        public BodyFrameGraphControl FrameGraphControl; 
         public AnaylsisTextContainer AnaylsisTextContainer;
         public Button RenameRecordingButton;
         public Image RenameRecordingImage;
@@ -128,7 +128,6 @@ namespace Assets.Scripts.UI.RecordingLoading
         private void SetContextualInfo()
         {
             BodyFrameDataControl.SetBody(BrainpackBody);
-            FrameGraphControl.SetBody(BrainpackBody);
             AnaylsisTextContainer.BodyToAnalyze = BrainpackBody;
         }
 

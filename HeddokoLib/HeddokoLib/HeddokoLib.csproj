@@ -53,7 +53,7 @@
     <Compile Include="genericPatterns\IListenable.cs" />
     <Compile Include="genericPatterns\IReleasableResource.cs" />
     <Compile Include="genericPatterns\Pool.cs" />
-    <Compile Include="HeddokoDataStructs\Brainpack\Brainpack.cs" />
+    <Compile Include="HeddokoDataStructs\Brainpack\BrainpackNetworkingModel.cs" />
     <Compile Include="heddokoProtobuff\Decoder\BrainpackCommandEnum.cs" />
     <Compile Include="heddokoProtobuff\Decoder\RawPacketDecoder.cs" />
     <Compile Include="heddokoProtobuff\Decoder\ProtobuffDispatchRouter.cs" />
@@ -62,6 +62,7 @@
     <Compile Include="heddokoProtobuff\Decoder\RawPacket.cs" />
     <Compile Include="heddokoProtobuff\packet\heddokoPacket.cs" />
     <Compile Include="heddokoProtobuff\packet\RawPacket.cs" />
+    <Compile Include="heddokoProtobuff\Sources\ProcessedFrame.cs" />
     <Compile Include="networking\Command.cs" />
     <Compile Include="networking\HeddokoPacket.cs" />
     <Compile Include="networking\PacketSetting.cs" />
@@ -73,6 +74,10 @@
     <Compile Include="utils\HeddokoCommands.cs" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <None Include="heddokoProtobuff\Sources\AnalysisFrame.proto" />
+    <None Include="heddokoProtobuff\Sources\ProcessedFrame.proto" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

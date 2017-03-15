@@ -73,6 +73,10 @@ namespace Assets.Scripts.Localization
         MessageFromServerReceived,
         ReturnToLoginScreen,
         NoAnalysisFrameSet,
-        PlayingRecording
+        PlayingRecording,
+	StartStreamingControl,
+        BrainpackDisconnected,
+        BrainpackConnecting,
+        StopStreamingControl
     }
 }

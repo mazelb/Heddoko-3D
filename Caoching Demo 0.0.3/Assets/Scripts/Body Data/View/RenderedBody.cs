@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Assets.Scripts.Body_Data.view;
 using Assets.Scripts.Body_Data.View.Anaylsis;
+using Assets.Scripts.Utils.DebugContext;
 using UnityEngine;
 
 namespace Assets.Scripts.Body_Data.View
@@ -26,7 +27,7 @@ namespace Assets.Scripts.Body_Data.View
         public SkinnedMeshRenderer Torso;
         public SkinnedMeshRenderer Limbs;
         public AnaylsisFeedBackContainer AnaylsisFeedBackContainer;
-
+        public SensorContainer SensorTransformContainer;
         public Shader NormalShader;
         public Shader XRayShader;
         public Transform UpperLeftArm;
@@ -40,6 +41,7 @@ namespace Assets.Scripts.Body_Data.View
         public Transform Hips;
         public Transform UpperSpine;
         public GameObject[] LayerCopyListeners;
+        public RenderedBodyDebugComponents DebugComponents;
 
 
 
@@ -75,6 +77,8 @@ namespace Assets.Scripts.Body_Data.View
                         LayerCopyListeners[i].layer = mCurrLayerMask;
                     }
                 }
+                SensorTransformContainer.SetLayer(mCurrLayerMask);
+                DebugComponents.SetLayer(mCurrLayerMask);
             }
         }
 
@@ -86,12 +90,13 @@ namespace Assets.Scripts.Body_Data.View
         /// <param name="vTypes"></param>
         public void Init(BodyStructureMap.BodyTypes vType = BodyStructureMap.BodyTypes.BodyType_FullBody)
         {
-            mCurrentBodyType = vType; 
+            SensorTransformContainer.Hide();
+            mCurrentBodyType = vType;
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftCalf, new SegmentInteractibleObjects(LowerLeftLeg, 6, Limbs));
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftThigh, new SegmentInteractibleObjects(UpperLeftLeg, 4, Limbs));
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_RightCalf, new SegmentInteractibleObjects(LowerRightLeg, 7, Limbs));
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_RightThigh, new SegmentInteractibleObjects(UpperRightLeg, 5, Limbs));
-            TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine, new SegmentInteractibleObjects(UpperSpine,0, Torso));
+            TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_UpperSpine, new SegmentInteractibleObjects(UpperSpine, 0, Torso));
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LowerSpine, new SegmentInteractibleObjects(Hips, 0, Torso));
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm, new SegmentInteractibleObjects(LowerLeftArm, 0, Limbs));
             TransformMapping.Add(BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm, new SegmentInteractibleObjects(UpperLeftArm, 2, Limbs));
@@ -108,6 +113,7 @@ namespace Assets.Scripts.Body_Data.View
                     vKvPair.Value.Selectable.SegmentHeldDownEvent += vKvPair.Value.SubsegmentVisibility.ToggleVisiblity;
                 }
             }
+            SetViewType(ViewType.Body);
         }
 
         /// <summary>
@@ -119,6 +125,15 @@ namespace Assets.Scripts.Body_Data.View
             mCurrentBodyType = vType;
         }
 
+        void OnEnable()
+        {
+            InputHandler.RegisterKeyboardAction(KeyCode.I, DebugComponents.FlipVisibility);
+        }
+
+        void OnDisable()
+        {
+            InputHandler.RemoveKeybinding(KeyCode.I, DebugComponents.FlipVisibility);
+        }
 
         /// <summary>
         /// Hides the segment based on the segment passed in
@@ -129,6 +144,48 @@ namespace Assets.Scripts.Body_Data.View
 
         }
 
+
+        public void SetViewType(ViewType vType)
+        {
+            switch (vType)
+            {
+                case ViewType.Body:
+                    Joints.gameObject.SetActive(true);
+                    Torso.gameObject.SetActive(true);
+                    Limbs.gameObject.SetActive(true);
+                    SensorTransformContainer.Hide();
+               
+                    if (DebugComponents.DebugModeEnabled)
+                    {
+                        DebugComponents.Show();
+                    }
+                    break;
+
+                case ViewType.Sensor:
+                    Joints.gameObject.SetActive(false);
+                    Torso.gameObject.SetActive(false);
+                    Limbs.gameObject.SetActive(false);
+                    SensorTransformContainer.Show();
+                    if (DebugComponents.DebugModeEnabled)
+                    {
+                        DebugComponents.Hide();
+                    }
+
+                    break;
+            }
+        }
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                SetViewType(ViewType.Body);
+            }
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                SetViewType(ViewType.Sensor);
+            }
+        }
         /// <summary>
         /// Request a RulaVisualAngleAnalysis for the current rendered body
         /// </summary>
@@ -188,6 +245,11 @@ namespace Assets.Scripts.Body_Data.View
                 vKeyPair.Value.SubsegmentVisibility.IsVisible = true;
             }
         }
+        public enum ViewType
+        {
+            Body,
+            Sensor
+        }
     }
 
     public class SegmentInteractibleObjects
@@ -207,6 +269,8 @@ namespace Assets.Scripts.Body_Data.View
 
 
         }
+
+
     }
     [Serializable]
     public class InvalidSegmentChangeRequestException : Exception
@@ -235,5 +299,7 @@ namespace Assets.Scripts.Body_Data.View
             StreamingContext context) : base(info, context)
         {
         }
+
+
     }
 }

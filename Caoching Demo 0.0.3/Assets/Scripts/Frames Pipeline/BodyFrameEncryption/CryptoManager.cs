@@ -41,7 +41,8 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameEncryption
         /// <param name="vFilepath"></param>
         /// <returns></returns>
         internal string Decrypt(string vFilepath )
-        { 
+        {
+            mFrameDecryptor.StopDecryption = false;
             return mFrameDecryptor.Decrypt(vFilepath);
         }
 

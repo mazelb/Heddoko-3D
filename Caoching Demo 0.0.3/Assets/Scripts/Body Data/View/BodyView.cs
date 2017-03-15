@@ -99,7 +99,6 @@ namespace Assets.Scripts.Body_Data.view
         /// <param name="vBodyFrame">the body frame to reset to</param>
         public void ResetInitialFrame(BodyFrame vBodyFrame = null)
         {
-
             if (mAssociatedBody != null)
             {
                 BodyFrame vTempBodyFrame = null;
@@ -119,6 +118,8 @@ namespace Assets.Scripts.Body_Data.view
                 AssociatedBody.SetInitialFrame(vTempBodyFrame);
                 UpdateViewTracking(vTempBodyFrame);
             }
+            Debug.ClearDeveloperConsole();
+
         }
 
         /// <summary>
@@ -136,8 +137,7 @@ namespace Assets.Scripts.Body_Data.view
 
             if (vDic != null)
             {
-                AssociatedBody.BodyFrameCalibrationContainer.UpdateCalibrationContainer(vDic, vBodyFrame.Timestamp);
-                Body.ApplyTracking(AssociatedBody, vDic);
+                 Body.ApplyTracking(AssociatedBody, vDic);
                 if (TrackingUpdateEvent != null)
                 {
                     TrackingUpdateEvent(vBodyFrame);
@@ -174,7 +174,6 @@ namespace Assets.Scripts.Body_Data.view
         /// </summary>
         private void Update()
         {
-
             if (StartUpdating)
             {
                 if (mIsPaused)
