@@ -26,12 +26,22 @@ namespace Assets.Scripts.Communication.Communicators
 
         public event OnSuitDataReceivedEvent DataReceivedEvent;
         public event Action<BrainpackConnectionStateChange> ConnectionStateChangeEvent;
-        private BrainpackConnectionState mPreviousState = BrainpackConnectionState.Disconnected;
+        private BrainpackConnectionStateChange mSavedState = new BrainpackConnectionStateChange();
         private object mLockIsConectedLock = new object();
         private Socket mSocket;
         public int Port = 8845;
         public IPAddress SuitIp;
 
+        private BrainpackConnectionStateChange SavedState
+        {
+            get
+            {
+                lock (mSavedState)
+                {
+                    return mSavedState;
+                }
+            }
+        }
         /// <summary>
         /// Is the suit currently connected?
         /// </summary>
@@ -50,7 +60,6 @@ namespace Assets.Scripts.Communication.Communicators
             }
         }
 
-
         /// <summary>
         /// Start the network connection to the suit
         /// </summary>
@@ -66,8 +75,9 @@ namespace Assets.Scripts.Communication.Communicators
 
                 mSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 //begin to connect to the suit
-                mPreviousState = BrainpackConnectionState.Disconnected;
-                InvokeStateChange(mPreviousState, BrainpackConnectionState.Connecting);
+                SavedState.OldState = BrainpackConnectionState.Disconnected;
+                SavedState.NewState = BrainpackConnectionState.Connecting;
+                InvokeStateChange(SavedState);
                 mSocket.ReceiveTimeout = 10000;
                 mSocket.SendTimeout = 10000;
                 mSocket.BeginConnect(vRemoteEp, new AsyncCallback(ConnectCallback), mSocket);
@@ -75,19 +85,15 @@ namespace Assets.Scripts.Communication.Communicators
             catch (ArgumentOutOfRangeException vException)
             {
                 DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "exception thrown in network suit control connection : Line: 74 ServerListener_StartServer_Port_number_is_invalid" + vException);
-                //throw new ArgumentOutOfRangeException(Resources.ServerListener_StartServer_Port_number_is_invalid, vArgument);
             }
             catch (SocketException vException)
             {
                 DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "exception thrown in network suit control connection : Line: 75 Could not create socket, check to make sure that port is not being used by another socke" + vException);
-
-                //   throw new ApplicationException("Could not create socket, check to make sure that port is not being used by another socket", vException);
             }
             catch (Exception vException)
             {
                 UnityEngine.Debug.Log("Line: 81 Error occured while binding socket, check inner exception" + vException);
                 DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "exception thrown in network suit control connection : Line: 81 Error occured while binding socket, check inner exception" + vException);
-                // throw new ApplicationException("Error occured while binding socket, check inner exception", vException);
             }
             return true;
         }
@@ -102,16 +108,15 @@ namespace Assets.Scripts.Communication.Communicators
             try
             {
                 DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "Connection callback initiated");
-
                 Socket vSocket = (Socket)vAr.AsyncState;
                 //setup current socket
                 StateObject vSocketConnection = new StateObject();
                 vSocketConnection.Socket = vSocket;
                 vSocketConnection.Buffer = new byte[1024];
                 mSocket.EndConnect(vAr);
-                mPreviousState = BrainpackConnectionState.Disconnected;
-                InvokeStateChange(BrainpackConnectionState.Disconnected, BrainpackConnectionState.Connected);
-
+                SavedState.OldState = BrainpackConnectionState.Connecting;
+                SavedState.NewState = BrainpackConnectionState.Connected;
+                InvokeStateChange(SavedState);
                 mSocket.BeginReceive(vSocketConnection.Buffer, 0, vSocketConnection.Buffer.Length,
                                   SocketFlags.None, new AsyncCallback(ReceiveCallback), vSocketConnection);
             }
@@ -127,8 +132,9 @@ namespace Assets.Scripts.Communication.Communicators
                     vInnerExceptionMsg = vSocketException.InnerException.ToString();
                 }
                 UnityEngine.Debug.Log(vMsg + " \r\n" + vInnerExceptionMsg);
-                mPreviousState = BrainpackConnectionState.Disconnected;
-                InvokeStateChange(BrainpackConnectionState.Disconnected, BrainpackConnectionState.Disconnected);
+                SavedState.OldState = BrainpackConnectionState.Connecting;
+                SavedState.NewState = BrainpackConnectionState.Disconnected; 
+                InvokeStateChange(SavedState);
             }
             catch (Exception vE)
             {
@@ -141,30 +147,24 @@ namespace Assets.Scripts.Communication.Communicators
                     vInnerExceptionMsg = vE.InnerException.ToString();
                 }
                 UnityEngine.Debug.Log(vMsg + " \r\n" + vInnerExceptionMsg);
-                InvokeStateChange(BrainpackConnectionState.Disconnected, BrainpackConnectionState.Disconnected);
-                mPreviousState = BrainpackConnectionState.Disconnected;
+                SavedState.OldState = BrainpackConnectionState.Connecting;
+                SavedState.NewState = BrainpackConnectionState.Disconnected;
+                InvokeStateChange(SavedState); 
                 DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "exception thrown in network suit control connection : " + vMsg + " \r\n" + vInnerExceptionMsg);
-            } 
+            }
         }
 
         /// <summary>
         /// Invokes a connection state change event
-        /// </summary>
-        /// <param name="vOld"></param>
-        /// <param name="vNew"></param>
-        private void InvokeStateChange(BrainpackConnectionState vOld, BrainpackConnectionState vNew)
+        /// </summary> 
+        private void InvokeStateChange(BrainpackConnectionStateChange vStateChange)
         {
-            DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "control connection : invoking suit change<old,new>" + vOld + "," + vNew);
+            DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "control connection : invoking suit change<old,new>" + SavedState.OldState + "," + SavedState.NewState);
 
             if (ConnectionStateChangeEvent != null)
             {
-                BrainpackConnectionStateChange vState = new BrainpackConnectionStateChange();
-                vState.NewState = vNew;
-                vState.OldState = vOld;
-                ConnectionStateChangeEvent(vState);
-
+                ConnectionStateChangeEvent(vStateChange);
             }
-
         }
 
 
@@ -188,8 +188,9 @@ namespace Assets.Scripts.Communication.Communicators
                     catch (Exception vE)
                     {
                         DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "control connection : Problem sending byte: " + vData.Length);
-                        mPreviousState = BrainpackConnectionState.Connected;
-                        InvokeStateChange(mPreviousState, BrainpackConnectionState.Disconnected);
+                        SavedState.OldState = BrainpackConnectionState.Connected;
+                        SavedState.NewState = BrainpackConnectionState.Disconnected;
+                        InvokeStateChange(SavedState);
                     }
                 }
             }
@@ -202,13 +203,13 @@ namespace Assets.Scripts.Communication.Communicators
 
         public void Send(Packet vPacket)
         {
-            DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "Seding packet of type "+vPacket.type);
+            DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "Seding packet of type " + vPacket.type);
             MemoryStream vStream = new MemoryStream();
             Serializer.Serialize(vStream, vPacket);
             RawPacket vRawPacket = new RawPacket();
             int vRawSize;
             var vRawBytes = vRawPacket.GetRawPacketByteArray(out vRawSize, vStream);
-              Send(vRawBytes, vRawSize  );
+            Send(vRawBytes, vRawSize);
         }
         public void Send(byte[] vData, int vBuffersize)
         {
@@ -219,8 +220,7 @@ namespace Assets.Scripts.Communication.Communicators
                 {
                     try
                     {
-                        mSocket.BeginSend(vData, 0, vBuffersize, 0, new AsyncCallback(SendCallback),mSocket);
-                      //  mSocket.Send(vData, vBuffersize, SocketFlags.None);
+                        mSocket.BeginSend(vData, 0, vBuffersize, 0, new AsyncCallback(SendCallback), mSocket); 
                     }
                     catch (SocketException vE)
                     {
@@ -233,12 +233,10 @@ namespace Assets.Scripts.Communication.Communicators
                         string vMsg = ReturnErrorString(vE);
                         DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "control connection : Problem sending byte: " + vData.Length + " buffer size input " + vBuffersize);
                         DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, vMsg);
-                        //    InvokeStateChange(mPreviousState, BrainpackConnectionState.Disconnected);
-                        //      mPreviousState = BrainpackConnectionState.Connected;
                     }
                 }
             }
-           
+
         }
 
         private void SendCallback(IAsyncResult vAr)
@@ -246,15 +244,14 @@ namespace Assets.Scripts.Communication.Communicators
             try
             {
                 Socket vSo = (Socket)vAr.AsyncState;
-
                 int send = vSo.EndSend(vAr);
             }
             catch (Exception vE)
             {
                 string vMsg = ReturnErrorString(vE);
-                DebugLogger.Instance.LogMessage(LogType.ApplicationCommand,"control connection on send callback: "+ vMsg);
+                DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "control connection on send callback: " + vMsg);
             }
-           
+
         }
 
 
@@ -267,7 +264,6 @@ namespace Assets.Scripts.Communication.Communicators
                 if (vBytesRead > 0)
                 {
                     //invoke data received event 
-
                     //add the bytes to the state object's raw packet
                     PacketStatus vPacketStatus = PacketStatus.Processing;
                     for (int i = 0; i < vIncomingConnection.Buffer.Length; i++)
@@ -308,7 +304,6 @@ namespace Assets.Scripts.Communication.Communicators
             {
                 string vMsg = ReturnErrorString(vE);
                 DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "control connection : error on receive  " + vMsg);
-
                 CloseAndRemoveStateObject(vIncomingConnection);
             }
         }
@@ -326,16 +321,16 @@ namespace Assets.Scripts.Communication.Communicators
                 {
                     vIncomingConnection.Socket.Shutdown(SocketShutdown.Both);
                     vIncomingConnection.Socket.Close();
-                    mPreviousState = BrainpackConnectionState.Connected;
-                    InvokeStateChange(mPreviousState, BrainpackConnectionState.Disconnected);
-
+                    BrainpackConnectionState vPreviousState = SavedState.NewState;
+                    SavedState.OldState = SavedState.NewState;
+                    SavedState.NewState = BrainpackConnectionState.Disconnected; 
+                    InvokeStateChange(SavedState);
                 }
             }
             catch (Exception vE)
             {
                 string vMsg = ReturnErrorString(vE);
                 DebugLogger.Instance.LogMessage(LogType.ApplicationCommand, "control connection : error on closing connection  " + vMsg);
-
             }
         }
 
@@ -359,14 +354,15 @@ namespace Assets.Scripts.Communication.Communicators
         {
             if (mSocket != null && (mSocket.Connected))
             {
-                mPreviousState = BrainpackConnectionState.Connected;
-                InvokeStateChange(mPreviousState, BrainpackConnectionState.Disconnected);
+                BrainpackConnectionState vPreviousState = SavedState.NewState;
+                SavedState.OldState = SavedState.NewState;
+                SavedState.NewState = BrainpackConnectionState.Disconnected;
+                InvokeStateChange(SavedState); 
                 mSocket.Shutdown(SocketShutdown.Both);
                 mSocket.Close();
             }
         }
     }
-
     public class StateObject
     {
         public const int gPacketSize = 1024;

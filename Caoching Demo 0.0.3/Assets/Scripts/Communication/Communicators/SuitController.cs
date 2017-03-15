@@ -15,11 +15,12 @@ using heddoko;
 using HeddokoLib.adt;
 using HeddokoLib.HeddokoDataStructs.Brainpack;
 using UnityEngine;
+using System.Threading.Tasks;
 
 namespace Assets.Scripts.Communication.Communicators
 {
     /// <summary>
-    /// The controller to the suit
+    /// The controller to the suit 
     /// </summary>
     public class SuitController : MonoBehaviour
     {
@@ -34,8 +35,6 @@ namespace Assets.Scripts.Communication.Communicators
         private const int PacketBufferSize = 8;
         private CircularQueue<Packet> mPacketBuffer;
         private ProtobuffFrameBodyFrameConverter mFrameConverter;
-
-
 
         public ProtobuffFrameBodyFrameConverter FrameConverter
         {
@@ -83,7 +82,7 @@ namespace Assets.Scripts.Communication.Communicators
             mAdvertisingListener.RegisterBrainpackLostEventHandler(BrainpackLostHandler);
             ConnectionManager.ConcerningReportIncludedEvent += ConcernReportHandler;
             ConnectionManager.ImuDataFrameReceivedEvent += ImuDataFrameReceivedHandler;
-            ConnectionManager.BrainpackConnectionStateChange += BrainpackControlSocketConnectedHandler;
+            ConnectionManager.BrainpackConnectionStateChangeEvent += BrainpackControlSocketConnectedHandler;
             mBrainpackStatusPanel.RequestStreamStartEvent += RequestStreamStartHandler;
             ConnectionManager.StatusResponseEvent += StatusResponseHandler;
         }
@@ -98,7 +97,7 @@ namespace Assets.Scripts.Communication.Communicators
             mAdvertisingListener.RemoveBrainpackLostEventHandler(BrainpackLostHandler);
             ConnectionManager.ConcerningReportIncludedEvent -= ConcernReportHandler;
             ConnectionManager.ImuDataFrameReceivedEvent -= ImuDataFrameReceivedHandler;
-            ConnectionManager.BrainpackConnectionStateChange -= BrainpackControlSocketConnectedHandler;
+            ConnectionManager.BrainpackConnectionStateChangeEvent -= BrainpackControlSocketConnectedHandler;
             mBrainpackStatusPanel.RequestStreamStartEvent -= RequestStreamStartHandler;
             ConnectionManager.StatusResponseEvent -= StatusResponseHandler;
         }
@@ -124,6 +123,7 @@ namespace Assets.Scripts.Communication.Communicators
             if (vFlag)
             {
                 ConnectionManager.RequestDataStreamFromBrainpack(1258);
+
                 ConnectionManager.RequestSuitStatus();
             }
             else
@@ -131,6 +131,12 @@ namespace Assets.Scripts.Communication.Communicators
                 ConnectionManager.RequestStreamFromBrainpackStop();
                 ConnectionManager.RequestSuitStatus();
             }
+            Task.Factory.StartNew(() =>
+              {
+                  System.Threading.Thread.Sleep(500);
+                  ConnectionManager.RequestSuitStatus();
+              }
+              );
         }
 
 
@@ -145,9 +151,19 @@ namespace Assets.Scripts.Communication.Communicators
                 () =>
                 {
                     mBrainpackStatusPanel.SetBrainpackTcpControlState(vArg1);
-                    if (vArg1.NewState == BrainpackConnectionState.Connected)
+                    if (vArg1.OldState == BrainpackConnectionState.Connecting)
                     {
-                         mConnectionManager.RequestSuitStatus();
+                        if (vArg1.NewState == BrainpackConnectionState.Connected)
+                        {
+                            mConnectionManager.RequestSuitStatus();
+                        }
+                    }
+                    else if (vArg1.OldState == BrainpackConnectionState.Connected)
+                    {
+                        if (vArg1.NewState == BrainpackConnectionState.Disconnected)
+                        {
+
+                        }
                     }
                 });
         }
@@ -209,7 +225,7 @@ namespace Assets.Scripts.Communication.Communicators
         /// </summary>
         /// <param name="vSelected"></param>
         private void BrainpackSelectedHandler(BrainpackNetworkingModel vSelected)
-        { 
+        {
             ConnectionManager.ConnectToSuitControlSocket(vSelected);
         }
 

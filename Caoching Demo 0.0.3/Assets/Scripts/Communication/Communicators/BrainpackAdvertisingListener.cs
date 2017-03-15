@@ -66,8 +66,7 @@ namespace Assets.Scripts.Communication.Communicators
         {
             BrainpackLostEvent -= vHandler;
         }
-
-
+        
         private void VerifyBrainpackCallTime(object vSender, ElapsedEventArgs vE)
         {
             DebugLogger.Instance.LogMessage(LogType.ApplicationCommand,"verifying brainpack calltime");
