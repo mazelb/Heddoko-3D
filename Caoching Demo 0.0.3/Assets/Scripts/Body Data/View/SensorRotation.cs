@@ -30,7 +30,7 @@ namespace Assets.Scripts.Body_Data.View
         public Quaternion InitialRotationInU = Quaternion.identity; // traduction de InitialRotation dans le systeme de Unity       
         public Quaternion GravityOffsetInU   = Quaternion.identity; // quaternion de correction par rapport a la verticale           
         public Quaternion MagOffsetInU       = Quaternion.identity; // quaternion de correction dans le plan horizontal
-        //public Quaternion MagOffsetInG       = Quaternion.identity; // quaternion de correction dans le plan horizontal
+        //public Quaternion MagOffsetInG     = Quaternion.identity; // quaternion de correction dans le plan horizontal
         public Vector3 CurAccelVectorInS     = Vector3.zero;        // valeur actuelle de l'acceleration lineaire provenant des accelerometres
         public Vector3 CurGyroVectorInS      = Vector3.zero;        // valeur actuelle de la vitesse angulaire porvenant des gyroscopes
         public Vector3 CurMagInS             = Vector3.zero;        // valeur actuelle champ magnetique
@@ -48,7 +48,7 @@ namespace Assets.Scripts.Body_Data.View
                 Quaternion vCurRotationInU   = Quaternion.identity;
                 Quaternion vExpectedRotation = Quaternion.identity;
                 Quaternion vGravityOffset    = Quaternion.identity;
-                Quaternion vMagOffset        = Quaternion.identity;   //quaternion de Correction de l'orientation du champ magnetique obtenu sur la base d'une comparaison entre
+                //Quaternion vMagOffset        = Quaternion.identity;   //quaternion de Correction de l'orientation du champ magnetique obtenu sur la base d'une comparaison entre
                                                                       //l'avant moyen sur 9 capteurs, et le champ magnetique exterieur moyen sur 9 capteurs 
 
                 //Correction des orientations actuelles en tenant compte des valeurs initiales des quaternions,
@@ -79,7 +79,6 @@ namespace Assets.Scripts.Body_Data.View
         public void Reset()
         {
             IsReset = true;
-
             ////Correction verticale (Gravitationnelle)
             Vector3 CurAccelVectorInSNormed = CurAccelVectorInS.normalized;     //Normalisation de l'acceleration lineaire actuelle
             Vector3 vExpectedGravityInU     = Vector3.down;                     //Orientation attendue de la gravite pour l'avatar (0,-1,0)
@@ -87,33 +86,8 @@ namespace Assets.Scripts.Body_Data.View
             Vector3 SensorAcceleroVectorInU = SensorSystemMapToUnitySystem(CurAccelVectorInSNormed, CurId);
             //Calcul (dans Unity) du decalage entre la mesure de l'acceleration actuelle InU (supposee  = a la gravite) et celle Attendue   
             GravityOffsetInU = Quaternion.FromToRotation(vExpectedGravityInU, SensorAcceleroVectorInU);
-
-            ////Correction horizontale (champ magnetique et direction avant)
-            ///Vecteur unitaire de reference : la composante perpendiculaire a la gravite du champ magnetique exterieur moyen (sur 9 capteurs) 
-            ///Vecteur unitaire de reference : champ gravitationnel moyen exterieur (sur 9 capteurs et sur la valeur du temps precedant)
-            Vector3 RefMagHInGNormed   = SensorContainer.MeanMagH.normalized;            
-            Vector3 RefAccelgInGNormed = SensorContainer.MeanGravFieldInG.normalized;
-
-            ///Champ magnetique courant pour un capteur et Champs magnetique exprimer dans le repere exterieur           
-            Vector3 CurMagInSNormed = CurMagInS.normalized;                     ///Champ magnetique tel que mesure localement par un capteur (InS) et norme
-            Vector3 CurMagInGNormed = AbsoluteRotation * CurMagInS.normalized;  ///Champ magnetique tel que decrit dans un referentiel exterieur, les composantes vecteurs
-                                                                                ///sont independantes de l'orientation du capteur
-                                                                                ///Vecteur avant courant pour un capteur  dans la base exterieure
-            Vector3 CurMagHInGNormed = SensorContainer.VProjectionPerp2W(CurMagInGNormed, RefAccelgInGNormed).normalized;
-            
-            Vector3 PersonFowardInS = new Vector3(0.0f, 0.0f, 1.0f);
-            if (CurId > 0 && CurId < 5) { PersonFowardInS = new Vector3(0.0f, 0.0f, -1.0f); }
-
-            Vector3 CurForwInGNormed = (AbsoluteRotation * PersonFowardInS).normalized;
-            Vector3 CurForwHInGNormed = SensorContainer.VProjectionPerp2W(CurForwInGNormed, RefAccelgInGNormed).normalized;
-            Quaternion MagForwQuatInS = Quaternion.FromToRotation(CurMagHInGNormed, CurForwHInGNormed);
-            
-            Vector3 MeanForwardHInGNormed = SensorContainer.VProjectionPerp2W(SensorContainer.MeanFowardInG, RefAccelgInGNormed).normalized;
-            Quaternion RefMagForwQuatInG  = Quaternion.FromToRotation(RefMagHInGNormed, MeanForwardHInGNormed);
-            MagOffsetInU = Quaternion.Inverse(MagForwQuatInS) * RefMagForwQuatInG;
-
             //Calcule de la correction dependant de l'orientation initiale et le GravityOffset
-            InitialRotationInU = AbsoluteRotationInU;// * MagOffsetInU * GravityOffsetInU ;             
+            InitialRotationInU = AbsoluteRotationInU * GravityOffsetInU ;              
         }
 
         /// <summary>
@@ -217,13 +191,9 @@ namespace Assets.Scripts.Body_Data.View
         }
     }
 }
-
-
 //Vector3 CurMagInSNormed = CurMagInS.normalized;                   ///Champ magnetique tel que mesure localement par un capteur (InS) et norme
 //Vector3 CurMagInGNormed = AbsoluteRotation*CurMagInS.normalized;  ///Champ magnetique tel que decrit dans un referentiel exterieur, les composantes vecteurs
 ///sont independantes de l'orientation du capteur   
-
-
 /////Vecteur unitaire courant de la composante perpendiculaire a la gravite du champ magnetique exterieur moyen (sur 9 capteurs) 
 //Vector3 CurMagHInGNormed = SensorContainer.VProjectionPerp2W(CurMagInGNormed, RefAccelgInGNormed).normalized;
 //MagOffsetInG             = Quaternion.FromToRotation(CurMagHInGNormed, RefMagHInGNormed);
@@ -241,3 +211,27 @@ namespace Assets.Scripts.Body_Data.View
 
 //Quaternion HorizontalOffsetInU = Quaternion.Slerp(MagOffsetInU, ForwOffsetInU, 0.5f);
 //MagOffsetInU = HorizontalOffsetInU;
+
+////Correction horizontale (champ magnetique et direction avant)
+///Vecteur unitaire de reference : la composante perpendiculaire a la gravite du champ magnetique exterieur moyen (sur 9 capteurs) 
+/////Vecteur unitaire de reference : champ gravitationnel moyen exterieur (sur 9 capteurs et sur la valeur du temps precedant)
+//Vector3 RefMagHInGNormed = SensorContainer.MeanMagH.normalized;
+//Vector3 RefAccelgInGNormed = SensorContainer.MeanGravFieldInG.normalized;
+
+/////Champ magnetique courant pour un capteur et Champs magnetique exprimer dans le repere exterieur           
+//Vector3 CurMagInSNormed = CurMagInS.normalized;                     ///Champ magnetique tel que mesure localement par un capteur (InS) et norme
+//Vector3 CurMagInGNormed = AbsoluteRotation * CurMagInS.normalized;  ///Champ magnetique tel que decrit dans un referentiel exterieur, les composantes vecteurs
+//                                                                    ///sont independantes de l'orientation du capteur
+//                                                                    ///Vecteur avant courant pour un capteur  dans la base exterieure
+//Vector3 CurMagHInGNormed = SensorContainer.VProjectionPerp2W(CurMagInGNormed, RefAccelgInGNormed).normalized;
+
+//Vector3 PersonFowardInS = new Vector3(0.0f, 0.0f, 1.0f);
+//            if (CurId > 0 && CurId< 5) { PersonFowardInS = new Vector3(0.0f, 0.0f, -1.0f); }
+
+//            Vector3 CurForwInGNormed = (AbsoluteRotation * PersonFowardInS).normalized;
+//Vector3 CurForwHInGNormed = SensorContainer.VProjectionPerp2W(CurForwInGNormed, RefAccelgInGNormed).normalized;
+//Quaternion MagForwQuatInS = Quaternion.FromToRotation(CurMagHInGNormed, CurForwHInGNormed);
+
+//Vector3 MeanForwardHInGNormed = SensorContainer.VProjectionPerp2W(SensorContainer.MeanFowardInG, RefAccelgInGNormed).normalized;
+//Quaternion RefMagForwQuatInG = Quaternion.FromToRotation(RefMagHInGNormed, MeanForwardHInGNormed);
+//MagOffsetInU = Quaternion.Inverse(MagForwQuatInS) * RefMagForwQuatInG;

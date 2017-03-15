@@ -45,16 +45,16 @@ public partial class BodySegment
     public static bool GBodyFrameUsingQuaternion = true;
     
     //Is segment tracked (based on body type) 
-    public bool IsTracked = true;
-    public bool IsReset = false;
+    public bool IsTracked =  true;
+    public bool IsReset   = false;
 
     //Tracking flags for segment
-    static public bool IsTrackingHeight = true;
-    static public bool IsHipsEstimateForward = true;
-    static public bool IsHipsEstimateUp = false;
-    static public bool IsUsingInterpolation = true;
-    static public bool IsFusingSubSegments = false;
-    static public float InterpolationSpeed = 0.3f;
+    static public bool  IsTrackingHeight      =  true;
+    static public bool  IsHipsEstimateForward =  true;
+    static public bool  IsHipsEstimateUp      = false;
+    static public bool  IsUsingInterpolation  =  true;
+    static public bool  IsFusingSubSegments   = false;
+    static public float InterpolationSpeed    =  0.3f;
 
 
     //Extract the delta time of the frames
@@ -73,8 +73,8 @@ public partial class BodySegment
 
     //Detection of vertical Hip position
     private static Vector3 mHipDisplacement = new Vector3(0, 0.95f, 0);
-    private static float mRightLegHeight = 0.95f;
-    private static float mLeftLegHeight = 0.95f;
+    private static float mRightLegHeight   = 0.95f;
+    private static float mLeftLegHeight    = 0.95f;
     private static float mInitialLegHeight = 0.95f;
 
     //Offsets calculated from sensors physical orientation
@@ -305,7 +305,6 @@ public partial class BodySegment
         mHipDisplacement = Vector3.Lerp(mHipDisplacement, vNewDisplacement, 0.5f);
         vSegment.UpdateSubsegmentPosition(mHipDisplacement);
     }
-
      
     /// <summary>
     /// MapTorsoSegment: Performs mapping on the torso subsegment from the available sensor data.
@@ -377,35 +376,22 @@ public partial class BodySegment
                 Vector3 SensorAcceleroVectorInU = SensorSystemMapToUnitySystem(CurAccelVectorNormed);
                 //Compute the offset from the actual value of Gravity given by the accel data and the expected gravity in Unity 
                 GravityOffsetInU                = Quaternion.FromToRotation(vExpectedGravityInU, SensorAcceleroVectorInU);
-                ///////////////////////*****************************                     
-                Vector3 MeanMagInG_N   = SensorContainer.MeanMagInG;
-                Vector3 MeanForwInG_N  = SensorContainer.MeanFowardInG;
-                Vector3 MeanGravInG_N  = SensorContainer.MeanGravFieldInG;
-                Vector3 HMeanMagInG_N  = SensorContainer.VProjectionPerp2W(MeanMagInG_N, MeanGravInG_N).normalized;
-                Vector3 HMeanForwInG_N = SensorContainer.VProjectionPerp2W(MeanForwInG_N, MeanGravInG_N).normalized;
-                Quaternion RefQuatM2F  = Quaternion.FromToRotation(HMeanForwInG_N, HMeanMagInG_N);
-                ////////////////////////******************************
-                Vector3    tHForwInG_N = SensorContainer.VProjectionPerp2W(vTrunkCurRawQuat * ( Vector3.forward), SensorContainer.MeanGravFieldInG).normalized;
-                Quaternion tQuatM2FInS = Quaternion.FromToRotation(tHForwInG_N, HMeanMagInG_N);
-                float angleref         =  (2.0f)*(360.0f)*Mathf.Acos( RefQuatM2F.w)/(2.0f * Mathf.PI)  - 90.0f;
-                float anglet           =  (2.0f)*(360.0f)*Mathf.Acos(tQuatM2FInS.w)/(2.0f * Mathf.PI)  - 90.0f;
-                float da               =  anglet - angleref; 
-                MagOffsetInU           =  Quaternion.AngleAxis(da, Vector3.up);             
-                ////////////////////////******************************
-                //////Vector3 MeanMagInS_N    = Quaternion.Inverse(vTrunkCurRawQuat) * SensorContainer.MeanMagInG;
-                //////Vector3 CurMagInS_N     = MeanMagInS_N;// (vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].CurrMagData).normalized;
-                //////Vector3  HCurMagInS_N   = SensorContainer.VProjectionPerp2W(CurMagInS_N, Quaternion.Inverse(vTrunkCurRawQuat) * SensorContainer.MeanGravFieldInG).normalized;
-                //////Vector3    HForwInS_N   = Quaternion.Inverse(vTrunkCurRawQuat) * SensorContainer.VProjectionPerp2W(vTrunkCurRawQuat * Vector3.forward, SensorContainer.MeanGravFieldInG).normalized;
-                //////Quaternion QuatM2FInS   = Quaternion.FromToRotation(HCurMagInS_N, HForwInS_N);                         
-                //////Vector3   CurMagInU_N   = (SensorSystemMapToUnitySystem(CurMagInS_N)).normalized;
-                //////Vector3  HCurMagInU_N   = (new Vector3(CurMagInU_N.x, 0.0f, CurMagInU_N.z)).normalized;
-                //////Quaternion QuatM2FInU   = Quaternion.FromToRotation(HCurMagInU_N, Vector3.forward);
-                //////float angle             = 360.0f * (Mathf.Acos(QuatM2FInU.w) - Mathf.Acos(QuatM2FInS.w) )/ ((float)Mathf.PI);
-                //////MagOffsetInU            = SensorSystemMapToUnitySystem(Quaternion.AngleAxis(angle, new Vector3(QuatM2FInU.x, QuatM2FInU.y, QuatM2FInU.z)));
-                //////Debug.Log("0:" + angle);
-                ////////////////////////******************************
+                ///////////////////////******************************///////////////////////
+                //Nota bene: Explication de la correction horizontale voir  MapArmsOrientationsQuat 
+                Vector3 MeanMagInG_N     = SensorContainer.MeanMagInG;
+                Vector3 MeanGravInG_N    = SensorContainer.MeanGravFieldInG;
+                Vector3 HMeanMagInG_N    = SensorContainer.VProjectionPerp2W(MeanMagInG_N, MeanGravInG_N).normalized;
+                Quaternion CorrecQuatGIG = Quaternion.FromToRotation(Vector3.right, CurAccelVectorNormed);
+                Vector3  tHForwInG_N     = SensorContainer.VProjectionPerp2W( CorrecQuatGIG * vTrunkCurRawQuat * (Vector3.forward), SensorContainer.MeanGravFieldInG).normalized;
+                Quaternion   QuatF2M     = Quaternion.FromToRotation(HMeanMagInG_N, tHForwInG_N);
+                float          angle     = 360.0f * Mathf.Acos(QuatF2M.w)/Mathf.PI;
+                Quaternion Qaxis         = vTrunkInitRawQuat * GravityOffsetInU;
+                Vector3     axis         = new Vector3(Qaxis.x,Qaxis.y,Qaxis.z);
+                MagOffsetInU             = Quaternion.AngleAxis(angle, axis);
+                ////////////////////////******************************///////////////////////
             }
-            Quaternion vNewTrunkQuat = Quaternion.Inverse(vTrunkInitRawQuat  * GravityOffsetInU) * (vTrunkCurRawQuat  * GravityOffsetInU);
+            Quaternion vNewTrunkQuat = Quaternion.Inverse(MagOffsetInU * vTrunkInitRawQuat * GravityOffsetInU) * (MagOffsetInU * vTrunkCurRawQuat * GravityOffsetInU);
+            //Quaternion vNewTrunkQuat = Quaternion.Inverse(vTrunkInitRawQuat * GravityOffsetInU) * (vTrunkCurRawQuat * GravityOffsetInU);
             //Apply transform on Trunk
             if (IsUsingInterpolation)
             {
@@ -447,7 +433,6 @@ public partial class BodySegment
                 vTrunkQuat = Quaternion.Inverse(vHipQuat) * vTorsoQuatY * vTorsoQuatX * vTorsoQuatZ;
             }
         }
-
         //Apply results
         vUSSubsegment.UpdateSubsegmentOrientation(vTrunkQuat, 1, true);
         vLSSubsegment.UpdateSubsegmentOrientation(vHipQuat, 3, true);
@@ -589,14 +574,35 @@ public partial class BodySegment
 
             //Compute the offset from the actual value of Gravity given by the accel data and the expected gravity in Unity 
             GravityOffsetInU   = Quaternion.FromToRotation(vExpectedGravityInU, SensorAcceleroVectorULInU);
-            GravityOffsetLLInU = Quaternion.FromToRotation(vExpectedGravityInU, SensorAcceleroVectorLLInU);            
+            GravityOffsetLLInU = Quaternion.FromToRotation(vExpectedGravityInU, SensorAcceleroVectorLLInU);
 
+            ///////////////////////******************************///////////////////////
+            ///////////////////////******************************///////////////////////
+            //Nota bene: Explication de la correction horizontale voir  MapArmsOrientationsQuat
+            Vector3 MeanMagInG_N = SensorContainer.MeanMagInG;
+            Vector3 MeanGravInG_N= SensorContainer.MeanGravFieldInG;
+            Vector3 HMeanMagInG_N= SensorContainer.VProjectionPerp2W(MeanMagInG_N, MeanGravInG_N).normalized;
+            Quaternion ULCorrecQuatGIG = Quaternion.FromToRotation(Vector3.right, CurAccelVectorULNormed);
+            Quaternion LLCorrecQuatGIG = Quaternion.FromToRotation(Vector3.right, CurAccelVectorLLNormed);
+            Vector3 ULHForwInG_N = SensorContainer.VProjectionPerp2W(ULCorrecQuatGIG * vULCurQuat * (Vector3.forward), SensorContainer.MeanGravFieldInG).normalized;
+            Vector3 LLHForwInG_N = SensorContainer.VProjectionPerp2W(LLCorrecQuatGIG * vLLCurQuat * (Vector3.forward), SensorContainer.MeanGravFieldInG).normalized;
+            Quaternion ULQuatF2M = Quaternion.FromToRotation(HMeanMagInG_N, ULHForwInG_N);
+            Quaternion LLQuatF2M = Quaternion.FromToRotation(HMeanMagInG_N, LLHForwInG_N);
+            float ULangle        = 360.0f * Mathf.Acos(ULQuatF2M.w) / Mathf.PI;
+            float LLangle        = 360.0f * Mathf.Acos(LLQuatF2M.w) / Mathf.PI;
+            Quaternion ULQaxis   = vULCurQuat * GravityOffsetInU;
+            Quaternion LLQaxis   = vLLCurQuat * GravityOffsetInU;
+            Vector3 ULaxis       = new Vector3(ULQaxis.x, ULQaxis.y, ULQaxis.z);
+            Vector3 LLaxis       = new Vector3(LLQaxis.x, LLQaxis.y, LLQaxis.z);
+            MagOffsetInU         = Quaternion.AngleAxis(ULangle, ULaxis);
+            MagOffsetLLInU       = Quaternion.AngleAxis(LLangle, LLaxis);
+            ///////////////////////******************************///////////////////////
         }
-
         //Correction des orientations actuelles en tenant compte des valeurs initiales des quaternions et de la correction verticale 
-        Quaternion vThighQuat = Quaternion.Inverse(vULInitQuat *   GravityOffsetInU) * (vULCurQuat *   GravityOffsetInU);
-        Quaternion vKneeQuat  = Quaternion.Inverse(vLLInitQuat * GravityOffsetLLInU) * (vLLCurQuat * GravityOffsetLLInU);
-
+        Quaternion vThighQuat    = Quaternion.Inverse(MagOffsetInU   * vULInitQuat *   GravityOffsetInU) * (MagOffsetInU   * vULCurQuat *   GravityOffsetInU);
+        Quaternion vKneeQuat     = Quaternion.Inverse(MagOffsetLLInU * vLLInitQuat * GravityOffsetLLInU) * (MagOffsetLLInU * vLLCurQuat * GravityOffsetLLInU);
+        //Quaternion vThighQuat = Quaternion.Inverse(vULInitQuat * GravityOffsetInU) * (vULCurQuat * GravityOffsetInU);
+        //Quaternion vKneeQuat = Quaternion.Inverse(vLLInitQuat * GravityOffsetLLInU) * (vLLCurQuat * GravityOffsetLLInU);
         Quaternion vNewThighQuat = Quaternion.identity;
         Quaternion vNewKneeQuat  = Quaternion.identity;
 
@@ -731,7 +737,7 @@ public partial class BodySegment
 
             //map orientation quaternion
             //////**********
-            Debug.Log("Rigth Arm");
+            //Debug.Log("Rigth Arm");
             MapArmsOrientationsQuat(vUpArmInitialRawQuat, vUpArmCurrentRawQuat, vLoArmInitialRawQuat, vLoArmCurrentRawQuat, vUASubsegment, vLASubsegment);
             //////**********  
         }
@@ -792,7 +798,7 @@ public partial class BodySegment
             Quaternion vLoArmInitialRawQuat = SensorSystemMapToUnitySystem(new Quaternion(vLoArmInit.x, vLoArmInit.y, vLoArmInit.z, vLoArmInit.w));
             Quaternion vLoArmCurrentRawQuat = SensorSystemMapToUnitySystem(new Quaternion(vLoArmCurr.x, vLoArmCurr.y, vLoArmCurr.z, vLoArmCurr.w));
             //////**********
-            Debug.Log("Left Arm");
+            //Debug.Log("Left Arm");
             MapArmsOrientationsQuat(vUpArmInitialRawQuat, vUpArmCurrentRawQuat, vLoArmInitialRawQuat, vLoArmCurrentRawQuat, vUASubsegment, vLASubsegment);
             //////**********
         }
@@ -852,52 +858,59 @@ public partial class BodySegment
             GravityOffsetInU   = Quaternion.FromToRotation(vExpectedGravityInU, SensorAcceleroVectorUAInU);
             GravityOffsetLLInU = Quaternion.FromToRotation(vExpectedGravityInU, SensorAcceleroVectorLAInU);
 
-            ////////////////////////******************************           
-            Vector3      MeanMagInG_N   = SensorContainer.MeanMagInG;
-            Vector3     MeanForwInG_N   = SensorContainer.MeanFowardInG;
-            Vector3     MeanGravInG_N   = SensorContainer.MeanGravFieldInG;
-            Vector3     HMeanMagInG_N   = SensorContainer.VProjectionPerp2W( MeanMagInG_N, MeanGravInG_N).normalized;
-            Vector3    HMeanForwInG_N   = SensorContainer.VProjectionPerp2W(MeanForwInG_N, MeanGravInG_N).normalized;
-            Quaternion     RefQuatM2F   = Quaternion.FromToRotation(HMeanForwInG_N, HMeanMagInG_N);
-            float angleref = (2.0f) * (360.0f) * Mathf.Acos(RefQuatM2F.w) / (2.0f * Mathf.PI) - 90.0f;
-            ////////////////////////******************************
-            Vector3       uHForwInG_N   = SensorContainer.VProjectionPerp2W(vUACurQuat  * (-Vector3.forward), SensorContainer.MeanGravFieldInG).normalized;
-            Quaternion    uQuatM2FInS   = Quaternion.FromToRotation(uHForwInG_N   , HMeanMagInG_N);
-            //MagOffsetInU    = SensorSystemMapToUnitySystem(Quaternion.Inverse(uQuatM2FInS) * RefQuatM2F);            
-            float uanglet    = (2.0f) * (360.0f) * Mathf.Acos(uQuatM2FInS.w) / (2.0f * Mathf.PI) - 90.0f;
-            float uda        = uanglet - angleref;
-            Debug.Log(uda);
+            ///////////////////////******************************///////////////////////  
+            //Nota bene:Attention, il y a certainement un probleme de sychronisation
+            //**********entre les valeurs actuelles et les valeurs moyennes calculées dans le SensorContainer. 
+            //**********une autre structure doit être trouvée pour permettre le calcules des valeurs
+            //**********moyennes sur l'ensemble des 9 capteurs pour un frame donné
 
-            if(vUASubsegment.SubsegmentType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftUpperArm)
-            {
-                MagOffsetInU     = Quaternion.AngleAxis(uda, Vector3.up);
-            }
-            if (vUASubsegment.SubsegmentType == BodyStructureMap.SubSegmentTypes.SubsegmentType_RightUpperArm)
-            {
-                MagOffsetInU = Quaternion.AngleAxis( -uda, Vector3.up);
-            }
+            //moyenne du champ magnetique calculée sur l'ensemble des 9 capteurs
+            Vector3 MeanMagInG_N       = SensorContainer.MeanMagInG;    
+                                                           
+            //moyenne conditionnelle (temporelle et sur les 9 capteurs)
+            //du champ gravitationnelle calculée dans le referentiel de la Terre 
+            Vector3 MeanGravInG_N      = SensorContainer.MeanGravFieldInG;                                            
+                                                                                                                      
+            //composante horizontale moyenne du champ magnetique calculée dans le referentiel de la Terre
+            Vector3 HMeanMagInG_N      = SensorContainer.VProjectionPerp2W(MeanMagInG_N, MeanGravInG_N).normalized;     
+                    
+            //quaternions de correction gravitationnelle calculée dans le referentiel de la Terre
+            //UACorrecQuatGIG : pour le subsegment Up, LACorrecQuatGIG :pour les subsegment Low
+            Quaternion UACorrecQuatGIG = Quaternion.FromToRotation(Vector3.right, CurAccelVectorUANormed);                        
+            Quaternion LACorrecQuatGIG = Quaternion.FromToRotation(Vector3.right, CurAccelVectorLANormed);
 
-            ////////////////////////******************************
-            Vector3       lHForwInG_N   = SensorContainer.VProjectionPerp2W(vLACurQuat * (-Vector3.forward), SensorContainer.MeanGravFieldInG).normalized;
-            Quaternion    lQuatM2FInS   = Quaternion.FromToRotation(lHForwInG_N, HMeanMagInG_N);
-            //MagOffsetLLInU   = SensorSystemMapToUnitySystem(Quaternion.Inverse(lQuatM2FInS) * RefQuatM2F);            
-            float langlet    = (2.0f) * (360.0f) * Mathf.Acos(lQuatM2FInS.w) / (2.0f * Mathf.PI) - 90.0f;
-            float lda        = langlet - angleref;
-            if (vUASubsegment.SubsegmentType == BodyStructureMap.SubSegmentTypes.SubsegmentType_LeftForeArm)
-            {
-                MagOffsetLLInU = Quaternion.AngleAxis(-lda, Vector3.up);
-            }
-            if (vUASubsegment.SubsegmentType == BodyStructureMap.SubSegmentTypes.SubsegmentType_RightForeArm )
-            {
-                MagOffsetLLInU = Quaternion.AngleAxis( lda, Vector3.up);
-            }
-            ////////////////////////******************************
+            //composante horizontale de L'axe du capteur pointant vers l'avant de l'usager et  exprimee dans le referentiel de la Terre
+            //UAHForwInG_N     : pour le subsegment Up, LAHForwInG_N :pour le subsegment Low
+            //(Vector3.forward): axe z local du capteur pointe approximativement vers l'avant de la personne 
+            //vUACurQuat       : changement de referentiel local vers global (Terre)
+            //UACorrecQuatGIG  : correction gravitionnelle dans le referentiel de la Terre
+            Vector3 UAHForwInG_N  = SensorContainer.VProjectionPerp2W(UACorrecQuatGIG * vUACurQuat * (Vector3.forward), SensorContainer.MeanGravFieldInG).normalized;  // extraction de la composante horizontale
+            Vector3 LAHForwInG_N  = SensorContainer.VProjectionPerp2W(LACorrecQuatGIG * vLACurQuat * (Vector3.forward), SensorContainer.MeanGravFieldInG).normalized;  // extraction de la composante horizontale
+            //Quaternion permettant de passer de la composante horizontale du champ magnetique a la direction horizontale avant du capteur
+            //UAQuatF2M : subsegment Up
+            //LAQuatF2M : subsegment Low
+            Quaternion UAQuatF2M  = Quaternion.FromToRotation(HMeanMagInG_N, UAHForwInG_N); 
+            Quaternion LAQuatF2M  = Quaternion.FromToRotation(HMeanMagInG_N, LAHForwInG_N);
+            //Calcul de l'angle associé aux quaternions en utilisant la composante scalaire (w = cos(angle/2))
+            float             UAangle  = 360.0f * Mathf.Acos(UAQuatF2M.w) / Mathf.PI;
+            float             LAangle  = 360.0f * Mathf.Acos(LAQuatF2M.w) / Mathf.PI;
+            //Nota bene : Attention, on suppose ici que la correction pour le champ magnetique est associée a une rotation autour d'un axe qui est le meme 
+            //la rotation resultante de la composition des deux transformations: Q = vUACurQuat * GravityOffsetInU --> axe = vector3(Q.x,Q.y,Q.z)
+            //l'axe de ls correction magnetique axem = axe 
+            //il est possible que la supposition correcte soit plutot : axem = axeg ou axeg est l'axe de la correction verticale basee sur la gravite
+            Quaternion UAQaxis  = vUACurQuat * GravityOffsetInU;
+            Quaternion        LAQaxis  = vLACurQuat * GravityOffsetInU;
+            Vector3            UAaxis  = new Vector3(UAQaxis.x, UAQaxis.y, UAQaxis.z);
+            Vector3            LAaxis  = new Vector3(LAQaxis.x, LAQaxis.y, LAQaxis.z);
+            //Transformation sous forme de quaternion pour les subsegments Up et Low
+            MagOffsetInU               = Quaternion.AngleAxis(UAangle, UAaxis);
+            MagOffsetLLInU             = Quaternion.AngleAxis(LAangle, LAaxis);
+            ///////////////////////******************************///////////////////////
         }
-        //Quaternion vUpArmQuat = Quaternion.Inverse(vUAInitQuat * MagOffsetInU ) * (vUACurQuat * MagOffsetInU );
-        //Quaternion vLoArmQuat = Quaternion.Inverse(vLAInitQuat * MagOffsetLLInU ) * (vLACurQuat * MagOffsetLLInU );
-        Quaternion vUpArmQuat = Quaternion.Inverse(vUAInitQuat * MagOffsetInU   * GravityOffsetInU)   * (vUACurQuat * MagOffsetInU   * GravityOffsetInU);
-        Quaternion vLoArmQuat = Quaternion.Inverse(vLAInitQuat * MagOffsetLLInU * GravityOffsetLLInU) * (vLACurQuat * MagOffsetLLInU * GravityOffsetLLInU);
-
+        Quaternion vUpArmQuat    = Quaternion.Inverse(MagOffsetInU   * vUAInitQuat *   GravityOffsetInU) * (MagOffsetInU   * vUACurQuat *   GravityOffsetInU);
+        Quaternion vLoArmQuat    = Quaternion.Inverse(MagOffsetLLInU * vLAInitQuat * GravityOffsetLLInU) * (MagOffsetLLInU * vLACurQuat * GravityOffsetLLInU);
+        //Quaternion vUpArmQuat = Quaternion.Inverse(vUAInitQuat * GravityOffsetInU)   * (vUACurQuat * GravityOffsetInU);
+        //Quaternion vLoArmQuat = Quaternion.Inverse(vLAInitQuat * GravityOffsetLLInU) * (vLACurQuat * GravityOffsetLLInU);
         Quaternion vNewUpArmQuat = Quaternion.identity;
         Quaternion vNewLoArmQuat = Quaternion.identity;
 
@@ -1221,3 +1234,15 @@ public partial class BodySegment
 //////                MagOffsetInU        = SensorSystemMapToUnitySystem(Quaternion.FromToRotation(ForwInU_NGC, RefForwInU_NGC));
 //////                Debug.Log(MagOffsetInU);
 //////                //MagOffsetInU   = Quaternion.Inverse(SM2FQuatInU) * RefM2FQuatInU;
+////////////////////////******************************
+//////Vector3 MeanMagInS_N    = Quaternion.Inverse(vTrunkCurRawQuat) * SensorContainer.MeanMagInG;
+//////Vector3 CurMagInS_N     = MeanMagInS_N;// (vTransformatricies[BodyStructureMap.SensorPositions.SP_UpperSpine].CurrMagData).normalized;
+//////Vector3  HCurMagInS_N   = SensorContainer.VProjectionPerp2W(CurMagInS_N, Quaternion.Inverse(vTrunkCurRawQuat) * SensorContainer.MeanGravFieldInG).normalized;
+//////Vector3    HForwInS_N   = Quaternion.Inverse(vTrunkCurRawQuat) * SensorContainer.VProjectionPerp2W(vTrunkCurRawQuat * Vector3.forward, SensorContainer.MeanGravFieldInG).normalized;
+//////Quaternion QuatM2FInS   = Quaternion.FromToRotation(HCurMagInS_N, HForwInS_N);                         
+//////Vector3   CurMagInU_N   = (SensorSystemMapToUnitySystem(CurMagInS_N)).normalized;
+//////Vector3  HCurMagInU_N   = (new Vector3(CurMagInU_N.x, 0.0f, CurMagInU_N.z)).normalized;
+//////Quaternion QuatM2FInU   = Quaternion.FromToRotation(HCurMagInU_N, Vector3.forward);
+//////float angle             = 360.0f * (Mathf.Acos(QuatM2FInU.w) - Mathf.Acos(QuatM2FInS.w) )/ ((float)Mathf.PI);
+//////MagOffsetInU            = SensorSystemMapToUnitySystem(Quaternion.AngleAxis(angle, new Vector3(QuatM2FInU.x, QuatM2FInU.y, QuatM2FInU.z)));
+//////Debug.Log("0:" + angle);
