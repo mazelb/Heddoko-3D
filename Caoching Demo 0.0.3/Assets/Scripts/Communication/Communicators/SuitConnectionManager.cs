@@ -4,10 +4,11 @@
 // * @author Mohammed Haider(mohammed@heddoko.com )
 // * @date October 2016
 // * Copyright Heddoko(TM) 2016,  all rights reserved
+
 // */
 
 using System;
-using System.IO;
+using System.IO; 
 using System.Net;
 using System.Net.Sockets;
 using Assets.Scripts.Communication.Controller;
@@ -44,7 +45,7 @@ namespace Assets.Scripts.Communication.Communicators
         /// <summary>
         /// Event where the TCP control socket connection has changed. 
         /// </summary>
-        public event Action<BrainpackConnectionStateChange, BrainpackNetworkingModel> BrainpackConnectionStateChange;
+        public event Action<BrainpackConnectionStateChange, BrainpackNetworkingModel> BrainpackConnectionStateChangeEvent;
         /// <summary>
         /// Event where the brainpack returns a status response message
         /// </summary>
@@ -57,8 +58,7 @@ namespace Assets.Scripts.Communication.Communicators
         private NetworkedSuitControlConnection mNetworkedSuitControlConnection;
         private NetworkedSuitUdpConnection mNetworkSuitUdpConnection;
         private ProtobuffDispatchRouter mDispatchRouter;
-        private StreamToRawPacketDecoder mDecoder;
-        private FirmwareUpdateManager mFirmwareUpdater;
+         private FirmwareUpdateManager mFirmwareUpdater;
 
         public string FirmwareLocationPath = "C:\\downl\\server";
 
@@ -80,7 +80,6 @@ namespace Assets.Scripts.Communication.Communicators
         {
             BrainpackUpdateEvent -= vBrainpackUpdatedHandle;
         }
-
 
         private NetworkedSuitControlConnection SuitControlConnection
         {
@@ -147,7 +146,6 @@ namespace Assets.Scripts.Communication.Communicators
         public SuitConnectionManager(BrainpackNetworkingModel vBrainpackModel) : this()
         {
             mBrainpackModel = vBrainpackModel;
-
         }
 
         public SuitConnectionManager()
@@ -166,9 +164,9 @@ namespace Assets.Scripts.Communication.Communicators
         private void SuitConnectionChangeHandler(BrainpackConnectionStateChange vObj)
         {
             mBrainpackModel.Point = new IPEndPoint(mNetworkedSuitControlConnection.SuitIp, mNetworkedSuitControlConnection.Port);
-            if (BrainpackConnectionStateChange != null)
+            if (BrainpackConnectionStateChangeEvent != null)
             {
-                BrainpackConnectionStateChange(vObj, mBrainpackModel);
+                BrainpackConnectionStateChangeEvent(vObj, mBrainpackModel);
             }
         }
 
@@ -182,7 +180,6 @@ namespace Assets.Scripts.Communication.Communicators
             {
                 mNetworkSuitUdpConnection.Dispose();
             }
-
             mBrainpackModel = vModel;
         }
 
@@ -359,13 +356,11 @@ namespace Assets.Scripts.Communication.Communicators
                     {
                         vCurrentEndPoint = vIp.ToString();
                     }
-
                 }
             }
             return vCurrentEndPoint;
         }
-
-
+        
         /// <summary>
         /// Begins the async file transfer process
         /// </summary>
@@ -387,6 +382,10 @@ namespace Assets.Scripts.Communication.Communicators
             SuitControlConnection.Send(vPacket);
         }
 
+        /// <summary>
+        /// Send a Packet to the suit.
+        /// </summary>
+        /// <param name="vPacket"></param>
         public void SendPacket(Packet vPacket)
         {
             SuitControlConnection.Send(vPacket);
