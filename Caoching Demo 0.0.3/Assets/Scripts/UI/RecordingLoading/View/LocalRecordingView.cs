@@ -65,7 +65,9 @@ namespace Assets.Scripts.UI.RecordingLoading.View
             UniFileBrowser.use.enabled = true;
             SetTransform();
         }
-
+        /// <summary>
+        /// Sets the rect component of the UniFileBrowser component
+        /// </summary>
         private void SetTransform()
         {
             var vPaths = new[] { "dat", "hsm" };

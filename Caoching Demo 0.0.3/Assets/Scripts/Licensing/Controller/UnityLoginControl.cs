@@ -36,7 +36,7 @@ namespace Assets.Scripts.Licensing.Controller
     {
         public LoginModel LoginModel = new LoginModel();
         public LoginView LoginView;
-        public Notify NotificationTemplate;
+        
         private LoginController mLoginController;
         private HeddokoClient mClient;
         internal OnLoginSuccess LoginSuccessEvent;

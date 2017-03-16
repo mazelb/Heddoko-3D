@@ -217,15 +217,14 @@ namespace Assets.Scripts.Frames_Pipeline
         /// </summary>
         public void Play()
         {
-            ConvertFrames();
-            int vTotalCount = ConvertedFrames.Count;
-            if (vTotalCount == 0)
+            ConvertFrames(); 
+            if (ConvertedFrames.Count == 0)
             {
                 return;
             }
             //calculate a delta time between frames, capture the first time stamp
             BodyFrame vFirstFrame = ConvertedFrames[0];
-            BodyFrame vLastFrame = ConvertedFrames[vTotalCount - 1];
+            BodyFrame vLastFrame = ConvertedFrames[ConvertedFrames.Count - 1];
             float vPrevTimeStamp = vFirstFrame.Timestamp;
             float vRecDeltatime = 0;
             float vStartTime = 0;
@@ -233,7 +232,7 @@ namespace Assets.Scripts.Frames_Pipeline
             //the position of the first and last frame
             mCurrentIdx = 0;
             mFirstPos = 0;
-            mFinalFramePos = vTotalCount - 1;
+            mFinalFramePos = ConvertedFrames.Count - 1;
             //start looping
             while (IsWorking)
             {
@@ -271,12 +270,10 @@ namespace Assets.Scripts.Frames_Pipeline
                     vPrevTimeStamp = ConvertedFrames[vPreviousIndex].Timestamp;
                     vRecDeltatime = Math.Abs(vCurrBodyFrame.Timestamp - vPrevTimeStamp);
                     int vSleepTime = (int)((vRecDeltatime / Math.Abs(PlaybackSpeed)) * 1000);
-                    Thread.Sleep(vSleepTime);
+                    Thread.Sleep(vSleepTime);                  
                     vEnquedBodyFrame = ConvertedFrames[mCurrentIdx];
-                    mFrameBuffer.Enqueue(vEnquedBodyFrame);
-
-                    mCurrentIdx += IteratorAdder;
-                    if (mCurrentIdx == mFinalFramePos)
+                    mFrameBuffer.Enqueue(vEnquedBodyFrame);                    
+                    if (mCurrentIdx >= mFinalFramePos)
                     {
 
                         if (LoopPlaybackEnabled)
@@ -297,6 +294,7 @@ namespace Assets.Scripts.Frames_Pipeline
                             //check if looping is enabled, set vCurrPos to first postion
                         }
                     }
+                    mCurrentIdx += IteratorAdder;
                 }
                 catch (Exception vException)
                 {

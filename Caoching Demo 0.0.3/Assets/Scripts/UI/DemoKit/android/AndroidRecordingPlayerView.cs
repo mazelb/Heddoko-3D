@@ -67,8 +67,7 @@ namespace Assets.Scripts.UI.DemoKit
             RootNode.PanelCamUpdated += SetPanelCamSize;
             //get loading button component and disable it
             mPlaybackControlPanel = (PlaybackControlPanel)RootNode.PanelSettings.GetPanelOfType(ControlPanelType.RecordingPlaybackControlPanel);
-            mPlaybackControlPanel.SingleRecordingLoadSubControl.gameObject.SetActive(false);
-            StartCoroutine(SetClickListener());
+             StartCoroutine(SetClickListener());
         }
 
         IEnumerator SetClickListener()

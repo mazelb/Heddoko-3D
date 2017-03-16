@@ -74,7 +74,7 @@ namespace Assets.Scripts.Localization
         ReturnToLoginScreen,
         NoAnalysisFrameSet,
         PlayingRecording,
-	StartStreamingControl,
+        StartStreamingControl,
         BrainpackDisconnected,
         BrainpackConnecting,
         StopStreamingControl

@@ -30,7 +30,9 @@ namespace Assets.Scripts.MainApp
 #pragma warning disable 649
         private LocalDBAccess mDbAccess;
 #pragma warning restore 649
+        [Obsolete("the application no longer uses a local database connection to load and store settings")]
         private Database mDatabase;
+        [Obsolete("the application  does not use any tags")]
         private TaggingManager mTaggingManager;
         public GameObject[] GOtoReEnable;
         public GameObject[] DatabaseConsumers;
@@ -50,7 +52,6 @@ namespace Assets.Scripts.MainApp
             QualitySettings.vSyncCount = 0;
             HVector3.Vector3MathServiceProvider = new UVector3MathServiceProvider();
             BodySegment.IsTrackingHeight = false;
-
             if (!IsDemo)
             {
                 EnableObjects(true);
@@ -71,14 +72,15 @@ namespace Assets.Scripts.MainApp
             Init();
 
         }
-
-        internal void Start()
+        
+        void Start()
         {
             UniFileBrowser.use.SetPath(ApplicationSettings.PreferedRecordingsFolder);
         }
         /// <summary>
         /// Injects the single database component into interested consumers
         /// </summary>
+        [Obsolete("the application no longer uses a local database connection to load and store settings")]
         internal void InjectDatabaseDependents()
         {
             mTaggingManager.Database = mDatabase;
@@ -96,6 +98,7 @@ namespace Assets.Scripts.MainApp
         /// <summary>
         ///Injects tagging manager dependents with a tagging manager object
         /// </summary>
+        [Obsolete("the application no longer uses a local database connection to load and store settings")]
         internal void InjectTaggingManagerDependents()
         {
             foreach (var vDependent in TaggingManagerConsumers)
@@ -168,6 +171,7 @@ namespace Assets.Scripts.MainApp
         /// <summary>
         /// Initialize the database 
         /// </summary>
+        [Obsolete("the application no longer uses a local database connection to load and store settings")]
         internal void InitializeDatabase()
         {
             mDatabase = new Database(DatabaseConnectionType.Local);

@@ -9,7 +9,6 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.Body_Data;
 using Assets.Scripts.Frames_Pipeline;
 using Assets.Scripts.Frames_Recorder.FramesRecording;
 using Assets.Scripts.Localization;
@@ -49,7 +48,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         public RecordingPlaySpeedModSubControl PlaybackSpeedModifierSubControl;
         public RecordingProgressSubControl PlaybackProgressSubControl;
         public RecordingIndexValue RecordingIndexValue;
-        public LoadSingleRecordingSubControl SingleRecordingLoadSubControl;
         public NewRecordingSelected NewRecordingSelectedEvent;
         public event BodyUpdated BodyUpdatedEvent;
         public event RecordingUpdated RecordingUpdatedEvent;
@@ -162,14 +160,12 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             mSubControls.Add(PlayPauseSubControls);
             mSubControls.Add(PlaybackSpeedModifierSubControl);
             mSubControls.Add(PlaybackProgressSubControl);
-            mSubControls.Add(SingleRecordingLoadSubControl);
             RecordingProgressSliderSubControl.Init(this);
             RecordingForwardSubControl.Init(this);
             RecordingRewindSubControl.Init(this);
             PlayPauseSubControls.Init(this);
             PlaybackSpeedModifierSubControl.Init(this);
             PlaybackProgressSubControl.Init(this);
-            SingleRecordingLoadSubControl.Init(this);
             ValidatePlaybackTaskForControls();
             mAbstractSubControls.Add(RecordingProgressSliderSubControl);
             mAbstractSubControls.Add(RecordingForwardSubControl);
@@ -178,7 +174,6 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
             mAbstractSubControls.Add(PlayPauseSubControls);
             mAbstractSubControls.Add(PlaybackSpeedModifierSubControl);
             mAbstractSubControls.Add(PlaybackProgressSubControl);
-            mAbstractSubControls.Add(SingleRecordingLoadSubControl);
         }
 
         public void SkipFrameBack()
@@ -383,10 +378,12 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                 bool vIsPaused = mPlaybackTask.IsPaused;
                 if (vIsPaused)
                 {
+                    Debug.Log("Set play state to play");
                     ChangeState(PlaybackState.Play);
                 }
                 else
                 {
+                    Debug.Log("Set play state to pause");
                     ChangeState(PlaybackState.Pause);
                 }
             }
@@ -530,10 +527,10 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
         /// <summary>
         /// A new recording has been selected
         /// </summary>
-        /// <param name="vNewCsvBodyFramesRecording"></param>
-        public void NewRecordingSelected(BodyFramesRecordingBase vNewCsvBodyFramesRecording)
+        /// <param name="vNewRecording"></param>
+        public void NewRecordingSelected(BodyFramesRecordingBase vNewRecording)
         {
-            if (mBody != null && vNewCsvBodyFramesRecording != null)
+            if (mBody != null && vNewRecording != null)
             {
                 mBody.StopThread();
                 if (mBody.InitialBodyFrame != null)
@@ -544,7 +541,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                     BodySegment.IsUsingInterpolation = vPrev;
                 }
 
-                if (vNewCsvBodyFramesRecording.RecordingRawFramesCount <= RecordingPlaybackTask.StartConversionIndex)
+                if (vNewRecording.RecordingRawFramesCount <= RecordingPlaybackTask.StartConversionIndex)
                 {
                     ModalPanel.SingleChoice("ERROR", LocalizationBinderContainer.GetString(KeyMessage.RecordingFileLessThanSkippableFrames),
                       () => { });
@@ -552,7 +549,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                     return;
                 }
 
-                string vRecGuid = vNewCsvBodyFramesRecording.BodyRecordingGuid;
+                string vRecGuid = vNewRecording.BodyRecordingGuid;
                 mBody.PlayRecording(vRecGuid);
                 //update the recording playback task by polling the body
                 StopCoroutine(CaptureRecordingPlaybackTask());
@@ -565,7 +562,7 @@ namespace Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording
                     BodyUpdatedEvent(mBody);
                 }
                 var vNotificationMsg = LocalizationBinderContainer.GetString(KeyMessage.PlayingRecording);
-                vNotificationMsg += vNewCsvBodyFramesRecording.Title;
+                vNotificationMsg += vNewRecording.Title;
                 NotificationManager.CreateNotification(vNotificationMsg, NotificationManager.NotificationUrgency.Low);
             }
             mIsNewRecording = true;

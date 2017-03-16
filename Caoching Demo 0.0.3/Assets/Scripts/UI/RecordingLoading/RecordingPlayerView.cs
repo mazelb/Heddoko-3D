@@ -67,10 +67,6 @@ namespace Assets.Scripts.UI.RecordingLoading
             vRightSide.Add(ControlPanelType.RecordingPlaybackControlPanel);
             ControlPanelTypeList.Add(vLeftSide);
             ControlPanelTypeList.Add(vRightSide);
-            //SingleRecordingSelection.Instance.StartLoadingEvent += StartLoadHookFunc;
-            //SingleRecordingSelection.Instance.FinishLoadingEvent += StopLoadHookFunc;
-            //PbControlPanel.SingleRecordingLoadSubControl.OnRecordingSelected += () =>
-            //{ SingleRecordingSelection.Instance.OpenFileBrowseDialog(PbControlPanel.NewRecordingSelected); };
             Hide();
         }
 
@@ -121,8 +117,6 @@ namespace Assets.Scripts.UI.RecordingLoading
                     mPanelNodes[0].PanelSettings.GetPanelOfType(ControlPanelType.RecordingPlaybackControlPanel);
             PbControlPanel.BodyUpdatedEvent += SetNewBody;
             CloudLocalStorageViewManager.RecordingLoadingCompleteEvent += PbControlPanel.NewRecordingSelected;
-
-            //  PbControlPanel.SingleRecordingLoadSubControl.SetNewButtonControl(LoadRecordingButton);
             if (RecordingPlayerViewLayoutCreatedEvent != null)
             {
                 RecordingPlayerViewLayoutCreatedEvent(this);

@@ -114,10 +114,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         private void BodyFrameResetInitializedEvent(BodyFrame vBodyFrame)
         {
 
-            if (!MovementSet || !mCollectingData)
+            if (!MovementSet || !mCollectingData || mCurrentBodyFrame == null)
             {
                 return;
             }
+
             //verify if the frame exists already in the set
             var vFrame = Body.AnalysisFramesSet.Get(mCurrentBodyFrame.Index - FRAME_OFFSET);
             if (vFrame != null)
@@ -145,14 +146,8 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// </summary>
         /// <param name="vNewFrame"></param>
         private void BodyFrameUpdatedHandler(BodyFrame vNewFrame)
-        { 
-            //mCurrentFrameIndex = vNewFrame.Index;
-            //if (mCurrentAnalysisFrame != null)
-            //{
-            //    mCurrentAnalysisFrame.TimeStamp = vNewFrame.Timestamp;
-            //}
-            mCurrentBodyFrame = vNewFrame;
-            //todo: add time stamp as uint
+        {  
+            mCurrentBodyFrame = vNewFrame; 
         }
 
         /// <summary>

@@ -22,7 +22,6 @@ using UnityEngine;
 [DataContract]
 public class BodyFrame
 {
-
     [JsonProperty]
     //The frame of data populated to sensors
     private Dictionary<BodyStructureMap.SensorPositions, Vect4> mFrameData;
@@ -103,9 +102,7 @@ public class BodyFrame
             return mMagFrameData;
         }
     }
-
     
-
     /// <summary>
     /// Getter: returns a map of the Magnetic frame data for the current frame
     /// </summary>
@@ -232,8 +229,6 @@ public class BodyFrame
         mAssociatedPacket = vPacket;
     }
 
-
-
     /**
     * ConvertRawFrame(BodyRawFrame rawData)
     * @brief Pass in a BodyRawFrame and convert it to a body frame
@@ -291,6 +286,13 @@ public class BodyFrame
                 vKey--;
                 vSensorPosAsKey = ImuSensorFromPos(vKey);
                 vBodyFrame.FrameData.Add(vSensorPosAsKey, vPlaceholderV3);
+                
+                Vector3 vAccel = Vector3.zero;
+                Vector3 vGyroData = Vector3.zero;
+                Vector3 vMag = Vector3.zero;
+                vBodyFrame.AccelFrameData.Add(vSensorPosAsKey, vAccel);          
+                vBodyFrame.MagFrameData.Add(vSensorPosAsKey, vMag);            
+                vBodyFrame.GyroFrameData.Add(vSensorPosAsKey, vGyroData);
             }
             else
             {
@@ -310,6 +312,7 @@ public class BodyFrame
         if (!vBodyFrame.FrameData.ContainsKey(BodyStructureMap.SensorPositions.SP_LowerSpine))
         {
             vBodyFrame.FrameData.Add(BodyStructureMap.SensorPositions.SP_LowerSpine, new Vect4()); //Vector3.zero));
+
         }
 
         //todo stretch sense data extrapolation starting from the updated startingIndex
@@ -455,9 +458,7 @@ public class BodyFrame
             return BodyStructureMap.SensorPositions.SP_LowerSpine;
         }
     }
-
-
-
+    
     /// <summary>
     /// Returns a sensor position of a stretch sensor from the given int pos
     /// </summary>

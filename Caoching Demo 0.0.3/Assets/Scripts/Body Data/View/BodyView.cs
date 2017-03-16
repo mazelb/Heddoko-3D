@@ -115,11 +115,13 @@ namespace Assets.Scripts.Body_Data.view
                 {
                     BodyFrameResetInitializedEvent(vTempBodyFrame);
                 }
-                AssociatedBody.SetInitialFrame(vTempBodyFrame);
-                UpdateViewTracking(vTempBodyFrame);
-            }
-            Debug.ClearDeveloperConsole();
+                if (vTempBodyFrame != null)
+                {
+                    AssociatedBody.SetInitialFrame(vTempBodyFrame);
+                    UpdateViewTracking(vTempBodyFrame);
 
+                }
+            }
         }
 
         /// <summary>
@@ -137,7 +139,7 @@ namespace Assets.Scripts.Body_Data.view
 
             if (vDic != null)
             {
-                 Body.ApplyTracking(AssociatedBody, vDic);
+                Body.ApplyTracking(AssociatedBody, vDic);
                 if (TrackingUpdateEvent != null)
                 {
                     TrackingUpdateEvent(vBodyFrame);

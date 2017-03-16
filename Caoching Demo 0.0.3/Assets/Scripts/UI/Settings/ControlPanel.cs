@@ -5,15 +5,12 @@
 * @date April 2016
 * Copyright Heddoko(TM) 2016, all rights reserved
 */
-
-using System;
-using System.Collections;
+ 
 using Assets.Scripts.Body_Pipeline.Analysis.Controller;
 using Assets.Scripts.Communication.Controller;
 using Assets.Scripts.Communication.View;
 using Assets.Scripts.MainApp;
-using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording.AnaylsisRecording;
-using Assets.Scripts.UI.RecordingLoading;
+ using Assets.Scripts.UI.RecordingLoading;
 using UIWidgets;
 using UnityEngine;
 using UnityEngine.UI;

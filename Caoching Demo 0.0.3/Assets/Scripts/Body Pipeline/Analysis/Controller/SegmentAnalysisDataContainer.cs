@@ -7,10 +7,7 @@
  */
 
 using System.Collections.Generic;
-using Assets.Scripts.Body_Data;
-using Assets.Scripts.Body_Pipeline.Analysis;
-using Assets.Scripts.ErrorHandling;
-using Assets.Scripts.ErrorHandling.Model;
+ using Assets.Scripts.Body_Pipeline.Analysis; 
 using HeddokoLib.genericPatterns;
 using UnityEngine;
 

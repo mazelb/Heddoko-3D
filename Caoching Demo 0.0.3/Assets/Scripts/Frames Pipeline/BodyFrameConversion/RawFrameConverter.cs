@@ -73,7 +73,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
         /// <returns>A converted BodyFrame</returns>
         public static BodyFrame ConvertRawFrame(BodyProtoPacketFrame vProtopacketFrame)
         {
-           var vBodyFrame = new  BodyFrame(vProtopacketFrame.Packet);
+            var vBodyFrame = new BodyFrame(vProtopacketFrame.Packet);
             vBodyFrame.Index = vProtopacketFrame.Index;
             return vBodyFrame;
         }
@@ -85,12 +85,10 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
         public static BodyFrame ConvertEncodedRawFrame(BodyRawFrame vRawData)
         {
             float vTimeStamp = 0;
-
             //  vTimeStamp = (float)(Convert.ToInt32(vRawData[0]));
             float.TryParse(vRawData[0], out vTimeStamp);
             vTimeStamp = (vTimeStamp / 1000f) - sStartTime;
             Int16 vBitmask = Convert.ToInt16(((string)vRawData[1]), 16);
-
             int vStartIndex = 2;
             int vEndIndex = 11;
             int vBitmaskCheck = 0;
@@ -116,13 +114,10 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                     }
                     catch (Exception vE)
                     {
-                         UnityEngine.Debug.Log("here");
+                        UnityEngine.Debug.Log("here");
                     }
-                   
-                    // new BodyFrame.Vect4(vPitch, vRoll, vYaw);// new Vector3(vPitch, vRoll, vYaw);
                 }
             }
-
             BodyFrame vBodyFrame = CreateBodyFrame(PreviouslyValidOrientations);
             vBodyFrame.Timestamp = vTimeStamp;
             vBodyFrame.Index = vRawData.Index;
@@ -133,7 +128,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
         {
             float vTimestamp = 0;
             float.TryParse(rawData.RawFrameData[0], out vTimestamp);
-            
+
             //from startIndex to endIndex, we check the subframes and extrapolate the IMU data. 
             int vStartIndex = 1;
             int vEndIndex = 20;
@@ -181,6 +176,7 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
                     vKey--;
                     vSensorPosAsKey = ImuSensorFromPos(vKey);
                     vBodyFrame.FrameData.Add(vSensorPosAsKey, vPlaceholderV3);
+                    AddEmptyAccelMagGyro(ref vBodyFrame, vSensorPosAsKey);
                 }
 
                 else
@@ -220,13 +216,25 @@ namespace Assets.Scripts.Frames_Pipeline.BodyFrameConversion
         public static BodyFrame CreateBodyFrame(BodyFrame.Vect4[] vBodyFrameData)
         {
             BodyFrame vBodyFrame = new BodyFrame(-1);
-            vBodyFrame.FrameData.Add(BodyStructureMap.SensorPositions.SP_LowerSpine, new BodyFrame.Vect4());// Vector3.zero);
+            vBodyFrame.FrameData.Add(BodyStructureMap.SensorPositions.SP_LowerSpine, new BodyFrame.Vect4());
+            AddEmptyAccelMagGyro(ref vBodyFrame, BodyStructureMap.SensorPositions.SP_LowerSpine);
             for (int i = 0; i < vBodyFrameData.Length; i++)
             {
                 BodyStructureMap.SensorPositions vSenPos = ImuSensorFromPos(i);
                 vBodyFrame.FrameData.Add(vSenPos, vBodyFrameData[i]);
+                AddEmptyAccelMagGyro(ref vBodyFrame, vSenPos);
             }
             return vBodyFrame;
+        }
+
+        private static void AddEmptyAccelMagGyro(ref BodyFrame vFrame, BodyStructureMap.SensorPositions vSenPos)
+        {
+            UnityEngine.Vector3 vAccel = UnityEngine.Vector3.zero;
+            UnityEngine.Vector3 vGyroData = UnityEngine.Vector3.zero;
+            UnityEngine.Vector3 vMag = UnityEngine.Vector3.zero;
+            vFrame.AccelFrameData.Add(vSenPos, vAccel);
+            vFrame.MagFrameData.Add(vSenPos, vMag);
+            vFrame.GyroFrameData.Add(vSenPos, vGyroData);
         }
 
         /// <summary>

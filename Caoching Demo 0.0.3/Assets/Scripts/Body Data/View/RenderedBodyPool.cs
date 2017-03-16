@@ -49,7 +49,7 @@ namespace Assets.Scripts.Body_Data.View
                 sAvailablePool.RemoveAt(0);
                 sInUsePool.Add(vPooledBody);
                 int vLayer = sAvailableLayers[0];
-                sAvailableLayers.RemoveAt(0);//.Pop();
+                sAvailableLayers.RemoveAt(0); 
                 sInUseLayers.Add(vLayer);
                 vPooledBody.CurrentLayerMask =vLayer;
             }

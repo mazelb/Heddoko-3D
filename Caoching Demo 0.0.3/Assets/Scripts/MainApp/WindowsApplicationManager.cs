@@ -137,7 +137,6 @@ namespace Assets.Scripts.MainApp
             mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseExpiring, LicenseExpiring);
             mActivitiesManager.RemoveNotificationMessageEventHandler(UserEventType.LicenseExpired, LicenseExpired);
             mActivitiesManager.Dispose();
-
         }
 
         /// <summary>

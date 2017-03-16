@@ -42,8 +42,7 @@ namespace Assets.Scripts.Tests
             TestCreateLayout();
 
             mControlPanel = (PlaybackControlPanel)mPanelNodes[0].PanelSettings.GetPanelOfType(ControlPanelType.RecordingPlaybackControlPanel);
-            mControlPanel.SingleRecordingLoadSubControl.enabled = false;
-            
+             
             
         }
 
