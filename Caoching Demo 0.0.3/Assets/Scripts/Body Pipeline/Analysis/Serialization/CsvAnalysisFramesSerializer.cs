@@ -66,6 +66,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Serialization
         /// <param name="vSegments"></param>
         public void SetAnalysisSegments(List<SegmentAnalysis> vSegments)
         {
+            mFilteredFieldTuples.Clear();
             for (int vI = 0; vI < vSegments.Count; vI++)
             {
                 AddAllowedFields(vSegments[vI]);
