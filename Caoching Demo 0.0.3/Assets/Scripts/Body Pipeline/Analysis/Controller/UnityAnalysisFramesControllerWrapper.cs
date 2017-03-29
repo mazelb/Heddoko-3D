@@ -42,9 +42,23 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             LiveSuitFeedView.LiveSuitFeedViewLayoutEnabled += LiveSuitFeedViewLayoutEnabledHandler;
             PlayerView.RecordingPlayerViewLayoutEnabled += RecordingPlayerViewLayoutEnabledHandler;
             ExportDataButton.enabled = false;
-            ExportDataButton.onClick.AddListener(LaunchSaveFileWindow);
+            ExportDataText.text = "START ANALYSIS COLLECTION";
+            ExportDataButton.onClick.AddListener(PrepDataCollection);
         }
 
+        /// <summary>
+        /// Starts data collection and clears out previous frames. 
+        /// </summary>
+        private void PrepDataCollection()
+        {
+
+            //remove all current listeners
+            ExportDataButton.onClick.RemoveAllListeners();
+            ExportDataText.text = "EXPORT DATA TO CSV";
+            //Add listener for data collection start
+            ExportDataButton.onClick.AddListener(LaunchSaveFileWindow);
+            StartDataCollection();
+        }
         private void RecordingPlayerViewLayoutEnabledHandler(RecordingPlayerView vObj)
         {
             if (LiveSuitFeedView.Initialized)
@@ -179,7 +193,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             mController.SetBody(PlayerView.CurrBody);
             mController.ResetCollection();
             mController.Body.AnalysisFramesSet.MaxFramesReachedEvent += AnalysisFramesSetMaxFramesReachedEvent;
-            StartDataCollection();
+ 
         }
 
 
@@ -228,6 +242,12 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// </summary>
         public void LaunchSaveFileWindow()
         {
+       
+            //remove all current listeners
+            ExportDataButton.onClick.RemoveAllListeners();
+            ExportDataText.text = "START ANALYSIS COLLECTION";
+            //Add listener for data collection start
+            ExportDataButton.onClick.AddListener(PrepDataCollection);
 
             //pause recording
             mPlaybackControlPanel.Pause();
@@ -246,6 +266,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             UniFileBrowser.use.enabled = true;
             UniFileBrowser.use.SaveFileWindow(ExportCsvData);
             UniFileBrowser.use.OnEscape = Escaped;
+            
         }
         /// <summary>
         /// Window has been escaped.  Datacollection has been ended. 
@@ -268,7 +289,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             Notify.Template("fade").Show(vMsg + vArg0 + ".csv", 5f, sequenceType: NotifySequence.First);
             DisablingPanel.SetActive(false);
             mPlaybackControlPanel.ChangeState(PlaybackState.Play);
-
+            StopDataCollection();
         }
         /// <summary>
         /// Commence data collection

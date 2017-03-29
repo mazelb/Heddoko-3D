@@ -131,13 +131,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
                 {
                     vFrame.Status = TposeStatus.Tpose;
                 }
-                //clear out frames after this current index
-                int vStartIndexClear = mCurrentBodyFrame.Index - FRAME_OFFSET + 1;
-                int vMaxCount = Body.AnalysisFramesSet.MaxFramesCount;
-                for (int vI = vStartIndexClear; vI < vMaxCount; vI++)
-                {
-                    Body.AnalysisFramesSet.Remove(vI);
-                }
             }
         }
 
