@@ -14,6 +14,7 @@ using Assets.Scripts.UI.AbstractViews.AbstractPanels.PlaybackAndRecording;
 using Assets.Scripts.UI.RecordingLoading;
 using UIWidgets;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
 {
@@ -27,12 +28,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         public RecordingPlayerView PlayerView;
         private PlaybackControlPanel mPlaybackControlPanel;
         private bool mCollectingData;
-
+        private bool InLiveView = false;
         public GameObject DisablingPanel;
         public AnalysisTextViewController AnalysisTextViewController;
-        public UnityEngine.UI.Button ExportDataButton;
-        public UnityEngine.UI.Text ExportDataText;
-
+        public Button ExportDataButton;
+        public Text ExportDataText;
+        private AnalysisCollectionIndexSet StartStop;
+        private bool mCompleteRecordingPlayed;
         internal void Awake()
         {
             IAnalysisFramesSerializer vSerializer = new CsvAnalysisFramesSerializer();
@@ -51,13 +53,13 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// </summary>
         private void PrepDataCollection()
         {
-
             //remove all current listeners
             ExportDataButton.onClick.RemoveAllListeners();
             ExportDataText.text = "EXPORT DATA TO CSV";
+            mCompleteRecordingPlayed = false;
             //Add listener for data collection start
             ExportDataButton.onClick.AddListener(LaunchSaveFileWindow);
-            StartDataCollection();
+            StartStop.StartIndex = mController.GetBodyFrameIndex();
         }
         private void RecordingPlayerViewLayoutEnabledHandler(RecordingPlayerView vObj)
         {
@@ -190,10 +192,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             {
                 PlayerView.CurrBody.AnalysisFramesSet.SetMaxFrameCount(vControlPanel.mPlaybackTask.ConvertedFrames.Count);
             }
-            mController.SetBody(PlayerView.CurrBody);
             mController.ResetCollection();
             mController.Body.AnalysisFramesSet.MaxFramesReachedEvent += AnalysisFramesSetMaxFramesReachedEvent;
- 
+            StartDataCollection();
+
         }
 
 
@@ -210,9 +212,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
                     "{0} frames have been analyzed and completed. Click on the export data button to save analysis data to a csv file.",
                     vCollectedFrames);
             NotificationManager.CreateNotification(vMessage, NotificationManager.NotificationUrgency.Low);
+            mController.Body.AnalysisFramesSet.MaxFramesReachedEvent -= AnalysisFramesSetMaxFramesReachedEvent;
+            mCompleteRecordingPlayed = true;
         }
 
-       internal void OnApplicationQuit()
+        internal void OnApplicationQuit()
         {
             if (mPlaybackControlPanel != null)
             {
@@ -242,7 +246,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// </summary>
         public void LaunchSaveFileWindow()
         {
-       
+
             //remove all current listeners
             ExportDataButton.onClick.RemoveAllListeners();
             ExportDataText.text = "START ANALYSIS COLLECTION";
@@ -266,7 +270,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             UniFileBrowser.use.enabled = true;
             UniFileBrowser.use.SaveFileWindow(ExportCsvData);
             UniFileBrowser.use.OnEscape = Escaped;
-            
+
         }
         /// <summary>
         /// Window has been escaped.  Datacollection has been ended. 
@@ -283,13 +287,19 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// <param name="vArg0"></param>
         private void ExportCsvData(string vArg0)
         {
-            mController.SerializeSet(vArg0);
+            StartStop.EndIndex = mController.GetBodyFrameIndex();
+            if (mCompleteRecordingPlayed)
+            {
+                mController.SerializeSet(vArg0);
+            }
+            else
+            {
+                mController.SerializeSet(vArg0, StartStop.StartIndex, StartStop.EndIndex);
+            }
             string vMsg = LocalizationBinderContainer.GetString(KeyMessage.AnalysisSaveMsg);
-
             Notify.Template("fade").Show(vMsg + vArg0 + ".csv", 5f, sequenceType: NotifySequence.First);
             DisablingPanel.SetActive(false);
             mPlaybackControlPanel.ChangeState(PlaybackState.Play);
-            StopDataCollection();
         }
         /// <summary>
         /// Commence data collection
@@ -300,6 +310,14 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             mController.Start();
         }
 
+        /// <summary>
+        /// Designate the start and stop index of the analysis set to serialize
+        /// </summary>
+        private struct AnalysisCollectionIndexSet
+        {
+            public int StartIndex;
+            public int EndIndex;
+        }
 
     }
 }

@@ -32,7 +32,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         private TPosedAnalysisFrame mCurrentAnalysisFrame;
         private int mAnalysisSegmentCounter;
         private int mTotalSingleSegmentsToCount;
-         internal bool MovementSet;
+        internal bool MovementSet;
         private BodyFrame mCurrentBodyFrame;
         /// <summary>
         /// Frames serializer
@@ -62,6 +62,9 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         {
             FramesSerializer = vSerializer;
         }
+
+
+
         /// <summary>
         /// Set the notifying body to the current instance.
         /// </summary>
@@ -78,6 +81,22 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             mTotalSingleSegmentsToCount = vAnalysisSegments.Count;
             FramesSerializer.SetAnalysisSegments(Body.AnalysisSegments.Values.ToList());
             RegisterListener();
+        }
+
+        /// <summary>
+        /// Get the current BodyFrame index
+        /// </summary>
+        /// <returns></returns>
+        internal int GetBodyFrameIndex()
+        {
+            if (mCurrentBodyFrame != null)
+            {
+                return mCurrentBodyFrame.Index;
+            }
+            else
+            {
+                return -1;
+            }
         }
 
         /// <summary>
@@ -140,11 +159,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
         /// <param name="vNewFrame"></param>
         private void BodyFrameUpdatedHandler(BodyFrame vNewFrame)
         { 
-            //mCurrentFrameIndex = vNewFrame.Index;
-            //if (mCurrentAnalysisFrame != null)
-            //{
-            //    mCurrentAnalysisFrame.TimeStamp = vNewFrame.Timestamp;
-            //}
             mCurrentBodyFrame = vNewFrame;
             //todo: add time stamp as uint
         }
@@ -311,6 +325,17 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
                     mCurrentAnalysisFrame.RightInitTibiaHeight = vRightLegtAnalysis.mInitTibiaHeight;
                     break;
             }
+        }
+
+        /// <summary>
+        /// Serialize based on a start and end index
+        /// </summary>
+        /// <param name="vArg0"></param>
+        /// <param name="startIndex"></param>
+        /// <param name="endIndex"></param>
+        internal void SerializeSet(string vArg0, int startIndex, int endIndex)
+        {
+            FramesSerializer.Serialize(Body.AnalysisFramesSet, vArg0,   startIndex,   endIndex);
         }
 
         /// <summary>

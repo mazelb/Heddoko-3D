@@ -6,6 +6,7 @@
 // * Copyright Heddoko(TM) 2017,  all rights reserved
 // */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -34,26 +35,34 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Serialization
         /// <param name="vPath">the path to serialize to</param>
         public void Serialize(IAnalysisFramesSet vSet, string vPath)
         {
+           
+           
+            var vValue = vSet.GetIterableList();
+            Serialize(vValue, vPath);
+        }
+
+        private void Serialize(List<TPosedAnalysisFrame> vList, string vPath)
+        {
             if (!vPath.EndsWith(".csv"))
             {
                 vPath += ".csv";
             }
             StringBuilder vBuilder = new StringBuilder();
             AddHeader(ref vBuilder);
-            var vValue = vSet.GetIterableList();
-            for (int vI = 0; vI < vValue.Count; vI++)
+            
+            for (int vI = 0; vI < vList.Count; vI++)
             {
-                vBuilder.Append(vValue[vI].TimeStamp + ",");
-                vBuilder.Append(vValue[vI].Index + ",");
-                vBuilder.Append((int) vValue[vI].Status + ",");
+                vBuilder.Append(vList[vI].TimeStamp + ",");
+                vBuilder.Append(vList[vI].Index + ",");
+                vBuilder.Append((int)vList[vI].Status + ",");
                 foreach (var vAnalysisFieldNameTuple in mFilteredFieldTuples)
                 {
-                    var vItemValue = (float)vAnalysisFieldNameTuple.CachedPropertyInfo.GetValue(vValue[vI], null);
+                    var vItemValue = (float)vAnalysisFieldNameTuple.CachedPropertyInfo.GetValue(vList[vI], null);
                     //truncate down to three decimals
                     vBuilder.Append(vItemValue.ToString("0.000") + ",");
                 }
                 vBuilder.AppendLine();
-            } 
+            }
             using (StreamWriter vFileWriter = new StreamWriter(vPath))
             {
                 vFileWriter.Write(vBuilder.ToString());
@@ -69,6 +78,14 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Serialization
             for (int vI = 0; vI < vSegments.Count; vI++)
             {
                 AddAllowedFields(vSegments[vI]);
+            }
+            //sort the fields according to their order number
+            var vList = mFilteredFieldTuples.ToList<AnalysisFieldNameTuple>();
+            mFilteredFieldTuples = vList.OrderBy(vAllowedField => vAllowedField.OrderNumber).ToList();
+            mFilteredFieldTuples.Clear();
+            for (int i = 0; i < vList.Count; i++)
+            {
+                mFilteredFieldTuples.Add(vList[i]);
             }
         }
 
@@ -103,7 +120,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Serialization
                     if (((AnalysisSerialization)vAttri).IgnoreAttribute)
                     {
                         continue;
-                    } 
+                    }
                     var vSet = new AnalysisFieldNameTuple
                     {
                         HeaderName = ((AnalysisSerialization)vAttri).AttributeName,
@@ -114,8 +131,29 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Serialization
                     mFilteredFieldTuples.Add(vSet);
                 }
             }
-            //sort the fields
-            mFilteredFieldTuples=  mFilteredFieldTuples.OrderBy(vAllowedField => vAllowedField.OrderNumber).ToList();
+        }
+
+        public void Serialize(IAnalysisFramesSet analysisFramesSet, string vPath, int startIndex, int endIndex)
+        {
+            List<TPosedAnalysisFrame> vFilteredList = new List<TPosedAnalysisFrame>();
+            var iterableFrameSet = analysisFramesSet.GetIterableList();
+            if (startIndex < endIndex)
+            {
+                var vEnumerable = from item in iterableFrameSet
+                                  where item.Index >= startIndex && item.Index <= endIndex
+                                  orderby item.Index
+                                  select item;
+                  vFilteredList = vEnumerable.ToList();
+            }
+            else
+            {
+                var vEnumerable = from item in iterableFrameSet
+                                  where item.Index <= endIndex && item.Index <= startIndex
+                                  orderby item.Index
+                                  select item;
+                vFilteredList = vEnumerable.ToList();
+            }
+            Serialize(vFilteredList, vPath);
         }
 
         /// <summary>
