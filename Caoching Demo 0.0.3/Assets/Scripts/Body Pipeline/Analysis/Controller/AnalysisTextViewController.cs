@@ -6,6 +6,7 @@
 // * Copyright Heddoko(TM) 2017,  all rights reserved
 // */
 
+using System;
 using Assets.Scripts.Body_Data.View.Anaylsis;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisModels;
 using Assets.Scripts.Body_Pipeline.Analysis.AnalysisTextViews;
@@ -35,5 +36,7 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Controller
             ShoulderText.UpdateView(vFrame);
             TrunkText.UpdateView(vFrame);
         }
+
+        
     }
 }

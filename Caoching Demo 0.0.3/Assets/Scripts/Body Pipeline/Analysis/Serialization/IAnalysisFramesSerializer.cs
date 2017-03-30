@@ -28,7 +28,6 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Serialization
         void Serialize(IAnalysisFramesSet vSet, string vPath);
 
         void SetAnalysisSegments(List<SegmentAnalysis> vSegments);
-
-
+        void Serialize(IAnalysisFramesSet analysisFramesSet, string vArg0, int startIndex, int endIndex);
     }
 }

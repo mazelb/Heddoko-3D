@@ -45,7 +45,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <param name="vFrame">The frame to add</param>
         public void Add(int vIndex, TPosedAnalysisFrame vFrame)
         {
-            ValidateIndex(vIndex);
+            if (!ValidateIndex(vIndex))
+            {
+                return;
+            }
             if (mCollection[vIndex] == null && vFrame != null)
             {
                 TotalCollectedFrames++;
@@ -80,7 +83,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <returns></returns>
         public TPosedAnalysisFrame Get(int vIndex)
         {
-            ValidateIndex(vIndex);
+            if (!ValidateIndex(vIndex))
+            {
+                return null;
+            }
             TPosedAnalysisFrame vFrame = mCollection[vIndex];
             return vFrame;
         }
@@ -106,12 +112,12 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         {
             if (vIndex < 0)
             {
-                throw new InvalidOperationException("Index < 0, no such index ");
+               // throw new InvalidOperationException("Index < 0, no such index ");
                 return false;
             }
             if (vIndex >= MaxFramesCount)
             {
-                throw new InvalidOperationException("Index > than the max number of frames allowed, no such index ");
+               // throw new InvalidOperationException("Index > than the max number of frames allowed, no such index ");
                 return false;
 
             }
@@ -125,7 +131,10 @@ namespace Assets.Scripts.Body_Pipeline.Analysis
         /// <returns></returns>
         public bool ContainsFrameAt(int vIndex)
         {
-            ValidateIndex(vIndex);
+            if (!ValidateIndex(vIndex))
+            {
+                return false;
+            }
             var vFrame = mCollection[vIndex];
             return vFrame != null;
         }
