@@ -75,9 +75,11 @@ namespace Assets.Scripts.Body_Pipeline.Analysis.Serialization
         /// <param name="vSegments"></param>
         public void SetAnalysisSegments(List<SegmentAnalysis> vSegments)
         {
-            for (int vI = 0; vI < vSegments.Count; vI++)
+            var vFilteredSegments = vSegments;
+            vFilteredSegments.RemoveAt(0);
+            for (int vI = 0; vI < vFilteredSegments.Count; vI++)
             {
-                AddAllowedFields(vSegments[vI]);
+                AddAllowedFields(vFilteredSegments[vI]);
             }
             //sort the fields according to their order number
             var vList = mFilteredFieldTuples.ToList<AnalysisFieldNameTuple>();
