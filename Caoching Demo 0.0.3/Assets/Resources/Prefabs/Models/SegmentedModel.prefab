@@ -280,7 +280,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &103040
 GameObject:
   m_ObjectHideFlags: 1
@@ -37303,32 +37303,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AxisOfRotation: {x: 0, y: 180, z: 0}
-  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
-  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
-  UpVector: {x: 0, y: 1, z: 0}
-  RightVector: {x: 1, y: 0, z: 0}
-  ForwardVector: {x: 0, y: 0, z: 1}
-  LegUpVector: {x: 0, y: 0, z: -1}
-  LegRightVector: {x: 1, y: 0, z: 0}
-  LegForwardVector: {x: 0, y: 1, z: 0}
-  RightArmUpVector: {x: -1, y: 0, z: 0}
-  RightArmRightVector: {x: 0, y: 1, z: 0}
-  RightArmForwardVector: {x: 0, y: 0, z: 1}
-  LeftArmUpVector: {x: 1, y: 0, z: 0}
-  LeftArmRightVector: {x: 0, y: 1, z: 0}
-  LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  CurAccelVector: {x: 0, y: 0, z: 0}
-  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurGyroVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurId: 0
-  OrientationCorrection: {x: 0, y: 0, z: -90}
   UseCorrection: 0
   IsReset: 0
+  AxisOfRotation: {x: 0, y: 180, z: 0}
+  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
+  AbsoluteRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
+  InitialRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  MagOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  CurAccelVectorInS: {x: 0, y: 0, z: 0}
+  CurGyroVectorInS: {x: 0, y: 0, z: 0}
+  CurMagInS: {x: 0, y: 0, z: 0}
+  CurId: 0
 --- !u!114 &11407372
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -37500,32 +37488,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AxisOfRotation: {x: 0, y: 180, z: 0}
-  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
-  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
-  UpVector: {x: 0, y: 1, z: 0}
-  RightVector: {x: 1, y: 0, z: 0}
-  ForwardVector: {x: 0, y: 0, z: 1}
-  LegUpVector: {x: 0, y: 0, z: -1}
-  LegRightVector: {x: 1, y: 0, z: 0}
-  LegForwardVector: {x: 0, y: 1, z: 0}
-  RightArmUpVector: {x: -1, y: 0, z: 0}
-  RightArmRightVector: {x: 0, y: 1, z: 0}
-  RightArmForwardVector: {x: 0, y: 0, z: 1}
-  LeftArmUpVector: {x: 1, y: 0, z: 0}
-  LeftArmRightVector: {x: 0, y: 1, z: 0}
-  LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  CurAccelVector: {x: 0, y: 0, z: 0}
-  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurGyroVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurId: 0
-  OrientationCorrection: {x: 0, y: 180, z: 180}
   UseCorrection: 0
   IsReset: 0
+  AxisOfRotation: {x: 0, y: 180, z: 0}
+  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
+  AbsoluteRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
+  InitialRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  MagOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  CurAccelVectorInS: {x: 0, y: 0, z: 0}
+  CurGyroVectorInS: {x: 0, y: 0, z: 0}
+  CurMagInS: {x: 0, y: 0, z: 0}
+  CurId: 0
 --- !u!114 &11415354
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38101,32 +38077,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AxisOfRotation: {x: 0, y: 180, z: 0}
-  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
-  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
-  UpVector: {x: 0, y: 1, z: 0}
-  RightVector: {x: 1, y: 0, z: 0}
-  ForwardVector: {x: 0, y: 0, z: 1}
-  LegUpVector: {x: 0, y: 0, z: -1}
-  LegRightVector: {x: 1, y: 0, z: 0}
-  LegForwardVector: {x: 0, y: 1, z: 0}
-  RightArmUpVector: {x: -1, y: 0, z: 0}
-  RightArmRightVector: {x: 0, y: 1, z: 0}
-  RightArmForwardVector: {x: 0, y: 0, z: 1}
-  LeftArmUpVector: {x: 1, y: 0, z: 0}
-  LeftArmRightVector: {x: 0, y: 1, z: 0}
-  LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  CurAccelVector: {x: 0, y: 0, z: 0}
-  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurGyroVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurId: 0
-  OrientationCorrection: {x: 0, y: 180, z: 180}
   UseCorrection: 0
   IsReset: 0
+  AxisOfRotation: {x: 0, y: 180, z: 0}
+  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
+  AbsoluteRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
+  InitialRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  MagOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  CurAccelVectorInS: {x: 0, y: 0, z: 0}
+  CurGyroVectorInS: {x: 0, y: 0, z: 0}
+  CurMagInS: {x: 0, y: 0, z: 0}
+  CurId: 0
 --- !u!114 &11442004
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38243,32 +38207,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AxisOfRotation: {x: 0, y: 180, z: 0}
-  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
-  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
-  UpVector: {x: 0, y: 1, z: 0}
-  RightVector: {x: 1, y: 0, z: 0}
-  ForwardVector: {x: 0, y: 0, z: 1}
-  LegUpVector: {x: 0, y: 0, z: -1}
-  LegRightVector: {x: 1, y: 0, z: 0}
-  LegForwardVector: {x: 0, y: 1, z: 0}
-  RightArmUpVector: {x: -1, y: 0, z: 0}
-  RightArmRightVector: {x: 0, y: 1, z: 0}
-  RightArmForwardVector: {x: 0, y: 0, z: 1}
-  LeftArmUpVector: {x: 1, y: 0, z: 0}
-  LeftArmRightVector: {x: 0, y: 1, z: 0}
-  LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  CurAccelVector: {x: 0, y: 0, z: 0}
-  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurGyroVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurId: 0
-  OrientationCorrection: {x: 0, y: 0, z: -90}
   UseCorrection: 0
   IsReset: 0
+  AxisOfRotation: {x: 0, y: 180, z: 0}
+  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
+  AbsoluteRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
+  InitialRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  MagOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  CurAccelVectorInS: {x: 0, y: 0, z: 0}
+  CurGyroVectorInS: {x: 0, y: 0, z: 0}
+  CurMagInS: {x: 0, y: 0, z: 0}
+  CurId: 0
 --- !u!114 &11445376
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38431,32 +38383,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AxisOfRotation: {x: 0, y: 180, z: 0}
-  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
-  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
-  UpVector: {x: 0, y: 1, z: 0}
-  RightVector: {x: 1, y: 0, z: 0}
-  ForwardVector: {x: 0, y: 0, z: 1}
-  LegUpVector: {x: 0, y: 0, z: -1}
-  LegRightVector: {x: 1, y: 0, z: 0}
-  LegForwardVector: {x: 0, y: 1, z: 0}
-  RightArmUpVector: {x: -1, y: 0, z: 0}
-  RightArmRightVector: {x: 0, y: 1, z: 0}
-  RightArmForwardVector: {x: 0, y: 0, z: 1}
-  LeftArmUpVector: {x: 1, y: 0, z: 0}
-  LeftArmRightVector: {x: 0, y: 1, z: 0}
-  LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  CurAccelVector: {x: 0, y: 0, z: 0}
-  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurGyroVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurId: 0
-  OrientationCorrection: {x: 0, y: 0, z: -90}
   UseCorrection: 0
   IsReset: 0
+  AxisOfRotation: {x: 0, y: 180, z: 0}
+  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
+  AbsoluteRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
+  InitialRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  MagOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  CurAccelVectorInS: {x: 0, y: 0, z: 0}
+  CurGyroVectorInS: {x: 0, y: 0, z: 0}
+  CurMagInS: {x: 0, y: 0, z: 0}
+  CurId: 0
 --- !u!114 &11452200
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -38468,32 +38408,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AxisOfRotation: {x: 0, y: 180, z: 0}
-  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
-  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
-  UpVector: {x: 0, y: 1, z: 0}
-  RightVector: {x: 1, y: 0, z: 0}
-  ForwardVector: {x: 0, y: 0, z: 1}
-  LegUpVector: {x: 0, y: 0, z: -1}
-  LegRightVector: {x: 1, y: 0, z: 0}
-  LegForwardVector: {x: 0, y: 1, z: 0}
-  RightArmUpVector: {x: -1, y: 0, z: 0}
-  RightArmRightVector: {x: 0, y: 1, z: 0}
-  RightArmForwardVector: {x: 0, y: 0, z: 1}
-  LeftArmUpVector: {x: 1, y: 0, z: 0}
-  LeftArmRightVector: {x: 0, y: 1, z: 0}
-  LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  CurAccelVector: {x: 0, y: 0, z: 0}
-  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurGyroVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurId: 0
-  OrientationCorrection: {x: 0, y: 0, z: 90}
   UseCorrection: 0
   IsReset: 0
+  AxisOfRotation: {x: 0, y: 180, z: 0}
+  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
+  AbsoluteRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
+  InitialRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  MagOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  CurAccelVectorInS: {x: 0, y: 0, z: 0}
+  CurGyroVectorInS: {x: 0, y: 0, z: 0}
+  CurMagInS: {x: 0, y: 0, z: 0}
+  CurId: 0
 --- !u!114 &11452626
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -39297,32 +39225,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AxisOfRotation: {x: 0, y: 180, z: 0}
-  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
-  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
-  UpVector: {x: 0, y: 1, z: 0}
-  RightVector: {x: 1, y: 0, z: 0}
-  ForwardVector: {x: 0, y: 0, z: 1}
-  LegUpVector: {x: 0, y: 0, z: -1}
-  LegRightVector: {x: 1, y: 0, z: 0}
-  LegForwardVector: {x: 0, y: 1, z: 0}
-  RightArmUpVector: {x: -1, y: 0, z: 0}
-  RightArmRightVector: {x: 0, y: 1, z: 0}
-  RightArmForwardVector: {x: 0, y: 0, z: 1}
-  LeftArmUpVector: {x: 1, y: 0, z: 0}
-  LeftArmRightVector: {x: 0, y: 1, z: 0}
-  LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  CurAccelVector: {x: 0, y: 0, z: 0}
-  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurGyroVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurId: 0
-  OrientationCorrection: {x: 0, y: 0, z: -90}
   UseCorrection: 0
   IsReset: 0
+  AxisOfRotation: {x: 0, y: 180, z: 0}
+  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
+  AbsoluteRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
+  InitialRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  MagOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  CurAccelVectorInS: {x: 0, y: 0, z: 0}
+  CurGyroVectorInS: {x: 0, y: 0, z: 0}
+  CurMagInS: {x: 0, y: 0, z: 0}
+  CurId: 0
 --- !u!114 &11478290
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -39561,32 +39477,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AxisOfRotation: {x: 0, y: 180, z: 0}
-  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
-  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
-  UpVector: {x: 0, y: 1, z: 0}
-  RightVector: {x: 1, y: 0, z: 0}
-  ForwardVector: {x: 0, y: 0, z: 1}
-  LegUpVector: {x: 0, y: 0, z: -1}
-  LegRightVector: {x: 1, y: 0, z: 0}
-  LegForwardVector: {x: 0, y: 1, z: 0}
-  RightArmUpVector: {x: -1, y: 0, z: 0}
-  RightArmRightVector: {x: 0, y: 1, z: 0}
-  RightArmForwardVector: {x: 0, y: 0, z: 1}
-  LeftArmUpVector: {x: 1, y: 0, z: 0}
-  LeftArmRightVector: {x: 0, y: 1, z: 0}
-  LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  CurAccelVector: {x: 0, y: 0, z: 0}
-  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurGyroVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurId: 0
-  OrientationCorrection: {x: 0, y: 180, z: 180}
   UseCorrection: 0
   IsReset: 0
+  AxisOfRotation: {x: 0, y: 180, z: 0}
+  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
+  AbsoluteRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
+  InitialRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  MagOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  CurAccelVectorInS: {x: 0, y: 0, z: 0}
+  CurGyroVectorInS: {x: 0, y: 0, z: 0}
+  CurMagInS: {x: 0, y: 0, z: 0}
+  CurId: 0
 --- !u!114 &11493010
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -39622,32 +39526,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6497a75fd7075643888c304dc2a3f61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AxisOfRotation: {x: 0, y: 180, z: 0}
-  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
-  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
-  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
-  GravityOffset: {x: 0, y: 0, z: 0, w: 1}
-  UpVector: {x: 0, y: 1, z: 0}
-  RightVector: {x: 1, y: 0, z: 0}
-  ForwardVector: {x: 0, y: 0, z: 1}
-  LegUpVector: {x: 0, y: 0, z: -1}
-  LegRightVector: {x: 1, y: 0, z: 0}
-  LegForwardVector: {x: 0, y: 1, z: 0}
-  RightArmUpVector: {x: -1, y: 0, z: 0}
-  RightArmRightVector: {x: 0, y: 1, z: 0}
-  RightArmForwardVector: {x: 0, y: 0, z: 1}
-  LeftArmUpVector: {x: 1, y: 0, z: 0}
-  LeftArmRightVector: {x: 0, y: 1, z: 0}
-  LeftArmForwardVector: {x: 0, y: 0, z: 1}
-  CurAccelVector: {x: 0, y: 0, z: 0}
-  CurAccelVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurGyroVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVector: {x: 0, y: 0, z: 0}
-  CurGyroDiffVectorSmoothed: {x: 0, y: 0, z: 0}
-  CurId: 0
-  OrientationCorrection: {x: 0, y: 180, z: 180}
   UseCorrection: 0
   IsReset: 0
+  AxisOfRotation: {x: 0, y: 180, z: 0}
+  UpAxisRotation: {x: 0, y: 0, z: 0, w: 0}
+  AbsoluteRotation: {x: 0, y: 0, z: 0, w: 1}
+  AbsoluteRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  InitialRotation: {x: -0, y: -0, z: -0, w: 1}
+  InitialRotationInU: {x: 0, y: 0, z: 0, w: 1}
+  GravityOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  MagOffsetInU: {x: 0, y: 0, z: 0, w: 1}
+  CurAccelVectorInS: {x: 0, y: 0, z: 0}
+  CurGyroVectorInS: {x: 0, y: 0, z: 0}
+  CurMagInS: {x: 0, y: 0, z: 0}
+  CurId: 0
 --- !u!114 &11494276
 MonoBehaviour:
   m_ObjectHideFlags: 1
